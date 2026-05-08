@@ -1,221 +1,569 @@
 <!DOCTYPE html>
 <html lang="nl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacybeleid — Stolkwebdesign</title>
-<meta name="description" content="Privacybeleid van Stolkwebdesign. Lees hoe wij omgaan met jouw persoonsgegevens.">
-<meta name="robots" content="noindex, follow">
-<link rel="canonical" href="https://www.stolkwebdesign.nl/privacybeleid">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
-html { scroll-behavior: smooth; }
-body { background: var(--white); color: var(--black); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacybeleid — Stolkwebdesign</title>
+  <meta name="description" content="Privacybeleid van Stolkwebdesign. Lees hoe wij omgaan met jouw persoonsgegevens.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://www.stolkwebdesign.nl/privacybeleid">
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8a7865ef-27ca-48b5-a7f2-0235848c8787" type="text/javascript" async></script>
+<script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-5MT8XNYTF7"></script>
+<script type="text/plain" data-cookieconsent="statistics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
+<script type="text/plain" data-cookieconsent="marketing">!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','384832226157615');fbq('track','PageView');</script>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-nav { position: fixed; top:0; left:0; right:0; z-index:100; background:var(--black); border-bottom:2px solid var(--black); display:flex; align-items:center; justify-content:space-between; padding:16px 48px; }
-.nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
-.nav-links { display:flex; gap:40px; list-style:none; }
-.nav-links a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:rgba(255,255,255,.5); text-decoration:none; transition:color .2s; }
-.nav-links a:hover { color:var(--white); }
-.nav-cta { font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; background:var(--red); color:var(--white); border:2px solid var(--white); padding:13px 22px; text-decoration:none; transition:background .15s,color .15s; }
-.nav-cta:hover { background:var(--white); color:var(--red); }
-.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
-.nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); transition:transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
-.nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-.nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
-.nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-.nav-cta-item { display:none; }
-.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; transition:top .15s; }
-.skip-link:focus { top:0; }
+    :root {
+      --black: #000;
+      --white: #fff;
+      --red: #EA2525;
+      --near-black: #0A0A0A;
+      --bone: #F5F5F5;
+      --muted: #767676;
+    }
 
-.page-header { padding: 160px 48px 80px; border-bottom: 2px solid var(--black); background: var(--near-black); color: var(--white); }
-.page-header-inner { max-width: 1400px; margin: 0 auto; }
-.page-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--red); margin-bottom:20px; }
-.page-title { font-family:'Archivo Black',sans-serif; font-size:clamp(52px,8vw,110px); text-transform:uppercase; letter-spacing:-0.04em; line-height:.88; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-.content { max-width: 860px; margin: 0 auto; padding: 80px 48px 120px; }
-.content h2 { font-family:'Archivo Black',sans-serif; font-size:clamp(20px,2.5vw,28px); text-transform:uppercase; letter-spacing:-0.02em; margin: 56px 0 16px; padding-bottom: 12px; border-bottom: 2px solid var(--black); }
-.content h2:first-child { margin-top: 0; }
-.content p { font-size:16px; line-height:1.75; color:#222; margin-bottom:16px; }
-.content ul { margin: 0 0 16px 0; padding-left: 0; list-style: none; }
-.content ul li { font-size:16px; line-height:1.75; color:#222; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,.08); display:flex; gap:12px; }
-.content ul li::before { content:'—'; color:var(--red); flex-shrink:0; font-family:'JetBrains Mono',monospace; }
-.content a { color:var(--black); text-decoration:underline; text-underline-offset:3px; }
-.content a:hover { color:var(--red); }
-.content .meta { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:48px; padding-bottom:24px; border-bottom:2px solid var(--black); }
-.content .highlight { background:var(--bone); border:2px solid var(--black); padding:24px 28px; margin:24px 0; }
-.content .highlight p { margin-bottom:0; }
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+    }
 
-footer { background:var(--black); color:var(--white); padding:40px 48px; border-top:2px solid var(--red); display:flex; align-items:center; justify-content:space-between; }
-.footer-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; letter-spacing:-0.02em; }
-.footer-copy { font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,.3); text-transform:uppercase; letter-spacing:.08em; }
-.footer-links-row { display:flex; gap:24px; flex-wrap:wrap; }
-.footer-links-row a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.45); text-decoration:none; transition:color .2s; }
-.footer-links-row a:hover { color:var(--white); }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--black);
+      border-bottom: 2px solid var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 48px;
+    }
 
-@media(max-width:900px) {
-  nav { padding:14px 20px; }
-  .nav-cta { display:none; }
-  .nav-links { display:none; }
-  .nav-hamburger { display:flex; }
-  .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
-  .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
-  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
-  .nav-links.open .nav-cta-item { display:block; border-bottom:none; padding-top:16px; }
-  .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
-  .page-header { padding: 120px 20px 60px; }
-  .content { padding: 48px 20px 80px; }
-  footer { flex-direction:column; gap:20px; padding:32px 20px; text-align:center; }
-  .footer-links-row { justify-content:center; }
-}
-</style>
+    .nav-logo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18px;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: rgba(255, 255, 255, .5);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--white);
+    }
+
+    .nav-cta {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      background: var(--red);
+      color: var(--white);
+      border: 2px solid var(--white);
+      padding: 13px 22px;
+      text-decoration: none;
+      transition: background .15s, color .15s;
+    }
+
+    .nav-cta:hover {
+      background: var(--white);
+      color: var(--red);
+    }
+
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--white);
+      transition: transform .25s cubic-bezier(.16, 1, .3, 1), opacity .2s;
+    }
+
+    .nav-hamburger.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .nav-hamburger.open span:nth-child(2) {
+      opacity: 0;
+      transform: scaleX(0);
+    }
+
+    .nav-hamburger.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .nav-cta-item {
+      display: none;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 0;
+      background: var(--red);
+      color: var(--white);
+      padding: 8px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      text-decoration: none;
+      z-index: 200;
+      transition: top .15s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    .page-header {
+      padding: 160px 48px 80px;
+      border-bottom: 2px solid var(--black);
+      background: var(--near-black);
+      color: var(--white);
+    }
+
+    .page-header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .page-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(52px, 8vw, 110px);
+      text-transform: uppercase;
+      letter-spacing: -0.04em;
+      line-height: .88;
+    }
+
+    .content {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 80px 48px 120px;
+    }
+
+    .content h2 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(20px, 2.5vw, 28px);
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin: 56px 0 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--black);
+    }
+
+    .content h2:first-child {
+      margin-top: 0;
+    }
+
+    .content p {
+      font-size: 16px;
+      line-height: 1.75;
+      color: #222;
+      margin-bottom: 16px;
+    }
+
+    .content ul {
+      margin: 0 0 16px 0;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .content ul li {
+      font-size: 16px;
+      line-height: 1.75;
+      color: #222;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, .08);
+      display: flex;
+      gap: 12px;
+    }
+
+    .content ul li::before {
+      content: '—';
+      color: var(--red);
+      flex-shrink: 0;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .content a {
+      color: var(--black);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .content a:hover {
+      color: var(--red);
+    }
+
+    .content .meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 48px;
+      padding-bottom: 24px;
+      border-bottom: 2px solid var(--black);
+    }
+
+    .content .highlight {
+      background: var(--bone);
+      border: 2px solid var(--black);
+      padding: 24px 28px;
+      margin: 24px 0;
+    }
+
+    .content .highlight p {
+      margin-bottom: 0;
+    }
+
+    footer {
+      background: var(--black);
+      color: var(--white);
+      padding: 40px 48px;
+      border-top: 2px solid var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .3);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .footer-links-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links-row a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255, 255, 255, .45);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .footer-links-row a:hover {
+      color: var(--white);
+    }
+
+    @media(max-width:900px) {
+      nav {
+        padding: 14px 20px;
+      }
+
+      .nav-cta {
+        display: none;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .nav-hamburger {
+        display: flex;
+      }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 57px;
+        left: 0;
+        right: 0;
+        background: var(--black);
+        border-bottom: 2px solid var(--red);
+        padding: 24px 20px;
+        gap: 0;
+        z-index: 99;
+      }
+
+      .nav-links.open li {
+        border-bottom: 1px solid rgba(255, 255, 255, .1);
+      }
+
+      .nav-links.open a {
+        display: block;
+        padding: 14px 0;
+        font-size: 14px;
+        letter-spacing: .1em;
+      }
+
+      .nav-links.open .nav-cta-item {
+        display: block;
+        border-bottom: none;
+        padding-top: 16px;
+      }
+
+      .nav-cta-mobile {
+        display: block;
+        background: var(--red);
+        color: var(--white);
+        font-family: 'Archivo Black', sans-serif;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        padding: 14px 20px;
+        text-decoration: none;
+        text-align: center;
+        border: 2px solid rgba(255, 255, 255, .3);
+      }
+
+      .page-header {
+        padding: 120px 20px 60px;
+      }
+
+      .content {
+        padding: 48px 20px 80px;
+      }
+
+      footer {
+        flex-direction: column;
+        gap: 20px;
+        padding: 32px 20px;
+        text-align: center;
+      }
+
+      .footer-links-row {
+        justify-content: center;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
+  <a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
 
-<nav>
-  <a href="index.html" class="nav-logo">Stolkwebdesign®</a>
-  <ul class="nav-links" id="nav-links">
-    <li><a href="portfolio.html">Portfolio / 01</a></li>
-    <li><a href="index.html#diensten">Diensten / 02</a></li>
-    <li><a href="index.html#aanpak">Aanpak / 03</a></li>
-    <li><a href="over.html">Over mij / 04</a></li>
-    <li class="nav-cta-item"><a href="contact.html" class="nav-cta-mobile">Plan een gesprek →</a></li>
-  </ul>
-  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-  <a href="contact.html" class="nav-cta">Plan een gesprek →</a>
-</nav>
+  <nav>
+    <a href="index.html" class="nav-logo">Stolkwebdesign®</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="portfolio.html">Portfolio / 01</a></li>
+      <li><a href="index.html#diensten">Diensten / 02</a></li>
+      <li><a href="index.html#aanpak">Aanpak / 03</a></li>
+      <li><a href="over.html">Over mij / 04</a></li>
+      <li class="nav-cta-item"><a href="contact.html" class="nav-cta-mobile">Plan een gesprek →</a></li>
+    </ul>
+    <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="contact.html" class="nav-cta">Plan een gesprek →</a>
+  </nav>
 
-<main id="main-content">
+  <main id="main-content">
 
-<header class="page-header">
-  <div class="page-header-inner">
-    <div class="page-eyebrow">Juridisch / —</div>
-    <h1 class="page-title font-display" style="font-family:'Archivo Black',sans-serif;">Privacy<span style="color:var(--red)">beleid.</span></h1>
-  </div>
-</header>
+    <header class="page-header">
+      <div class="page-header-inner">
+        <div class="page-eyebrow">Juridisch / —</div>
+        <h1 class="page-title font-display" style="font-family:'Archivo Black',sans-serif;">Privacy<span
+            style="color:var(--red)">beleid.</span></h1>
+      </div>
+    </header>
 
-<div class="content">
-  <p class="meta">Versie 1.0 — Laatst bijgewerkt: mei 2026</p>
+    <div class="content">
+      <p class="meta">Versie 1.0 — Laatst bijgewerkt: mei 2026</p>
 
-  <h2>01 — Wie zijn wij?</h2>
-  <p>Stolkwebdesign is een eenmanszaak van Peter Stolk, gevestigd in Uithoorn. Wij zijn verantwoordelijk voor de verwerking van persoonsgegevens zoals beschreven in dit privacybeleid.</p>
-  <div class="highlight">
-    <p><strong>Stolkwebdesign</strong><br>
-    Peter Stolk<br>
-    Burgemeester Kootlaan 57, 1421 KB Uithoorn<br>
-    Tel: <a href="tel:+31650222228">06 50222228</a><br>
-    E-mail: <a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a><br>
-    KvK-nummer: [invullen]</p>
-  </div>
+      <h2>01 — Wie zijn wij?</h2>
+      <p>Stolkwebdesign is een eenmanszaak van Peter Stolk, gevestigd in Uithoorn. Wij zijn verantwoordelijk voor de
+        verwerking van persoonsgegevens zoals beschreven in dit privacybeleid.</p>
+      <div class="highlight">
+        <p><strong>Stolkwebdesign</strong><br>
+          Peter Stolk<br>
+          Burgemeester Kootlaan 57, 1421 KB Uithoorn<br>
+          Tel: <a href="tel:+31650222228">06 50222228</a><br>
+          E-mail: <a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a><br>
+          KvK-nummer:66906660</p>
+      </div>
 
-  <h2>02 — Welke gegevens verwerken wij?</h2>
-  <p>Wij verwerken alleen persoonsgegevens die je zelf aan ons verstrekt via het contactformulier of het plannen van een gesprek:</p>
-  <ul>
-    <li>Naam</li>
-    <li>E-mailadres</li>
-    <li>De inhoud van je bericht of vraag</li>
-    <li>Datum en tijd van indiening</li>
-    <li>Bij een geplande afspraak (via Cal.com): naam, e-mailadres en afspraakgegevens</li>
-  </ul>
+      <h2>02 — Welke gegevens verwerken wij?</h2>
+      <p>Wij verwerken alleen persoonsgegevens die je zelf aan ons verstrekt via het contactformulier of het plannen van
+        een gesprek:</p>
+      <ul>
+        <li>Naam</li>
+        <li>E-mailadres</li>
+        <li>De inhoud van je bericht of vraag</li>
+        <li>Datum en tijd van indiening</li>
+        <li>Bij een geplande afspraak (via Cal.com): naam, e-mailadres en afspraakgegevens</li>
+      </ul>
 
-  <h2>03 — Waarom verwerken wij deze gegevens?</h2>
-  <ul>
-    <li>Beantwoorden van vragen en verzoeken via het contactformulier</li>
-    <li>Plannen en bevestigen van kennismakingsgesprekken</li>
-    <li>Uitvoering van een eventuele overeenkomst</li>
-  </ul>
-  <p>Wij gebruiken jouw gegevens nooit voor marketingdoeleinden zonder jouw expliciete toestemming en delen ze niet met derden voor commerciële doeleinden.</p>
+      <h2>03 — Waarom verwerken wij deze gegevens?</h2>
+      <ul>
+        <li>Beantwoorden van vragen en verzoeken via het contactformulier</li>
+        <li>Plannen en bevestigen van kennismakingsgesprekken</li>
+        <li>Uitvoering van een eventuele overeenkomst</li>
+      </ul>
+      <p>Wij gebruiken jouw gegevens nooit voor marketingdoeleinden zonder jouw expliciete toestemming en delen ze niet
+        met derden voor commerciële doeleinden.</p>
 
-  <h2>04 — Rechtsgrond</h2>
-  <ul>
-    <li><strong>Contactformulier:</strong> gerechtvaardigd belang — het beantwoorden van zakelijke vragen (art. 6 lid 1 sub f AVG)</li>
-    <li><strong>Afsprakenbeheer via Cal.com:</strong> uitvoering van een overeenkomst of precontractuele stappen (art. 6 lid 1 sub b AVG)</li>
-  </ul>
+      <h2>04 — Rechtsgrond</h2>
+      <ul>
+        <li><strong>Contactformulier:</strong> gerechtvaardigd belang — het beantwoorden van zakelijke vragen (art. 6
+          lid 1 sub f AVG)</li>
+        <li><strong>Afsprakenbeheer via Cal.com:</strong> uitvoering van een overeenkomst of precontractuele stappen
+          (art. 6 lid 1 sub b AVG)</li>
+      </ul>
 
-  <h2>05 — Bewaartermijn</h2>
-  <p>Gegevens uit het contactformulier worden maximaal <strong>1 jaar</strong> na het laatste contact bewaard, tenzij er een lopende zakelijke relatie bestaat. Daarna worden ze verwijderd uit onze systemen.</p>
+      <h2>05 — Bewaartermijn</h2>
+      <p>Gegevens uit het contactformulier worden maximaal <strong>1 jaar</strong> na het laatste contact bewaard,
+        tenzij er een lopende zakelijke relatie bestaat. Daarna worden ze verwijderd uit onze systemen.</p>
 
-  <h2>06 — Derde partijen</h2>
-  <p>Wij maken gebruik van de volgende externe diensten die mogelijk persoonsgegevens verwerken:</p>
-  <ul>
-    <li><strong>Cal.com (VS)</strong> — afsprakenbeheer. Cal.com verwerkt naam en e-mailadres bij het plannen van een gesprek. Zie <a href="https://cal.com/privacy" target="_blank" rel="noopener">cal.com/privacy</a>.</li>
-    <li><strong>Google LLC (VS)</strong> — Google Fonts. Bij het laden van de website worden lettertypen opgehaald van Google's servers, waarbij technische gegevens (waaronder IP-adres) naar Google worden verzonden. Zie <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</li>
-    <li><strong>Notion (VS)</strong> — interne verwerking van contactverzoeken. Berichten die via het contactformulier worden ingediend worden opgeslagen in een beveiligde Notion-database die uitsluitend toegankelijk is voor Stolkwebdesign.</li>
-  </ul>
-  <p>Met verwerkers waarmee wij een structurele relatie hebben, sluiten wij waar vereist een verwerkersovereenkomst af.</p>
+      <h2>06 — Derde partijen</h2>
+      <p>Wij maken gebruik van de volgende externe diensten die mogelijk persoonsgegevens verwerken:</p>
+      <ul>
+        <li><strong>Cal.com (VS)</strong> — afsprakenbeheer. Cal.com verwerkt naam en e-mailadres bij het plannen van
+          een gesprek. Zie <a href="https://cal.com/privacy" target="_blank" rel="noopener">cal.com/privacy</a>.</li>
+        <li><strong>Google LLC (VS)</strong> — Google Fonts. Bij het laden van de website worden lettertypen opgehaald
+          van Google's servers, waarbij technische gegevens (waaronder IP-adres) naar Google worden verzonden. Zie <a
+            href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.
+        </li>
+        <li><strong>Notion (VS)</strong> — interne verwerking van contactverzoeken. Berichten die via het
+          contactformulier worden ingediend worden opgeslagen in een beveiligde Notion-database die uitsluitend
+          toegankelijk is voor Stolkwebdesign.</li>
+      </ul>
+      <p>Met verwerkers waarmee wij een structurele relatie hebben, sluiten wij waar vereist een verwerkersovereenkomst
+        af.</p>
 
-  <h2>07 — Cookies</h2>
-  <p>Deze website maakt gebruik van <strong>functionele cookies</strong> die noodzakelijk zijn voor de werking van de afsprakenfunctie (Cal.com). Wij gebruiken <strong>geen</strong> analytische of tracking cookies en plaatsen geen advertentiecookies.</p>
-  <ul>
-    <li><strong>Cal.com sessiecookies</strong> — worden geplaatst wanneer je op "Plan een gesprek" klikt. Deze zijn noodzakelijk voor de werking van de afsprakenfunctie.</li>
-    <li><strong>localStorage (geen cookie)</strong> — de website slaat portfoliogegevens op in de lokale opslag van je browser. Dit bevat geen persoonsgegevens.</li>
-  </ul>
-  <p>Omdat wij uitsluitend functionele cookies gebruiken, is geen actieve toestemming vereist. Je kunt cookies altijd verwijderen via de instellingen van je browser.</p>
+      <h2>07 — Cookies</h2>
+      <p>Deze website maakt gebruik van <strong>functionele cookies</strong> die noodzakelijk zijn voor de werking van
+        de afsprakenfunctie (Cal.com). Wij gebruiken <strong>geen</strong> analytische of tracking cookies en plaatsen
+        geen advertentiecookies.</p>
+      <ul>
+        <li><strong>Cal.com sessiecookies</strong> — worden geplaatst wanneer je op "Plan een gesprek" klikt. Deze zijn
+          noodzakelijk voor de werking van de afsprakenfunctie.</li>
+        <li><strong>localStorage (geen cookie)</strong> — de website slaat portfoliogegevens op in de lokale opslag van
+          je browser. Dit bevat geen persoonsgegevens.</li>
+      </ul>
+      <p>Omdat wij uitsluitend functionele cookies gebruiken, is geen actieve toestemming vereist. Je kunt cookies
+        altijd verwijderen via de instellingen van je browser.</p>
 
-  <h2>08 — Jouw rechten</h2>
-  <p>Op grond van de AVG heb je de volgende rechten:</p>
-  <ul>
-    <li>Recht op inzage — opvragen welke gegevens wij van je hebben</li>
-    <li>Recht op rectificatie — onjuiste gegevens laten corrigeren</li>
-    <li>Recht op verwijdering — laten verwijderen van jouw gegevens</li>
-    <li>Recht op beperking van verwerking</li>
-    <li>Recht op bezwaar tegen verwerking</li>
-    <li>Recht op dataportabiliteit</li>
-  </ul>
-  <p>Je kunt een verzoek indienen via <a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a>. Wij reageren binnen 4 weken.</p>
+      <h2>08 — Jouw rechten</h2>
+      <p>Op grond van de AVG heb je de volgende rechten:</p>
+      <ul>
+        <li>Recht op inzage — opvragen welke gegevens wij van je hebben</li>
+        <li>Recht op rectificatie — onjuiste gegevens laten corrigeren</li>
+        <li>Recht op verwijdering — laten verwijderen van jouw gegevens</li>
+        <li>Recht op beperking van verwerking</li>
+        <li>Recht op bezwaar tegen verwerking</li>
+        <li>Recht op dataportabiliteit</li>
+      </ul>
+      <p>Je kunt een verzoek indienen via <a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a>. Wij
+        reageren binnen 4 weken.</p>
 
-  <h2>09 — Klacht indienen</h2>
-  <p>Ben je niet tevreden over hoe wij met jouw gegevens omgaan? Dan heb je het recht een klacht in te dienen bij de Autoriteit Persoonsgegevens via <a href="https://www.autoriteitpersoonsgegevens.nl" target="_blank" rel="noopener">autoriteitpersoonsgegevens.nl</a>.</p>
+      <h2>09 — Klacht indienen</h2>
+      <p>Ben je niet tevreden over hoe wij met jouw gegevens omgaan? Dan heb je het recht een klacht in te dienen bij de
+        Autoriteit Persoonsgegevens via <a href="https://www.autoriteitpersoonsgegevens.nl" target="_blank"
+          rel="noopener">autoriteitpersoonsgegevens.nl</a>.</p>
 
-  <h2>10 — Wijzigingen</h2>
-  <p>Wij behouden het recht dit privacybeleid te wijzigen. Raadpleeg deze pagina regelmatig voor de meest actuele versie. De datum bovenaan geeft aan wanneer het beleid voor het laatst is bijgewerkt.</p>
+      <h2>10 — Wijzigingen</h2>
+      <p>Wij behouden het recht dit privacybeleid te wijzigen. Raadpleeg deze pagina regelmatig voor de meest actuele
+        versie. De datum bovenaan geeft aan wanneer het beleid voor het laatst is bijgewerkt.</p>
 
-  <h2>11 — Contact</h2>
-  <p>Vragen over dit privacybeleid? Neem contact op via <a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a> of via het <a href="contact.html">contactformulier</a>.</p>
-</div>
+      <h2>11 — Contact</h2>
+      <p>Vragen over dit privacybeleid? Neem contact op via <a
+          href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a> of via het <a
+          href="contact.html">contactformulier</a>.</p>
+    </div>
 
-</main>
+  </main>
 
-<footer>
-  <div class="footer-logo" style="font-family:'Archivo Black',sans-serif;">Stolkwebdesign®</div>
-  <div class="footer-links-row">
-    <a href="index.html">Home</a>
-    <a href="portfolio.html">Portfolio</a>
-    <a href="over.html">Over mij</a>
-    <a href="contact.html">Contact</a>
-    <span style="color:rgba(255,255,255,.15)">|</span>
-    <a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a>
-    <span style="color:rgba(255,255,255,.15)">|</span>
-    <a href="privacybeleid.html">Privacybeleid</a>
-    <a href="algemene-voorwaarden.html">Algemene Voorwaarden</a>
-  </div>
-  <div class="footer-copy">© 2026 Stolkwebdesign — Uithoorn</div>
-</footer>
+  <footer>
+    <div class="footer-logo" style="font-family:'Archivo Black',sans-serif;">Stolkwebdesign®</div>
+    <div class="footer-links-row">
+      <a href="index.html">Home</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="over.html">Over mij</a>
+      <a href="contact.html">Contact</a>
+      <span style="color:rgba(255,255,255,.15)">|</span>
+      <a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a>
+      <span style="color:rgba(255,255,255,.15)">|</span>
+      <a href="privacybeleid.html">Privacybeleid</a>
+      <a href="algemene-voorwaarden.html">Algemene Voorwaarden</a>
+    </div>
+    <div class="footer-copy">© 2026 Stolkwebdesign — Uithoorn</div>
+  </footer>
 
-<script>
-  document.getElementById('nav-toggle').addEventListener('click', () => {
-    const links = document.getElementById('nav-links');
-    const open = links.classList.toggle('open');
-    document.getElementById('nav-toggle').classList.toggle('open', open);
-    document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
-  });
-</script>
+  <script>
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const links = document.getElementById('nav-links');
+      const open = links.classList.toggle('open');
+      document.getElementById('nav-toggle').classList.toggle('open', open);
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
+    });
+  </script>
 
-<div id="cookie-bar" style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--near-black); border-top:2px solid var(--red); padding:14px 24px; align-items:center; justify-content:space-between; gap:16px; z-index:500; flex-wrap:wrap;">
-  <span style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.75);">Deze site gebruikt functionele cookies van Cal.com voor het plannen van afspraken. <a href="privacybeleid.html" style="color:var(--red); text-decoration:none;">Meer info →</a></span>
-  <button onclick="document.getElementById('cookie-bar').style.display='none'; localStorage.setItem('cookie_accepted','true');" style="background:var(--red); color:var(--white); border:2px solid rgba(255,255,255,.15); font-family:'Archivo Black',sans-serif; font-size:11px; text-transform:uppercase; padding:8px 20px; cursor:pointer; white-space:nowrap; letter-spacing:.04em;">OK</button>
-</div>
-<script>if(!localStorage.getItem('cookie_accepted'))document.getElementById('cookie-bar').style.display='flex';</script>
 
 </body>
+
 </html>
