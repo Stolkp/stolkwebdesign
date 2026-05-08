@@ -167,8 +167,11 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     <span style="color:rgba(255,255,255,.15)">|</span>
     <a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a>
     <a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a>
+    <span style="color:rgba(255,255,255,.15)">|</span>
+    <a href="privacybeleid.html">Privacybeleid</a>
+    <a href="algemene-voorwaarden.html">Algemene Voorwaarden</a>
   </div>
-  <div class="footer-copy">© 2026 Stolkwebdesign — Amsterdam</div>
+  <div class="footer-copy">© 2026 Stolkwebdesign — Uithoorn</div>
 </footer>
 
 <script>
@@ -260,5 +263,11 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
   });
 </script>
 </main>
+
+<div id="cookie-bar" style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--near-black); border-top:2px solid var(--red); padding:14px 24px; align-items:center; justify-content:space-between; gap:16px; z-index:500; flex-wrap:wrap;">
+  <span style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.75);">Deze site gebruikt functionele cookies van Cal.com voor het plannen van afspraken. <a href="privacybeleid.html" style="color:var(--red); text-decoration:none;">Meer info →</a></span>
+  <button onclick="document.getElementById('cookie-bar').style.display='none'; localStorage.setItem('cookie_accepted','true');" style="background:var(--red); color:var(--white); border:2px solid rgba(255,255,255,.15); font-family:'Archivo Black',sans-serif; font-size:11px; text-transform:uppercase; padding:8px 20px; cursor:pointer; white-space:nowrap; letter-spacing:.04em;">OK</button>
+</div>
+<script>if(!localStorage.getItem('cookie_accepted'))document.getElementById('cookie-bar').style.display='flex';</script>
 </body>
 </html>

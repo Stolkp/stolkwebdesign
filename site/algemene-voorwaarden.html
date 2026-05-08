@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Algemene Voorwaarden — Stolkwebdesign</title>
+<meta name="description" content="Algemene leveringsvoorwaarden van Stolkwebdesign. Van toepassing op alle aanbiedingen, offertes en overeenkomsten.">
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://www.stolkwebdesign.nl/algemene-voorwaarden">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
+html { scroll-behavior: smooth; }
+body { background: var(--white); color: var(--black); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+
+nav { position: fixed; top:0; left:0; right:0; z-index:100; background:var(--black); border-bottom:2px solid var(--black); display:flex; align-items:center; justify-content:space-between; padding:16px 48px; }
+.nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
+.nav-links { display:flex; gap:40px; list-style:none; }
+.nav-links a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:rgba(255,255,255,.5); text-decoration:none; transition:color .2s; }
+.nav-links a:hover { color:var(--white); }
+.nav-cta { font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; background:var(--red); color:var(--white); border:2px solid var(--white); padding:13px 22px; text-decoration:none; transition:background .15s,color .15s; }
+.nav-cta:hover { background:var(--white); color:var(--red); }
+.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+.nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); transition:transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
+.nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.nav-cta-item { display:none; }
+.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; transition:top .15s; }
+.skip-link:focus { top:0; }
+
+.page-header { padding: 160px 48px 80px; border-bottom: 2px solid var(--black); background: var(--near-black); color: var(--white); }
+.page-header-inner { max-width: 1400px; margin: 0 auto; }
+.page-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--red); margin-bottom:20px; }
+.page-title { font-family:'Archivo Black',sans-serif; font-size:clamp(40px,6vw,90px); text-transform:uppercase; letter-spacing:-0.04em; line-height:.88; }
+
+.content { max-width: 860px; margin: 0 auto; padding: 80px 48px 120px; }
+.content h2 { font-family:'Archivo Black',sans-serif; font-size:clamp(17px,2vw,22px); text-transform:uppercase; letter-spacing:-0.01em; margin: 48px 0 14px; padding-bottom: 10px; border-bottom: 2px solid var(--black); }
+.content h2:first-child { margin-top: 0; }
+.content p { font-size:15px; line-height:1.75; color:#222; margin-bottom:12px; }
+.content ol { margin: 0 0 16px 0; padding-left: 0; list-style: none; counter-reset: item; }
+.content ol li { font-size:15px; line-height:1.75; color:#222; padding: 8px 0 8px 32px; border-bottom: 1px solid rgba(0,0,0,.07); position:relative; counter-increment: item; }
+.content ol li::before { content: counter(item) "."; position:absolute; left:0; color:var(--red); font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; top:10px; }
+.content a { color:var(--black); text-decoration:underline; text-underline-offset:3px; }
+.content a:hover { color:var(--red); }
+.content .meta { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin-bottom:48px; padding-bottom:24px; border-bottom:2px solid var(--black); }
+.content .highlight { background:var(--bone); border:2px solid var(--black); padding:24px 28px; margin:24px 0; }
+.content .highlight p { margin-bottom:0; }
+
+footer { background:var(--black); color:var(--white); padding:40px 48px; border-top:2px solid var(--red); display:flex; align-items:center; justify-content:space-between; }
+.footer-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; letter-spacing:-0.02em; }
+.footer-copy { font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,.3); text-transform:uppercase; letter-spacing:.08em; }
+.footer-links-row { display:flex; gap:24px; flex-wrap:wrap; }
+.footer-links-row a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.45); text-decoration:none; transition:color .2s; }
+.footer-links-row a:hover { color:var(--white); }
+
+@media(max-width:900px) {
+  nav { padding:14px 20px; }
+  .nav-cta { display:none; }
+  .nav-links { display:none; }
+  .nav-hamburger { display:flex; }
+  .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
+  .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
+  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
+  .nav-links.open .nav-cta-item { display:block; border-bottom:none; padding-top:16px; }
+  .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
+  .page-header { padding: 120px 20px 60px; }
+  .content { padding: 48px 20px 80px; }
+  footer { flex-direction:column; gap:20px; padding:32px 20px; text-align:center; }
+  .footer-links-row { justify-content:center; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
+
+<nav>
+  <a href="index.html" class="nav-logo">Stolkwebdesign®</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="portfolio.html">Portfolio / 01</a></li>
+    <li><a href="index.html#diensten">Diensten / 02</a></li>
+    <li><a href="index.html#aanpak">Aanpak / 03</a></li>
+    <li><a href="over.html">Over mij / 04</a></li>
+    <li class="nav-cta-item"><a href="contact.html" class="nav-cta-mobile">Plan een gesprek →</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="contact.html" class="nav-cta">Plan een gesprek →</a>
+</nav>
+
+<main id="main-content">
+
+<header class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">Juridisch / —</div>
+    <h1 class="page-title" style="font-family:'Archivo Black',sans-serif;">Algemene<br><span style="color:var(--red)">Voorwaarden.</span></h1>
+  </div>
+</header>
+
+<div class="content">
+  <p class="meta">Versie 1.0 — Van toepassing op alle overeenkomsten met Stolkwebdesign</p>
+
+  <div class="highlight">
+    <p><strong>Stolkwebdesign</strong><br>
+    Peter Stolk<br>
+    Burgemeester Kootlaan 57, 1421 KB Uithoorn<br>
+    Tel: <a href="tel:+31650222228">06 50222228</a><br>
+    E-mail: <a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a></p>
+  </div>
+
+  <h2>Artikel 1 — Definities</h2>
+  <ol>
+    <li>Opdrachtgever: de natuurlijke of rechtspersoon met wie de overeenkomst tot levering van producten en diensten door Stolkwebdesign wordt gesloten.</li>
+    <li>Website: een samenhangend geheel van digitale internetpagina's inclusief eventuele bijbehorende digitale afbeeldingen, scripts, databases en andere media.</li>
+    <li>Webshop: een samenhangend geheel van digitale internetpagina's inclusief eventuele bijbehorende digitale afbeeldingen, scripts, databases en andere media met als doel om diensten of producten te verkopen.</li>
+    <li>Overeenkomst: elke wederzijdse acceptatie, schriftelijk of per e-mail bevestigd, van levering van één of meer producten of diensten door Stolkwebdesign.</li>
+  </ol>
+
+  <h2>Artikel 2 — Toepasselijkheid</h2>
+  <ol>
+    <li>Deze algemene voorwaarden zijn van toepassing op alle aanbiedingen, offertes en alle door Stolkwebdesign gesloten overeenkomsten en verrichtte diensten en alle overige door Stolkwebdesign verrichtte handelingen.</li>
+    <li>Door het bekrachtigen van de overeenkomst met Stolkwebdesign verklaart de Opdrachtgever dat hij kennis heeft genomen van deze algemene voorwaarden en dat hij met deze voorwaarden akkoord gaat.</li>
+    <li>Afwijken van de algemene leveringsvoorwaarden is alleen dan mogelijk, wanneer die expliciet in een overeenkomst tussen de Opdrachtgever en Stolkwebdesign opgenomen wordt.</li>
+    <li>Alle aanbiedingen zijn vrijblijvend, tenzij in het aanbod schriftelijk uitdrukkelijk anders is aangegeven.</li>
+    <li>Toepasselijkheid van eventuele inkoop- of andere voorwaarden van de Opdrachtgever wordt uitdrukkelijk van de hand gewezen.</li>
+    <li>Indien enige bepaling van deze algemene voorwaarden nietig is of vernietigd wordt, zullen de overige bepalingen volledig van kracht blijven en zullen Stolkwebdesign en Opdrachtgever in overleg treden teneinde nieuwe bepalingen ter vervanging overeen te komen.</li>
+  </ol>
+
+  <h2>Artikel 3 — Aanbiedingen en offertes</h2>
+  <ol>
+    <li>Alle offertes en prijsopgaven door of vanwege Stolkwebdesign gedaan zijn vrijblijvend, behalve indien door Stolkwebdesign schriftelijk of per e-mail anders is vermeld. Per opdracht zal Stolkwebdesign een offerte uitbrengen. Alle opgegeven prijzen en tarieven zijn exclusief BTW.</li>
+    <li>Offertes en prijsopgaven blijven 1 maand geldig, tenzij een andere termijn wordt vermeld door Stolkwebdesign. Facturering geschiedt op basis van deze offerte.</li>
+    <li>Wijzigingen in de oorspronkelijk gesloten overeenkomst zijn pas geldig vanaf het moment dat deze wijzigingen middels een aanvullende of gewijzigde overeenkomst zijn aanvaard door beide partijen.</li>
+    <li>De Opdrachtgever erkent onderling e-mailverkeer als wettelijk, geldig bewijsmiddel.</li>
+    <li>Aanbiedingen of offertes gelden niet automatisch voor toekomstige opdrachten.</li>
+  </ol>
+
+  <h2>Artikel 4 — Aanvang van de overeenkomst</h2>
+  <ol>
+    <li>Een overeenkomst komt tot stand op de dag dat de Opdrachtgever mondeling of schriftelijk heeft aangegeven dat hij de offerte heeft aanvaard.</li>
+    <li>Het staat partijen vrij om de totstandkoming van de overeenkomst met andere middelen te bewijzen.</li>
+    <li>Aanvullingen en wijzigingen van de overeenkomst kunnen uitsluitend schriftelijk geschieden.</li>
+    <li>Zodra de overeenkomst definitief is betaalt de Opdrachtgever 25% van het totaalbedrag alvorens Stolkwebdesign begint met de eerste opzet van een website of webshop. Direct na oplevering betaalt de Opdrachtgever het resterende bedrag.</li>
+  </ol>
+
+  <h2>Artikel 5 — Uitvoering van de overeenkomst</h2>
+  <ol>
+    <li>Stolkwebdesign zal de overeenkomst naar beste inzicht en vermogen en overeenkomstig de eisen van goed vakmanschap uitvoeren.</li>
+    <li>Indien en voor zover een goede uitvoering van de overeenkomst dit vereist, heeft Stolkwebdesign het recht bepaalde werkzaamheden te laten verrichten door derden.</li>
+    <li>De Opdrachtgever draagt er zorg voor dat alle gegevens, waarvan Stolkwebdesign aangeeft dat deze noodzakelijk zijn voor het uitvoeren van de overeenkomst, tijdig aan Stolkwebdesign worden verstrekt. Indien de benodigde gegevens niet tijdig zijn verstrekt, heeft Stolkwebdesign het recht de uitvoering op te schorten en/of de uit de vertraging voortvloeiende extra kosten in rekening te brengen.</li>
+    <li>Stolkwebdesign is niet aansprakelijk voor schade doordat hij is uitgegaan van door de Opdrachtgever verstrekte onjuiste en/of onvolledige gegevens, tenzij deze onjuistheid voor Stolkwebdesign kenbaar behoorde te zijn.</li>
+    <li>Indien is overeengekomen dat de overeenkomst in fasen zal worden uitgevoerd kan Stolkwebdesign de uitvoering van volgende fasen opschorten tot dat de Opdrachtgever de resultaten van de voorgaande fase schriftelijk heeft goedgekeurd.</li>
+    <li>Stolkwebdesign zal de website opleveren binnen de in de offerte aangegeven termijn. Indien Opdrachtgever zijn medewerking nalaat zal het totaalbedrag na het verstrijken van de oplevertermijn geheel worden gefactureerd.</li>
+    <li>Opdrachtgever vrijwaart Stolkwebdesign voor eventuele aanspraken van derden die in verband met de uitvoering van de overeenkomst schade lijden welke aan Opdrachtgever toerekenbaar is.</li>
+    <li>Indien de Opdrachtgever tijdens de uitvoering van de lopende overeenkomst nieuwe wensen uit welke buiten de gemaakte afspraken vallen, worden deze aangemerkt als zijnde een nieuwe opdracht.</li>
+  </ol>
+
+  <h2>Artikel 6 — Duur en beëindiging</h2>
+  <ol>
+    <li>Het ontwerpen van een nieuwe website of webshop door Stolkwebdesign voor de Opdrachtgever wordt beschouwd als een eenmalige verbintenis en kent derhalve geen looptijd.</li>
+    <li>Opdrachtgevers hebben na oplevering van de website recht op een vrijblijvend onderhoudscontract. Een onderhoudsovereenkomst kent een minimale looptijd van 6 maanden en wordt iedere 6 maanden stilzwijgend verlengd. Na het verstrijken van de minimale looptijd kan de overeenkomst schriftelijk worden opgezegd, met inachtneming van een opzegtermijn van 2 maanden.</li>
+    <li>Stolkwebdesign heeft het recht geleverde producten en diensten tijdelijk of geheel buiten gebruik te stellen en/of het gebruik ervan te beperken indien Opdrachtgever de overeenkomst niet nakomt of in strijd handelt met deze algemene voorwaarden. Stolkwebdesign zal Opdrachtgever hiervan tevoren in kennis stellen. De verplichting tot betaling blijft ook tijdens de buitengebruikstelling bestaan.</li>
+    <li>Stolkwebdesign heeft het recht de overeenkomst met onmiddellijke ingang te beëindigen indien Opdrachtgever in staat van faillissement is verklaard, surseance van betaling heeft aangevraagd of anderszins het vrije beheer over zijn vermogen heeft verloren.</li>
+    <li>Contracten met betrekking tot domeinnaamregistratie en hosting kennen een opzegtermijn van 2 maanden en worden elk jaar stilzwijgend verlengd.</li>
+    <li>Stolkwebdesign heeft het recht websites af te schermen als blijkt dat deze een gevaar vormen voor de server en zo voor andere op de server aanwezige websites.</li>
+  </ol>
+
+  <h2>Artikel 7 — Levering en leveringstijd</h2>
+  <ol>
+    <li>Stolkwebdesign gaat na ontvangst van de benodigde gegevens, teksten en/of beeldmateriaal zo spoedig mogelijk van start met het aanmaken van de overeengekomen producten en/of diensten en deelt de Opdrachtgever de verwachte levertijd mee.</li>
+    <li>Bij het ontwerpen van een nieuwe website maakt Stolkwebdesign eerst een basisontwerp en legt dit ter goedkeuring voor aan de Opdrachtgever. Wanneer de Opdrachtgever niet binnen een redelijke termijn reageert, gaat Stolkwebdesign ervan uit dat de Opdrachtgever akkoord gaat met het basisontwerp.</li>
+    <li>Mocht Stolkwebdesign onverhoopt niet in staat zijn binnen de overeengekomen levertijd aan zijn verplichtingen te voldoen, kan Stolkwebdesign alleen schriftelijk in gebreke worden gesteld, waarbij Stolkwebdesign een termijn van minimaal 10 dagen gegund wordt om haar verplichtingen na te komen.</li>
+    <li>Door Stolkwebdesign gemaakte websites worden op een nader te specificeren wijze aan de Opdrachtgever opgeleverd.</li>
+  </ol>
+
+  <h2>Artikel 8 — Overmacht</h2>
+  <ol>
+    <li>In geval van overmacht is Stolkwebdesign gerechtigd de overeenkomst als ontbonden te beschouwen, zonder rechterlijke tussenkomst en zonder dat er een plicht tot schadeloosstelling ontstaat.</li>
+    <li>Onder overmacht wordt verstaan elke vreemde oorzaak, welke niet aan Stolkwebdesign kan worden toegerekend en die de nakoming van de overeenkomst belet of in zo ernstige mate belemmert dat nakoming in redelijkheid niet kan worden gevergd.</li>
+    <li>In het geval dat de overmacht slechts tijdelijk van aard is, zal Stolkwebdesign alsnog aan alle verplichtingen trachten te voldoen vanaf het moment dat dit redelijkerwijs weer mogelijk is.</li>
+    <li>Stolkwebdesign is niet aansprakelijk voor de gevolgen van gebeurtenissen bij een hostingprovider, domeinnaamregistrant of anderen waarop Stolkwebdesign geen invloed kan uitoefenen.</li>
+  </ol>
+
+  <h2>Artikel 9 — Prijzen</h2>
+  <ol>
+    <li>Alle genoemde tarieven, alsmede overeengekomen prijzen zijn in euro en exclusief BTW, tenzij anders is vermeld.</li>
+    <li>Stolkwebdesign heeft het recht de tarieven te wijzigen. Deze wijzigingen worden uiterlijk 1 maand voordat deze ingaan aan Opdrachtgever bekend gemaakt. Opdrachtgever is gerechtigd de overeenkomst te beëindigen tegen de datum van inwerkingtreding van de wijziging.</li>
+  </ol>
+
+  <h2>Artikel 10 — Betalingsvoorwaarden</h2>
+  <ol>
+    <li>Na ondertekening van de offerte krijgt de offerte de status van contract en is de Opdrachtgever betalingsplichtig.</li>
+    <li>De Opdrachtgever dient 25% van het totaalbedrag van de offerte als aanbetaling te voldoen binnen 14 dagen na ondertekening. Stolkwebdesign houdt zich het recht voor om pas met haar werkzaamheden te beginnen nadat de aanbetaling is ontvangen.</li>
+    <li>De Opdrachtgever dient na oplevering van de website het resterende verschuldigde bedrag te voldoen. Stolkwebdesign stuurt hiertoe een factuur welke binnen 14 dagen dient te worden voldaan.</li>
+    <li>Vanaf het moment dat de Opdrachtgever de betalingstermijn overschrijdt, is hij zonder een daartoe strekkende ingebrekestelling in gebreke.</li>
+    <li>Indien de betalingstermijn is overschreden, wordt door Stolkwebdesign een aanmaning tot betaling verstuurd.</li>
+    <li>Indien de betalingstermijn met 28 dagen is overschreden, wordt een tweede aanmaning verstuurd. Kosten van een aanmaning, t.w. netto € 50,- worden in rekening gebracht bij de Opdrachtgever.</li>
+    <li>Wanneer de Opdrachtgever binnen 28 dagen nog niet aan zijn verplichtingen heeft voldaan, is de Opdrachtgever de wettelijke rente plus buitengerechtelijke incassokosten verschuldigd over het openstaande factuurbedrag.</li>
+    <li>Mocht het gefactureerde bedrag in de ogen van de Opdrachtgever onjuist zijn, dan dient hij uiterlijk binnen 14 dagen na facturering Stolkwebdesign hiervan op de hoogte te stellen.</li>
+    <li>Indien Stolkwebdesign abusievelijk een groter bedrag dan het gefactureerde bedrag ontvangt, zal Stolkwebdesign het teveel ontvangen bedrag direct terugstorten op de rekening van de Opdrachtgever.</li>
+  </ol>
+
+  <h2>Artikel 11 — Onderhoudscontracten</h2>
+  <ol>
+    <li>Met technisch onderhoud van de website wordt bedoeld het up-to-date houden van WordPress, plug-ins, framework en het maken van een back-up van de database, alsmede het toevoegen, verwijderen en wijzigen van functies die door Stolkwebdesign vervaardigd zijn en niet door derden.</li>
+    <li>Tussentijdse wijzigingen aan de website door de Opdrachtgever zijn voor risico van de Opdrachtgever.</li>
+    <li>Deze voorwaarden gelden voor een halfjarig onderhoudscontract voor een bestaande website.</li>
+    <li>De Opdrachtgever is verplicht een maandelijks bedrag van € 25,- over te maken aan Stolkwebdesign, waarmee de Opdrachtgever recht heeft op 1 uur onderhoud per maand.</li>
+    <li>Overgebleven uren gaan mee naar de volgende maand. Overgebleven uren gaan niet mee naar het volgende half jaar. Geen restitutie van de overgebleven uren. Elk aanvullend uur wordt berekend tegen het uurtarief van € 60,-.</li>
+    <li>Bij een onderhoudsovereenkomst stuurt Stolkwebdesign een factuur zodra er meer dan 1 uur werktijd kan worden gedeclareerd of wanneer er na het eerste onderhoud een half jaar is verstreken. De Opdrachtgever dient binnen 14 dagen te betalen.</li>
+    <li>Onderhoud van contacten met het hostingbedrijf indien toepasselijk.</li>
+    <li>De opzegtermijn voor een onderhoudscontract is twee maanden voor het einde van de contractdatum.</li>
+  </ol>
+
+  <h2>Artikel 12 — Copyright</h2>
+  <ol>
+    <li>Al het door Stolkwebdesign vervaardigde materiaal mag zonder de uitdrukkelijke toestemming van Stolkwebdesign niet worden bewerkt of verwerkt in andere websites dan waarvoor het oorspronkelijk gemaakt is.</li>
+    <li>Het eigendom van door Stolkwebdesign verstrekte ideeën, concepten of (proef)ontwerpen blijft volledig bij Stolkwebdesign, tenzij uitdrukkelijk schriftelijk anders overeengekomen wordt. Bij gebleken schending is Stolkwebdesign gerechtigd hiervoor een redelijke vergoeding in rekening te brengen.</li>
+    <li>Stolkwebdesign behoudt het recht de door de uitvoering van de werkzaamheden toegenomen kennis voor andere doeleinden te gebruiken, voor zover hierbij geen vertrouwelijke informatie ter kennis van derden wordt gebracht.</li>
+  </ol>
+
+  <h2>Artikel 13 — Aansprakelijkheid</h2>
+  <ol>
+    <li>Voor zover Stolkwebdesign bij haar activiteiten afhankelijk is van de medewerking, diensten en leveranties van derden, waarop Stolkwebdesign weinig of geen invloed kan uitoefenen, kan Stolkwebdesign op geen enkele manier aansprakelijk worden gesteld voor welke schade dan ook voortkomend uit deze relaties.</li>
+    <li>In geval van toerekenbare tekortkoming is Stolkwebdesign slechts aansprakelijk voor vervangende schadevergoeding. Iedere aansprakelijkheid voor indirecte schade, gevolgschade of schade wegens gederfde omzet of winst is uitgesloten.</li>
+    <li>De Opdrachtgever vrijwaart Stolkwebdesign voor alle aanspraken op schadevergoeding die derden mochten doen gelden ter zake van schade die is ontstaan door het onrechtmatig of onzorgvuldig gebruik van de geleverde producten en diensten.</li>
+    <li>Stolkwebdesign kan niet aansprakelijk gesteld worden voor schade in welke vorm dan ook veroorzaakt door het verzenden van vertrouwelijke of geheime informatie via internet. Stolkwebdesign is niet aansprakelijk voor beveiliging of misbruik door derden van de gegevens die worden opgeslagen.</li>
+    <li>Stolkwebdesign is niet verantwoordelijk of aansprakelijk voor de inhoud van het door de Opdrachtgever aangeleverde materiaal dat op de website is aangebracht.</li>
+    <li>De inhoud van de gegevensverspreiding en -publicatie blijft in alle gevallen de eigen verantwoordelijkheid van de Opdrachtgever. Alle nodige auteursrechten, vergoedingen, onkosten of boetes zijn ten laste van de Opdrachtgever.</li>
+    <li>De Opdrachtgever is aansprakelijk voor alle schade die Stolkwebdesign mocht lijden ten gevolge van een aan de Opdrachtgever toerekenbare tekortkoming.</li>
+    <li>Wijzigingen in de gegevens van de Opdrachtgever dient deze direct schriftelijk mede te delen aan Stolkwebdesign.</li>
+  </ol>
+
+  <h2>Artikel 14 — Overdracht van rechten en verplichtingen</h2>
+  <p>Stolkwebdesign noch de Opdrachtgever zijn gerechtigd hun rechten of plichten voortvloeiend uit gesloten overeenkomsten over te dragen aan een derde partij zonder voorafgaande schriftelijke toestemming van de wederpartij.</p>
+
+  <h2>Artikel 15 — Reclamatie</h2>
+  <ol>
+    <li>De Opdrachtgever heeft gedurende 14 dagen na levering de gelegenheid duidelijk omschreven gebreken aan de geleverde producten te melden aan Stolkwebdesign, waarna Stolkwebdesign deze gebreken zal trachten te verhelpen. Wanneer binnen de genoemde termijn geen gebreken worden gemeld, vervalt elke mogelijkheid tot reclamatie.</li>
+    <li>Reclamatie schort de verplichtingen van de Opdrachtgever niet op.</li>
+  </ol>
+
+  <h2>Artikel 16 — Buitengebruikstelling</h2>
+  <ol>
+    <li>Stolkwebdesign heeft het recht geleverde producten en diensten (tijdelijk) buiten gebruik te stellen en/of het gebruik ervan te beperken indien de Opdrachtgever een verplichting niet nakomt of in strijd handelt met deze algemene voorwaarden. De verplichting tot betaling van de verschuldigde bedragen blijft ook tijdens de buitengebruikstelling bestaan.</li>
+    <li>Tot indienststelling wordt weer overgegaan indien de Opdrachtgever binnen een door Stolkwebdesign gestelde termijn zijn verplichtingen is nagekomen en een ter zake vastgesteld bedrag voor herindienststelling heeft voldaan.</li>
+  </ol>
+
+  <h2>Artikel 17 — Wijziging van de voorwaarden</h2>
+  <ol>
+    <li>Stolkwebdesign behoudt zich het recht voor deze voorwaarden te wijzigen of aan te vullen.</li>
+    <li>Wijzigingen gelden ook ten aanzien van reeds gesloten overeenkomsten met inachtneming van een termijn van 30 dagen na schriftelijke bekendmaking van de wijziging.</li>
+    <li>Indien de Opdrachtgever een wijziging in deze voorwaarden niet wil accepteren, kan hij tot de datum waarop de nieuwe voorwaarden van kracht worden de overeenkomst ontbinden.</li>
+  </ol>
+
+  <h2>Artikel 18 — Geschillenregeling en toepasselijk recht</h2>
+  <ol>
+    <li>Indien bij gerechtelijke uitspraak een of meer artikelen van deze voorwaarden ongeldig worden verklaard, zullen overige bepalingen volledig van kracht blijven en zullen Stolkwebdesign en de Opdrachtgever in overleg treden teneinde nieuwe bepalingen ter vervanging overeen te komen.</li>
+    <li>Alle overeenkomsten worden beheerst door Nederlands recht.</li>
+    <li>Alle geschillen welke tussen partijen ontstaan, zullen worden voorgelegd aan de bevoegde rechter in het arrondissement van de vestigingsplaats van Stolkwebdesign, tenzij partijen overeenkomen hun geschil anders te beslechten.</li>
+  </ol>
+</div>
+
+</main>
+
+<footer>
+  <div class="footer-logo" style="font-family:'Archivo Black',sans-serif;">Stolkwebdesign®</div>
+  <div class="footer-links-row">
+    <a href="index.html">Home</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="over.html">Over mij</a>
+    <a href="contact.html">Contact</a>
+    <span style="color:rgba(255,255,255,.15)">|</span>
+    <a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a>
+    <span style="color:rgba(255,255,255,.15)">|</span>
+    <a href="privacybeleid.html">Privacybeleid</a>
+    <a href="algemene-voorwaarden.html">Algemene Voorwaarden</a>
+  </div>
+  <div class="footer-copy">© 2026 Stolkwebdesign — Uithoorn</div>
+</footer>
+
+<script>
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const links = document.getElementById('nav-links');
+    const open = links.classList.toggle('open');
+    document.getElementById('nav-toggle').classList.toggle('open', open);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
+  });
+</script>
+
+<div id="cookie-bar" style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--near-black); border-top:2px solid var(--red); padding:14px 24px; align-items:center; justify-content:space-between; gap:16px; z-index:500; flex-wrap:wrap;">
+  <span style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.75);">Deze site gebruikt functionele cookies van Cal.com voor het plannen van afspraken. <a href="privacybeleid.html" style="color:var(--red); text-decoration:none;">Meer info →</a></span>
+  <button onclick="document.getElementById('cookie-bar').style.display='none'; localStorage.setItem('cookie_accepted','true');" style="background:var(--red); color:var(--white); border:2px solid rgba(255,255,255,.15); font-family:'Archivo Black',sans-serif; font-size:11px; text-transform:uppercase; padding:8px 20px; cursor:pointer; white-space:nowrap; letter-spacing:.04em;">OK</button>
+</div>
+<script>if(!localStorage.getItem('cookie_accepted'))document.getElementById('cookie-bar').style.display='flex';</script>
+
+</body>
+</html>
