@@ -269,12 +269,7 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 
     <div class="form-group">
       <label class="form-label font-mono">Techniek *</label>
-      <select id="f-type" class="form-select">
-        <option value="Custom HTML · CSS · GSAP">Custom HTML · CSS · GSAP</option>
-        <option value="WordPress · Custom theme">WordPress · Custom theme</option>
-        <option value="Custom HTML · CSS animaties">Custom HTML · CSS animaties</option>
-        <option value="WordPress · Custom design">WordPress · Custom design</option>
-      </select>
+      <input type="text" id="f-type" class="form-input" placeholder="bv. Webflow · Custom CSS, WordPress · GSAP, …">
     </div>
 
     <div class="form-group">
@@ -397,7 +392,7 @@ function openModal(id = null) {
   } else {
     document.getElementById('f-name').value = '';
     document.getElementById('f-tag').value = '';
-    document.getElementById('f-type').value = 'Custom HTML · CSS · GSAP';
+    document.getElementById('f-type').value = '';
     document.getElementById('f-desc').value = '';
     document.getElementById('f-bg').value = '';
     document.getElementById('f-url').value = '';
