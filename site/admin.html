@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Stolkwebdesign</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -23,6 +25,7 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 .login-input:focus { outline:none; border-color:var(--red); }
 .login-btn { width:100%; padding:16px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; background:var(--red); color:var(--white); border:none; cursor:pointer; letter-spacing:.04em; transition:background .15s; }
 .login-btn:hover { background:#c91f1f; }
+.login-btn:disabled { opacity:.6; cursor:not-allowed; }
 .login-error { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--red); text-transform:uppercase; letter-spacing:.1em; display:none; margin-top:12px; text-align:center; }
 
 /* ── ADMIN LAYOUT ── */
@@ -79,7 +82,7 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 .project-row:hover { border-color:#333; }
 .project-row-name { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:-0.01em; }
 .project-row-tag { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:4px; }
-.project-row-type { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--red); background:rgba(234,37,37,.1); border:1px solid rgba(234,37,37,.2); padding:4px 10px; }
+.project-row-type { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--red); background:rgba(234,37,37,.1); border:1px solid rgba(234,37,37,.2); padding:4px 10px; white-space:nowrap; }
 .row-btn { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; padding:8px 14px; border:1px solid #333; background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; }
 .row-btn:hover { border-color:var(--white); color:var(--white); }
 .row-btn.danger:hover { border-color:var(--red); color:var(--red); }
@@ -103,16 +106,15 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 
 .form-group { margin-bottom:20px; }
 .form-label { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.15em; color:var(--muted); margin-bottom:8px; display:block; }
-.form-input, .form-textarea, .form-select {
+.form-input, .form-textarea {
   width:100%; padding:12px 16px;
   background:#0a0a0a; color:var(--white);
   border:1px solid #2a2a2a; border-radius:0;
   font-family:'Space Grotesk',sans-serif; font-size:14px;
-  transition:border-color .15s; appearance:none;
+  transition:border-color .15s;
 }
-.form-input:focus, .form-textarea:focus, .form-select:focus { outline:none; border-color:var(--red); }
+.form-input:focus, .form-textarea:focus { outline:none; border-color:var(--red); }
 .form-textarea { resize:vertical; min-height:80px; }
-.form-select option { background:#111; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 .form-actions { display:flex; gap:12px; margin-top:28px; padding-top:24px; border-top:1px solid #1a1a1a; }
 .btn-save { flex:1; padding:14px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; background:var(--red); color:var(--white); border:none; cursor:pointer; transition:background .15s; letter-spacing:.04em; }
@@ -132,7 +134,6 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 .settings-btn { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; padding:10px 18px; border:1px solid #333; background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; margin-top:8px; }
 .settings-btn:hover { border-color:var(--white); color:var(--white); }
 .settings-info { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:8px; }
-
 .export-box { background:#0a0a0a; border:1px solid #1a1a1a; padding:16px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#555; line-height:1.8; white-space:pre-wrap; margin-top:12px; max-height:200px; overflow-y:auto; }
 
 @media(max-width:900px) {
@@ -150,9 +151,10 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
   <div class="login-logo">Stolk<span>®</span> Admin</div>
   <div class="login-box">
     <div class="login-title font-mono">Inloggen / beheer</div>
+    <input type="email" id="email-input" class="login-input" placeholder="E-mailadres" autocomplete="email">
     <input type="password" id="pw-input" class="login-input" placeholder="Wachtwoord" autocomplete="current-password">
-    <button class="login-btn font-display" onclick="doLogin()">Inloggen →</button>
-    <div class="login-error font-mono" id="login-error">Wachtwoord onjuist</div>
+    <button class="login-btn font-display" id="login-btn" onclick="doLogin()">Inloggen →</button>
+    <div class="login-error font-mono" id="login-error">Inloggen mislukt — controleer je gegevens</div>
   </div>
 </div>
 
@@ -196,15 +198,14 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
       <!-- PROJECTS -->
       <div id="section-projects" class="page-section active">
         <div class="page-title font-display">Portfolio projecten</div>
-        <div class="page-sub font-mono">Projecten beheren — wijzigingen worden direct opgeslagen</div>
+        <div class="page-sub font-mono">Projecten beheren — wijzigingen worden direct opgeslagen in Supabase</div>
 
         <button class="add-btn font-display" onclick="openModal()">+ Project toevoegen</button>
 
         <div class="project-list" id="project-list"></div>
 
         <div style="padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
-          ℹ Projecten worden opgeslagen in je browser (localStorage).<br>
-          Gebruik "Exporteer JSON" in Instellingen om een back-up te maken.
+          ℹ Projecten worden opgeslagen in Supabase — zichtbaar op het portfolio na opslaan.
         </div>
       </div>
 
@@ -216,7 +217,7 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
         <div class="settings-grid">
           <div class="settings-card">
             <div class="settings-card-title font-display">Data exporteren</div>
-            <p class="settings-info">Exporteer alle projecten als JSON-bestand. Handig als back-up of om naar een server te verplaatsen.</p>
+            <p class="settings-info">Exporteer alle projecten als JSON-bestand. Handig als back-up.</p>
             <button class="settings-btn font-mono" onclick="exportJSON()">↓ Download projects.json</button>
             <div id="export-preview" class="export-box" style="display:none;"></div>
           </div>
@@ -230,17 +231,17 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 
           <div class="settings-card">
             <div class="settings-card-title font-display">Wachtwoord wijzigen</div>
-            <p class="settings-info">Wijzig het admin-wachtwoord. Wordt lokaal opgeslagen.</p>
+            <p class="settings-info">Wijzig het wachtwoord van je Supabase-account.</p>
             <div class="form-group" style="margin-top:12px; margin-bottom:0;">
-              <input type="password" id="new-pw" class="form-input" placeholder="Nieuw wachtwoord">
+              <input type="password" id="new-pw" class="form-input" placeholder="Nieuw wachtwoord (min. 6 tekens)">
               <button class="settings-btn font-mono" style="margin-top:10px;" onclick="changePassword()">Opslaan</button>
             </div>
           </div>
 
           <div class="settings-card">
             <div class="settings-card-title font-display">Alle data wissen</div>
-            <p class="settings-info">Verwijder alle projecten en reset naar de standaard dataset. Niet ongedaan te maken.</p>
-            <button class="settings-btn font-mono" style="border-color:rgba(234,37,37,.4); color:rgba(234,37,37,.6);" onclick="resetData()">⚠ Reset naar standaard</button>
+            <p class="settings-info">Verwijder alle projecten uit de database. Niet ongedaan te maken.</p>
+            <button class="settings-btn font-mono" style="border-color:rgba(234,37,37,.4); color:rgba(234,37,37,.6);" onclick="resetData()">⚠ Alle projecten verwijderen</button>
           </div>
         </div>
       </div>
@@ -309,66 +310,79 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 <div class="toast font-mono" id="toast"></div>
 
 <script>
-// ── CONFIG ──
-const DEFAULT_PASSWORD = 'stolk2026';
-const STORAGE_KEY = 'stolkwebdesign_projects';
-const PW_KEY = 'stolkwebdesign_pw';
-
-const DEFAULT_PROJECTS = [
-  { id: 1, name: 'Sauberhaus', tag: 'Lifestyle brand', type: 'Custom HTML · CSS · GSAP', desc: 'Handcrafted site met scroll-driven animaties.', bg: 'linear-gradient(145deg,#0d0205 0%,#2d0510 50%,#4a0820 100%)', url: '', img: '', order: 1 },
-  { id: 2, name: 'Maestr', tag: 'Music / Tech', type: 'WordPress · Custom theme', desc: 'WordPress met volledig custom theme.', bg: 'linear-gradient(145deg,#020510 0%,#050d2d 50%,#081048 100%)', url: '', img: '', order: 2 },
-  { id: 3, name: 'NM We Create', tag: 'Creatief bureau', type: 'Custom HTML · CSS animaties', desc: 'Strak editorial design met CSS animaties.', bg: 'linear-gradient(145deg,#020d05 0%,#052d10 50%,#084820 100%)', url: '', img: '', order: 3 },
-  { id: 4, name: 'Anouk Hoogendijk', tag: 'Personal brand', type: 'WordPress · Custom design', desc: 'Persoonlijke en sterke WordPress site.', bg: 'linear-gradient(145deg,#0d0a02 0%,#2d2005 50%,#483208 100%)', url: '', img: '', order: 4 },
-];
+// ── INIT ──
+const { createClient } = window.supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let currentProjects = [];
 
 // ── AUTH ──
-function getPassword() { return localStorage.getItem(PW_KEY) || DEFAULT_PASSWORD; }
-function doLogin() {
+async function initAuth() {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) showAdmin();
+  db.auth.onAuthStateChange((_, session) => {
+    if (session) showAdmin(); else showLogin();
+  });
+}
+
+async function doLogin() {
+  const email = document.getElementById('email-input').value.trim();
   const pw = document.getElementById('pw-input').value;
-  if (pw === getPassword()) {
-    sessionStorage.setItem('admin_auth', '1');
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('admin-screen').style.display = 'block';
-    renderProjects();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
-    document.getElementById('pw-input').value = '';
-  }
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  errEl.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Bezig...';
+  const { error } = await db.auth.signInWithPassword({ email, password: pw });
+  btn.disabled = false; btn.textContent = 'Inloggen →';
+  if (error) errEl.style.display = 'block';
 }
-function doLogout() {
-  sessionStorage.removeItem('admin_auth');
-  document.getElementById('admin-screen').style.display = 'none';
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('pw-input').value = '';
+
+async function doLogout() {
+  await db.auth.signOut();
 }
-document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
-if (sessionStorage.getItem('admin_auth') === '1') {
+
+function showAdmin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-screen').style.display = 'block';
   renderProjects();
 }
 
-// ── DATA ──
-function getProjects() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) { localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PROJECTS)); return DEFAULT_PROJECTS; }
-  return JSON.parse(raw);
+function showLogin() {
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
 }
-function saveProjects(projects) { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); }
-function nextId(projects) { return projects.length ? Math.max(...projects.map(p=>p.id)) + 1 : 1; }
+
+document.getElementById('email-input').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('pw-input').focus(); });
+document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+// ── DATA ──
+async function fetchProjects() {
+  const { data, error } = await db.from('projects').select('*').order('sort_order');
+  if (error) { toast('Laadprobleem: ' + error.message, true); return []; }
+  currentProjects = data || [];
+  return currentProjects;
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 // ── RENDER ──
-function renderProjects() {
-  const projects = getProjects().sort((a,b) => a.order - b.order);
+async function renderProjects() {
   const list = document.getElementById('project-list');
-  if (!projects.length) { list.innerHTML = '<div style="padding:40px 24px; text-align:center; font-family:JetBrains Mono,monospace; font-size:11px; color:#444; text-transform:uppercase; letter-spacing:.1em;">Nog geen projecten — voeg er een toe.</div>'; return; }
+  list.innerHTML = '<div style="padding:40px 24px;text-align:center;font-family:JetBrains Mono,monospace;font-size:11px;color:#444;text-transform:uppercase;letter-spacing:.1em;">Laden...</div>';
+  const projects = await fetchProjects();
+  if (!projects.length) {
+    list.innerHTML = '<div style="padding:40px 24px;text-align:center;font-family:JetBrains Mono,monospace;font-size:11px;color:#444;text-transform:uppercase;letter-spacing:.1em;">Nog geen projecten — voeg er een toe.</div>';
+    return;
+  }
   list.innerHTML = projects.map(p => `
     <div class="project-row">
       <div>
-        <div class="project-row-name font-display">${p.name}</div>
-        <div class="project-row-tag font-mono">${p.tag} · Volgorde ${p.order}</div>
+        <div class="project-row-name font-display">${esc(p.name)}</div>
+        <div class="project-row-tag font-mono">${esc(p.tag)} · Volgorde ${p.sort_order}</div>
       </div>
-      <div class="project-row-type font-mono">${p.type.split(' · ')[0]}</div>
+      <div class="project-row-type font-mono">${esc((p.type||'').split(' · ')[0] || p.type || '—')}</div>
       <button class="row-btn font-mono" onclick="editProject(${p.id})">Bewerken</button>
       <button class="row-btn danger font-mono" onclick="deleteProject(${p.id})">Verwijderen</button>
     </div>
@@ -380,23 +394,19 @@ function openModal(id = null) {
   document.getElementById('modal-title').textContent = id ? 'Project bewerken' : 'Project toevoegen';
   document.getElementById('edit-id').value = id || '';
   if (id) {
-    const p = getProjects().find(x => x.id === id);
-    document.getElementById('f-name').value = p.name;
-    document.getElementById('f-tag').value = p.tag;
-    document.getElementById('f-type').value = p.type;
-    document.getElementById('f-desc').value = p.desc || '';
-    document.getElementById('f-bg').value = p.bg || '';
-    document.getElementById('f-url').value = p.url || '';
-    document.getElementById('f-img').value = p.img || '';
-    document.getElementById('f-order').value = p.order || 99;
+    const p = currentProjects.find(x => x.id === id);
+    if (p) {
+      document.getElementById('f-name').value = p.name || '';
+      document.getElementById('f-tag').value = p.tag || '';
+      document.getElementById('f-type').value = p.type || '';
+      document.getElementById('f-desc').value = p.description || '';
+      document.getElementById('f-bg').value = p.bg || '';
+      document.getElementById('f-url').value = p.url || '';
+      document.getElementById('f-img').value = p.img || '';
+      document.getElementById('f-order').value = p.sort_order || 99;
+    }
   } else {
-    document.getElementById('f-name').value = '';
-    document.getElementById('f-tag').value = '';
-    document.getElementById('f-type').value = '';
-    document.getElementById('f-desc').value = '';
-    document.getElementById('f-bg').value = '';
-    document.getElementById('f-url').value = '';
-    document.getElementById('f-img').value = '';
+    ['f-name','f-tag','f-type','f-desc','f-bg','f-url','f-img'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-order').value = 99;
   }
   document.getElementById('modal').classList.add('open');
@@ -406,38 +416,38 @@ function editProject(id) { openModal(id); }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
 
-function saveProject() {
+async function saveProject() {
   const name = document.getElementById('f-name').value.trim();
   if (!name) { toast('Projectnaam is verplicht', true); return; }
-  const projects = getProjects();
   const editId = document.getElementById('edit-id').value;
   const project = {
-    id: editId ? parseInt(editId) : nextId(projects),
     name,
-    tag: document.getElementById('f-tag').value.trim() || 'Project',
-    type: document.getElementById('f-type').value,
-    desc: document.getElementById('f-desc').value.trim(),
-    bg: document.getElementById('f-bg').value.trim() || 'linear-gradient(145deg,#111,#333)',
-    url: document.getElementById('f-url').value.trim(),
-    img: document.getElementById('f-img').value.trim(),
-    order: parseInt(document.getElementById('f-order').value) || 99,
+    tag:         document.getElementById('f-tag').value.trim() || 'Project',
+    type:        document.getElementById('f-type').value.trim(),
+    description: document.getElementById('f-desc').value.trim(),
+    bg:          document.getElementById('f-bg').value.trim() || 'linear-gradient(145deg,#111,#333)',
+    url:         document.getElementById('f-url').value.trim(),
+    img:         document.getElementById('f-img').value.trim(),
+    sort_order:  parseInt(document.getElementById('f-order').value) || 99,
   };
+
+  let error;
   if (editId) {
-    const idx = projects.findIndex(p => p.id === parseInt(editId));
-    projects[idx] = project;
+    ({ error } = await db.from('projects').update(project).eq('id', parseInt(editId)));
   } else {
-    projects.push(project);
+    ({ error } = await db.from('projects').insert(project));
   }
-  saveProjects(projects);
-  renderProjects();
+  if (error) { toast('Fout: ' + error.message, true); return; }
   closeModal();
+  renderProjects();
   toast(editId ? `${name} bijgewerkt` : `${name} toegevoegd`);
 }
 
-function deleteProject(id) {
-  const p = getProjects().find(x => x.id === id);
-  if (!confirm(`"${p.name}" verwijderen?`)) return;
-  saveProjects(getProjects().filter(x => x.id !== id));
+async function deleteProject(id) {
+  const p = currentProjects.find(x => x.id === id);
+  if (!p || !confirm(`"${p.name}" verwijderen?`)) return;
+  const { error } = await db.from('projects').delete().eq('id', id);
+  if (error) { toast('Fout: ' + error.message, true); return; }
   renderProjects();
   toast(`${p.name} verwijderd`);
 }
@@ -451,8 +461,9 @@ function showSection(name, el) {
 }
 
 // ── SETTINGS ──
-function exportJSON() {
-  const data = JSON.stringify(getProjects(), null, 2);
+async function exportJSON() {
+  const projects = await fetchProjects();
+  const data = JSON.stringify(projects, null, 2);
   const preview = document.getElementById('export-preview');
   preview.style.display = 'block';
   preview.textContent = data;
@@ -462,30 +473,45 @@ function exportJSON() {
   URL.revokeObjectURL(url);
   toast('projects.json gedownload');
 }
+
 function importJSON(input) {
   const file = input.files[0]; if (!file) return;
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = async e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!Array.isArray(data)) throw new Error('Geen array');
-      saveProjects(data); renderProjects(); toast(`${data.length} projecten geïmporteerd`);
-    } catch { toast('Ongeldig JSON bestand', true); }
+      if (!Array.isArray(data)) throw new Error('Geen geldige array');
+      await db.from('projects').delete().neq('id', 0);
+      const rows = data.map(p => ({
+        name: p.name || '', tag: p.tag || '', type: p.type || '',
+        description: p.description || p.desc || '',
+        bg: p.bg || '', url: p.url || '', img: p.img || '',
+        sort_order: p.sort_order || p.order || 99,
+      }));
+      const { error } = await db.from('projects').insert(rows);
+      if (error) throw error;
+      renderProjects();
+      toast(`${data.length} projecten geïmporteerd`);
+    } catch(err) { toast('Ongeldig bestand: ' + err.message, true); }
   };
   reader.readAsText(file);
 }
-function changePassword() {
+
+async function changePassword() {
   const pw = document.getElementById('new-pw').value.trim();
-  if (!pw || pw.length < 4) { toast('Minimaal 4 tekens', true); return; }
-  localStorage.setItem(PW_KEY, pw);
+  if (!pw || pw.length < 6) { toast('Minimaal 6 tekens', true); return; }
+  const { error } = await db.auth.updateUser({ password: pw });
+  if (error) { toast('Fout: ' + error.message, true); return; }
   document.getElementById('new-pw').value = '';
-  toast('Wachtwoord opgeslagen');
+  toast('Wachtwoord bijgewerkt');
 }
-function resetData() {
-  if (!confirm('Alle projecten wissen en terugzetten naar standaard?')) return;
-  saveProjects(DEFAULT_PROJECTS);
+
+async function resetData() {
+  if (!confirm('Alle projecten wissen uit Supabase? Dit kan niet ongedaan worden gemaakt.')) return;
+  const { error } = await db.from('projects').delete().neq('id', 0);
+  if (error) { toast('Fout: ' + error.message, true); return; }
   renderProjects();
-  toast('Teruggezet naar standaard');
+  toast('Alle projecten verwijderd');
 }
 
 // ── TOAST ──
@@ -496,6 +522,8 @@ function toast(msg, isError = false) {
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 3000);
 }
+
+initAuth();
 </script>
 </body>
 </html>

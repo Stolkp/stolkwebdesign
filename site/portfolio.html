@@ -19,6 +19,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
@@ -175,23 +177,10 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
 </footer>
 
 <script>
-  // ── DATA ──
-  const STORAGE_KEY = 'stolkwebdesign_projects';
-  const DEFAULT_PROJECTS = [
-    { id:1, name:'Sauberhaus',       tag:'Lifestyle brand · Custom HTML', type:'Handcrafted HTML · CSS · GSAP animaties · Scroll-driven', bg:'linear-gradient(145deg,#0d0205 0%,#2d0510 50%,#4a0820 100%)', url:'', img:'', order:1 },
-    { id:2, name:'Maestr',           tag:'Music / Tech · WordPress',      type:'WordPress · Custom theme · Responsief design',             bg:'linear-gradient(145deg,#020510 0%,#050d2d 50%,#081048 100%)', url:'', img:'', order:2 },
-    { id:3, name:'NM We Create',     tag:'Creatief bureau · Custom HTML', type:'Custom HTML · CSS animaties · Strak editorial design',     bg:'linear-gradient(145deg,#020d05 0%,#052d10 50%,#084820 100%)', url:'', img:'', order:3 },
-    { id:4, name:'Anouk Hoogendijk', tag:'Personal brand · WordPress',    type:'WordPress · Custom design · Persoonlijk & sterk',          bg:'linear-gradient(145deg,#0d0a02 0%,#2d2005 50%,#483208 100%)', url:'', img:'', order:4 },
-  ];
-
-  function getProjects() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return DEFAULT_PROJECTS;
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) && parsed.length ? parsed.sort((a,b) => (a.order||99)-(b.order||99)) : DEFAULT_PROJECTS;
-    } catch { return DEFAULT_PROJECTS; }
-  }
+  // ── SUPABASE ──
+  const { createClient } = window.supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  let allProjects = [];
 
   function getCategory(type) {
     return (type||'').toLowerCase().includes('wordpress') ? 'wordpress' : 'custom-html';
@@ -204,9 +193,8 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
 
   // ── RENDER ──
   function renderPortfolio(filter) {
-    const projects = getProjects();
     const grid = document.getElementById('portfolio-grid');
-    const visible = filter === 'all' ? projects : projects.filter(p => getCategory(p.type) === filter);
+    const visible = filter === 'all' ? allProjects : allProjects.filter(p => getCategory(p.type) === filter);
 
     if (!visible.length) {
       grid.innerHTML = '<div style="grid-column:1/-1;padding:80px;text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);">Geen projecten gevonden.</div>';
@@ -218,7 +206,7 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
         ? `background-image:url('${p.img}');background-size:cover;background-position:center;`
         : `background:${p.bg || 'linear-gradient(145deg,#111,#333)'};`;
       return `
-        <div class="port-card reveal" style="transition-delay:${i*0.08}s" data-id="${p.id}" data-url="${p.url||''}">
+        <div class="port-card reveal" style="transition-delay:${i*0.08}s" data-url="${p.url||''}">
           <div class="port-bg" style="${bgStyle}">
             <div class="port-overlay"></div>
             <div class="port-arrow">→</div>
@@ -231,14 +219,12 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
         </div>`;
     }).join('');
 
-    // Attach click handlers for URL (safe, no inline onclick)
     grid.querySelectorAll('.port-card').forEach(card => {
       const url = card.dataset.url;
       if (url) card.addEventListener('click', () => window.open(url, '_blank'));
       else card.style.cursor = 'default';
     });
 
-    // Observe new cards for scroll reveal
     grid.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   }
 
@@ -251,16 +237,29 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     });
   });
 
-  // ── INIT ──
-  renderPortfolio('all');
-
-  // ── Hamburger ──
+  // ── HAMBURGER ──
   document.getElementById('nav-toggle').addEventListener('click', () => {
     const links = document.getElementById('nav-links');
     const open = links.classList.toggle('open');
     document.getElementById('nav-toggle').classList.toggle('open', open);
     document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
   });
+
+  // ── LOAD FROM SUPABASE ──
+  async function loadProjects() {
+    const grid = document.getElementById('portfolio-grid');
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:80px;text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);">Laden...</div>';
+    const { data, error } = await db.from('projects').select('*').order('sort_order');
+    if (error || !data) {
+      grid.innerHTML = '<div style="grid-column:1/-1;padding:80px;text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);">Portfolio tijdelijk niet beschikbaar.</div>';
+      return;
+    }
+    allProjects = data;
+    const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+    renderPortfolio(activeFilter);
+  }
+
+  loadProjects();
 </script>
 </main>
 
