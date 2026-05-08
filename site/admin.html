@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Stolkwebdesign</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#929292; --green:#22c55e; }
+body { background:var(--near-black); color:var(--white); font-family:'Space Grotesk',sans-serif; min-height:100vh; }
+
+/* ── LOGIN ── */
+#login-screen {
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:32px;
+}
+.login-logo { font-family:'Archivo Black',sans-serif; font-size:24px; text-transform:uppercase; letter-spacing:-0.02em; }
+.login-logo span { color:var(--red); }
+.login-box { background:#111; border:2px solid #222; padding:48px; width:100%; max-width:400px; }
+.login-title { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--muted); margin-bottom:24px; }
+.login-input { width:100%; padding:14px 18px; background:var(--black); color:var(--white); border:2px solid #333; font-family:'Space Grotesk',sans-serif; font-size:16px; margin-bottom:16px; border-radius:0; }
+.login-input:focus { outline:none; border-color:var(--red); }
+.login-btn { width:100%; padding:16px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; background:var(--red); color:var(--white); border:none; cursor:pointer; letter-spacing:.04em; transition:background .15s; }
+.login-btn:hover { background:#c91f1f; }
+.login-error { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--red); text-transform:uppercase; letter-spacing:.1em; display:none; margin-top:12px; text-align:center; }
+
+/* ── ADMIN LAYOUT ── */
+#admin-screen { display:none; }
+
+.admin-nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:var(--black); border-bottom:2px solid #1a1a1a;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 32px;
+}
+.admin-nav-logo { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:-0.02em; }
+.admin-nav-logo span { color:var(--red); }
+.admin-nav-right { display:flex; align-items:center; gap:16px; }
+.admin-badge { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.15em; background:rgba(34,197,94,.15); color:var(--green); border:1px solid rgba(34,197,94,.3); padding:4px 10px; }
+.admin-logout { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); cursor:pointer; border:none; background:none; transition:color .2s; }
+.admin-logout:hover { color:var(--red); }
+
+.admin-body { padding-top:72px; display:grid; grid-template-columns:260px 1fr; min-height:100vh; }
+
+/* SIDEBAR */
+.sidebar { background:#0c0c0c; border-right:2px solid #1a1a1a; padding:32px 0; }
+.sidebar-section { margin-bottom:8px; }
+.sidebar-label { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.2em; color:#444; padding:0 24px 8px; }
+.sidebar-item {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 24px; cursor:pointer;
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  text-transform:uppercase; letter-spacing:.1em; color:var(--muted);
+  transition:background .15s, color .15s;
+  border-left:2px solid transparent;
+}
+.sidebar-item:hover { background:#141414; color:var(--white); }
+.sidebar-item.active { background:#141414; color:var(--white); border-left-color:var(--red); }
+.sidebar-icon { width:16px; opacity:.6; }
+
+/* MAIN */
+.main { padding:40px; overflow-y:auto; }
+.page-section { display:none; }
+.page-section.active { display:block; }
+
+.page-title { font-family:'Archivo Black',sans-serif; font-size:28px; text-transform:uppercase; letter-spacing:-0.03em; margin-bottom:8px; }
+.page-sub { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:36px; }
+
+/* PROJECT LIST */
+.project-list { display:flex; flex-direction:column; gap:3px; margin-bottom:24px; }
+.project-row {
+  display:grid; grid-template-columns:1fr auto auto auto;
+  gap:16px; align-items:center;
+  background:#111; border:1px solid #1a1a1a;
+  padding:20px 24px;
+  transition:border-color .15s;
+}
+.project-row:hover { border-color:#333; }
+.project-row-name { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:-0.01em; }
+.project-row-tag { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:4px; }
+.project-row-type { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--red); background:rgba(234,37,37,.1); border:1px solid rgba(234,37,37,.2); padding:4px 10px; }
+.row-btn { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; padding:8px 14px; border:1px solid #333; background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; }
+.row-btn:hover { border-color:var(--white); color:var(--white); }
+.row-btn.danger:hover { border-color:var(--red); color:var(--red); }
+
+/* ADD BUTTON */
+.add-btn {
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.04em;
+  background:var(--red); color:var(--white); border:none; padding:12px 24px; cursor:pointer;
+  transition:background .15s; margin-bottom:32px;
+}
+.add-btn:hover { background:#c91f1f; }
+
+/* MODAL */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.8); z-index:200; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.open { display:flex; }
+.modal { background:#111; border:2px solid #222; padding:40px; width:100%; max-width:680px; max-height:90vh; overflow-y:auto; position:relative; }
+.modal-title { font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-0.02em; margin-bottom:28px; }
+.modal-close { position:absolute; top:20px; right:24px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); cursor:pointer; border:none; background:none; }
+.modal-close:hover { color:var(--red); }
+
+.form-group { margin-bottom:20px; }
+.form-label { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.15em; color:var(--muted); margin-bottom:8px; display:block; }
+.form-input, .form-textarea, .form-select {
+  width:100%; padding:12px 16px;
+  background:#0a0a0a; color:var(--white);
+  border:1px solid #2a2a2a; border-radius:0;
+  font-family:'Space Grotesk',sans-serif; font-size:14px;
+  transition:border-color .15s; appearance:none;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus { outline:none; border-color:var(--red); }
+.form-textarea { resize:vertical; min-height:80px; }
+.form-select option { background:#111; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-actions { display:flex; gap:12px; margin-top:28px; padding-top:24px; border-top:1px solid #1a1a1a; }
+.btn-save { flex:1; padding:14px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; background:var(--red); color:var(--white); border:none; cursor:pointer; transition:background .15s; letter-spacing:.04em; }
+.btn-save:hover { background:#c91f1f; }
+.btn-cancel { padding:14px 24px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; background:transparent; color:var(--muted); border:1px solid #333; cursor:pointer; transition:all .15s; }
+.btn-cancel:hover { border-color:var(--white); color:var(--white); }
+
+/* TOAST */
+.toast { position:fixed; bottom:32px; right:32px; background:var(--green); color:var(--black); font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; padding:14px 20px; z-index:300; transform:translateY(80px); opacity:0; transition:all .3s; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast.error { background:var(--red); color:var(--white); }
+
+/* SETTINGS */
+.settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.settings-card { background:#111; border:1px solid #1a1a1a; padding:28px; }
+.settings-card-title { font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:-0.01em; margin-bottom:16px; }
+.settings-btn { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; padding:10px 18px; border:1px solid #333; background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; margin-top:8px; }
+.settings-btn:hover { border-color:var(--white); color:var(--white); }
+.settings-info { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:8px; }
+
+.export-box { background:#0a0a0a; border:1px solid #1a1a1a; padding:16px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#555; line-height:1.8; white-space:pre-wrap; margin-top:12px; max-height:200px; overflow-y:auto; }
+
+@media(max-width:900px) {
+  .admin-body { grid-template-columns:1fr; }
+  .sidebar { display:none; }
+  .settings-grid { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-logo">Stolk<span>®</span> Admin</div>
+  <div class="login-box">
+    <div class="login-title font-mono">Inloggen / beheer</div>
+    <input type="password" id="pw-input" class="login-input" placeholder="Wachtwoord" autocomplete="current-password">
+    <button class="login-btn font-display" onclick="doLogin()">Inloggen →</button>
+    <div class="login-error font-mono" id="login-error">Wachtwoord onjuist</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin-screen">
+  <nav class="admin-nav">
+    <div class="admin-nav-logo font-display">Stolk<span>®</span> Admin</div>
+    <div class="admin-nav-right">
+      <div class="admin-badge font-mono">● Ingelogd</div>
+      <button class="admin-logout font-mono" onclick="doLogout()">Uitloggen</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label font-mono">Beheer</div>
+        <div class="sidebar-item active font-mono" onclick="showSection('projects', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/></svg>
+          Portfolio
+        </div>
+        <div class="sidebar-item font-mono" onclick="showSection('settings', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
+          Instellingen
+        </div>
+      </div>
+      <div class="sidebar-section" style="margin-top:24px; padding:0 24px; border-top:1px solid #1a1a1a; padding-top:24px;">
+        <div class="sidebar-label font-mono">Snelle links</div>
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">
+          <a href="index.html" target="_blank" style="font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:#444; text-decoration:none;">→ Homepage</a>
+          <a href="portfolio.html" target="_blank" style="font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:#444; text-decoration:none;">→ Portfolio</a>
+          <a href="contact.html" target="_blank" style="font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; color:#444; text-decoration:none;">→ Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+      <!-- PROJECTS -->
+      <div id="section-projects" class="page-section active">
+        <div class="page-title font-display">Portfolio projecten</div>
+        <div class="page-sub font-mono">Projecten beheren — wijzigingen worden direct opgeslagen</div>
+
+        <button class="add-btn font-display" onclick="openModal()">+ Project toevoegen</button>
+
+        <div class="project-list" id="project-list"></div>
+
+        <div style="padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
+          ℹ Projecten worden opgeslagen in je browser (localStorage).<br>
+          Gebruik "Exporteer JSON" in Instellingen om een back-up te maken.
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div id="section-settings" class="page-section">
+        <div class="page-title font-display">Instellingen</div>
+        <div class="page-sub font-mono">Beheer je data en wachtwoord</div>
+
+        <div class="settings-grid">
+          <div class="settings-card">
+            <div class="settings-card-title font-display">Data exporteren</div>
+            <p class="settings-info">Exporteer alle projecten als JSON-bestand. Handig als back-up of om naar een server te verplaatsen.</p>
+            <button class="settings-btn font-mono" onclick="exportJSON()">↓ Download projects.json</button>
+            <div id="export-preview" class="export-box" style="display:none;"></div>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-card-title font-display">Data importeren</div>
+            <p class="settings-info">Importeer een eerder geëxporteerd projects.json bestand. Overschrijft huidige data.</p>
+            <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(this)">
+            <button class="settings-btn font-mono" onclick="document.getElementById('import-file').click()">↑ Importeer JSON</button>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-card-title font-display">Wachtwoord wijzigen</div>
+            <p class="settings-info">Wijzig het admin-wachtwoord. Wordt lokaal opgeslagen.</p>
+            <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+              <input type="password" id="new-pw" class="form-input" placeholder="Nieuw wachtwoord">
+              <button class="settings-btn font-mono" style="margin-top:10px;" onclick="changePassword()">Opslaan</button>
+            </div>
+          </div>
+
+          <div class="settings-card">
+            <div class="settings-card-title font-display">Alle data wissen</div>
+            <p class="settings-info">Verwijder alle projecten en reset naar de standaard dataset. Niet ongedaan te maken.</p>
+            <button class="settings-btn font-mono" style="border-color:rgba(234,37,37,.4); color:rgba(234,37,37,.6);" onclick="resetData()">⚠ Reset naar standaard</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close font-mono" onclick="closeModal()">✕ Sluiten</button>
+    <div class="modal-title font-display" id="modal-title">Project toevoegen</div>
+    <input type="hidden" id="edit-id">
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label font-mono">Projectnaam *</label>
+        <input type="text" id="f-name" class="form-input" placeholder="Sauberhaus">
+      </div>
+      <div class="form-group">
+        <label class="form-label font-mono">Categorie / tag</label>
+        <input type="text" id="f-tag" class="form-input" placeholder="Lifestyle brand">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Techniek *</label>
+      <select id="f-type" class="form-select">
+        <option value="Custom HTML · CSS · GSAP">Custom HTML · CSS · GSAP</option>
+        <option value="WordPress · Custom theme">WordPress · Custom theme</option>
+        <option value="Custom HTML · CSS animaties">Custom HTML · CSS animaties</option>
+        <option value="WordPress · Custom design">WordPress · Custom design</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Omschrijving</label>
+      <textarea id="f-desc" class="form-textarea" placeholder="Korte omschrijving van het project..."></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label font-mono">Achtergrondkleur (CSS gradient of hex)</label>
+        <input type="text" id="f-bg" class="form-input" placeholder="linear-gradient(145deg,#0d0205,#4a0820)">
+      </div>
+      <div class="form-group">
+        <label class="form-label font-mono">Project URL (optioneel)</label>
+        <input type="url" id="f-url" class="form-input" placeholder="https://sauberhaus.nl">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Afbeelding URL (optioneel — anders kleurblok)</label>
+      <input type="text" id="f-img" class="form-input" placeholder="assets/sauberhaus.jpg">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Volgorde (lager = eerst)</label>
+      <input type="number" id="f-order" class="form-input" value="99" min="1">
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-cancel font-mono" onclick="closeModal()">Annuleren</button>
+      <button class="btn-save font-display" onclick="saveProject()">Project opslaan →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast font-mono" id="toast"></div>
+
+<script>
+// ── CONFIG ──
+const DEFAULT_PASSWORD = 'stolk2026';
+const STORAGE_KEY = 'stolkwebdesign_projects';
+const PW_KEY = 'stolkwebdesign_pw';
+
+const DEFAULT_PROJECTS = [
+  { id: 1, name: 'Sauberhaus', tag: 'Lifestyle brand', type: 'Custom HTML · CSS · GSAP', desc: 'Handcrafted site met scroll-driven animaties.', bg: 'linear-gradient(145deg,#0d0205 0%,#2d0510 50%,#4a0820 100%)', url: '', img: '', order: 1 },
+  { id: 2, name: 'Maestr', tag: 'Music / Tech', type: 'WordPress · Custom theme', desc: 'WordPress met volledig custom theme.', bg: 'linear-gradient(145deg,#020510 0%,#050d2d 50%,#081048 100%)', url: '', img: '', order: 2 },
+  { id: 3, name: 'NM We Create', tag: 'Creatief bureau', type: 'Custom HTML · CSS animaties', desc: 'Strak editorial design met CSS animaties.', bg: 'linear-gradient(145deg,#020d05 0%,#052d10 50%,#084820 100%)', url: '', img: '', order: 3 },
+  { id: 4, name: 'Anouk Hoogendijk', tag: 'Personal brand', type: 'WordPress · Custom design', desc: 'Persoonlijke en sterke WordPress site.', bg: 'linear-gradient(145deg,#0d0a02 0%,#2d2005 50%,#483208 100%)', url: '', img: '', order: 4 },
+];
+
+// ── AUTH ──
+function getPassword() { return localStorage.getItem(PW_KEY) || DEFAULT_PASSWORD; }
+function doLogin() {
+  const pw = document.getElementById('pw-input').value;
+  if (pw === getPassword()) {
+    sessionStorage.setItem('admin_auth', '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('admin-screen').style.display = 'block';
+    renderProjects();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+  }
+}
+function doLogout() {
+  sessionStorage.removeItem('admin_auth');
+  document.getElementById('admin-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+}
+document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+if (sessionStorage.getItem('admin_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-screen').style.display = 'block';
+  renderProjects();
+}
+
+// ── DATA ──
+function getProjects() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) { localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_PROJECTS)); return DEFAULT_PROJECTS; }
+  return JSON.parse(raw);
+}
+function saveProjects(projects) { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); }
+function nextId(projects) { return projects.length ? Math.max(...projects.map(p=>p.id)) + 1 : 1; }
+
+// ── RENDER ──
+function renderProjects() {
+  const projects = getProjects().sort((a,b) => a.order - b.order);
+  const list = document.getElementById('project-list');
+  if (!projects.length) { list.innerHTML = '<div style="padding:40px 24px; text-align:center; font-family:JetBrains Mono,monospace; font-size:11px; color:#444; text-transform:uppercase; letter-spacing:.1em;">Nog geen projecten — voeg er een toe.</div>'; return; }
+  list.innerHTML = projects.map(p => `
+    <div class="project-row">
+      <div>
+        <div class="project-row-name font-display">${p.name}</div>
+        <div class="project-row-tag font-mono">${p.tag} · Volgorde ${p.order}</div>
+      </div>
+      <div class="project-row-type font-mono">${p.type.split(' · ')[0]}</div>
+      <button class="row-btn font-mono" onclick="editProject(${p.id})">Bewerken</button>
+      <button class="row-btn danger font-mono" onclick="deleteProject(${p.id})">Verwijderen</button>
+    </div>
+  `).join('');
+}
+
+// ── MODAL ──
+function openModal(id = null) {
+  document.getElementById('modal-title').textContent = id ? 'Project bewerken' : 'Project toevoegen';
+  document.getElementById('edit-id').value = id || '';
+  if (id) {
+    const p = getProjects().find(x => x.id === id);
+    document.getElementById('f-name').value = p.name;
+    document.getElementById('f-tag').value = p.tag;
+    document.getElementById('f-type').value = p.type;
+    document.getElementById('f-desc').value = p.desc || '';
+    document.getElementById('f-bg').value = p.bg || '';
+    document.getElementById('f-url').value = p.url || '';
+    document.getElementById('f-img').value = p.img || '';
+    document.getElementById('f-order').value = p.order || 99;
+  } else {
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-tag').value = '';
+    document.getElementById('f-type').value = 'Custom HTML · CSS · GSAP';
+    document.getElementById('f-desc').value = '';
+    document.getElementById('f-bg').value = '';
+    document.getElementById('f-url').value = '';
+    document.getElementById('f-img').value = '';
+    document.getElementById('f-order').value = 99;
+  }
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('f-name').focus(), 100);
+}
+function editProject(id) { openModal(id); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function closeModalOutside(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+
+function saveProject() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { toast('Projectnaam is verplicht', true); return; }
+  const projects = getProjects();
+  const editId = document.getElementById('edit-id').value;
+  const project = {
+    id: editId ? parseInt(editId) : nextId(projects),
+    name,
+    tag: document.getElementById('f-tag').value.trim() || 'Project',
+    type: document.getElementById('f-type').value,
+    desc: document.getElementById('f-desc').value.trim(),
+    bg: document.getElementById('f-bg').value.trim() || 'linear-gradient(145deg,#111,#333)',
+    url: document.getElementById('f-url').value.trim(),
+    img: document.getElementById('f-img').value.trim(),
+    order: parseInt(document.getElementById('f-order').value) || 99,
+  };
+  if (editId) {
+    const idx = projects.findIndex(p => p.id === parseInt(editId));
+    projects[idx] = project;
+  } else {
+    projects.push(project);
+  }
+  saveProjects(projects);
+  renderProjects();
+  closeModal();
+  toast(editId ? `${name} bijgewerkt` : `${name} toegevoegd`);
+}
+
+function deleteProject(id) {
+  const p = getProjects().find(x => x.id === id);
+  if (!confirm(`"${p.name}" verwijderen?`)) return;
+  saveProjects(getProjects().filter(x => x.id !== id));
+  renderProjects();
+  toast(`${p.name} verwijderd`);
+}
+
+// ── NAVIGATION ──
+function showSection(name, el) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.getElementById('section-' + name).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── SETTINGS ──
+function exportJSON() {
+  const data = JSON.stringify(getProjects(), null, 2);
+  const preview = document.getElementById('export-preview');
+  preview.style.display = 'block';
+  preview.textContent = data;
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'projects.json'; a.click();
+  URL.revokeObjectURL(url);
+  toast('projects.json gedownload');
+}
+function importJSON(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error('Geen array');
+      saveProjects(data); renderProjects(); toast(`${data.length} projecten geïmporteerd`);
+    } catch { toast('Ongeldig JSON bestand', true); }
+  };
+  reader.readAsText(file);
+}
+function changePassword() {
+  const pw = document.getElementById('new-pw').value.trim();
+  if (!pw || pw.length < 4) { toast('Minimaal 4 tekens', true); return; }
+  localStorage.setItem(PW_KEY, pw);
+  document.getElementById('new-pw').value = '';
+  toast('Wachtwoord opgeslagen');
+}
+function resetData() {
+  if (!confirm('Alle projecten wissen en terugzetten naar standaard?')) return;
+  saveProjects(DEFAULT_PROJECTS);
+  renderProjects();
+  toast('Teruggezet naar standaard');
+}
+
+// ── TOAST ──
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = isError ? '✕ ' + msg : '✓ ' + msg;
+  el.className = 'toast font-mono' + (isError ? ' error' : '');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>

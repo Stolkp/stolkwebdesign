@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website laten bouwen — Peter Stolk Webdesign Amsterdam</title>
+<meta name="description" content="Wil je een professionele website laten bouwen die opvalt? Peter Stolk maakt handcrafted websites in HTML, CSS & GSAP én WordPress — snel, uniek en volledig op maat. Vanaf €2.500. Amsterdam.">
+<meta name="keywords" content="website laten bouwen, webdesign Amsterdam, professionele website, WordPress website laten bouwen, HTML website, custom webdesign, website onderhoud, webhosting">
+<meta property="og:title" content="Website laten bouwen — Peter Stolk Webdesign">
+<meta property="og:description" content="Handcrafted websites voor ondernemers die het verschil willen zien. HTML, CSS & GSAP én WordPress. Vanaf €2.500.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.stolkwebdesign.nl">
+<meta property="og:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
+<link rel="canonical" href="https://www.stolkwebdesign.nl">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"Stolkwebdesign","url":"https://www.stolkwebdesign.nl","telephone":"+31650222228","email":"info@stolkwebdesign.nl","description":"Handcrafted websites voor ondernemers — HTML, CSS, GSAP & WordPress","address":{"@type":"PostalAddress","addressLocality":"Uithoorn","addressCountry":"NL"},"priceRange":"€€"}
+</script>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --red: #EA2525;
+  --near-black: #0A0A0A;
+  --bone: #F5F5F5;
+  --muted: #767676;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── TYPOGRAPHY ── */
+.font-display { font-family: 'Archivo Black', sans-serif; }
+.font-mono    { font-family: 'JetBrains Mono', monospace; }
+
+/* ── BRUTALIST OFFSET ── */
+.brutalist-offset {
+  background: var(--white);
+  border: 2px solid var(--black);
+  box-shadow: 8px 8px 0 0 var(--black);
+  transition: transform .15s ease-out, box-shadow .15s ease-out;
+}
+.brutalist-offset:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--black); }
+.brutalist-offset-red {
+  background: var(--white);
+  border: 2px solid var(--black);
+  box-shadow: 8px 8px 0 0 var(--red);
+  transition: transform .15s ease-out, box-shadow .15s ease-out;
+}
+.brutalist-offset-red:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--red); }
+
+/* ── MARQUEE ── */
+.marquee-container {
+  overflow: hidden;
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+  background: var(--black);
+  color: var(--white);
+  padding: 14px 0;
+}
+.marquee-container:hover .marquee-track { animation-play-state: paused; }
+.marquee-track {
+  display: flex;
+  animation: marquee 32s linear infinite;
+  white-space: nowrap;
+}
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-item {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(22px, 3.5vw, 44px);
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  padding-right: 40px;
+}
+.marquee-sep { color: var(--red); margin-right: 40px; }
+
+/* ── NOISE ── */
+.noise {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: .08; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ── SMASH ANIMATION ── */
+.smash-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1;
+  margin-right: 0.22em;
+}
+.smash-word:last-child { margin-right: 0; }
+.smash-inner {
+  display: block;
+  transform: translateY(110%);
+  opacity: 0;
+  animation: smashUp .4s cubic-bezier(.16,1,.3,1) forwards;
+  line-height: .9;
+  padding-bottom: .05em;
+}
+@keyframes smashUp { to { transform: translateY(0); opacity: 1; } }
+
+/* ── HOVER SHIFT ── */
+.hover-shift {
+  display: inline-block;
+  transition: transform .2s ease-out;
+  position: relative;
+  cursor: pointer;
+}
+.hover-shift::after {
+  content: ''; position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 2px;
+  background: var(--red);
+  transition: width .2s ease-out;
+}
+.hover-shift:hover { transform: translateX(-4px) skewX(-3deg); }
+.hover-shift:hover::after { width: 100%; }
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity .3s cubic-bezier(.8,0,.2,1), transform .3s cubic-bezier(.8,0,.2,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ══════ NAV ══════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--black);
+  border-bottom: 2px solid var(--black);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 48px;
+}
+.nav-logo {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 18px; text-transform: uppercase;
+  color: var(--white); letter-spacing: -0.02em;
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .15em;
+  color: rgba(255,255,255,.5); text-decoration: none;
+  transition: color .2s;
+}
+.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+.nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); transition:transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
+.nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.nav-cta-item { display:none; }
+.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; transition:top .15s; }
+.skip-link:focus { top:0; }
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 12px; text-transform: uppercase;
+  background: var(--red); color: var(--white);
+  border: 2px solid var(--white); padding: 13px 22px;
+  text-decoration: none; letter-spacing: .04em;
+  transition: background .15s, color .15s;
+}
+.nav-cta:hover { background: var(--white); color: var(--red); }
+
+/* ══════ HERO ══════ */
+.hero {
+  position: relative; min-height: 100vh;
+  background: var(--near-black); color: var(--white);
+  padding-top: 72px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  overflow: hidden;
+}
+.hero-video-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(10,10,10,.3) 0%, rgba(10,10,10,.6) 60%, var(--near-black) 100%);
+  z-index: 1;
+}
+.hero .noise { z-index: 2; opacity: .1; }
+.hero-content {
+  position: relative; z-index: 3;
+  padding: 80px 48px 72px;
+  max-width: 1400px;
+}
+.hero-label {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 40px; opacity: 0;
+  animation: smashUp .6s ease forwards .2s;
+}
+.hero-label-dot { width: 10px; height: 10px; background: var(--red); flex-shrink: 0; }
+.hero-label-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .2em; color: rgba(255,255,255,.55);
+}
+.hero-headline {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(52px, 9.5vw, 116px);
+  line-height: .9; letter-spacing: -0.04em;
+  text-transform: uppercase; max-width: 1100px;
+  margin-bottom: 36px;
+}
+.hero-headline .red { color: var(--red); }
+.hero-sub {
+  font-size: clamp(15px, 1.4vw, 18px);
+  color: rgba(255,255,255,.6); max-width: 540px;
+  line-height: 1.65; margin-bottom: 48px;
+  opacity: 0; animation: smashUp .7s ease forwards 1.4s;
+}
+.hero-sub strong { color: var(--white); font-weight: 500; }
+.hero-ctas {
+  display: flex; align-items: center; gap: 20px;
+  opacity: 0; animation: smashUp .6s ease forwards 1.7s;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 13px; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--red); color: var(--white);
+  border: 2px solid var(--red); padding: 16px 32px;
+  text-decoration: none;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.btn-primary:hover { background: var(--white); color: var(--red); border-color: var(--white); }
+.btn-wa {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+  color: rgba(255,255,255,.6); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.2);
+  padding-bottom: 2px;
+  transition: color .2s, border-color .2s;
+}
+.btn-wa:hover { color: var(--white); border-color: var(--white); }
+
+/* ══════ USP STRIP ══════ */
+.usp-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--black);
+  border-top: none;
+  background: var(--bone);
+}
+.usp-item {
+  padding: 20px 28px;
+  border-right: 2px solid var(--black);
+  display: flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--muted);
+}
+.usp-item:last-child { border-right: none; }
+.usp-check { color: var(--red); font-size: 14px; }
+
+/* ══════ SECTION COMMONS ══════ */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .2em; color: var(--red);
+  margin-bottom: 20px;
+}
+.section-heading {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(36px, 4.5vw, 68px);
+  line-height: .92; letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+.section-heading .red { color: var(--red); }
+
+/* ══════ PROBLEEM ══════ */
+.problem {
+  padding: 100px 48px 120px;
+  max-width: 1400px; margin: 0 auto;
+  display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start;
+}
+.problem-body {
+  font-size: 17px; line-height: 1.7; color: var(--black); margin-bottom: 44px;
+}
+.pain-list { border-top: 2px solid var(--black); }
+.pain-item {
+  display: grid; grid-template-columns: 72px 1fr; gap: 20px;
+  align-items: start;
+  border-bottom: 2px solid var(--black); padding: 22px 0;
+}
+.pain-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: .1em; padding-top: 3px; }
+.pain-text { font-family: 'Archivo Black', sans-serif; font-size: clamp(16px, 1.8vw, 22px); text-transform: uppercase; line-height: 1.2; letter-spacing: -0.02em; }
+
+/* ══════ DIENSTEN (oplossing) ══════ */
+.solution { background: var(--near-black); color: var(--white); padding: 100px 48px; position: relative; overflow: hidden; }
+.solution-inner { max-width: 1400px; margin: 0 auto; }
+.solution-header { margin-bottom: 56px; }
+.pillars { display: grid; grid-template-columns: repeat(3, 1fr); border: 2px solid var(--white); }
+.pillar { padding: 44px 36px; border-right: 2px solid var(--white); }
+.pillar:last-child { border-right: none; }
+.pillar-num { font-family: 'Archivo Black', sans-serif; font-size: clamp(52px, 6vw, 88px); color: var(--red); line-height: 1; margin-bottom: 20px; }
+.pillar-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(18px, 2vw, 26px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 14px; }
+.pillar-body { font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.75; margin-bottom: 20px; }
+.pillar-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: .1em; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,.15); padding-top: 16px; }
+.pillar-price strong { color: var(--white); }
+
+/* ══════ AANPAK ══════ */
+.process { padding: 100px 48px; max-width: 1400px; margin: 0 auto; }
+.steps { margin-top: 56px; border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); }
+.step {
+  display: grid; grid-template-columns: 140px 1fr 40px;
+  gap: 40px; align-items: center;
+  border-bottom: 2px solid var(--black);
+  padding: 36px 0; transition: background .2s;
+}
+.step:last-child { border-bottom: none; }
+.step:hover { background: var(--bone); }
+.step-num { font-family: 'Archivo Black', sans-serif; font-size: clamp(36px, 4.5vw, 60px); line-height: 1; letter-spacing: -0.04em; text-transform: uppercase; }
+.step-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(18px, 2.2vw, 28px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 8px; }
+.step-body { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 620px; }
+.step-arrow { font-size: 22px; transition: transform .2s, color .2s; color: var(--muted); }
+.step:hover .step-arrow { transform: translateX(5px); color: var(--red); }
+
+/* ══════ SOCIAL PROOF ══════ */
+.social-proof { padding: 100px 48px; background: var(--bone); border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); }
+.social-inner { max-width: 1400px; margin: 0 auto; }
+.quote-block { margin-top: 56px; padding: 56px; max-width: 920px; }
+.quote-mark { font-family: 'Archivo Black', sans-serif; font-size: 130px; line-height: .7; color: var(--red); margin-bottom: -28px; display: block; }
+.quote-text { font-family: 'Archivo Black', sans-serif; font-size: clamp(22px, 2.8vw, 38px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05; margin-top: 20px; }
+.quote-attr { margin-top: 36px; padding-top: 28px; border-top: 2px solid var(--black); }
+.attr-name { font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+.attr-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: .1em; margin-top: 4px; }
+.metrics { display: grid; grid-template-columns: repeat(4, 1fr); border: 2px solid var(--black); margin-top: 56px; }
+.metric { padding: 36px 32px; border-right: 2px solid var(--black); }
+.metric:last-child { border-right: none; }
+.metric-num { font-family: 'Archivo Black', sans-serif; font-size: clamp(36px, 4.5vw, 64px); color: var(--red); line-height: 1; margin-bottom: 10px; }
+.metric-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; }
+
+/* ══════ OVER PETER ══════ */
+.about { padding: 100px 48px; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
+.about-image { aspect-ratio: 4/5; max-height: 560px; background: var(--black); position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 28px; }
+.about-image-name { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 4vw, 56px); text-transform: uppercase; color: var(--white); letter-spacing: -0.03em; line-height: 1; }
+.about-body { font-size: 16px; line-height: 1.75; margin: 20px 0 36px; }
+.manifesto { border-top: 2px solid var(--black); padding-top: 28px; }
+.manifesto-item { display: flex; align-items: baseline; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; padding: 11px 0; border-bottom: 1px solid rgba(0,0,0,.1); }
+.manifesto-plus { color: var(--red); font-size: 13px; }
+
+/* ══════ PORTFOLIO STRIP ══════ */
+.portfolio-strip { padding: 0 48px 100px; max-width: 1400px; margin: 0 auto; }
+.portfolio-strip-header { padding: 80px 0 48px; }
+.portfolio-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3px; }
+.port-card { position: relative; overflow: hidden; cursor: pointer; }
+.port-card:first-child { grid-row: 1 / 3; }
+.port-bg {
+  width: 100%; height: 100%; min-height: 220px;
+  padding: 24px; display: flex; align-items: flex-end;
+  border: 2px solid var(--black);
+  position: relative;
+  transition: transform .5s cubic-bezier(.16,1,.3,1);
+}
+.port-card:hover .port-bg { transform: scale(1.02); }
+.port-card:first-child .port-bg { min-height: 460px; }
+.port-bg-1 { background: linear-gradient(145deg, #111 0%, #1e0a0a 60%, #3d0a0a 100%); }
+.port-bg-2 { background: linear-gradient(145deg, #0a0a11 0%, #0a0a2e 100%); }
+.port-bg-3 { background: linear-gradient(145deg, #0a110a 0%, #0a2e0a 100%); }
+.port-bg-4 { background: linear-gradient(145deg, #11100a 0%, #2e2a0a 100%); }
+.port-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.1) 60%); }
+.port-info { position: relative; z-index: 1; }
+.port-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+.port-name { font-family: 'Archivo Black', sans-serif; font-size: clamp(18px, 2vw, 24px); color: var(--white); text-transform: uppercase; letter-spacing: -0.02em; }
+.port-type { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 4px; }
+
+/* ══════ FINAL CTA ══════ */
+.final-cta { background: var(--red); color: var(--white); padding: 100px 48px; position: relative; overflow: hidden; border-top: 2px solid var(--black); }
+.final-cta .noise { opacity: .12; mix-blend-mode: multiply; }
+.final-cta-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+.final-cta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: rgba(255,255,255,.65); margin-bottom: 28px; }
+.final-cta-heading { font-family: 'Archivo Black', sans-serif; font-size: clamp(44px, 8vw, 120px); line-height: .88; letter-spacing: -0.04em; text-transform: uppercase; max-width: 1050px; margin-bottom: 56px; }
+.btn-white {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px; text-transform: uppercase; letter-spacing: .03em;
+  background: var(--white); color: var(--red);
+  border: 2px solid var(--white); padding: 20px 40px;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.btn-white:hover { background: var(--red); color: var(--white); }
+.final-secondary { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.65); margin-top: 24px; display: block; }
+.final-secondary a { color: var(--white); }
+
+/* ══════ FOOTER ══════ */
+footer { background: var(--black); color: var(--white); padding: 60px 48px 36px; border-top: 2px solid var(--red); }
+.footer-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+.footer-logo { font-family: 'Archivo Black', sans-serif; font-size: 20px; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 14px; }
+.footer-tagline { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; line-height: 1.7; }
+.footer-col-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: var(--red); margin-bottom: 14px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 9px; }
+.footer-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.45); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bar { max-width: 1400px; margin: 0 auto; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: space-between; }
+.footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,.25); letter-spacing: .08em; text-transform: uppercase; }
+
+/* ══════ RESPONSIVE ══════ */
+@media (max-width: 900px) {
+  nav { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .nav-cta { display:none; }
+  .nav-hamburger { display:flex; }
+  .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
+  .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
+  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
+  .nav-links.open .nav-cta-item { display:block; border-bottom:none; padding-top:16px; }
+  .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
+  .hero video { display: none; }
+  .hero-content { padding: 60px 20px 48px; }
+  .problem, .about { grid-template-columns: 1fr; padding: 72px 20px; gap: 40px; }
+  .pillars { grid-template-columns: 1fr; }
+  .pillar { border-right: none; border-bottom: 2px solid var(--white); }
+  .pillar:last-child { border-bottom: none; }
+  .step { grid-template-columns: 80px 1fr; gap: 20px; }
+  .step-arrow { display: none; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .metric:nth-child(2) { border-right: none; }
+  .portfolio-grid { grid-template-columns: 1fr; }
+  .port-card:first-child { grid-row: auto; }
+  .solution, .process, .social-proof, .final-cta, .portfolio-strip { padding: 72px 20px; }
+  .quote-block { padding: 28px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .usp-strip { grid-template-columns: repeat(2, 1fr); }
+  .usp-item:nth-child(2) { border-right: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+  .smash-inner { animation: none; opacity: 1; transform: none; }
+  .reveal { transition: none; opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Stolkwebdesign®</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="portfolio.html" class="hover-shift">Portfolio / 01</a></li>
+    <li><a href="#diensten" class="hover-shift">Diensten / 02</a></li>
+    <li><a href="#aanpak" class="hover-shift">Aanpak / 03</a></li>
+    <li><a href="over.html" class="hover-shift">Over mij / 04</a></li>
+    <li class="nav-cta-item"><a href="contact.html" class="nav-cta-mobile">Plan een gesprek →</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="contact.html" class="nav-cta">Plan een gesprek →</a>
+</nav>
+
+<main id="main-content">
+
+<!-- HERO -->
+<section class="hero">
+  <video autoplay loop muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(100%) contrast(1.5);opacity:.5;z-index:0;">
+    <source src="hero-video.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+  <div class="noise"></div>
+  <div class="hero-content">
+    <div class="hero-label">
+      <div class="hero-label-dot"></div>
+      <span class="hero-label-text">Peter Stolk — Webdesign · Amsterdam · Persoonlijk contact</span>
+    </div>
+    <h1 class="hero-headline">
+      <span class="smash-word"><span class="smash-inner" style="animation-delay:.5s">Jouw</span></span><span class="smash-word"><span class="smash-inner" style="animation-delay:.62s">ideale</span></span><br>
+      <span class="smash-word"><span class="smash-inner" style="animation-delay:.75s">website</span></span><span class="smash-word"><span class="smash-inner red" style="animation-delay:.88s">gebouwd.</span></span>
+    </h1>
+    <p class="hero-sub">
+      Wil je een <strong>professionele website laten bouwen</strong> die echt opvalt? Ik maak handcrafted websites in HTML &amp; CSS én WordPress — volledig op maat, snel en altijd up-to-date. Van A tot Z geregeld.
+    </p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn-primary">
+        Plan een gesprek
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="https://wa.me/31650222228" class="btn-wa">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.121.555 4.112 1.528 5.836L0 24l6.335-1.51A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.846 0-3.576-.49-5.068-1.346l-.362-.214-3.762.898.936-3.665-.235-.375A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- USP STRIP -->
+<div class="usp-strip">
+  <div class="usp-item"><span class="usp-check">✓</span> Persoonlijk contact</div>
+  <div class="usp-item"><span class="usp-check">✓</span> Custom design — geen templates</div>
+  <div class="usp-item"><span class="usp-check">✓</span> Responsief op alle devices</div>
+  <div class="usp-item"><span class="usp-check">✓</span> Hosting &amp; onderhoud mogelijk</div>
+</div>
+
+<!-- MARQUEE 1 -->
+<div class="marquee-container">
+  <div class="marquee-track">
+    <span class="marquee-item">WEBSITE LATEN BOUWEN</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">SAUBERHAUS</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">MAESTR</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">NM WE CREATE</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">ANOUK HOOGENDIJK</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">WEBDESIGN AMSTERDAM</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">WEBSITE LATEN BOUWEN</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">SAUBERHAUS</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">MAESTR</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">NM WE CREATE</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">ANOUK HOOGENDIJK</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">WEBDESIGN AMSTERDAM</span><span class="marquee-item marquee-sep">✱</span>
+  </div>
+</div>
+
+<!-- PORTFOLIO -->
+<section id="werk">
+  <div class="portfolio-strip">
+    <div class="portfolio-strip-header reveal">
+      <div class="section-label">Geselecteerd werk / 01</div>
+      <h2 class="section-heading">Elk project<br>een <span class="red">statement.</span></h2>
+    </div>
+    <div class="portfolio-grid">
+      <div class="port-card reveal">
+        <div class="port-bg port-bg-1">
+          <div class="port-overlay"></div>
+          <div class="port-info">
+            <div class="port-tag">Lifestyle brand</div>
+            <div class="port-name">Sauberhaus</div>
+            <div class="port-type">Custom HTML · GSAP · Scroll animaties</div>
+          </div>
+        </div>
+      </div>
+      <div class="port-card reveal" style="transition-delay:.08s">
+        <div class="port-bg port-bg-2">
+          <div class="port-overlay"></div>
+          <div class="port-info">
+            <div class="port-tag">Music / Tech</div>
+            <div class="port-name">Maestr</div>
+            <div class="port-type">WordPress · Custom theme</div>
+          </div>
+        </div>
+      </div>
+      <div class="port-card reveal" style="transition-delay:.16s">
+        <div class="port-bg port-bg-3">
+          <div class="port-overlay"></div>
+          <div class="port-info">
+            <div class="port-tag">Creatief bureau</div>
+            <div class="port-name">NM We Create</div>
+            <div class="port-type">Custom HTML · Animaties</div>
+          </div>
+        </div>
+      </div>
+      <div class="port-card reveal" style="transition-delay:.24s">
+        <div class="port-bg port-bg-4">
+          <div class="port-overlay"></div>
+          <div class="port-info">
+            <div class="port-tag">Personal brand</div>
+            <div class="port-name">Anouk Hoogendijk</div>
+            <div class="port-type">WordPress · Custom design</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEEM -->
+<section style="border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); background: var(--bone);">
+  <div class="problem">
+    <div class="reveal">
+      <div class="section-label">Het probleem / —</div>
+      <h2 class="section-heading">Jouw site kost je <span class="red">klanten.</span></h2>
+    </div>
+    <div class="reveal" style="transition-delay:.1s">
+      <p class="problem-body">
+        Je hebt een website — maar hij converteert niet. De opmaak klopt niet op mobiel, de laadtijd is te lang en de tekst had net zo goed van een concurrent kunnen zijn. Dat is geen website. Dat is een gemiste kans.
+      </p>
+      <div class="pain-list">
+        <div class="pain-item">
+          <span class="pain-num font-mono">/01</span>
+          <span class="pain-text font-display">Je homepage ziet er precies uit als die van je concurrent.</span>
+        </div>
+        <div class="pain-item">
+          <span class="pain-num font-mono">/02</span>
+          <span class="pain-text font-display">Bezoekers haken af voor ze je verhaal gehoord hebben.</span>
+        </div>
+        <div class="pain-item">
+          <span class="pain-num font-mono">/03</span>
+          <span class="pain-text font-display">Je betaalde voor onderhoud maar hoort nooit meer iemand.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIENSTEN -->
+<section class="solution" id="diensten">
+  <div class="noise" style="opacity:.05"></div>
+  <div class="solution-inner">
+    <div class="solution-header reveal">
+      <div class="section-label" style="color:var(--red)">Wat ik doe / 02</div>
+      <h2 class="section-heading" style="color:var(--white)">Van idee tot live —<br><span class="red">van A tot Z.</span></h2>
+    </div>
+    <div class="pillars">
+      <div class="pillar reveal">
+        <div class="pillar-num">01</div>
+        <div class="pillar-title">Website laten bouwen</div>
+        <p class="pillar-body">Ik bouw websites in HTML &amp; CSS met GSAP-animaties én WordPress — afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.</p>
+        <div class="pillar-price">Vanaf <strong>€2.500</strong></div>
+      </div>
+      <div class="pillar reveal" style="transition-delay:.1s">
+        <div class="pillar-num">02</div>
+        <div class="pillar-title">Webhosting &amp; beveiliging</div>
+        <p class="pillar-body">Dedicated webhosting op een snelle server. SSL-certificaat, automatische back-ups en monitoring inbegrepen. Jouw website staat altijd online en is altijd actueel — zonder dat jij er omkijken naar hebt.</p>
+        <div class="pillar-price">Vanaf <strong>€25 / maand</strong></div>
+      </div>
+      <div class="pillar reveal" style="transition-delay:.2s">
+        <div class="pillar-num">03</div>
+        <div class="pillar-title">Onderhoud &amp; support</div>
+        <p class="pillar-body">Kleine aanpassingen, nieuwe pagina's of technische vragen. Directe lijn met Peter — geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.</p>
+        <div class="pillar-price"><strong>Op aanvraag</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE 2 -->
+<div class="marquee-container">
+  <div class="marquee-track" style="animation-direction:reverse; animation-duration:28s">
+    <span class="marquee-item">GEEN TEMPLATES</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">CUSTOM WEBDESIGN</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">HTML &amp; CSS &amp; GSAP</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">WORDPRESS OP MAAT</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">PERSOONLIJK CONTACT</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">GEEN TEMPLATES</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">CUSTOM WEBDESIGN</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">HTML &amp; CSS &amp; GSAP</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">WORDPRESS OP MAAT</span><span class="marquee-item marquee-sep">✱</span>
+    <span class="marquee-item">PERSOONLIJK CONTACT</span><span class="marquee-item marquee-sep">✱</span>
+  </div>
+</div>
+
+<!-- AANPAK -->
+<section style="border-bottom: 2px solid var(--black);" id="aanpak">
+  <div class="process">
+    <div class="reveal">
+      <div class="section-label">De aanpak / 03</div>
+      <h2 class="section-heading">Jouw website —<br>van brief tot <span class="red">live.</span></h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num font-display">01</div>
+        <div>
+          <div class="step-title font-display">Kennismaken &amp; briefen.</div>
+          <p class="step-body">We spreken af — digitaal of in Amsterdam. Jij vertelt me over je wensen, je merk en je doelgroep. Ik stel de vragen die nodig zijn om het goed te doen. Daarna maak ik een voorstel op maat.</p>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step reveal" style="transition-delay:.08s">
+        <div class="step-num font-display">02</div>
+        <div>
+          <div class="step-title font-display">Design &amp; feedback.</div>
+          <p class="step-body">Ik ontwerp een visueel aantrekkelijk en responsief design dat perfect aansluit bij jouw merk. Jij geeft feedback, ik verwerk die — direct en efficiënt. Geen eindeloze feedbackrondes.</p>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step reveal" style="transition-delay:.16s">
+        <div class="step-num font-display">03</div>
+        <div>
+          <div class="step-title font-display">Bouwen &amp; testen.</div>
+          <p class="step-body">Ik bouw de website — snel, schoon en geoptimaliseerd. Responsief op alle devices, getest in alle browsers, klaar voor zoekmachines. Jij ziet de voortgang live.</p>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+      <div class="step reveal" style="transition-delay:.24s">
+        <div class="step-num font-display">04</div>
+        <div>
+          <div class="step-title font-display">Live &amp; klaar.</div>
+          <p class="step-body">Jouw website gaat live. Ik regel de webhosting, het SSL-certificaat en de overdracht. Daarna ben ik beschikbaar voor onderhoud en support — zo lang als je wil.</p>
+        </div>
+        <div class="step-arrow">→</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-proof">
+  <div class="social-inner">
+    <div class="reveal">
+      <div class="section-label">Wat klanten zeggen / —</div>
+      <h2 class="section-heading">Werk dat zijn<br>geld <span class="red">terugverdient.</span></h2>
+    </div>
+    <div class="quote-block brutalist-offset-red reveal" style="transition-delay:.1s">
+      <span class="quote-mark">"</span>
+      <p class="quote-text">"Peter denkt mee, reageert snel en levert precies op wat hij belooft. De site ziet er prachtig uit en werkt geweldig."</p>
+      <div class="quote-attr">
+        <div class="attr-name font-display">Klant via Stolkwebdesign</div>
+        <div class="attr-role font-mono">Ondernemer — Nederland</div>
+      </div>
+    </div>
+    <div class="metrics reveal" style="transition-delay:.15s">
+      <div class="metric">
+        <div class="metric-num font-display">12+</div>
+        <div class="metric-label font-mono">Projecten opgeleverd</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num font-display">7+</div>
+        <div class="metric-label font-mono">Jaar ervaring</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num font-display">100%</div>
+        <div class="metric-label font-mono">Custom design</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num font-display">€2.5k</div>
+        <div class="metric-label font-mono">Startprijs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OVER PETER -->
+<section id="peter" style="border-top: 2px solid var(--black);">
+  <div class="about">
+    <div class="about-image reveal">
+      <img src="assets/peter stolk.png" alt="Peter Stolk — webdesigner Uithoorn" loading="lazy"
+           style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+      <div class="noise" style="opacity:.18"></div>
+      <div class="about-image-name font-display">Peter<br>Stolk</div>
+    </div>
+    <div class="reveal" style="transition-delay:.1s">
+      <div class="section-label">Over de maker / 04</div>
+      <h2 class="section-heading">Geen bureau.<br><span class="red">Eén vakman.</span></h2>
+      <p class="about-body">
+        Ik ben Peter Stolk — zelfstandig webdesigner uit Amsterdam. Ik ontwerp en bouw visueel aantrekkelijke, responsieve websites die perfect aansluiten bij wat jij voor ogen hebt. Of dat nu een handcrafted HTML-site met GSAP-animaties is, of een gebruiksvriendelijke WordPress-website — ik kies wat het beste werkt voor jouw project.
+      </p>
+      <p class="about-body" style="color:var(--muted);">
+        Geen grote agency met juniors die je project afhandelen. Jij hebt direct contact met de persoon die jouw website bouwt. Dat maakt het verschil.
+      </p>
+      <div class="manifesto">
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Persoonlijk contact — altijd direct met Peter.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Custom designs — geen standaard templates.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Responsief op alle devices — altijd.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Hosting en onderhoud mogelijk als add-ons.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="contact">
+  <div class="noise"></div>
+  <div class="final-cta-inner">
+    <div class="final-cta-label font-mono">/ Vertel Peter meer over je wensen</div>
+    <h2 class="final-cta-heading font-display">
+      Klaar voor een website die werkt?
+    </h2>
+    <a href="#" class="btn-white" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+      Plan een gratis gesprek
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="0"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </a>
+    <span class="final-secondary font-mono">Of stuur een WhatsApp → <a href="https://wa.me/31650222228">+31 6 50 22 22 28</a></span>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo font-display">Stolkwebdesign®</div>
+      <p class="footer-tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Navigeer</div>
+      <ul class="footer-links">
+        <li><a href="#werk">Portfolio</a></li>
+        <li><a href="#diensten">Diensten</a></li>
+        <li><a href="#aanpak">Aanpak</a></li>
+        <li><a href="#peter">Over mij</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Diensten</div>
+      <ul class="footer-links">
+        <li><a href="#diensten">Website laten bouwen</a></li>
+        <li><a href="#diensten">WordPress website</a></li>
+        <li><a href="#diensten">Webhosting</a></li>
+        <li><a href="#diensten">Onderhoud &amp; support</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://cal.com/peter-stolk-9dkoig/30min">Plan een gesprek</a></li>
+        <li><a href="https://wa.me/31650222228">WhatsApp</a></li>
+        <li><a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a></li>
+      </ul>
+      <div class="footer-col-label font-mono" style="margin-top:24px;">Volg ons</div>
+      <ul class="footer-links">
+        <li><a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-copy font-mono">© 2026 Stolkwebdesign — Amsterdam</span>
+    <span class="footer-copy font-mono">Website laten bouwen · Custom webdesign · WordPress · Hosting</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Nav scroll state
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.borderBottomColor = window.scrollY > 60 ? 'var(--red)' : 'var(--black)';
+  });
+
+  // Hamburger
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const links = document.getElementById('nav-links');
+    const open = links.classList.toggle('open');
+    document.getElementById('nav-toggle').classList.toggle('open', open);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
+  });
+
+  // Cal.com popup
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "30min", {origin:"https://cal.com"});
+  Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+
+  document.querySelectorAll('[data-cal-link]').forEach(el => {
+    el.addEventListener('click', e => e.preventDefault());
+  });
+</script>
+
+</body>
+</html>

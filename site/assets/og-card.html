@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1200px; height:630px; overflow:hidden; background:#000; }
+  .card {
+    width:1200px; height:630px;
+    background:#000;
+    display:flex; flex-direction:column;
+    justify-content:flex-end;
+    padding:72px 80px;
+    position:relative;
+    font-family:'Archivo Black','Arial Black',Impact,sans-serif;
+  }
+  .card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,.025) 60px,
+      rgba(255,255,255,.025) 62px
+    );
+  }
+  .accent { position:absolute; top:0; right:0; width:6px; height:100%; background:#EA2525; }
+  .eyebrow {
+    font-family:'JetBrains Mono','Courier New',monospace;
+    font-size:14px; letter-spacing:.2em; text-transform:uppercase;
+    color:rgba(255,255,255,.45); margin-bottom:24px;
+  }
+  .logo {
+    font-size:96px; font-weight:900; text-transform:uppercase;
+    letter-spacing:-0.04em; line-height:.88; color:#fff;
+    margin-bottom:32px;
+  }
+  .logo span { color:#EA2525; }
+  .tagline {
+    font-family:'Arial',sans-serif;
+    font-size:22px; color:rgba(255,255,255,.55);
+    font-weight:400; letter-spacing:.01em;
+  }
+  .url {
+    position:absolute; bottom:72px; right:80px;
+    font-family:'JetBrains Mono','Courier New',monospace;
+    font-size:14px; letter-spacing:.15em; text-transform:uppercase;
+    color:rgba(255,255,255,.3);
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="card">
+    <div class="accent"></div>
+    <div class="eyebrow">Webdesign · Amsterdam · Persoonlijk contact</div>
+    <div class="logo">STOLKWEB<br>DESIGN<span>®</span></div>
+    <div class="tagline">Handcrafted websites voor ondernemers die het verschil willen zien.</div>
+    <div class="url">stolkwebdesign.nl</div>
+  </div>
+</body>
+</html>

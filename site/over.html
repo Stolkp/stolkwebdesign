@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Over Peter Stolk — Webdesigner Uithoorn</title>
+  <meta name="description"
+    content="Wie is Peter Stolk? Zelfstandig webdesigner uit Uithoorn met 7+ jaar ervaring. Handcrafted websites in HTML, CSS & GSAP én WordPress. Persoonlijk contact, custom designs.">
+  <meta property="og:title" content="Over Peter Stolk — Webdesigner Uithoorn">
+  <meta property="og:description" content="Zelfstandig webdesigner met 7+ jaar ervaring. Handcrafted websites in HTML, CSS & GSAP én WordPress. Persoonlijk contact, custom designs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.stolkwebdesign.nl/over">
+  <meta property="og:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
+  <link rel="canonical" href="https://www.stolkwebdesign.nl/over">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black: #000;
+      --white: #fff;
+      --red: #EA2525;
+      --near-black: #0A0A0A;
+      --bone: #F5F5F5;
+      --muted: #767676;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--white);
+      color: var(--black);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .font-display {
+      font-family: 'Archivo Black', sans-serif;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--black);
+      border-bottom: 2px solid var(--black);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 48px;
+    }
+
+    .nav-logo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18px;
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: rgba(255, 255, 255, .5);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--white);
+    }
+
+    .nav-cta {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      background: var(--red);
+      color: var(--white);
+      border: 2px solid var(--white);
+      padding: 13px 22px;
+      text-decoration: none;
+      transition: background .15s, color .15s;
+    }
+
+    .nav-cta:hover {
+      background: var(--white);
+      color: var(--red);
+    }
+
+    .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+    .nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); transition:transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
+    .nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+    .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .nav-cta-item { display:none; }
+    .skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; transition:top .15s; }
+    .skip-link:focus { top:0; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity .3s cubic-bezier(.8, 0, .2, 1), transform .3s cubic-bezier(.8, 0, .2, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .page-header {
+      padding: 160px 48px 80px;
+      border-bottom: 2px solid var(--black);
+      background: var(--near-black);
+      color: var(--white);
+    }
+
+    .page-header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+    }
+
+    .page-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(48px, 7vw, 96px);
+      text-transform: uppercase;
+      letter-spacing: -0.04em;
+      line-height: .88;
+    }
+
+    .page-sub {
+      font-size: 16px;
+      color: rgba(255, 255, 255, .55);
+      line-height: 1.7;
+    }
+
+    .about-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 100px 48px;
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .about-photo {
+      aspect-ratio: 4/5;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 28px;
+      border: 2px solid var(--black);
+    }
+
+    .about-photo-name {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(28px, 4vw, 56px);
+      text-transform: uppercase;
+      color: var(--white);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .noise {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: .18;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      color: var(--red);
+      margin-bottom: 20px;
+    }
+
+    .section-heading {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(36px, 4vw, 60px);
+      line-height: .92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .section-heading .red {
+      color: var(--red);
+    }
+
+    .body-text {
+      font-size: 16px;
+      line-height: 1.78;
+      margin-bottom: 24px;
+      color: var(--black);
+    }
+
+    .body-text.muted {
+      color: var(--muted);
+    }
+
+    .manifesto {
+      border-top: 2px solid var(--black);
+      padding-top: 28px;
+      margin-top: 8px;
+    }
+
+    .manifesto-item {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, .1);
+    }
+
+    .manifesto-plus {
+      color: var(--red);
+      font-size: 13px;
+    }
+
+    .skills-section {
+      background: var(--near-black);
+      color: var(--white);
+      padding: 80px 48px;
+      border-top: 2px solid var(--black);
+      border-bottom: 2px solid var(--black);
+    }
+
+    .skills-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 48px;
+    }
+
+    .skill-card {
+      padding: 36px 32px;
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .skill-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 48px;
+      color: var(--red);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .skill-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 20px;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .skill-body {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .55);
+      line-height: 1.7;
+    }
+
+    .cta-strip {
+      background: var(--red);
+      color: var(--white);
+      padding: 80px 48px;
+      text-align: center;
+      border-top: 2px solid var(--black);
+    }
+
+    .cta-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(36px, 5vw, 72px);
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      line-height: .9;
+      margin-bottom: 40px;
+    }
+
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 16px;
+      text-transform: uppercase;
+      background: var(--white);
+      color: var(--red);
+      border: 2px solid var(--white);
+      padding: 18px 36px;
+      text-decoration: none;
+      transition: background .15s, color .15s;
+    }
+
+    .btn-white:hover {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    footer {
+      background: var(--black);
+      color: var(--white);
+      padding: 40px 48px;
+      border-top: 2px solid var(--red);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .footer-logo {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+
+    .footer-links-row {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-links-row a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: rgba(255, 255, 255, .45);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .footer-links-row a:hover {
+      color: var(--white);
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: rgba(255, 255, 255, .25);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    @media(max-width:900px) {
+      nav { padding: 14px 20px; }
+      .nav-cta { display:none; }
+      .nav-links { display: none; }
+      .nav-hamburger { display:flex; }
+      .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
+      .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
+      .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
+      .nav-links.open .nav-cta-item { display:block; border-bottom:none; padding-top:16px; }
+      .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
+      .page-header-inner, .about-section { grid-template-columns: 1fr; gap: 40px; padding: 72px 20px; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .skills-section, .cta-strip { padding: 60px 20px; }
+      footer { flex-direction: column; gap: 20px; padding: 32px 20px; text-align: center; }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      .reveal { transition:none; opacity:1; transform:none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Stolkwebdesign®</a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="portfolio.html">Portfolio / 01</a></li>
+      <li><a href="index.html#diensten">Diensten / 02</a></li>
+      <li><a href="index.html#aanpak">Aanpak / 03</a></li>
+      <li><a href="over.html" class="active">Over mij / 04</a></li>
+      <li class="nav-cta-item"><a href="#" class="nav-cta-mobile" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view"}'>Plan een gesprek →</a></li>
+    </ul>
+    <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#" class="nav-cta" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>Plan een gesprek →</a>
+  </nav>
+
+  <main id="main-content">
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div>
+        <div class="page-eyebrow">Over mij / 04</div>
+        <h1 class="page-title font-display">Wie is<br><span style="color:var(--red)">Peter Stolk?</span></h1>
+      </div>
+      <p class="page-sub">Zelfstandig webdesigner uit Uithoorn. Ik ontwerp en bouw websites die echt werken —
+        persoonlijk, op maat en met oog voor detail.</p>
+    </div>
+  </header>
+
+  <section class="about-section">
+    <div class="about-photo reveal">
+      <img src="assets/peter stolk.png" alt="Peter Stolk — webdesigner Uithoorn" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
+      <div class="noise"></div>
+      <div class="about-photo-name font-display">Peter<br>Stolk</div>
+    </div>
+    <div class="reveal" style="transition-delay:.1s">
+      <div class="section-label">Wie is Peter / —</div>
+      <h2 class="section-heading font-display">Geen bureau.<br><span class="red">Eén vakman.</span></h2>
+      <p class="body-text">
+        Ik ben Peter Stolk — zelfstandig webdesigner uit Uithoorn. Al meer dan 7 jaar ontwerp en bouw ik professionele
+        websites voor ondernemers door heel Nederland. Ik werk met HTML, CSS en GSAP voor volledig handcrafted sites, én
+        met WordPress wanneer dat de slimste keuze is voor jouw project.
+      </p>
+      <p class="body-text">
+        Wat mij onderscheidt? Jij hebt altijd direct contact met mij — de persoon die jouw website daadwerkelijk bouwt.
+        Geen account managers, geen juniors, geen offshore productie. Gewoon Peter, die begrijpt wat jij nodig hebt en
+        dat ook levert.
+      </p>
+      <p class="body-text muted">
+        Ik werk voor een selecte groep klanten tegelijk. Zo geef ik elk project de aandacht die het verdient — en jij de
+        service die je mag verwachten.
+      </p>
+      <div class="manifesto">
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Persoonlijk contact — altijd
+            direct met Peter.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Custom designs — geen standaard
+            templates.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Responsief op alle devices —
+            altijd getest.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Ik zeg nee als een project niet
+            bij mij past.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Hosting en onderhoud regel ik
+            erbij — als jij dat wil.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="skills-section">
+    <div class="skills-inner">
+      <div class="section-label reveal" style="color:var(--red)">Wat ik gebruik / —</div>
+      <h2 class="section-heading font-display reveal" style="color:var(--white)">Tools &amp; <span
+          class="red">technieken.</span></h2>
+      <div class="skills-grid">
+        <div class="skill-card reveal">
+          <div class="skill-num font-display">01</div>
+          <div class="skill-title font-display">HTML &amp; CSS</div>
+          <p class="skill-body">Handcrafted, schone code zonder onnodige frameworks. Snel, veilig en onderhoudbaar. De
+            basis van elk goed gebouwde website.</p>
+        </div>
+        <div class="skill-card reveal" style="transition-delay:.08s">
+          <div class="skill-num font-display">02</div>
+          <div class="skill-title font-display">GSAP &amp; animaties</div>
+          <p class="skill-body">Scroll-driven animaties, cinematic hero-secties en interactieve elementen die bezoekers
+            vasthouden. Professioneel en performant.</p>
+        </div>
+        <div class="skill-card reveal" style="transition-delay:.16s">
+          <div class="skill-num font-display">03</div>
+          <div class="skill-title font-display">WordPress</div>
+          <p class="skill-body">Custom WordPress-themes zonder page builders. Voor klanten die zelf content willen
+            beheren — snel, gebruiksvriendelijk en op maat.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-strip">
+    <div class="cta-title font-display">Laten we<br>kennismaken.</div>
+    <a href="#" class="btn-white" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
+      Plan een gratis gesprek
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <line x1="5" y1="12" x2="19" y2="12" />
+        <polyline points="12 5 19 12 12 19" />
+      </svg>
+    </a>
+  </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-logo font-display">Stolkwebdesign®</div>
+    <div class="footer-links-row">
+      <a href="index.html">Home</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="over.html">Over mij</a>
+      <a href="contact.html">Contact</a>
+      <span style="color:rgba(255,255,255,.15)">|</span>
+      <a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div class="footer-copy">© 2026 Stolkwebdesign — Uithoorn</div>
+  </footer>
+
+  <!-- Cal.com element-click embed -->
+  <script type="text/javascript">
+    (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+    Cal("init", "30min", {origin:"https://app.cal.com"});
+    Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+  </script>
+
+  <script>
+    const obs = new IntersectionObserver(e => e.forEach(x => { if (x.isIntersecting) { x.target.classList.add('visible'); obs.unobserve(x.target); } }), { threshold: .12 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // Hamburger
+    document.getElementById('nav-toggle').addEventListener('click', () => {
+      const links = document.getElementById('nav-links');
+      const open = links.classList.toggle('open');
+      document.getElementById('nav-toggle').classList.toggle('open', open);
+      document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
+    });
+
+    // Prevent # scroll-jump on Cal trigger links
+    document.querySelectorAll('[data-cal-link]').forEach(el => {
+      el.addEventListener('click', e => e.preventDefault());
+    });
+  </script>
+</body>
+
+</html>
