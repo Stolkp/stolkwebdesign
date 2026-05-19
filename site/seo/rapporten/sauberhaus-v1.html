@@ -1,0 +1,2968 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>SEO Strategy Report — sauberhaus.nl</title>
+<script src="/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async () => {
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) window.location.replace('/seo/');
+})();
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: rgba(255,255,255,0.03);
+    --bg-card-hover: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --text: #e8e8ed;
+    --text-secondary: #8b8b9e;
+    --text-muted: #5a5a6e;
+    --accent: #6366f1;
+    --accent-glow: rgba(99,102,241,0.3);
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.12);
+    --green-border: rgba(34,197,94,0.25);
+    --yellow: #eab308;
+    --yellow-bg: rgba(234,179,8,0.12);
+    --yellow-border: rgba(234,179,8,0.25);
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,0.12);
+    --red-border: rgba(239,68,68,0.25);
+    --blue: #3b82f6;
+    --blue-bg: rgba(59,130,246,0.12);
+    --orange: #f97316;
+    --orange-bg: rgba(249,115,22,0.12);
+    --orange-border: rgba(249,115,22,0.25);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,0.08);
+    --purple-border: rgba(167,139,250,0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 6px;
+  }
+
+  ::selection { background: var(--accent); color: white; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(59,130,246,0.03) 0%, transparent 50%);
+    z-index: -1;
+    animation: ambientDrift 20s ease-in-out infinite;
+  }
+  @keyframes ambientDrift {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-2%, 1%); }
+    66% { transform: translate(1%, -1%); }
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .header { padding: 40px 0 0; text-align: center; }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 100px;
+    font-size: 12px; font-weight: 500; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px;
+  }
+  .header-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--green);
+    box-shadow: 0 0 8px var(--green); animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .header h1 {
+    font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700;
+    line-height: 1.15; margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 0%, #a5a5c0 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .header .subtitle { font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; }
+
+  .score-section {
+    display: flex; align-items: center; gap: 48px; margin-bottom: 40px;
+    padding: 40px; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); backdrop-filter: blur(20px);
+  }
+  .score-circle-wrap { position: relative; flex-shrink: 0; }
+  .score-circle {
+    width: 180px; height: 180px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    position: relative;
+  }
+  .score-circle svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-circle svg circle { fill: none; stroke-width: 6; stroke-linecap: round; }
+  .score-circle svg .bg-ring { stroke: rgba(255,255,255,0.06); }
+  .score-circle svg .progress-ring {
+    stroke: var(--accent); stroke-dasharray: 502;
+    stroke-dashoffset: 281;
+    filter: drop-shadow(0 0 6px var(--accent-glow));
+    transition: stroke-dashoffset 1.5s ease-out;
+  }
+  .score-number {
+    font-family: 'Space Grotesk', sans-serif; font-size: 56px; font-weight: 700;
+    line-height: 1; color: white; position: relative; z-index: 1;
+  }
+  .score-label {
+    font-size: 13px; color: var(--text-secondary); font-weight: 500;
+    position: relative; z-index: 1; margin-top: 4px;
+  }
+  .score-grade {
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;
+    position: relative; z-index: 1; margin-top: 2px;
+  }
+  .score-details { flex: 1; }
+  .score-details h2 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .score-details p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+
+  .sub-scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+  .sub-score {
+    padding: 14px 16px; background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+  }
+  .sub-score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; }
+  .sub-score-value { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
+  .sub-score-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06); margin-top: 8px; overflow: hidden; }
+  .sub-score-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease-out; }
+
+  .tabs {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border); padding: 0;
+  }
+  .tabs-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 0; overflow-x: auto; scrollbar-width: none;
+  }
+  .tabs-inner::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 16px 24px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500;
+    color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s; position: relative;
+  }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-btn .tab-count {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 20px; height: 20px; padding: 0 6px;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px;
+    font-size: 11px; font-weight: 600; margin-left: 8px; color: var(--text-secondary);
+  }
+  .tab-btn.active .tab-count { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .tab-content { display: none; padding: 40px 0 80px; }
+  .tab-content.active { display: block; }
+
+  .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .section-subtitle { color: var(--text-secondary); font-size: 15px; margin-bottom: 24px; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .stat-card {
+    padding: 24px; background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); text-align: center; transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--border-hover); }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .stat-label { font-size: 13px; color: var(--text-secondary); }
+
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px; margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--border-hover); }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 12px; border-radius: 100px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+  }
+  .badge-critical { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-high { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-medium { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-low { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-warning { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+  .finding {
+    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: start;
+  }
+  .finding:last-child { border-bottom: none; }
+  .finding-status { width: 8px; height: 8px; border-radius: 50%; margin-top: 8px; }
+  .finding-status.pass { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.4); }
+  .finding-status.warning { background: var(--yellow); box-shadow: 0 0 6px rgba(234,179,8,0.4); }
+  .finding-status.warn { background: var(--yellow); box-shadow: 0 0 6px rgba(234,179,8,0.4); }
+  .finding-status.fail { background: var(--red); box-shadow: 0 0 6px rgba(239,68,68,0.4); }
+  .finding-content h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .finding-content p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .finding-rec {
+    margin-top: 8px; padding: 10px 14px;
+    background: rgba(99,102,241,0.06); border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    font-size: 13px; color: var(--text); line-height: 1.5;
+  }
+
+  .collapsible {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); margin-bottom: 12px;
+    overflow: hidden; transition: border-color 0.2s;
+  }
+  .collapsible:hover { border-color: var(--border-hover); }
+  .collapsible-header {
+    padding: 20px 24px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; user-select: none;
+  }
+  .collapsible-header:hover { background: rgba(255,255,255,0.02); }
+  .collapsible-title { font-weight: 600; color: var(--text); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .collapsible-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-body-inner { padding: 0 24px 24px; }
+  .collapse-icon {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--text-muted);
+    transition: transform 0.3s, background 0.2s; flex-shrink: 0;
+  }
+  .collapsible.open .collapse-icon { transform: rotate(180deg); }
+
+  .page-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .page-table th {
+    text-align: left; padding: 12px 16px;
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 600;
+  }
+  .page-table td {
+    padding: 12px 16px; font-size: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top;
+  }
+  .page-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .page-url { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); word-break: break-all; }
+
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-icon {
+    width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; margin-top: 1px; font-weight: bold;
+  }
+  .check-icon.pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .check-icon.fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .check-icon.warn { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .check-text { font-size: 14px; color: var(--text); }
+  .check-text.muted { color: var(--text-secondary); }
+
+  .action-item {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 24px; margin-bottom: 12px;
+    display: flex; gap: 20px; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .action-item:hover { border-color: var(--border-hover); }
+  .action-number {
+    font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700;
+    color: var(--accent); flex-shrink: 0; width: 36px; text-align: center; opacity: 0.5;
+  }
+  .action-content { flex: 1; }
+  .action-title { font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 6px; }
+  .action-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+  .action-impact { margin-top: 8px; font-size: 13px; color: var(--green); font-weight: 500; }
+
+  .cluster {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+  }
+  .cluster-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--purple); font-size: 16px; margin-bottom: 12px; }
+  .cluster-pages { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cluster-page {
+    padding: 6px 14px; border-radius: 100px;
+    background: var(--purple-bg); border: 1px solid var(--purple-border);
+    font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary);
+  }
+  .cluster-page.pillar {
+    background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.3);
+    color: var(--purple); font-weight: 600;
+  }
+
+  .lsi-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .lsi-tag {
+    padding: 6px 14px; background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.2); border-radius: 100px;
+    font-size: 13px; font-family: 'JetBrains Mono', monospace;
+    color: var(--text); transition: all 0.2s;
+  }
+  .lsi-tag:hover { background: rgba(99,102,241,0.15); border-color: rgba(99,102,241,0.4); }
+  .lsi-tag.integrated { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+  .lsi-tag.missing { background: var(--red-bg); border-color: var(--red-border); color: var(--red); opacity: 0.7; }
+
+  .keyword-table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+  .keyword-table th, .keyword-table td {
+    text-align: left; padding: 12px 16px; vertical-align: top;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+  .keyword-table th {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text-muted); font-weight: 600; border-bottom: 1px solid var(--border);
+  }
+  .keyword-table td { font-size: 14px; }
+  .keyword-primary { font-weight: 600; color: var(--accent); }
+  .keyword-tag {
+    display: inline-block; padding: 3px 10px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 100px; font-size: 12px;
+    font-family: 'JetBrains Mono', monospace; margin: 2px 4px 2px 0;
+    color: var(--text-secondary);
+  }
+
+  .competitor-card {
+    padding: 20px; background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    margin-bottom: 12px;
+  }
+  .competitor-rank {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%; background: var(--accent);
+    color: white; font-size: 13px; font-weight: 700; margin-right: 12px; flex-shrink: 0;
+  }
+  .competitor-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; }
+  .competitor-url { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); margin-bottom: 12px; word-break: break-all; }
+  .competitor-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .competitor-meta-item { font-size: 12px; color: var(--text-secondary); }
+  .competitor-meta-item strong { color: var(--text); }
+  .competitor-topics { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.04); }
+  .competitor-topics h5 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 8px; }
+
+  .gap-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .gap-card { padding: 20px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .gap-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .gap-card ul { list-style: none; padding: 0; }
+  .gap-card ul li {
+    font-size: 13px; color: var(--text-secondary);
+    padding: 4px 0; padding-left: 16px; position: relative;
+  }
+  .gap-card ul li::before {
+    content: ''; position: absolute; left: 0; top: 11px;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .header h1 { font-size: 28px; }
+    .score-section { flex-direction: column; text-align: center; padding: 24px; gap: 24px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .sub-scores { grid-template-columns: repeat(2, 1fr); }
+    .gap-grid { grid-template-columns: 1fr; }
+    .action-item { flex-direction: column; gap: 12px; }
+  }
+
+  @media print {
+    .tabs { display: none; }
+    .tab-content { display: block !important; page-break-before: always; }
+    body::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="header-badge"><span class="dot"></span> Site-Wide SEO Audit</div>
+    <h1>sauberhaus.nl</h1>
+    <p class="subtitle">Volledige SEO-analyse van 16 pagina's — Gegenereerd 19 mei 2026</p>
+  </div>
+</div>
+
+<div class="container" style="padding-top: 0; padding-bottom: 32px;">
+  <div class="score-section">
+    <div class="score-circle-wrap">
+      <div class="score-circle">
+        <svg viewBox="0 0 160 160">
+          <circle class="bg-ring" cx="80" cy="80" r="74"/>
+          <circle class="progress-ring" cx="80" cy="80" r="74"/>
+        </svg>
+        <span class="score-number">44</span>
+        <span class="score-grade">F</span>
+        <span class="score-label">Overall Health</span>
+      </div>
+    </div>
+    <div class="score-details">
+      <h2>Kritieke fundamenten ontbreken — sterk uitgangspunt om snel te verbeteren</h2>
+      <p>Het site-fundament is technisch in orde (HTTPS, HSTS, CDN, lazy loading, schone URL-structuur), maar de meta-laag is praktisch leeg: geen meta descriptions, geen H1's op 13 van 16 pagina's, 0% alt-text, geen schema, geen sitemap. Dit zijn allemaal eendaags-fixes met dramatische impact op organische zichtbaarheid.</p>
+      <div class="sub-scores">
+        <div class="sub-score">
+          <div class="sub-score-label">Technical</div>
+          <div class="sub-score-value" style="color: var(--orange)">46</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:46%; background: var(--orange)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Content</div>
+          <div class="sub-score-value" style="color: var(--red)">33</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:33%; background: var(--red)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Architecture</div>
+          <div class="sub-score-value" style="color: var(--yellow)">71</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:71%; background: var(--yellow)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Cross-Page</div>
+          <div class="sub-score-value" style="color: var(--red)">37</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:37%; background: var(--red)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Social &amp; Schema</div>
+          <div class="sub-score-value" style="color: var(--red)">33</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:33%; background: var(--red)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab(event, 'executive')">Executive Summary</button>
+    <button class="tab-btn" onclick="switchTab(event, 'pages')">Page Breakdown <span class="tab-count">16</span></button>
+    <button class="tab-btn" onclick="switchTab(event, 'sitewide')">Site-Wide Issues <span class="tab-count">12</span></button>
+    <button class="tab-btn" onclick="switchTab(event, 'technical')">Technical</button>
+    <button class="tab-btn" onclick="switchTab(event, 'content')">Content Strategy</button>
+    <button class="tab-btn" onclick="switchTab(event, 'linking')">Internal Linking</button>
+    <button class="tab-btn" onclick="switchTab(event, 'actions')">Action Plan</button>
+  </div>
+</div>
+
+<!-- TAB 1: EXECUTIVE SUMMARY -->
+<div id="tab-executive" class="tab-content active">
+<div class="container">
+  <div class="section-title">Executive Summary</div>
+  <div class="section-subtitle">High-level overzicht van de SEO-gezondheid en top-prioriteiten voor sauberhaus.nl</div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value">16</div><div class="stat-label">Pagina's geanalyseerd</div></div>
+    <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Critical issues</div></div>
+    <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">High priority</div></div>
+    <div class="stat-card"><div class="stat-value">50</div><div class="stat-label">Warnings</div></div>
+    <div class="stat-card"><div class="stat-value">311</div><div class="stat-label">Gem. word count</div></div>
+    <div class="stat-card"><div class="stat-value">0%</div><div class="stat-label">Schema dekking</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="card-title" style="margin-bottom: 16px;">Belangrijkste bevindingen</div>
+    <div style="color: var(--text-secondary); font-size: 15px; line-height: 1.8;">
+      
+Sauberhaus.nl scoort <strong>44/100 (grade F)</strong> op deze SEO-audit. De site mist op vrijwel alle pagina's de meest basale SEO-elementen:
+<strong>16/16 pagina's missen een meta description</strong>,
+<strong>13/16 pagina's hebben geen H1</strong>, en
+<strong>195 afbeeldingen hebben 0% beschrijvende alt-tekst</strong>. Vier pagina's hebben de identieke title
+"Sauberhaus" (10 chars) — Google zal die als duplicates behandelen. De site heeft <strong>geen XML sitemap</strong>,
+een <strong>leeg robots.txt-bestand</strong>, en <strong>geen JSON-LD structured data</strong> (geen Book/Person/Organization schema).
+Architectuur is wel sterk (consistente URL-structuur), maar de homepage gebruikt hash-anchors voor de hoofdnavigatie waardoor concepten zoals "boeken" of "auteurs" geen echte overzichts-URL hebben om voor te ranken.
+
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 32px;">Top 3 Prioriteiten</div>
+  <div class="section-subtitle">De hoogst-renderende acties om nu meteen te doen</div>
+  
+<div class="action-item">
+  <div class="action-number">1</div>
+  <div class="action-content">
+    <div class="action-title">Voeg unieke meta description toe op alle 16 pagina's</div>
+    <div class="action-desc">Op dit moment heeft <strong>geen enkele pagina</strong> een meta description. Google genereert nu zelf snippets uit willekeurige tekst, wat de CTR uit de zoekresultaten dramatisch verlaagt. Schrijf per pagina 140-160 chars met titel, auteur en USP.</div>
+    <div class="action-impact">Verwachte impact: +20-40% CTR op alle ranked pagina's binnen 2-4 weken na re-indexering</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div>
+<div class="action-item">
+  <div class="action-number">2</div>
+  <div class="action-content">
+    <div class="action-title">Fix de 4 duplicate "Sauberhaus" titels op nieuws- en auteur-pagina's</div>
+    <div class="action-desc">/auteurs/herman-den-blijker, /nieuws/sander-schaepman, /nieuws/michel-schoonheim en /nieuws/jari-tekent hebben allemaal de title <em>"Sauberhaus"</em> (10 chars). Vervang door beschrijvende titles met het onderwerp + brand suffix, bijv. <em>"Herman den Blijker — Auteur | Uitgeverij Sauberhaus"</em>.</div>
+    <div class="action-impact">Verwachte impact: 4 pagina's stoppen met elkaar te kannibaliseren + worden vindbaar op naam</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div>
+<div class="action-item">
+  <div class="action-number">3</div>
+  <div class="action-content">
+    <div class="action-title">Voeg XML sitemap toe en wijs ernaar in robots.txt</div>
+    <div class="action-desc">De site heeft <strong>geen /sitemap.xml</strong> (404 op alle varianten) en een <strong>leeg robots.txt</strong>. In Webflow kun je dit met één klik aanzetten (Project Settings → SEO → Auto-generate sitemap.xml). Voeg vervolgens in robots.txt: <code>Sitemap: https://www.sauberhaus.nl/sitemap.xml</code>.</div>
+    <div class="action-impact">Verwachte impact: snellere indexering van nieuwe pagina's, ontdekking van orphan pages door Googlebot</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div>
+
+
+  <div class="card" style="margin-top: 32px; background: rgba(234,179,8,0.05); border-color: var(--yellow-border);">
+    <div class="card-title" style="margin-bottom: 12px; color: var(--yellow);">Beperkingen van deze audit</div>
+    <ul style="color: var(--text-secondary); font-size: 14px; line-height: 1.8; padding-left: 20px;">
+      <li>Audit is gebaseerd op HTML-analyse — geen echte Core Web Vitals meting (geen Lighthouse run)</li>
+      <li>Geen backlink-profiel data (vereist Ahrefs/Semrush)</li>
+      <li>Geen actuele ranking-data uit Google Search Console (niet beschikbaar)</li>
+      <li>Crawl beperkt tot 16 pagina's (homepage + 10 boeken + 1 auteur + 1 LP + 3 nieuws). Site heeft 18+ pagina's; 3 zijn niet geauditeerd.</li>
+      <li>Concurrentie-analyse is licht — geen diepe SERP-data per keyword</li>
+    </ul>
+  </div>
+</div>
+</div>
+
+<!-- TAB 2: PAGE BREAKDOWN -->
+<div id="tab-pages" class="tab-content">
+<div class="container">
+  <div class="section-title">Pagina-per-pagina Breakdown</div>
+  <div class="section-subtitle">Audit-resultaten per gecrawlde pagina</div>
+
+  <div class="card" style="overflow-x: auto; padding: 0;">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Pagina</th><th>Title</th><th>Words</th><th>H1</th><th>Meta Desc</th><th>Schema</th><th>OG Tags</th><th>Issues</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+  <td><span class="page-url">/</span></td>
+  <td>Sauberhaus - de uitgeverij van de toekomst</td>
+  <td>322</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>5</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/vuur</span></td>
+  <td>Sauberhaus Uitgeverij | Vuur</td>
+  <td>327</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>6</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/open-kaart</span></td>
+  <td>Sauberhaus Uitgeverij | Open kaart</td>
+  <td>284</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>5</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/het-boek-van-joek</span></td>
+  <td>Sauberhaus Uitgeverij | Het boek van Joek</td>
+  <td>126</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>6</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/zijn-legendarische-jaren-bij-ajax</span></td>
+  <td>Sauberhaus Uitgeverij | Jari Litmanen - Zijn legen</td>
+  <td>274</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>6</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/als-de-bal-harder-aankomt</span></td>
+  <td>Sauberhaus Uitgeverij | Als de bal harder aankomt</td>
+  <td>296</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>5</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/een-taart-voor-de-prinses</span></td>
+  <td>Sauberhaus Uitgeverij | Een taart voor de prinses</td>
+  <td>173</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>6</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/herman-kookt-terug</span></td>
+  <td>Sauberhaus Uitgeverij | Herman Kookt terug</td>
+  <td>268</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>5</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/leiderschap-met-ballen</span></td>
+  <td>Sauberhaus Uitgeverij | LEIDERSCHAP MET BALLEN</td>
+  <td>209</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>5</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/we-hadden-ook-thuis-kunnen-blijven</span></td>
+  <td>Sauberhaus Uitgeverij | We hadden ook thuis kunnen</td>
+  <td>280</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>5</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/mijn-weg-langs-leiderschap-verlies-en-liefde</span></td>
+  <td>Sauberhaus Uitgeverij | Mijn weg; langs leiderscha</td>
+  <td>563</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><strong>6</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/auteurs/herman-den-blijker</span></td>
+  <td>Sauberhaus</td>
+  <td>101</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><strong>8</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/lp-sander-schaepman-leiderschap-met-ballen</span></td>
+  <td>LP-Sander Schaepman leiderschap met ballen</td>
+  <td>587</td>
+  <td><span class="badge badge-fail">0</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-warning">Partial</span></td>
+  <td><strong>6</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/nieuws/sander-schaepman-gevangen-door-sauberhaus</span></td>
+  <td>Sauberhaus</td>
+  <td>148</td>
+  <td><span class="badge badge-pass">1</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><strong>7</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus</span></td>
+  <td>Sauberhaus</td>
+  <td>873</td>
+  <td><span class="badge badge-pass">1</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><strong>6</strong></td>
+</tr>
+<tr>
+  <td><span class="page-url">/nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</span></td>
+  <td>Sauberhaus</td>
+  <td>155</td>
+  <td><span class="badge badge-pass">1</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><strong>7</strong></td>
+</tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top: 32px;">
+    <div class="section-title" style="font-size: 18px;">Gedetailleerde bevindingen per pagina</div>
+    <div class="section-subtitle">Klik om uit te klappen — elke pagina toont specifieke issues + aanbevelingen</div>
+    <div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/</span>
+      <span class="badge badge-critical">7 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 28 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>WebSite/Organization</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>WebSite/Organization</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/vuur</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title te kort (28 chars)</h4>
+    <p>Title is alleen <em>"Sauberhaus Uitgeverij | Vuur"</em> — te kort om beschrijvend te zijn.</p>
+    <div class="finding-rec">Maak title 50-60 chars met onderwerp + brand suffix.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 12 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/open-kaart</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (284 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 13 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/het-boek-van-joek</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Thin content (126 woorden)</h4>
+    <p>Onder 150 woorden — te weinig om relevantie te tonen.</p>
+    <div class="finding-rec">Breid uit naar minimaal 400-600 woorden met auteursinfo, samenvatting, leesfragment.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 13 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/zijn-legendarische-jaren-bij-ajax</span>
+      <span class="badge badge-critical">9 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title te lang (73 chars)</h4>
+    <p>Title wordt afgekapt in zoekresultaten.</p>
+    <div class="finding-rec">Kort title in tot 50-60 chars zonder kernwoorden te verliezen.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (274 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 12 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/als-de-bal-harder-aankomt</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (296 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 13 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/een-taart-voor-de-prinses</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (173 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 12 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/herman-kookt-terug</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (268 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 12 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/leiderschap-met-ballen</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (209 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 12 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/we-hadden-ook-thuis-kunnen-blijven</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (280 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 12 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/boeken/mijn-weg-langs-leiderschap-verlies-en-liefde</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title te lang (71 chars)</h4>
+    <p>Title wordt afgekapt in zoekresultaten.</p>
+    <div class="finding-rec">Kort title in tot 50-60 chars zonder kernwoorden te verliezen.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 12 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Book</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Book</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/auteurs/herman-den-blijker</span>
+      <span class="badge badge-critical">10 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title te kort (10 chars)</h4>
+    <p>Title is alleen <em>"Sauberhaus"</em> — te kort om beschrijvend te zijn.</p>
+    <div class="finding-rec">Maak title 50-60 chars met onderwerp + brand suffix.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Duplicate title (gebruikt op 4 pagina&#x27;s)</h4>
+    <p>Identieke title "Sauberhaus" gebruikt op: /auteurs/herman-den-blijker, /nieuws/sander-schaepman-gevangen-door-sauberhaus, /nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus, /nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</p>
+    <div class="finding-rec">Maak titles uniek per pagina met paginaspecifiek onderwerp.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Thin content (101 woorden)</h4>
+    <p>Onder 150 woorden — te weinig om relevantie te tonen.</p>
+    <div class="finding-rec">Breid uit naar minimaal 400-600 woorden met auteursinfo, samenvatting, leesfragment.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 8 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>Person</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>Person</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/lp-sander-schaepman-leiderschap-met-ballen</span>
+      <span class="badge badge-critical">7 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen H1 tag</h4>
+    <p>De pagina heeft geen H1 — Google ziet geen hoofdonderwerp.</p>
+    <div class="finding-rec">Voeg één <code>&lt;h1&gt;</code> toe bovenaan met de boektitel / onderwerpkeyword.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 9 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>WebSite/Organization</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>WebSite/Organization</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/nieuws/sander-schaepman-gevangen-door-sauberhaus</span>
+      <span class="badge badge-critical">9 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title te kort (10 chars)</h4>
+    <p>Title is alleen <em>"Sauberhaus"</em> — te kort om beschrijvend te zijn.</p>
+    <div class="finding-rec">Maak title 50-60 chars met onderwerp + brand suffix.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Duplicate title (gebruikt op 4 pagina&#x27;s)</h4>
+    <p>Identieke title "Sauberhaus" gebruikt op: /auteurs/herman-den-blijker, /nieuws/sander-schaepman-gevangen-door-sauberhaus, /nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus, /nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</p>
+    <div class="finding-rec">Maak titles uniek per pagina met paginaspecifiek onderwerp.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Thin content (148 woorden)</h4>
+    <p>Onder 150 woorden — te weinig om relevantie te tonen.</p>
+    <div class="finding-rec">Breid uit naar minimaal 400-600 woorden met auteursinfo, samenvatting, leesfragment.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 9 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>NewsArticle</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>NewsArticle</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus</span>
+      <span class="badge badge-critical">8 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title te kort (10 chars)</h4>
+    <p>Title is alleen <em>"Sauberhaus"</em> — te kort om beschrijvend te zijn.</p>
+    <div class="finding-rec">Maak title 50-60 chars met onderwerp + brand suffix.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Duplicate title (gebruikt op 4 pagina&#x27;s)</h4>
+    <p>Identieke title "Sauberhaus" gebruikt op: /auteurs/herman-den-blijker, /nieuws/sander-schaepman-gevangen-door-sauberhaus, /nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus, /nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</p>
+    <div class="finding-rec">Maak titles uniek per pagina met paginaspecifiek onderwerp.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 9 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>NewsArticle</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>NewsArticle</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+<div class="collapsible">
+  <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+    <span class="collapsible-title">
+      <span class="page-url">/nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</span>
+      <span class="badge badge-critical">9 issues</span>
+    </span>
+    <span class="collapse-icon">▼</span>
+  </div>
+  <div class="collapsible-body">
+    <div class="collapsible-body-inner">
+      <div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title te kort (10 chars)</h4>
+    <p>Title is alleen <em>"Sauberhaus"</em> — te kort om beschrijvend te zijn.</p>
+    <div class="finding-rec">Maak title 50-60 chars met onderwerp + brand suffix.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Duplicate title (gebruikt op 4 pagina&#x27;s)</h4>
+    <p>Identieke title "Sauberhaus" gebruikt op: /auteurs/herman-den-blijker, /nieuws/sander-schaepman-gevangen-door-sauberhaus, /nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus, /nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</p>
+    <div class="finding-rec">Maak titles uniek per pagina met paginaspecifiek onderwerp.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Meta description ontbreekt</h4>
+    <p>Google moet zelf een snippet genereren uit de pagina-content — vaak een slechte, irrelevante zin.</p>
+    <div class="finding-rec">Schrijf 140-160 chars met onderwerp + USP + call-to-action.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Korte content (155 woorden)</h4>
+    <p>Onder 300 woorden — minder ranking-potentie dan concurrenten met 600-1200.</p>
+    <div class="finding-rec">Voeg recensies, leesfragment, auteurbio, ISBN-metadata toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>0% alt-tekst op 9 images</h4>
+    <p>Alle images hebben <code>alt=""</code> (leeg) — toegankelijkheid en image-SEO weg.</p>
+    <div class="finding-rec">Voeg beschrijvende alt-tekst toe per image (boektitel, auteur, scène).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen JSON-LD structured data</h4>
+    <p>Geen schema.org markup. Voor dit type pagina is <code>NewsArticle</code> schema aangewezen.</p>
+    <div class="finding-rec">Voeg JSON-LD <code>NewsArticle</code> schema toe via Webflow embed.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Geen canonical tag</h4>
+    <p>Risico op duplicate URL-issues (HTTP/HTTPS, www/non-www, querystrings).</p>
+    <div class="finding-rec">Voeg <code>&lt;link rel="canonical" href="..."&gt;</code> toe per pagina.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>og:description ontbreekt</h4>
+    <p>Sociale shares krijgen geen preview-tekst.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta property="og:description"&gt;</code> toe (mag gelijk zijn aan meta description).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>twitter:card ontbreekt</h4>
+    <p>Twitter weet niet welk kaarttype te tonen — valt terug op standaard.</p>
+    <div class="finding-rec">Voeg <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code> toe.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+    </div>
+  </div>
+</div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 3: SITE-WIDE ISSUES -->
+<div id="tab-sitewide" class="tab-content">
+<div class="container">
+  <div class="section-title">Site-Wide Issues</div>
+  <div class="section-subtitle">Cross-cutting issues die meerdere pagina's tegelijk raken</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">Duplicate Content &amp; Cannibalization</div>
+    <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Identieke title &quot;Sauberhaus&quot; op 4 pagina&#x27;s</h4>
+    <p>Dezelfde title <em>"Sauberhaus"</em> komt voor op: <code>/auteurs/herman-den-blijker</code>, <code>/nieuws/sander-schaepman-gevangen-door-sauberhaus</code>, <code>/nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus</code>, <code>/nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</code>. Google ziet deze pagina's als duplicates en zal er maar één indexeren.</p>
+    <div class="finding-rec">Maak elke title uniek met paginaspecifiek onderwerp (auteursnaam / nieuws-onderwerp) + brand suffix.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Keyword cannibalization rond &quot;leiderschap&quot;</h4>
+    <p>Drie pagina's targeten de term "leiderschap": <code>/boeken/leiderschap-met-ballen</code>, <code>/boeken/mijn-weg-langs-leiderschap-verlies-en-liefde</code>, en <code>/lp-sander-schaepman-leiderschap-met-ballen</code>. Daarnaast bestaat ook <code>/boeken/leiderschap-met-ballen-midprice</code> (niet in audit-set) wat een mogelijke duplicate van de hoofdboekpagina is.</p>
+    <div class="finding-rec">Maak één pillar-pagina (/boeken/leiderschap-met-ballen) en gebruik canonical om de midprice-variant en LP te wijzen. Differentieer de andere boekpagina (Mandy van der Wal) op een ander concept dan leiderschap.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Twee pagina&#x27;s rond Sander Schaepman</h4>
+    <p>Zowel <code>/lp-sander-schaepman-leiderschap-met-ballen</code> als <code>/nieuws/sander-schaepman-gevangen-door-sauberhaus</code> kunnen op zoekopdrachten rond "Sander Schaepman" verschijnen.</p>
+    <div class="finding-rec">Bepaal welke je primair wilt ranken (waarschijnlijk de LP) en laat de nieuwspagina ernaar linken met "Lees meer over het boek".</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Alle 16 pagina&#x27;s hebben geen meta description</h4>
+    <p>Geen enkele pagina heeft een eigen meta description, dus alle pagina's zijn in feite "duplicate empty" op dit veld.</p>
+    <div class="finding-rec">Schrijf voor elke pagina een unieke meta description (140-160 chars).</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">Consistency Issues</div>
+    <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Heading-strategie inconsistent tussen pagina-types</h4>
+    <p>13/16 pagina's hebben geen H1. Alleen de 3 nieuws-pagina's hebben er één. Homepage, boekpagina's, auteurpagina en landing page missen allemaal H1.</p>
+    <div class="finding-rec">Standaardiseer template: elke pagina krijgt 1× H1 met het hoofdonderwerp (boektitel / auteurnaam / pagina-thema).</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>OG-tags incomplete maar consistent leeg</h4>
+    <p>Alle pagina's hebben <code>og:title</code> en <code>og:image</code>, maar geen enkele heeft <code>og:description</code>, <code>og:url</code> of <code>og:type</code>.</p>
+    <div class="finding-rec">Vul de ontbrekende OG-tags in via Webflow page settings (description, type=article voor nieuws, type=website voor rest).</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Title-format niet consistent</h4>
+    <p>Sommige titles starten met <em>"Sauberhaus Uitgeverij | "</em>, andere met de boektitel, en 4 zijn alleen <em>"Sauberhaus"</em>.</p>
+    <div class="finding-rec">Kies één format: <em>"[Onderwerp] | Uitgeverij Sauberhaus"</em> en pas op alle pagina's toe.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Alt-tekst beleid: geen enkele image heeft beschrijvende alt</h4>
+    <p>195 images site-wide, allemaal met <code>alt=""</code> (leeg).</p>
+    <div class="finding-rec">Cover-images: <em>alt="[Boektitel] door [Auteur]"</em>. Auteurfoto: <em>alt="[Naam], auteur bij Sauberhaus"</em>. Logo: <em>alt="Uitgeverij Sauberhaus"</em>.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">robots.txt &amp; Sitemap</div>
+    <div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen XML sitemap (404 op alle paths)</h4>
+    <p>Geen <code>/sitemap.xml</code>, <code>/sitemap_index.xml</code> of variant gevonden. Google moet alle pagina's zelf ontdekken via interne links — orphan-pagina's worden nooit gevonden.</p>
+    <div class="finding-rec">In Webflow Project Settings → SEO → schakel "Auto-generate sitemap.xml" in. Dien sitemap in via Google Search Console.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>robots.txt bestaat maar is leeg (0 bytes)</h4>
+    <p>De file geeft HTTP 200 maar bevat geen directives en geen Sitemap-referentie. Crawlers krijgen geen sturing.</p>
+    <div class="finding-rec">Vul in:<br><code>User-agent: *<br>Allow: /<br>Sitemap: https://www.sauberhaus.nl/sitemap.xml</code></div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>3 ontdekte pagina&#x27;s niet bereikbaar via crawled set</h4>
+    <p>Homepage linkt naar <code>/boeken/leiderschap-met-ballen-midprice</code>, <code>/nieuws/douwe-bob-tekent-bij-uitgeverij-sauberhaus-b-v-voor-zijn-eerste-kookboek-vuur</code> en <code>/nieuws/lizet-kruijff-en-hidde-de-brabander-tekenen-ook-bij-sauberhaus</code> — die ontdekken we alleen via de homepage. Zonder sitemap mist Google deze als de homepage-link verdwijnt.</p>
+    <div class="finding-rec">Voeg sitemap.xml toe (zie hierboven) en zorg dat alle pagina's vanuit minimaal 2 plekken intern gelinkt zijn.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">Security &amp; Server Headers</div>
+    <div class="finding">
+  <div class="finding-status pass"></div>
+  <div class="finding-content">
+    <h4>HTTPS + HSTS actief</h4>
+    <p>De site draait op HTTPS via Cloudflare met <code>strict-transport-security: max-age=31536000</code>.</p>
+    <div class="finding-rec">Goed — geen actie nodig. Eventueel preload toevoegen.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Content-Security-Policy ontbreekt</h4>
+    <p>Geen CSP-header. Bij Webflow vereist externe oplossing (Cloudflare Transform Rule of Workers).</p>
+    <div class="finding-rec">Configureer CSP in Cloudflare Transform Rules (start in <em>Report-Only</em>-mode).</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>X-Content-Type-Options ontbreekt</h4>
+    <p>Geen <code>X-Content-Type-Options: nosniff</code> header. Browsers kunnen MIME-types raden — risico op XSS via geüploade content.</p>
+    <div class="finding-rec">Zet via Cloudflare Transform Rule: <code>X-Content-Type-Options: nosniff</code>.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>X-Frame-Options ontbreekt</h4>
+    <p>Geen clickjacking-bescherming.</p>
+    <div class="finding-rec">Zet via Cloudflare: <code>X-Frame-Options: SAMEORIGIN</code>.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Referrer-Policy ontbreekt</h4>
+    <p>Geen referrer-policy header — externe sites krijgen volledige URL als referrer.</p>
+    <div class="finding-rec">Zet <code>Referrer-Policy: strict-origin-when-cross-origin</code>.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status pass"></div>
+  <div class="finding-content">
+    <h4>Gzip compressie actief</h4>
+    <p>Cloudflare levert content met <code>content-encoding: gzip</code>.</p>
+    <div class="finding-rec">Goed — geen actie nodig.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+  </div>
+</div>
+</div>
+
+<!-- TAB 4: TECHNICAL -->
+<div id="tab-technical" class="tab-content">
+<div class="container">
+  <div class="section-title">Technical SEO</div>
+  <div class="section-subtitle">Infrastructuur, performance en technische implementatie</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 20px;">Implementatie Checklist</div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">HTTPS actief over hele site (Cloudflare)</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">HSTS header (max-age=31536000)</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Viewport meta tag op alle pagina's</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">HTML lang="nl" correct ingesteld</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Favicon (SVG + apple-touch-icon)</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Preconnect naar Google Fonts + Webflow CDN</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Stylesheet met SRI integrity hash</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Lazy loading op 98% van images (192/195)</div></div><div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Gzip compressie actief</div></div><div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text">robots.txt bestaat (200 OK) maar is leeg</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">XML sitemap MISSING (404 op alle varianten)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">JSON-LD structured data: 0/16 pagina's</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Canonical tags: 0/16 pagina's</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Meta description: 0/16 pagina's</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">H1 tags: alleen op 3/16 pagina's aanwezig</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Alt-tekst op images: 0/195 beschrijvend</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Geen WebP/AVIF — alle covers in PNG/JPG</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Content-Security-Policy header ontbreekt</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">X-Content-Type-Options header ontbreekt</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">X-Frame-Options header ontbreekt</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Referrer-Policy header ontbreekt</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">og:description / og:url / og:type op alle pagina's ontbreken</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">twitter:card tag ontbreekt site-wide</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Breadcrumb markup ontbreekt</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Algemene Voorwaarden + Privacy als PDF i.p.v. HTML-pagina</div></div>
+  </div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 32px;">Schema Markup Strategie</div>
+  <div class="section-subtitle">Huidige structured data en aanbevolen toevoegingen per pagina-type</div>
+  <div class="card" style="overflow-x: auto; padding: 0;">
+    <table class="page-table"><thead><tr><th>Pagina type</th><th>Huidige schema</th><th>Aanbevolen schema</th><th>Velden om te includeren</th></tr></thead><tbody><tr><td>Homepage</td><td><span class="badge badge-fail">Geen</span></td><td>Organization + WebSite</td><td>name, url, logo, sameAs (socials), potentialAction (SearchAction)</td></tr><tr><td>Boekpagina (/boeken/[slug])</td><td><span class="badge badge-fail">Geen</span></td><td>Book + Person (author)</td><td>name, author, isbn, datePublished, publisher, bookFormat, numberOfPages, image</td></tr><tr><td>Auteurpagina (/auteurs/[slug])</td><td><span class="badge badge-fail">Geen</span></td><td>Person</td><td>name, jobTitle, image, sameAs (socials), description, knowsAbout</td></tr><tr><td>Nieuws (/nieuws/[slug])</td><td><span class="badge badge-fail">Geen</span></td><td>NewsArticle / Article</td><td>headline, datePublished, author, image, publisher, articleBody</td></tr><tr><td>Landing page (/lp-...)</td><td><span class="badge badge-fail">Geen</span></td><td>Product + Offer</td><td>name, image, description, brand, offers (price, availability, url)</td></tr></tbody></table>
+  </div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 32px;">Performance Indicatoren</div>
+  <div class="section-subtitle">Resource counts, image-optimalisatie en loading patterns</div>
+  <div class="finding">
+  <div class="finding-status pass"></div>
+  <div class="finding-content">
+    <h4>Lazy loading op 192/195 images (98%)</h4>
+    <p>Vrijwel alle images zijn loading="lazy" — Webflow doet dit standaard.</p>
+    <div class="finding-rec">Goed — geen actie nodig.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status fail"></div>
+  <div class="finding-content">
+    <h4>Geen WebP/AVIF — alle 195 images in PNG/JPG</h4>
+    <p>Moderne formaten leveren 25-50% kleinere bestanden. Cover-images blijven nu groot.</p>
+    <div class="finding-rec">In Webflow Asset Manager: zet "Responsive images" aan + serveer WebP via Cloudflare Polish.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div><div class="finding">
+  <div class="finding-status pass"></div>
+  <div class="finding-content">
+    <h4>Cloudflare CDN (cf-cache-status: HIT)</h4>
+    <p>Cache hits zichtbaar in response headers.</p>
+    <div class="finding-rec">Goed — caching werkt.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div><div class="finding">
+  <div class="finding-status warn"></div>
+  <div class="finding-content">
+    <h4>Veel inline Webflow CSS in HTML</h4>
+    <p>Webflow inlinet animatie-styles per element — vergroot HTML size (homepage 45KB).</p>
+    <div class="finding-rec">Beperk gebruik van Webflow interactions waar mogelijk; gebruik Symbols voor herbruikbare blokken.</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 32px;">Concurrentie</div>
+  <div class="section-subtitle">Andere NL non-fictie uitgevers — wat zij beter doen</div>
+  
+<div class="competitor-card">
+  <div class="competitor-title"><span class="competitor-rank">1</span> Atlas Contact</div>
+  <div class="competitor-url">https://www.atlascontact.nl</div>
+  <div class="competitor-meta">
+    <span class="competitor-meta-item">Type: <strong>Premium NL uitgeverij</strong></span>
+    <span class="competitor-meta-item">Categorieën: <strong>fictie + non-fictie</strong></span>
+  </div>
+  <div class="competitor-topics">
+    <h5>Wat ze sterker doen dan Sauberhaus</h5>
+    <div class="lsi-cloud">
+      <span class="keyword-tag">unieke meta descriptions per pagina</span>
+      <span class="keyword-tag">Book/Author schema</span>
+      <span class="keyword-tag">auteur overzichtspagina</span>
+      <span class="keyword-tag">categorie-pagina's</span>
+      <span class="keyword-tag">interne search</span>
+    </div>
+  </div>
+</div>
+<div class="competitor-card">
+  <div class="competitor-title"><span class="competitor-rank">2</span> Kosmos Uitgevers</div>
+  <div class="competitor-url">https://www.kosmosuitgevers.nl</div>
+  <div class="competitor-meta">
+    <span class="competitor-meta-item">Type: <strong>VBK groep (groot)</strong></span>
+    <span class="competitor-meta-item">Sterk in: <strong>kookboeken, sport, lifestyle</strong></span>
+  </div>
+  <div class="competitor-topics">
+    <h5>Wat ze sterker doen dan Sauberhaus</h5>
+    <div class="lsi-cloud">
+      <span class="keyword-tag">ISBN-detail per boek</span>
+      <span class="keyword-tag">leesfragment / leesproef</span>
+      <span class="keyword-tag">koopknoppen met links</span>
+      <span class="keyword-tag">recensies / quotes</span>
+      <span class="keyword-tag">filterbare categorieën</span>
+    </div>
+  </div>
+</div>
+<div class="competitor-card">
+  <div class="competitor-title"><span class="competitor-rank">3</span> Lannoo</div>
+  <div class="competitor-url">https://www.lannoo.com</div>
+  <div class="competitor-meta">
+    <span class="competitor-meta-item">Type: <strong>BE/NL non-fictie marktleider</strong></span>
+    <span class="competitor-meta-item">Sterk in: <strong>biografieën, kookboeken</strong></span>
+  </div>
+  <div class="competitor-topics">
+    <h5>Wat ze sterker doen dan Sauberhaus</h5>
+    <div class="lsi-cloud">
+      <span class="keyword-tag">structured data (Book/Person)</span>
+      <span class="keyword-tag">auteur biografie</span>
+      <span class="keyword-tag">interviews / persmappen</span>
+      <span class="keyword-tag">nieuwsbrief signup</span>
+      <span class="keyword-tag">XML sitemap</span>
+    </div>
+  </div>
+</div>
+<div class="competitor-card">
+  <div class="competitor-title"><span class="competitor-rank">4</span> Thomas Rap</div>
+  <div class="competitor-url">https://www.thomasrap.nl</div>
+  <div class="competitor-meta">
+    <span class="competitor-meta-item">Type: <strong>onderdeel De Bezige Bij</strong></span>
+    <span class="competitor-meta-item">Sterk in: <strong>non-fictie</strong></span>
+  </div>
+  <div class="competitor-topics">
+    <h5>Wat ze sterker doen dan Sauberhaus</h5>
+    <div class="lsi-cloud">
+      <span class="keyword-tag">categorie-archief pagina</span>
+      <span class="keyword-tag">snelle bestelfunctionaliteit</span>
+      <span class="keyword-tag">unieke H1 per boek</span>
+      <span class="keyword-tag">levering / verzending info</span>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<!-- TAB 5: CONTENT STRATEGY -->
+<div id="tab-content" class="tab-content">
+<div class="container">
+  <div class="section-title">Content Strategie</div>
+  <div class="section-subtitle">Content gaps, keyword-kansen en aanbevolen content clusters</div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Thin content pagina's</div></div>
+    <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Strong content pagina's</div></div>
+    <div class="stat-card"><div class="stat-value">4986</div><div class="stat-label">Totaal woorden</div></div>
+    <div class="stat-card"><div class="stat-value">16</div><div class="stat-label">Missing meta desc</div></div>
+  </div>
+
+  <div class="section-title" style="font-size: 18px;">Keyword Strategie</div>
+  <div class="section-subtitle">Primary keyword + secondary + LSI termen (uit competitor analyse)</div>
+  <table class="keyword-table">
+    <thead><tr><th>Type</th><th>Keyword</th><th>Densiteit doel</th><th>Pagina's gebruikt</th></tr></thead>
+    <tbody>
+<tr>
+  <td><span class="keyword-primary">PRIMARY</span></td>
+  <td><strong>uitgeverij sauberhaus</strong></td>
+  <td>1-2%</td>
+  <td>4/16</td>
+</tr>
+<tr>
+  <td><span class="badge badge-medium">Secondary</span></td>
+  <td>auteur</td>
+  <td>0.5-1%</td>
+  <td>12/16</td>
+</tr>
+<tr>
+  <td><span class="badge badge-medium">Secondary</span></td>
+  <td>boek / boeken / kookboek / biografie</td>
+  <td>1%</td>
+  <td>16/16 (in URL), maar inhoudelijk dun</td>
+</tr>
+<tr>
+  <td><span class="badge badge-medium">Secondary</span></td>
+  <td>non-fictie / leiderschap</td>
+  <td>0.5%</td>
+  <td>2-4/16</td>
+</tr>
+<tr>
+  <td><span class="badge badge-low">LSI</span></td>
+  <td>pre-order, samenvatting, levenslessen, koken, voetbal, ajax, leiderschap, biografie, recensie, bestseller, paperback, hardcover, ISBN</td>
+  <td>1-3 mentions each</td>
+  <td>varies</td>
+</tr>
+</tbody>
+  </table>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 40px;">LSI Keywords — site-wide dekking</div>
+  <div class="section-subtitle">Groen = aanwezig op tenminste 1 pagina | Rood = volledig ontbrekend op de hele site</div>
+  <div class="lsi-cloud">
+    <span class="lsi-tag integrated" title="Publisher/Industry">uitgeverij</span>
+        <span class="lsi-tag missing" title="Publisher/Industry">uitgever</span>
+        <span class="lsi-tag integrated" title="Publisher/Industry">uitgeven</span>
+        <span class="lsi-tag missing" title="Publisher/Industry">manuscript</span>
+        <span class="lsi-tag missing" title="Publisher/Industry">redactie</span>
+        <span class="lsi-tag integrated" title="Publisher/Industry">auteur</span>
+        <span class="lsi-tag missing" title="Publisher/Industry">schrijver</span>
+        <span class="lsi-tag missing" title="Publisher/Industry">fonds</span>
+        <span class="lsi-tag missing" title="Publisher/Industry">oplage</span>
+        <span class="lsi-tag integrated" title="Publisher/Industry">druk</span>
+        <span class="lsi-tag missing" title="Publisher/Industry">isbn</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">paperback</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">hardcover</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">gebonden</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">ebook</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">pocket</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">kopen</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">bestellen</span>
+        <span class="lsi-tag integrated" title="Book Formats/Sales">pre-order</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">voorverkoop</span>
+        <span class="lsi-tag missing" title="Book Formats/Sales">leverbaar</span>
+        <span class="lsi-tag integrated" title="Genres">non-fictie</span>
+        <span class="lsi-tag integrated" title="Genres">fictie</span>
+        <span class="lsi-tag integrated" title="Genres">biografie</span>
+        <span class="lsi-tag missing" title="Genres">memoires</span>
+        <span class="lsi-tag integrated" title="Genres">kookboek</span>
+        <span class="lsi-tag integrated" title="Genres">sportboek</span>
+        <span class="lsi-tag missing" title="Genres">kinderboek</span>
+        <span class="lsi-tag integrated" title="Genres">managementboek</span>
+        <span class="lsi-tag integrated" title="Genres">leiderschap</span>
+        <span class="lsi-tag missing" title="Trust/Quality">recensie</span>
+        <span class="lsi-tag missing" title="Trust/Quality">bestseller</span>
+        <span class="lsi-tag integrated" title="Trust/Quality">samenvatting</span>
+        <span class="lsi-tag missing" title="Trust/Quality">voorwoord</span>
+        <span class="lsi-tag missing" title="Trust/Quality">jury</span>
+        <span class="lsi-tag missing" title="Trust/Quality">prijs</span>
+        <span class="lsi-tag missing" title="Trust/Quality">nominatie</span>
+        <span class="lsi-tag missing" title="Trust/Quality">pers</span>
+        <span class="lsi-tag integrated" title="Distribution">boekhandel</span>
+        <span class="lsi-tag missing" title="Distribution">bruna</span>
+        <span class="lsi-tag integrated" title="Distribution">bol</span>
+        <span class="lsi-tag integrated" title="Distribution">managementboek</span>
+        <span class="lsi-tag missing" title="Distribution">libris</span>
+        <span class="lsi-tag missing" title="Distribution">boekenwereld</span>
+        <span class="lsi-tag missing" title="Distribution">readshop</span>
+        <span class="lsi-tag integrated" title="Audience/Topic">lezer</span>
+        <span class="lsi-tag missing" title="Audience/Topic">inspiratie</span>
+        <span class="lsi-tag integrated" title="Audience/Topic">levenslessen</span>
+        <span class="lsi-tag integrated" title="Audience/Topic">verhalen</span>
+        <span class="lsi-tag missing" title="Audience/Topic">ervaringen</span>
+        <span class="lsi-tag integrated" title="Audience/Topic">creatief</span>
+        <span class="lsi-tag integrated" title="Audience/Topic">commercieel</span>
+  </div>
+  <p style="margin-top: 16px; color: var(--text-secondary); font-size: 13px;">20 van 52 termen aanwezig site-wide (38%)</p>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 40px;">Gap Analyse</div>
+  <div class="section-subtitle">Wat ontbreekt op deze site vs. wat NL uitgever-concurrentie wel heeft</div>
+  <div class="gap-grid">
+    <div class="gap-card">
+      <h4 style="color: var(--red);">Content Gaps</h4>
+      <ul>
+        <li>Geen <strong>auteur-overzichtspagina</strong> — concurrenten hebben dedicated /auteurs hub</li>
+        <li>Geen <strong>boek-overzichtspagina</strong> — alle boeken alleen vindbaar via homepage scroll of directe URL</li>
+        <li>Geen <strong>categorie-pagina's</strong> (kookboeken, sport, leiderschap) → mist breed-zoek traffic</li>
+        <li>Geen <strong>leesfragmenten / leesproeven</strong> op boekpagina's — concurrenten bieden dit standaard</li>
+        <li>Geen <strong>recensies / quotes uit pers</strong> op boekpagina's (trust signal)</li>
+        <li>Geen <strong>ISBN / aantal pagina's / formaat</strong> op boekpagina's — basale boekmetadata ontbreekt</li>
+        <li>Geen <strong>persmap / interview-aanvraag pagina</strong> (B2B journalistiek verkeer)</li>
+        <li>Geen <strong>blog / inkijk over uitgeven</strong> — alleen 5 korte nieuwsberichten over contracttekeningen</li>
+</ul>
+    </div>
+    <div class="gap-card">
+      <h4 style="color: var(--yellow);">Structurele Gaps</h4>
+      <ul>
+        <li>Gemiddeld <strong>311 woorden/pagina</strong> — boekpagina's bij grote concurrenten zitten meestal op 600-1200</li>
+        <li><strong>5 pagina's onder 200 woorden</strong> (waaronder /auteurs/herman-den-blijker met 101 woorden)</li>
+        <li>Navigatie via hash-anchors (#wie-zijn-wij, #boek-releases) i.p.v. echte URL-pagina's — verlaagt indexeerbaarheid</li>
+        <li>Algemene Voorwaarden en Privacy zijn <strong>PDF op Webflow CDN</strong>, niet als HTML-pagina — geen SEO-waarde</li>
+        <li>Contact alleen via mailto: — geen contactpagina met formulier, NAP-data of routebeschrijving</li>
+        <li>Discord-link in footer is generiek (<code>https://discord.com/</code>) zonder server-invite — broken UX-signal</li>
+</ul>
+    </div>
+    <div class="gap-card">
+      <h4 style="color: var(--green);">Unieke voordelen die je hebt</h4>
+      <ul>
+        <li><strong>Sterke bekende auteurs:</strong> Herman den Blijker, Douwe Bob, Jari Litmanen, Sander Schaepman</li>
+        <li><strong>Consistente URL-structuur</strong> (/boeken/[slug], /auteurs/[slug], /nieuws/[slug])</li>
+        <li><strong>Snelle Webflow hosting</strong> op Cloudflare CDN (HTTP/2, gzip, HSTS)</li>
+        <li><strong>Lazy loading</strong> op 98% van images (192/195) — performance-boost gratis</li>
+        <li><strong>Schone NL-taal</strong> markup (<code>&lt;html lang="nl"&gt;</code>) — duidelijk taalsignaal aan Google</li>
+</ul>
+    </div>
+    <div class="gap-card">
+      <h4 style="color: var(--blue);">Keyword Gaps</h4>
+      <ul>
+        <li><strong>31 van 52 LSI-termen</strong> komen helemaal niet voor op de site</li>
+        <li>Mist commerciële trigger-woorden: <em>kopen</em>, <em>bestellen</em>, <em>voorverkoop</em>, <em>leverbaar</em></li>
+        <li>Mist book-trust-termen: <em>recensie</em>, <em>bestseller</em>, <em>jury</em>, <em>nominatie</em>, <em>pers</em></li>
+        <li>Mist boek-metadata: <em>ISBN</em>, <em>paperback</em>, <em>hardcover</em>, <em>oplage</em>, <em>druk</em></li>
+        <li>Mist boekhandel-namen die meezoeken: <em>Bruna</em>, <em>Libris</em>, <em>Boekenwereld</em>, <em>Readshop</em></li>
+</ul>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 40px;">Keyword Map per pagina</div>
+  <div class="section-subtitle">Inferred target keyword + dekking + cannibalization-risk per pagina</div>
+  <div class="card" style="overflow-x: auto; padding: 0;">
+    <table class="page-table">
+      <thead><tr><th>Pagina</th><th>Inferred target keyword</th><th>KW in title</th><th>KW in H1</th><th>In eerste 100 wrds</th><th>Cannibal. risk</th></tr></thead>
+      <tbody><tr>
+  <td><span class="page-url">/</span></td>
+  <td>sauberhaus uitgeverij</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/vuur</span></td>
+  <td>vuur</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/open-kaart</span></td>
+  <td>open kaart</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/het-boek-van-joek</span></td>
+  <td>het boek van joek</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/zijn-legendarische-jaren-bij-ajax</span></td>
+  <td>zijn legendarische jaren bij ajax</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/als-de-bal-harder-aankomt</span></td>
+  <td>als de bal harder aankomt</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/een-taart-voor-de-prinses</span></td>
+  <td>een taart voor de prinses</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/herman-kookt-terug</span></td>
+  <td>herman kookt terug</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/leiderschap-met-ballen</span></td>
+  <td>leiderschap met ballen</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">Hoog</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/we-hadden-ook-thuis-kunnen-blijven</span></td>
+  <td>we hadden ook thuis kunnen blijven</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/boeken/mijn-weg-langs-leiderschap-verlies-en-liefde</span></td>
+  <td>mijn weg langs leiderschap verlies en liefde</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">Hoog</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/auteurs/herman-den-blijker</span></td>
+  <td>herman den blijker</td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/lp-sander-schaepman-leiderschap-met-ballen</span></td>
+  <td>lp sander schaepman leiderschap met ballen</td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-fail">Hoog</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/nieuws/sander-schaepman-gevangen-door-sauberhaus</span></td>
+  <td>sander schaepman gevangen door sauberhaus</td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-warning">Medium</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus</span></td>
+  <td>michel schoonheim start eigen uitgeverij sauberhaus</td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr>
+<tr>
+  <td><span class="page-url">/nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</span></td>
+  <td>jari tekent nieuw contract bij sauberhaus</td>
+  <td><span class="badge badge-fail">No</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Yes</span></td>
+  <td><span class="badge badge-pass">Laag</span></td>
+</tr></tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 40px;">Aanbevolen Content Clusters</div>
+  <div class="section-subtitle">Groepeer gerelateerde pagina's tot pillar/cluster structuren voor topic authority</div>
+  
+<div class="cluster">
+  <div class="cluster-title">Sport / Voetbal</div>
+  <div class="cluster-pages">
+    <span class="cluster-page pillar">/boeken/sport (NIEUW pillar voorstel)</span>
+    <span class="cluster-page">/boeken/zijn-legendarische-jaren-bij-ajax</span>
+    <span class="cluster-page">/boeken/als-de-bal-harder-aankomt</span>
+    <span class="cluster-page">/boeken/open-kaart</span>
+    <span class="cluster-page">/nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</span>
+  </div>
+</div>
+<div class="cluster">
+  <div class="cluster-title">Leiderschap / Management</div>
+  <div class="cluster-pages">
+    <span class="cluster-page pillar">/boeken/leiderschap-met-ballen (huidige pillar)</span>
+    <span class="cluster-page">/lp-sander-schaepman-leiderschap-met-ballen (canonical → pillar)</span>
+    <span class="cluster-page">/boeken/leiderschap-met-ballen-midprice (canonical → pillar)</span>
+    <span class="cluster-page">/nieuws/sander-schaepman-gevangen-door-sauberhaus</span>
+  </div>
+</div>
+<div class="cluster">
+  <div class="cluster-title">Koken / Culinair</div>
+  <div class="cluster-pages">
+    <span class="cluster-page pillar">/boeken/koken (NIEUW pillar voorstel)</span>
+    <span class="cluster-page">/boeken/vuur</span>
+    <span class="cluster-page">/boeken/herman-kookt-terug</span>
+    <span class="cluster-page">/boeken/een-taart-voor-de-prinses</span>
+    <span class="cluster-page">/auteurs/herman-den-blijker</span>
+    <span class="cluster-page">/nieuws/douwe-bob-tekent-bij-uitgeverij-sauberhaus-b-v-voor-zijn-eerste-kookboek-vuur</span>
+  </div>
+</div>
+<div class="cluster">
+  <div class="cluster-title">Kinder / Jeugd</div>
+  <div class="cluster-pages">
+    <span class="cluster-page">/boeken/het-boek-van-joek</span>
+    <span class="cluster-page" style="opacity:0.5">(uitbreiden — slechts 1 titel in dit segment)</span>
+  </div>
+</div>
+<div class="cluster">
+  <div class="cluster-title">Memoires / Reis</div>
+  <div class="cluster-pages">
+    <span class="cluster-page">/boeken/mijn-weg-langs-leiderschap-verlies-en-liefde</span>
+    <span class="cluster-page">/boeken/we-hadden-ook-thuis-kunnen-blijven</span>
+  </div>
+</div>
+
+
+  <div class="section-title" style="font-size: 18px; margin-top: 40px;">Content Gap Aanbevelingen</div>
+  <div class="section-subtitle">Nieuwe pagina's en onderwerpen om toe te voegen</div>
+  
+<div class="action-item">
+  <div class="action-number">1</div>
+  <div class="action-content">
+    <div class="action-title">Bouw een /boeken overzichtspagina</div>
+    <div class="action-desc">Alle 10+ boeken op één pagina met filtering (genre, auteur, jaar). Wordt de natuurlijke landing voor de zoekopdracht "uitgeverij sauberhaus boeken".</div>
+    <div class="action-impact">+1 hub page met sterk intern linkprofiel</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">2</div>
+  <div class="action-content">
+    <div class="action-title">Maak een /auteurs overzichtspagina</div>
+    <div class="action-desc">Eén lijstpagina met alle auteurs (Herman den Blijker, Douwe Bob, Jari Litmanen, Sander Schaepman, etc.) met thumbnail + korte bio + link naar boek(en).</div>
+    <div class="action-impact">Nieuwe long-tail rankings op auteursnamen + sterk autoriteitssignaal</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">3</div>
+  <div class="action-content">
+    <div class="action-title">Categorie-pagina's (/boeken/sport, /boeken/koken, /boeken/leiderschap)</div>
+    <div class="action-desc">Op basis van content clusters: één pagina per categorie met intro + lijst boeken in die categorie. Vangt zoekopdrachten als "Nederlandse sportboeken", "managementboek 2026" etc.</div>
+    <div class="action-impact">+3 nieuwe ranking-pagina's op brede category-keywords</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+<div class="action-item">
+  <div class="action-number">4</div>
+  <div class="action-content">
+    <div class="action-title">Echte /over en /contact pagina's</div>
+    <div class="action-desc">Vervang hash-anchor #wie-zijn-wij door /over (Michel Schoonheim verhaal + visie + team). Maak echte /contact pagina met formulier + NAP-data + KvK-info (E-E-A-T trust).</div>
+    <div class="action-impact">Vindbaar voor "michel schoonheim", "sauberhaus contact"; bouwt trust signals</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+<div class="action-item">
+  <div class="action-number">5</div>
+  <div class="action-content">
+    <div class="action-title">Blog / inkijk content over uitgeven</div>
+    <div class="action-desc">Topics als "Hoe wordt mijn boek uitgegeven?", "Waarom non-fictie?", "Kosten van een boek". Trekt aanbieders + journalisten en versterkt thema-autoriteit.</div>
+    <div class="action-impact">Long-tail traffic + leadgen voor nieuwe auteurs</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+
+</div>
+</div>
+
+<!-- TAB 6: INTERNAL LINKING -->
+<div id="tab-linking" class="tab-content">
+<div class="container">
+  <div class="section-title">Internal Linking Analyse</div>
+  <div class="section-subtitle">Link equity-verdeling, orphan pages en link-kansen</div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value">122</div><div class="stat-label">Totaal interne links</div></div>
+    <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Orphan pages</div></div>
+    <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Dead-end pages</div></div>
+    <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">Gem. links/pagina</div></div>
+  </div>
+
+  <div class="section-title" style="font-size: 18px;">Link Equity verdeling</div>
+  <div class="section-subtitle">Hoe interne link juice over de site verdeeld is</div>
+  <div class="card" style="overflow-x: auto; padding: 0;">
+    <table class="page-table">
+      <thead><tr><th>Pagina</th><th>Incoming internal</th><th>Outgoing internal</th><th>External links</th><th>Status</th></tr></thead>
+      <tbody><tr><td><span class="page-url">/</span></td><td>14</td><td>12</td><td>13</td><td><span class="badge badge-pass">Hub</span></td></tr>
+<tr><td><span class="page-url">/boeken/vuur</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/open-kaart</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/het-boek-van-joek</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/zijn-legendarische-jaren-bij-ajax</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/als-de-bal-harder-aankomt</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/een-taart-voor-de-prinses</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/herman-kookt-terug</span></td><td>2</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/leiderschap-met-ballen</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/we-hadden-ook-thuis-kunnen-blijven</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/boeken/mijn-weg-langs-leiderschap-verlies-en-liefde</span></td><td>1</td><td>1</td><td>10</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/auteurs/herman-den-blijker</span></td><td>0</td><td>2</td><td>6</td><td><span class="badge badge-fail">Orphan</span></td></tr>
+<tr><td><span class="page-url">/lp-sander-schaepman-leiderschap-met-ballen</span></td><td>0</td><td>0</td><td>4</td><td><span class="badge badge-fail">Orphan</span></td></tr>
+<tr><td><span class="page-url">/nieuws/sander-schaepman-gevangen-door-sauberhaus</span></td><td>3</td><td>2</td><td>7</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/nieuws/michel-schoonheim-start-eigen-uitgeverij-sauberhaus</span></td><td>1</td><td>2</td><td>6</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+<tr><td><span class="page-url">/nieuws/jari-tekent-nieuw-contract-bij-sauberhaus</span></td><td>1</td><td>2</td><td>6</td><td><span class="badge badge-pass">Healthy</span></td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 40px;">Orphan Pages</div>
+  <div class="section-subtitle">Pagina's die geen interne links uit de gecrawlde set ontvangen</div>
+  <div class="action-item">
+  <div class="action-content">
+    <div class="action-title"><span class="page-url">/auteurs/herman-den-blijker</span></div>
+    <div class="action-desc">Krijgt 0 interne links vanuit andere geauditeerde pagina's. Google ontdekt deze pagina alleen via externe links (die er nu nauwelijks zijn).</div>
+    <div class="action-impact">Aanbevolen: link vanuit /boeken overzichtspagina + relevante auteur/boek pagina's</div>
+  </div>
+  <span class="badge badge-high">Orphan</span>
+</div><div class="action-item">
+  <div class="action-content">
+    <div class="action-title"><span class="page-url">/lp-sander-schaepman-leiderschap-met-ballen</span></div>
+    <div class="action-desc">Krijgt 0 interne links vanuit andere geauditeerde pagina's. Google ontdekt deze pagina alleen via externe links (die er nu nauwelijks zijn).</div>
+    <div class="action-impact">Aanbevolen: link vanuit /boeken overzichtspagina + relevante auteur/boek pagina's</div>
+  </div>
+  <span class="badge badge-high">Orphan</span>
+</div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 40px;">Aanbevolen interne links</div>
+  <div class="section-subtitle">Specifieke link-kansen om equity beter te verdelen</div>
+  
+<div class="action-item">
+  <div class="action-number">1</div>
+  <div class="action-content">
+    <div class="action-title">Link homepage en boek/vuur naar /auteurs/herman-den-blijker</div>
+    <div class="action-desc">/auteurs/herman-den-blijker is nu orphan. Herman is ook auteur van /boeken/herman-kookt-terug en wordt op homepage als auteur vermeld — link beide naar zijn auteur-pagina.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">2</div>
+  <div class="action-content">
+    <div class="action-title">Link /lp-sander-schaepman... vanaf /boeken/leiderschap-met-ballen</div>
+    <div class="action-desc">De LP is nu een dead-end zonder incoming links. Voeg een "Lees meer over het boek" CTA vanuit de boekpagina en omgekeerd canonical de LP naar het boek.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">3</div>
+  <div class="action-content">
+    <div class="action-title">Link auteurspagina's onderling (cross-author recommendations)</div>
+    <div class="action-desc">Op elke /auteurs/[naam] pagina: "Andere auteurs bij Sauberhaus" sectie met 3-4 thumbnails. Versterkt het auteur-cluster en verdeelt link equity.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+<div class="action-item">
+  <div class="action-number">4</div>
+  <div class="action-content">
+    <div class="action-title">Voeg "Gerelateerde boeken" sectie toe op elke /boeken/[slug] pagina</div>
+    <div class="action-desc">Toon 3 andere boeken uit hetzelfde genre/cluster. Verhoogt dwell time + verdeelt link equity binnen content clusters.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+<div class="action-item">
+  <div class="action-number">5</div>
+  <div class="action-content">
+    <div class="action-title">Link /nieuws posts naar het bijbehorende boek</div>
+    <div class="action-desc">Bijv. /nieuws/jari-tekent-nieuw-contract-bij-sauberhaus → expliciete link naar /boeken/zijn-legendarische-jaren-bij-ajax. Nu zijn nieuws en boek-pagina's silos.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+
+</div>
+</div>
+
+<!-- TAB 7: ACTION PLAN -->
+<div id="tab-actions" class="tab-content">
+<div class="container">
+  <div class="section-title">Prioritized Action Plan</div>
+  <div class="section-subtitle">Alle aanbevelingen gerangschikt op impact, gegroepeerd op effort</div>
+
+  <div class="section-title" style="font-size: 18px; color: var(--green); margin-top: 24px;">Quick Wins <span style="font-size: 14px; color: var(--text-muted); font-weight: 400;">— minder dan 1 uur per item</span></div>
+  <div style="margin-bottom: 24px;">
+<div class="action-item">
+  <div class="action-number">1</div>
+  <div class="action-content">
+    <div class="action-title">Vul robots.txt + zet sitemap.xml aan in Webflow</div>
+    <div class="action-desc">Webflow → Project Settings → SEO → Auto-generate sitemap.xml + voeg in robots.txt: <code>Sitemap: https://www.sauberhaus.nl/sitemap.xml</code></div>
+    <div class="action-impact">Snellere indexering nieuwe pagina's. <strong>~15 minuten werk</strong>.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div>
+<div class="action-item">
+  <div class="action-number">2</div>
+  <div class="action-content">
+    <div class="action-title">Fix de 4 "Sauberhaus"-only titles</div>
+    <div class="action-desc">Open Webflow CMS voor /nieuws en /auteurs collection → vul SEO Title per item met onderwerpspecifieke titel.</div>
+    <div class="action-impact">Stopt duplicate-title penalty. <strong>~30 minuten werk</strong>.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div>
+<div class="action-item">
+  <div class="action-number">3</div>
+  <div class="action-content">
+    <div class="action-title">Voeg meta description toe op homepage + alle 10 boekpagina's</div>
+    <div class="action-desc">Per boek: "<em>[Titel] door [Auteur]. [Boek USP in 1 zin]. Verkrijgbaar bij Sauberhaus.</em>" — 140-160 chars.</div>
+    <div class="action-impact">+20-40% CTR uit organische resultaten. <strong>~60 minuten werk voor 11 pagina's</strong>.</div>
+  </div>
+  <span class="badge badge-critical">Critical</span>
+</div>
+<div class="action-item">
+  <div class="action-number">4</div>
+  <div class="action-content">
+    <div class="action-title">Voeg H1 toe aan elke pagina (boektitel/auteurnaam/onderwerp)</div>
+    <div class="action-desc">In Webflow CMS template: zet huidige hero-tekst om in een H1-element. Voor homepage: <em>"Uitgeverij Sauberhaus — non-fictie boeken met lef"</em>.</div>
+    <div class="action-impact">Geeft Google duidelijk hoofdonderwerp per pagina. <strong>~45 minuten werk</strong>.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">5</div>
+  <div class="action-content">
+    <div class="action-title">Voeg twitter:card meta tag toe (één template, alle pagina's)</div>
+    <div class="action-desc">Eén regel in Webflow Project Settings → Custom Code (Head): <code>&lt;meta name="twitter:card" content="summary_large_image"&gt;</code></div>
+    <div class="action-impact">Twitter shares krijgen grote preview-card. <strong>~5 minuten werk</strong>.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+</div>
+
+  <div class="section-title" style="font-size: 18px; color: var(--orange);">High Impact <span style="font-size: 14px; color: var(--text-muted); font-weight: 400;">— 1-4 uur per item</span></div>
+  <div style="margin-bottom: 24px;">
+<div class="action-item">
+  <div class="action-number">1</div>
+  <div class="action-content">
+    <div class="action-title">Voeg alt-tekst toe aan alle 195 images</div>
+    <div class="action-desc">Voor elke boekcover: <em>"[Boektitel] door [Auteur] — boekcover Uitgeverij Sauberhaus"</em>. Voor auteursfoto's: <em>"[Naam], auteur bij Uitgeverij Sauberhaus"</em>. Logo: <em>"Uitgeverij Sauberhaus"</em>.</div>
+    <div class="action-impact">Toegankelijkheid + image-search traffic. <strong>~2 uur werk</strong>.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">2</div>
+  <div class="action-content">
+    <div class="action-title">Implementeer JSON-LD Book schema op alle /boeken/* pagina's</div>
+    <div class="action-desc">Eén schema-template in Webflow CMS Collection met variabelen ({{name}}, {{author}}, {{isbn}}, {{datePublished}}, {{image}}). Vul ISBN-data in via Webflow CMS-veld.</div>
+    <div class="action-impact">Rich snippets (rating, price) in Google. <strong>~3-4 uur werk</strong>.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">3</div>
+  <div class="action-content">
+    <div class="action-title">Bouw /boeken en /auteurs overzichtspagina's</div>
+    <div class="action-desc">Webflow CMS Collection pages — automatisch alle items uit de bestaande Collections weergeven met filter (genre, auteur). 2 nieuwe ranking-hubs.</div>
+    <div class="action-impact">Vangt brede zoekopdrachten + verdeelt link equity. <strong>~4 uur werk</strong>.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">4</div>
+  <div class="action-content">
+    <div class="action-title">Schrijf 200+ extra woorden voor 5 thin pages</div>
+    <div class="action-desc">/auteurs/herman-den-blijker (101w), /boeken/het-boek-van-joek (126w), 2 nieuws-posts (148w + 155w), /boeken/een-taart-voor-de-prinses (173w). Voeg auteur-bio, leesfragment of ISBN-info toe.</div>
+    <div class="action-impact">Verlaagt thin-content risk. <strong>~3 uur werk</strong>.</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+<div class="action-item">
+  <div class="action-number">5</div>
+  <div class="action-content">
+    <div class="action-title">Fix de 3 leiderschap-cannibalization pagina's met canonical</div>
+    <div class="action-desc">Stel <code>/boeken/leiderschap-met-ballen</code> in als canonical. Voeg <code>rel="canonical"</code> op /lp-... en /boeken/leiderschap-met-ballen-midprice die naar deze hoofdpagina wijst.</div>
+    <div class="action-impact">1 sterke ranking i.p.v. 3 zwakke + opgelost dupe-content signaal. <strong>~30 minuten werk</strong>.</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+</div>
+
+  <div class="section-title" style="font-size: 18px; color: var(--purple);">Strategische Initiatieven <span style="font-size: 14px; color: var(--text-muted); font-weight: 400;">— doorlopend</span></div>
+  <div style="margin-bottom: 24px;">
+<div class="action-item">
+  <div class="action-number">1</div>
+  <div class="action-content">
+    <div class="action-title">Bouw content-strategie rond 3 hoofdthema's: Sport / Leiderschap / Koken</div>
+    <div class="action-desc">Per thema 1 pillar-pagina + 4-6 supporting articles (blog/inkijk). Geeft topical authority op die 3 fronten en vangt long-tail traffic.</div>
+    <div class="action-impact">Domain authority groei + bredere ranking-footprint</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+<div class="action-item">
+  <div class="action-number">2</div>
+  <div class="action-content">
+    <div class="action-title">Maak elke auteur een aparte personal landing page (zoals huidige LP Schaepman)</div>
+    <div class="action-desc">Per auteur: bio, alle boeken, interviews, agenda, koop-links. Auteurs gebruiken deze pagina als linkbait op hun socials → externe backlinks.</div>
+    <div class="action-impact">Backlink-acquisitie + auteurnaam-rankings</div>
+  </div>
+  <span class="badge badge-medium">Medium</span>
+</div>
+<div class="action-item">
+  <div class="action-number">3</div>
+  <div class="action-content">
+    <div class="action-title">Vraag Google Search Console aan + dien sitemap in</div>
+    <div class="action-desc">Verifieer domein (DNS TXT-record), dien sitemap.xml in, monitor wekelijks: indexed pages, klikken, top queries, CTR, position.</div>
+    <div class="action-impact">Inzicht in echte ranking-performance + actiegerichte data</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+<div class="action-item">
+  <div class="action-number">4</div>
+  <div class="action-content">
+    <div class="action-title">Implementeer interne search-functionaliteit</div>
+    <div class="action-desc">Webflow heeft built-in search; activeer + voeg search-bar toe in header. Helpt UX en Google ziet meer interne signalen.</div>
+    <div class="action-impact">Lagere bounce + nieuwe Sitelinks search box in Google</div>
+  </div>
+  <span class="badge badge-low">Low</span>
+</div>
+<div class="action-item">
+  <div class="action-number">5</div>
+  <div class="action-content">
+    <div class="action-title">PR & backlink-strategie: pitch elke nieuwe titel naar 5+ NL media</div>
+    <div class="action-desc">Voor elk nieuw boek: stuur recensie-exemplaar naar NRC, Volkskrant, AD, regio-pers en niche-blogs (voor kookboeken: Foodies, eetinspiratie blogs). Vraag review + backlink.</div>
+    <div class="action-impact">Externe backlinks zijn DE belangrijkste ranking-factor voor nieuwe domeinen</div>
+  </div>
+  <span class="badge badge-high">High</span>
+</div>
+</div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 32px;">Volledige Implementatie Checklist</div>
+  <div class="section-subtitle">Elke actionable aanbeveling in één checklist</div>
+  <div class="card">
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">🚨 Genereer en publiceer XML sitemap (Webflow: Project Settings → SEO → Auto-generate)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">🚨 Vul robots.txt met Sitemap-referentie</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">🚨 Schrijf unieke meta description voor alle 16 pagina's (140-160 chars)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">🚨 Fix 4 duplicate "Sauberhaus" titles (nieuws + auteurs collections)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">🚨 Voeg H1 toe op alle 13 pagina's die er geen hebben</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg beschrijvende alt-tekst toe aan 195 images</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Implementeer Book schema JSON-LD op alle boekpagina's</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Implementeer Person schema op /auteurs/* pagina's</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Implementeer NewsArticle schema op /nieuws/* pagina's</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Implementeer Organization + WebSite schema op homepage</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg canonical tags toe op alle pagina's</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg og:description, og:url, og:type toe site-wide</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg twitter:card meta tag toe (één template-regel)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Bouw /boeken overzichtspagina (Collection list)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Bouw /auteurs overzichtspagina (Collection list)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Bouw /over en /contact als echte HTML-pagina's (geen hash-anchors)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Schrijf 200+ extra woorden voor 5 thin pages</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Fix /lp-sander-schaepman... orphan + dead-end (intern linken vanuit boekpagina)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Fix /auteurs/herman-den-blijker orphan (link vanuit /boeken/herman-kookt-terug + /boeken/vuur)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Canonical /lp-... en /boeken/leiderschap-met-ballen-midprice → /boeken/leiderschap-met-ballen</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Link nieuws-posts naar bijbehorend boek (5 posts)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg "Gerelateerde boeken" sectie toe op elke boekpagina</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg ISBN + paperback/hardcover + aantal pagina's + prijs toe per boek</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg leesfragment / leesproef toe per boekpagina</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Voeg recensies/quotes uit pers toe per boekpagina</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Configureer Cloudflare Polish voor WebP image-conversie</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Configureer Cloudflare Transform Rules voor X-Content-Type-Options, X-Frame-Options, Referrer-Policy</div></div><div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text">Configureer Content-Security-Policy (start in Report-Only)</div></div><div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text">Vervang Algemene Voorwaarden + Privacy PDFs door HTML-pagina's</div></div><div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text">Fix broken Discord-link in footer (specifieke server-invite of verwijderen)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Vraag Google Search Console aan + dien sitemap in</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Bouw 1 personal landing page per auteur (zoals Schaepman LP)</div></div><div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted">Stuur recensie-exemplaren naar NL media (NRC, Volkskrant, AD, niche-blogs)</div></div>
+  </div>
+</div>
+</div>
+
+<script>
+function switchTab(evt, tabId) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  evt.target.closest('.tab-btn').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>

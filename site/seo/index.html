@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Client Portal — Stolkwebdesign</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/config.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #000;
+  --white: #fff;
+  --red: #EA2525;
+  --near-black: #0A0A0A;
+  --card-bg: #111;
+  --border: #1a1a1a;
+  --border-hover: #2a2a2a;
+  --bone: #F5F5F5;
+  --muted: #929292;
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,.12);
+  --green-border: rgba(34,197,94,.25);
+}
+body {
+  background: var(--near-black);
+  color: var(--white);
+  font-family: 'Space Grotesk', sans-serif;
+  min-height: 100vh;
+}
+
+/* ── LOGIN ── */
+#login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 32px;
+  padding: 24px;
+}
+.login-logo {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.login-logo span { color: var(--red); }
+.login-box {
+  background: #111;
+  border: 2px solid var(--border);
+  padding: 48px;
+  width: 100%;
+  max-width: 420px;
+}
+.login-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--muted);
+  margin-bottom: 20px;
+}
+.login-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 26px;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 32px;
+}
+.login-title span { color: var(--red); }
+.form-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.login-input {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--black);
+  color: var(--white);
+  border: 2px solid #333;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 16px;
+  margin-bottom: 20px;
+  outline: none;
+  transition: border-color .15s;
+}
+.login-input:focus { border-color: var(--red); }
+.login-btn {
+  width: 100%;
+  padding: 16px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  background: var(--red);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  transition: background .15s;
+}
+.login-btn:hover { background: #c91f1f; }
+.login-btn:disabled { opacity: .6; cursor: not-allowed; }
+.login-error {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  display: none;
+  margin-top: 12px;
+  text-align: center;
+}
+.login-footer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: #444;
+  text-align: center;
+}
+
+/* ── PORTAL ── */
+#portal-screen { display: none; }
+
+.portal-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--black);
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+}
+.portal-nav-logo {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.portal-nav-logo span { color: var(--red); }
+.portal-nav-right { display: flex; align-items: center; gap: 16px; }
+.portal-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+  padding: 4px 10px;
+}
+.portal-logout {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: color .2s;
+}
+.portal-logout:hover { color: var(--red); }
+
+.portal-body { max-width: 960px; margin: 0 auto; padding: 56px 32px 80px; }
+
+.portal-header { margin-bottom: 48px; }
+.portal-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.portal-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 36px;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.portal-title span { color: var(--red); }
+.portal-subtitle {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  color: var(--muted);
+  margin-top: 10px;
+}
+
+/* ── RAPPORT KAARTEN ── */
+#reports-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.report-card {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 24px 28px;
+  text-decoration: none;
+  color: var(--white);
+  transition: border-color .15s, background .15s;
+  cursor: pointer;
+}
+.report-card:hover {
+  border-color: var(--border-hover);
+  background: #161616;
+}
+.report-card-left { display: flex; flex-direction: column; gap: 6px; }
+.report-card-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+.report-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.report-domain {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: lowercase;
+}
+.report-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #444;
+}
+.report-version {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  background: rgba(234,37,37,.1);
+  color: var(--red);
+  border: 1px solid rgba(234,37,37,.2);
+}
+.report-arrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--muted);
+  transition: color .15s, transform .15s;
+  white-space: nowrap;
+}
+.report-card:hover .report-arrow {
+  color: var(--white);
+  transform: translateX(4px);
+}
+
+/* ── EMPTY STATE ── */
+#empty-state {
+  display: none;
+  text-align: center;
+  padding: 80px 24px;
+  border: 1px solid var(--border);
+}
+.empty-icon {
+  font-size: 40px;
+  margin-bottom: 20px;
+  opacity: .3;
+}
+.empty-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 18px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: var(--muted);
+}
+.empty-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: #444;
+}
+
+/* ── LOADING ── */
+#loading-state {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: #444;
+  padding: 40px 0;
+}
+
+@media (max-width: 640px) {
+  .portal-nav { padding: 12px 20px; }
+  .portal-body { padding: 40px 20px 60px; }
+  .report-card { grid-template-columns: 1fr auto; padding: 20px; }
+  .report-version { display: none; }
+  .login-box { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="login-screen">
+  <div class="login-logo">STOLK<span>.</span>WEBDESIGN</div>
+  <div class="login-box">
+    <div class="login-eyebrow">Beveiligd — Client Toegang</div>
+    <h1 class="login-title">Uw<br><span>Rapporten</span></h1>
+    <label class="form-label" for="email-input">E-mailadres</label>
+    <input type="email" id="email-input" class="login-input" placeholder="naam@bedrijf.nl" autocomplete="email">
+    <label class="form-label" for="pw-input">Wachtwoord</label>
+    <input type="password" id="pw-input" class="login-input" placeholder="••••••••" autocomplete="current-password">
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Inloggen →</button>
+    <div class="login-error" id="login-error">Ongeldig e-mailadres of wachtwoord</div>
+  </div>
+  <div class="login-footer">Vragen? Neem contact op via info@stolkwebdesign.nl</div>
+</div>
+
+<!-- ── PORTAL SCREEN ── -->
+<div id="portal-screen">
+  <nav class="portal-nav">
+    <div class="portal-nav-logo">STOLK<span>.</span>WEBDESIGN</div>
+    <div class="portal-nav-right">
+      <span class="portal-badge" id="user-badge">Ingelogd</span>
+      <button class="portal-logout" onclick="doLogout()">Uitloggen</button>
+    </div>
+  </nav>
+
+  <div class="portal-body">
+    <div class="portal-header">
+      <div class="portal-eyebrow">Client Portal</div>
+      <h1 class="portal-title">Uw <span>SEO</span><br>Rapporten</h1>
+      <p class="portal-subtitle">Overzicht van uw analyses en optimalisatierapporten.</p>
+    </div>
+
+    <div id="loading-state">Rapporten laden...</div>
+    <div id="reports-grid"></div>
+    <div id="empty-state">
+      <div class="empty-icon">📋</div>
+      <div class="empty-title">Nog geen rapporten</div>
+      <div class="empty-text">Rapporten verschijnen hier zodra ze klaar zijn</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const { createClient } = window.supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ── AUTH ──
+async function initAuth() {
+  const { data: { session } } = await db.auth.getSession();
+  if (session) showPortal(session.user);
+  db.auth.onAuthStateChange((_, session) => {
+    if (session) showPortal(session.user);
+    else showLogin();
+  });
+}
+
+async function doLogin() {
+  const email = document.getElementById('email-input').value.trim();
+  const pw = document.getElementById('pw-input').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  errEl.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Bezig...';
+  const { error } = await db.auth.signInWithPassword({ email, password: pw });
+  btn.disabled = false;
+  btn.textContent = 'Inloggen →';
+  if (error) errEl.style.display = 'block';
+}
+
+async function doLogout() {
+  await db.auth.signOut();
+}
+
+function showPortal(user) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('portal-screen').style.display = 'block';
+  const emailShort = user.email.split('@')[0];
+  document.getElementById('user-badge').textContent = user.email;
+  loadReports(user.id);
+}
+
+function showLogin() {
+  document.getElementById('portal-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('pw-input').value = '';
+}
+
+// ── RAPPORTEN ──
+async function loadReports(userId) {
+  const grid = document.getElementById('reports-grid');
+  const empty = document.getElementById('empty-state');
+  const loading = document.getElementById('loading-state');
+
+  loading.style.display = 'block';
+  grid.innerHTML = '';
+  empty.style.display = 'none';
+
+  const { data: reports, error } = await db
+    .from('seo_reports')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  loading.style.display = 'none';
+
+  if (error || !reports || reports.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.innerHTML = reports.map(r => `
+    <a class="report-card" href="/seo/rapporten/${esc(r.slug)}.html">
+      <div class="report-card-left">
+        <div class="report-card-title">${esc(r.title)}</div>
+        <div class="report-card-meta">
+          ${r.domain ? `<span class="report-domain">${esc(r.domain)}</span>` : ''}
+          <span class="report-date">${formatDate(r.created_at)}</span>
+        </div>
+      </div>
+      <div class="report-version">${esc(r.version)}</div>
+      <div class="report-arrow">Bekijk rapport →</div>
+    </a>
+  `).join('');
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── KEYBOARD ──
+document.getElementById('email-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('pw-input').focus();
+});
+document.getElementById('pw-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+initAuth();
+</script>
+</body>
+</html>

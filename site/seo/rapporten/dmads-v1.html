@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>SEO Strategy Report — dmads.nl</title>
+<script src="/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async () => {
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) window.location.replace('/seo/');
+})();
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0f; --bg-card: rgba(255,255,255,0.03); --bg-card-hover: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08); --border-hover: rgba(255,255,255,0.15);
+    --text: #e8e8ed; --text-secondary: #8b8b9e; --text-muted: #5a5a6e;
+    --accent: #6366f1; --accent-glow: rgba(99,102,241,0.3);
+    --green: #22c55e; --green-bg: rgba(34,197,94,0.12); --green-border: rgba(34,197,94,0.25);
+    --yellow: #eab308; --yellow-bg: rgba(234,179,8,0.12); --yellow-border: rgba(234,179,8,0.25);
+    --red: #ef4444; --red-bg: rgba(239,68,68,0.12); --red-border: rgba(239,68,68,0.25);
+    --blue: #3b82f6; --blue-bg: rgba(59,130,246,0.12);
+    --orange: #f97316; --orange-bg: rgba(249,115,22,0.12); --orange-border: rgba(249,115,22,0.25);
+    --purple: #a78bfa; --purple-bg: rgba(167,139,250,0.08); --purple-border: rgba(167,139,250,0.15);
+    --radius: 16px; --radius-sm: 10px; --radius-xs: 6px;
+  }
+  ::selection { background: var(--accent); color: white; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(59,130,246,0.03) 0%, transparent 50%);
+    z-index: -1; animation: ambientDrift 20s ease-in-out infinite; }
+  @keyframes ambientDrift { 0%,100%{transform:translate(0,0)}33%{transform:translate(-2%,1%)}66%{transform:translate(1%,-1%)} }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .header { padding: 40px 0 0; text-align: center; }
+  .header-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; font-size: 12px; font-weight: 500; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
+  .header-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 8px var(--yellow); animation: pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .header h1 { font-family: 'Space Grotesk', sans-serif; font-size: 42px; font-weight: 700; line-height: 1.15; margin-bottom: 12px; background: linear-gradient(135deg, #fff 0%, #a5a5c0 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header .subtitle { font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; }
+  .score-section { display: flex; align-items: center; gap: 48px; margin-bottom: 40px; padding: 40px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); backdrop-filter: blur(20px); }
+  .score-circle-wrap { position: relative; flex-shrink: 0; }
+  .score-circle { width: 180px; height: 180px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; position: relative; }
+  .score-circle svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-circle svg circle { fill: none; stroke-width: 6; stroke-linecap: round; }
+  .score-circle svg .bg-ring { stroke: rgba(255,255,255,0.06); }
+  .score-circle svg .progress-ring { stroke: var(--orange); stroke-dasharray: 502; stroke-dashoffset: 257; filter: drop-shadow(0 0 6px rgba(249,115,22,0.4)); transition: stroke-dashoffset 1.5s ease-out; }
+  .score-number { font-family: 'Space Grotesk', sans-serif; font-size: 56px; font-weight: 700; line-height: 1; color: white; position: relative; z-index: 1; }
+  .score-grade { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; position: relative; z-index: 1; margin-top: 2px; }
+  .score-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; position: relative; z-index: 1; margin-top: 4px; }
+  .score-details { flex: 1; }
+  .score-details h2 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .score-details p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+  .sub-scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+  .sub-score { padding: 14px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .sub-score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; }
+  .sub-score-value { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
+  .sub-score-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06); margin-top: 8px; overflow: hidden; }
+  .sub-score-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease-out; }
+  .tabs { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); }
+  .tabs-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .tabs-inner::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 16px 24px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-btn .tab-count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; font-size: 11px; font-weight: 600; margin-left: 8px; color: var(--text-secondary); }
+  .tab-btn.active .tab-count { background: var(--accent); border-color: var(--accent); color: white; }
+  .tab-content { display: none; padding: 40px 0 80px; }
+  .tab-content.active { display: block; }
+  .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .section-subtitle { color: var(--text-secondary); font-size: 15px; margin-bottom: 24px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .stat-card { padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; transition: border-color 0.2s; }
+  .stat-card:hover { border-color: var(--border-hover); }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .stat-label { font-size: 13px; color: var(--text-secondary); }
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 16px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--border-hover); }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; }
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; }
+  .badge-critical { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-high { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-medium { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-low { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-warning { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .finding { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: start; }
+  .finding:last-child { border-bottom: none; }
+  .finding-status { width: 8px; height: 8px; border-radius: 50%; margin-top: 8px; }
+  .finding-status.pass { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.4); }
+  .finding-status.warning { background: var(--yellow); box-shadow: 0 0 6px rgba(234,179,8,0.4); }
+  .finding-status.fail { background: var(--red); box-shadow: 0 0 6px rgba(239,68,68,0.4); }
+  .finding-content h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .finding-content p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .finding-rec { margin-top: 8px; padding: 10px 14px; background: rgba(99,102,241,0.06); border-left: 3px solid var(--accent); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; font-size: 13px; color: var(--text); line-height: 1.5; }
+  .collapsible { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; }
+  .collapsible:hover { border-color: var(--border-hover); }
+  .collapsible-header { padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .collapsible-header:hover { background: rgba(255,255,255,0.02); }
+  .collapsible-title { font-weight: 600; color: var(--text); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .collapsible-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-body-inner { padding: 0 24px 24px; }
+  .collapse-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-muted); transition: transform 0.3s; flex-shrink: 0; }
+  .collapsible.open .collapse-icon { transform: rotate(180deg); }
+  .page-table { width: 100%; border-collapse: collapse; }
+  .page-table th { text-align: left; padding: 12px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 600; }
+  .page-table td { padding: 12px 16px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top; }
+  .page-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .page-url { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); word-break: break-all; }
+  .checklist-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-icon { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 1px; }
+  .check-icon.pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .check-icon.fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .check-icon.warn { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .check-text { font-size: 14px; color: var(--text); }
+  .action-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px; margin-bottom: 12px; display: flex; gap: 20px; align-items: flex-start; transition: border-color 0.2s; }
+  .action-item:hover { border-color: var(--border-hover); }
+  .action-number { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--accent); flex-shrink: 0; width: 36px; text-align: center; opacity: 0.5; }
+  .action-content { flex: 1; }
+  .action-title { font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 6px; }
+  .action-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+  .action-impact { margin-top: 8px; font-size: 13px; color: var(--green); font-weight: 500; }
+  .cluster { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+  .cluster-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--purple); font-size: 16px; margin-bottom: 12px; }
+  .cluster-pages { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cluster-page { padding: 6px 14px; border-radius: 100px; background: var(--purple-bg); border: 1px solid var(--purple-border); font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); }
+  .cluster-page.pillar { background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.3); color: var(--purple); font-weight: 600; }
+  .lsi-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .lsi-tag { padding: 6px 14px; border-radius: 100px; font-size: 13px; font-family: 'JetBrains Mono', monospace; transition: all 0.2s; }
+  .lsi-tag.integrated { background: var(--green-bg); border: 1px solid var(--green-border); color: var(--green); }
+  .lsi-tag.missing { background: var(--red-bg); border: 1px solid var(--red-border); color: var(--red); opacity: 0.8; }
+  .lsi-tag.partial { background: var(--yellow-bg); border: 1px solid var(--yellow-border); color: var(--yellow); }
+  .kw-suggested { display: inline-block; padding: 4px 12px; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.25); border-radius: 100px; font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--accent); margin: 3px; }
+  @media (max-width: 768px) {
+    .header h1 { font-size: 28px; }
+    .score-section { flex-direction: column; text-align: center; padding: 24px; gap: 24px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .sub-scores { grid-template-columns: repeat(2, 1fr); }
+    .action-item { flex-direction: column; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="header-badge"><span class="dot"></span> Site-Wide SEO Audit</div>
+    <h1>dmads.nl</h1>
+    <p class="subtitle">De Mannen Achter De Schermen — analyse van 12 pagina's · 7 april 2026</p>
+  </div>
+</div>
+
+<div class="container" style="padding-top: 0; padding-bottom: 32px;">
+  <div class="score-section">
+    <div class="score-circle-wrap">
+      <div class="score-circle">
+        <svg viewBox="0 0 160 160">
+          <circle class="bg-ring" cx="80" cy="80" r="74"/>
+          <circle class="progress-ring" cx="80" cy="80" r="74"/>
+        </svg>
+        <span class="score-number">49</span>
+        <span class="score-grade">D</span>
+        <span class="score-label">Overall Health</span>
+      </div>
+    </div>
+    <div class="score-details">
+      <h2>Sterke basis, maar fundamentele SEO-fouten blokkeren groei</h2>
+      <p>DMADS heeft een goed opgezette sitestructuur en basic schema-implementatie, maar scoort laag op de elementen die Google écht telt: geen enkele pagina heeft een H1-tag, 2 pagina's zijn exacte duplicaten van elkaar, alle paginatitels zijn te lang, en er zijn geen Open Graph tags voor sociale deling. Voor een online marketing bureau zijn dit blinde vlekken die klanten afschrikken — want wie vertrouwt een bureau dat zijn eigen SEO niet op orde heeft?</p>
+      <div class="sub-scores">
+        <div class="sub-score">
+          <div class="sub-score-label">Technical</div>
+          <div class="sub-score-value" style="color:var(--orange)">55</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:55%;background:var(--orange)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Content</div>
+          <div class="sub-score-value" style="color:var(--red)">38</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:38%;background:var(--red)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Architecture</div>
+          <div class="sub-score-value" style="color:var(--yellow)">68</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:68%;background:var(--yellow)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Cross-Page</div>
+          <div class="sub-score-value" style="color:var(--red)">40</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:40%;background:var(--red)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Social & Schema</div>
+          <div class="sub-score-value" style="color:var(--red)">35</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:35%;background:var(--red)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('executive')">Executive Summary</button>
+    <button class="tab-btn" onclick="switchTab('pages')">Pagina's <span class="tab-count">12</span></button>
+    <button class="tab-btn" onclick="switchTab('sitewide')">Site-brede Issues <span class="tab-count">8</span></button>
+    <button class="tab-btn" onclick="switchTab('technical')">Technisch</button>
+    <button class="tab-btn" onclick="switchTab('content')">Content Strategie</button>
+    <button class="tab-btn" onclick="switchTab('linking')">Interne Links</button>
+    <button class="tab-btn" onclick="switchTab('actions')">Actieplan</button>
+  </div>
+</div>
+
+<!-- ===== TAB 1: EXECUTIVE SUMMARY ===== -->
+<div id="tab-executive" class="tab-content active">
+<div class="container">
+  <div class="section-title">Executive Summary</div>
+  <div class="section-subtitle">Overzicht SEO-gezondheid dmads.nl + directe prioriteiten</div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Pagina's Geanalyseerd</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--red)">2</div><div class="stat-label">Kritieke Issues</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--orange)">7</div><div class="stat-label">Hoge Prioriteit</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--yellow)">6</div><div class="stat-label">Waarschuwingen</div></div>
+    <div class="stat-card"><div class="stat-value">~180</div><div class="stat-label">Gem. Woordtelling</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--yellow)">25%</div><div class="stat-label">Schema Dekking</div></div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-title" style="margin-bottom:16px">Kernbevindingen</div>
+    <div style="color:var(--text-secondary);font-size:15px;line-height:1.8">
+      De meest urgente bevinding is dat <strong style="color:var(--text)">geen enkele van de 12 pagina's een H1-tag heeft</strong> — het meest fundamentele SEO-element. De site is gebouwd met Divi, waarbij de "heading" visueel aanwezig is maar als styled div in de HTML staat, onzichtbaar voor Google. Tegelijkertijd zijn <strong style="color:var(--text)">/online-groeien/ en /sea/ identiek</strong>: dezelfde title tag, meta description én hoogstwaarschijnlijk dezelfde content — dit is harde keyword-kannibalisatie. Alle 5 service- en hoofdpagina's hebben titeltags van 57–83 tekens (limiet is 60). De gemiddelde woordtelling is slechts ~180 woorden per pagina — de case study's (/ons-werk/*) hebben zelfs maar 50–120 woorden. Voor een bureau dat zich richt op Utrecht is er geen enkele lokale SEO-pagina. Positief: de URL-structuur is schoon, schema markup is aanwezig op alle pagina's, en robots.txt + sitemap zijn correct geconfigureerd.
+    </div>
+  </div>
+
+  <!-- Suggested target keywords -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-title" style="margin-bottom:12px">🎯 Aanbevolen Doelkeywords — Utrecht Focus</div>
+    <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px">Gebaseerd op de content en diensten van DMADS. Gebruik deze als leidraad voor de hele SEO-strategie.</div>
+    <div>
+      <div style="margin-bottom:8px;font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Primair</div>
+      <span class="kw-suggested">online marketing bureau Utrecht</span>
+      <div style="margin-top:12px;margin-bottom:8px;font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Secundair (per dienst)</div>
+      <span class="kw-suggested">Google Ads bureau Utrecht</span>
+      <span class="kw-suggested">SEA bureau Utrecht</span>
+      <span class="kw-suggested">SEO bureau Utrecht</span>
+      <span class="kw-suggested">social media marketing bureau Utrecht</span>
+      <span class="kw-suggested">website laten maken Utrecht</span>
+      <div style="margin-top:12px;margin-bottom:8px;font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Long-tail</div>
+      <span class="kw-suggested">online marketing bureau MKB Utrecht</span>
+      <span class="kw-suggested">Google Ads campagne opstarten</span>
+      <span class="kw-suggested">Instagram adverteren bureau</span>
+      <span class="kw-suggested">Facebook advertenties bureau Nederland</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;margin-top:32px">Top 3 Prioriteiten</div>
+  <div class="section-subtitle">Hoogste impact, direct uitvoerbaar</div>
+
+  <div class="action-item">
+    <div class="action-number">1</div>
+    <div class="action-content">
+      <div class="action-title">🚨 Voeg H1-tags toe aan alle 12 pagina's via Divi</div>
+      <div class="action-desc">Geen enkele pagina heeft een H1-tag. Dit is de #1 SEO-fout op de site. In Divi: open elke pagina, klik op de eerste grote heading, ga naar Geavanceerd → HTML-tag → selecteer H1. De visuele weergave verandert niet, maar Google ziet nu het primaire heading-signaal. Prioriteer: homepage, /sea/, /seo/, /social-media/, /website/.</div>
+      <div class="action-impact">Verwacht effect: Directe verbetering in keyword-relevantiesignalen voor alle servicepagina's</div>
+    </div>
+    <span class="badge badge-critical">Kritiek</span>
+  </div>
+
+  <div class="action-item">
+    <div class="action-number">2</div>
+    <div class="action-content">
+      <div class="action-title">🚨 Fix /online-groeien/ — identieke duplicaat van /sea/</div>
+      <div class="action-desc">/online-groeien/ heeft exact dezelfde title tag ("Eyes on the prize met SEA") en meta description als /sea/. Google weet niet welke pagina te ranken en straft beide af. Oplossing: maak /online-groeien/ een unieke "strategie" of "groei-traject" landingspagina met eigen content en eigen keyword-focus ("online groeien met marketing"), óf zet een 301-redirect naar /sea/ en verwijder /online-groeien/ uit de sitemap.</div>
+      <div class="action-impact">Verwacht effect: Eliminatie van kannibalisatie, hogere rankings voor beide keywords</div>
+    </div>
+    <span class="badge badge-critical">Kritiek</span>
+  </div>
+
+  <div class="action-item">
+    <div class="action-number">3</div>
+    <div class="action-content">
+      <div class="action-title">Maak een "Online Marketing Bureau Utrecht" landingspagina</div>
+      <div class="action-desc">DMADS heeft géén lokale SEO-pagina terwijl Utrecht het primaire werkgebied is. Maak /online-marketing-bureau-utrecht/ als dedicated pagina (800+ woorden) met: waarom Utrecht, lokale klantcases, Google Maps embed, LocalBusiness schema met adres. Dit is het meest directe keyword waar lokale bureaus op scoren.</div>
+      <div class="action-impact">Verwacht effect: Top-5 kans voor "online marketing bureau Utrecht" — directe lead generatie uit organisch verkeer</div>
+    </div>
+    <span class="badge badge-high">Hoog</span>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB 2: PAGE-BY-PAGE ===== -->
+<div id="tab-pages" class="tab-content">
+<div class="container">
+  <div class="section-title">Pagina voor Pagina Analyse</div>
+  <div class="section-subtitle">Individuele audit resultaten voor alle 12 gecrawlde pagina's</div>
+
+  <div class="card" style="overflow-x:auto;padding:0">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Pagina</th>
+          <th>Titel (tekens)</th>
+          <th>Woorden</th>
+          <th>H1</th>
+          <th>Meta Desc</th>
+          <th>Schema</th>
+          <th>OG Tags</th>
+          <th>Issues</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="page-url">/</span></td>
+          <td style="font-size:11px">De Mannen Achter De Schermen… (83)</td>
+          <td>~400</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-pass">139</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/social-media/</span></td>
+          <td style="font-size:11px">Ga voor scroll-stopping… (71)</td>
+          <td>~250</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-warning">121</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/sea/</span></td>
+          <td style="font-size:11px">Eyes on the prize met SEA… (57)</td>
+          <td>~200</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-warning">128</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr style="background:rgba(239,68,68,0.04)">
+          <td><span class="page-url" style="color:var(--red)">/online-groeien/</span></td>
+          <td style="font-size:11px;color:var(--red)">Eyes on the prize met SEA… (57) ← DUPLICAAT</td>
+          <td>~200</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Duplicaat</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><strong style="color:var(--red)">6</strong></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/seo/</span></td>
+          <td style="font-size:11px">Meer zichtbaarheid door SEO… (62)</td>
+          <td>~250</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-pass">144</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/website/</span></td>
+          <td style="font-size:11px">Maak van je website een… (83)</td>
+          <td>~200</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-pass">145</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/over-ons/</span></td>
+          <td style="font-size:11px">Over ons | De Mannen… (47)</td>
+          <td>~150</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-warning">127</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/ons-werk/</span></td>
+          <td style="font-size:11px">Ons werk, jouw winst… (53)</td>
+          <td>~120</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-pass">138</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/ons-werk/athlon/</span></td>
+          <td style="font-size:11px">Ons werk | Athlon Nederland… (60)</td>
+          <td>~75</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-warning">138</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/ons-werk/floating-amsterdam/</span></td>
+          <td style="font-size:11px">Ons werk | Floating Amsterdam… (62)</td>
+          <td>~100</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-pass">142</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/ons-werk/glo-entertainment-live/</span></td>
+          <td style="font-size:11px">Ons werk | GLO… (48)</td>
+          <td>~80</td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-pass">125</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>4</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/ons-werk/tandarts-mondain/</span></td>
+          <td style="font-size:11px">Niet gecrawld (rate limit)</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:32px">
+  <div class="section-title" style="font-size:18px">Gedetailleerde Bevindingen per Pagina</div>
+  <div class="section-subtitle">Klik voor uitgebreide analyse</div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title"><span class="page-url">/</span> — Homepage <span class="badge badge-high">4 issues</span></span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body"><div class="collapsible-body-inner">
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen H1-tag — Divi styling maskeert heading voor Google</h4>
+          <p>De homepage heeft geen enkel H1-element. De grote tekst bovenaan is waarschijnlijk een Divi Text Module met aangepaste CSS-styling — zichtbaar als tekst, maar Google ziet het als anonieme div-content.</p>
+          <div class="finding-rec">Divi: klik de eerste grote heading aan → Inhoudsopties → HTML-tag → H1. Aanbevolen H1 tekst: "Online Marketing Bureau in Utrecht — De Mannen Achter De Schermen"</div>
+        </div>
+        <span class="badge badge-critical">Kritiek</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Title tag te lang: 83 tekens (limiet 60)</h4>
+          <p>"De Mannen Achter De Schermen | Wij zetten jouw bedrijf in de schijnwerpers" — 83 tekens. Google knipt dit af in zoekresultaten na ~60 tekens.</p>
+          <div class="finding-rec">Verkort naar: "Online Marketing Bureau Utrecht | DMADS" (46 tekens) — primaire keyword vooraan.</div>
+        </div>
+        <span class="badge badge-high">Hoog</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen Open Graph tags</h4>
+          <p>Geen og:title, og:description, og:image of og:url aanwezig op de homepage. Wanneer iemand de site deelt op LinkedIn/Facebook ziet het er generiek of leeg uit.</p>
+          <div class="finding-rec">Voeg OG tags toe via Yoast SEO of RankMath. og:image minimaal 1200×630px, merkgerelateerde afbeelding.</div>
+        </div>
+        <span class="badge badge-high">Hoog</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>Geen lokale keyword-focus</h4>
+          <p>De homepage vermeldt nergens "Utrecht". Voor een lokaal bureau is de homepage de primaire kans om lokale relevantie te signaleren aan Google.</p>
+          <div class="finding-rec">Voeg "Utrecht" toe in H1, eerste alinea, en meta description. Voeg ook een LocalBusiness schema toe met adres en geo-coördinaten Utrecht.</div>
+        </div>
+        <span class="badge badge-high">Hoog</span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title"><span class="page-url" style="color:var(--red)">/online-groeien/</span> — KRITIEKE DUPLICAAT van /sea/ <span class="badge badge-critical">6 issues</span></span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body"><div class="collapsible-body-inner">
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Exacte duplicaat van /sea/ — title tag, meta description en content identiek</h4>
+          <p>Beide pagina's hebben title: "Eyes on the prize met SEA | De Mannen Achter De Schermen" en meta description: "Met gierende banden op weg naar bedrijfsgroei? Stap dan in bij SEA..." — woord voor woord identiek. Google selecteert één pagina en negeert de andere, of straft beide af.</p>
+          <div class="finding-rec">Optie A (aanbevolen): Maak /online-groeien/ een eigen pagina over het groeitraject/strategie met eigen keyword ("online groeien met marketing"). Optie B: 301-redirect /online-groeien/ → /sea/ en verwijder uit sitemap.</div>
+        </div>
+        <span class="badge badge-critical">Kritiek</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen H1-tag</h4>
+          <p>Zelfde probleem als alle andere pagina's.</p>
+          <div class="finding-rec">Na fix van de duplicaat: voeg H1 toe die afwijkt van /sea/.</div>
+        </div>
+        <span class="badge badge-critical">Kritiek</span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title"><span class="page-url">/sea/</span> — SEA Dienst <span class="badge badge-high">4 issues</span></span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body"><div class="collapsible-body-inner">
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen H1-tag</h4>
+          <p>Geen H1 aanwezig. Primaire SEA-pagina mist het meest fundamentele ranking-signaal.</p>
+          <div class="finding-rec">H1 aanbeveling: "Google Ads Bureau Utrecht — Snel In Beeld Bij Je Doelgroep"</div>
+        </div>
+        <span class="badge badge-critical">Kritiek</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>Meta description te kort: 128 tekens (target 150–160)</h4>
+          <p>32 tekens onder het optimum. Gemiste kans om extra waarde en keywords mee te geven.</p>
+          <div class="finding-rec">Breid uit naar: "Snel zichtbaar bij je doelgroep met Google Ads? DMADS is jouw SEA-bureau in Utrecht. Van campagnestrategie tot continue optimalisatie — wij halen het maximale uit je budget."</div>
+        </div>
+        <span class="badge badge-medium">Medium</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen Open Graph tags</h4>
+          <p>Geen sociale preview bij delen op LinkedIn of Facebook.</p>
+          <div class="finding-rec">Voeg og:title, og:description, og:image toe via Yoast/RankMath per pagina.</div>
+        </div>
+        <span class="badge badge-high">Hoog</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>Dunne content — ~200 woorden</h4>
+          <p>Concurrerende SEA-pagina's van bureaus ranken met 800–2000+ woorden. 200 woorden is te weinig om voor "Google Ads bureau Utrecht" te ranken.</p>
+          <div class="finding-rec">Breid uit met: werkproces (stap voor stap), type campagnes (Search, Display, Shopping, YouTube), tarieven/investering, FAQ, case study link naar Athlon of Floating Amsterdam.</div>
+        </div>
+        <span class="badge badge-high">Hoog</span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title"><span class="page-url">/seo/</span> — SEO Dienst <span class="badge badge-high">4 issues</span></span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body"><div class="collapsible-body-inner">
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen H1-tag</h4>
+          <p>De SEO-servicepagina heeft geen H1 — een bijzonder ironische omissie voor een SEO-dienst.</p>
+          <div class="finding-rec">H1: "SEO Bureau Utrecht — Meer Organisch Verkeer, Meer Klanten"</div>
+        </div>
+        <span class="badge badge-critical">Kritiek</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>Title tag net te lang: 62 tekens</h4>
+          <p>"Meer zichtbaarheid door SEO | De Mannen Achter De Schermen" — 2 tekens over het maximum.</p>
+          <div class="finding-rec">Hernoem naar: "SEO Bureau Utrecht | Meer Zichtbaarheid | DMADS" (54 tekens)</div>
+        </div>
+        <span class="badge badge-medium">Medium</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen OG tags + dunne content (~250 woorden)</h4>
+          <p>Zelfde patronen als andere dienstpagina's.</p>
+          <div class="finding-rec">Breid content uit met: on-page SEO, technische SEO, linkbuilding, lokale SEO, resultaten/cases. 800+ woorden minimum.</div>
+        </div>
+        <span class="badge badge-high">Hoog</span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title"><span class="page-url">/ons-werk/*</span> — Case Studies (Athlon, Floating Amsterdam, GLO) <span class="badge badge-high">Dunne content</span></span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body"><div class="collapsible-body-inner">
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Extreem dunne content: 50–120 woorden per case study</h4>
+          <p>Case study pagina's zijn een enorme kans voor E-E-A-T (bewijs van expertise) maar zijn vrijwel leeg. Athlon: ~75 woorden, Floating Amsterdam: ~100 woorden, GLO: ~80 woorden. Google beschouwt dit als "thin content".</p>
+          <div class="finding-rec">Transformeer elke case study naar 400–600 woorden: probleem → aanpak → resultaten (meetbaar: X% meer verkeer, Y conversies). Voeg screenshots van advertenties of resultaten toe.</div>
+        </div>
+        <span class="badge badge-high">Hoog</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status fail"></div>
+        <div class="finding-content">
+          <h4>Geen H1-tag op case study pagina's</h4>
+          <p>Zelfde patroon als de rest van de site.</p>
+          <div class="finding-rec">H1 per case study: klantnaam + resultaat. Bijv. "Athlon Nederland: hoe we hun social media bereik met 60% lieten groeien"</div>
+        </div>
+        <span class="badge badge-critical">Kritiek</span>
+      </div>
+      <div class="finding">
+        <div class="finding-status warning"></div>
+        <div class="finding-content">
+          <h4>Verkeerde afbeelding als featured image: sea-dmads.jpg op meerdere pagina's</h4>
+          <p>De afbeelding sea-dmads.jpg (alt: "SEA") wordt als featured image gebruikt op /ons-werk/, /ons-werk/athlon/, /ons-werk/floating-amsterdam/ en /over-ons/. Dit is een generieke afbeelding die niets met de specifieke case te maken heeft — negatief voor gebruikerservaring én OG tags.</p>
+          <div class="finding-rec">Gebruik per case study een relevante afbeelding: screenshot van de campagne, klantlogo, of eindresultaat. Geef alt text die de afbeelding beschrijft.</div>
+        </div>
+        <span class="badge badge-medium">Medium</span>
+      </div>
+    </div></div>
+  </div>
+
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB 3: SITE-WIDE ISSUES ===== -->
+<div id="tab-sitewide" class="tab-content">
+<div class="container">
+  <div class="section-title">Site-brede Issues</div>
+  <div class="section-subtitle">Problemen die meerdere pagina's of de hele site raken</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">Duplicate Content &amp; Keyword Kannibalisatie</div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>/online-groeien/ = exacte duplicaat van /sea/</h4>
+        <p>Identieke title tag, meta description, en hoogstwaarschijnlijk identieke content. Google ziet dit als thin/duplicate content op twee URL's en zal beide penaliseren of willekeurig één kiezen.</p>
+        <div class="finding-rec">301-redirect /online-groeien/ → /sea/ ÓDAT /online-groeien/ een unieke pagina wordt over groeitrajecten/strategie met eigen keyword-focus.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Case study titels beginnen allemaal met "Ons werk |"</h4>
+        <p>"Ons werk | Athlon Nederland | De Mannen…", "Ons werk | Floating Amsterdam | De Mannen…", "Ons werk | GLO | De Mannen…" — Google herkent het patroon maar de titels zijn weinig onderscheidend en keyword-arm.</p>
+        <div class="finding-rec">Maak titels keyword-rijker en resultaatgericht: "Athlon Nederland: Social Media Succes via DMADS" of "Floating Amsterdam: Van Onzichtbaar naar Volgeboekt".</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">Site-brede Consistentieproblemen</div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>Geen enkele pagina heeft een H1-tag (12/12 pagina's)</h4>
+        <p>Dit is de meest fundamentele SEO-omissie op de site. H1 is het primaire signal dat Google gebruikt om te begrijpen waar een pagina over gaat. Het ontbreekt door het gebruik van Divi-modules in plaats van semantische HTML heading-elementen.</p>
+        <div class="finding-rec">In Divi: selecteer de eerste heading op elke pagina → tab "Geavanceerd" → veld "HTML tag" → wijzig naar "h1". Doe dit voor alle 12 pagina's — begin met de 5 hoofdpagina's.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>Geen Open Graph tags op 11 van 12 pagina's</h4>
+        <p>Alleen /social-media/ heeft OG tags. De overige 11 pagina's — inclusief homepage, alle diensten en alle case studies — hebben geen og:title, og:description, og:image. Dit maakt de site "ondeelbaar" op LinkedIn, Facebook en WhatsApp.</p>
+        <div class="finding-rec">Activeer OG tags via Yoast SEO of RankMath voor alle pagina's. Definieer een unieke og:image per pagina (1200×630px).</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>4 van 5 service/hoofd-paginatitels te lang (&gt;60 tekens)</h4>
+        <p>Homepage (83), /social-media/ (71), /website/ (83), /seo/ (62). Google knipt alles boven 60 tekens af in zoekresultaten, wat de klikratio schaadt.</p>
+        <div class="finding-rec">Gebruik het format: "[Primaire keyword] | DMADS" of "[Dienst] Bureau Utrecht | DMADS". Nooit langer dan 60 tekens. Gebruik een tool als serpsimulator.com om te controleren.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Geen Twitter Card tags op enige pagina</h4>
+        <p>Twitter/X Card tags ontbreken volledig op de site. Weinig kritisch maar eenvoudig te verhelpen.</p>
+        <div class="finding-rec">Voeg toe via Yoast SEO: twitter:card, twitter:title, twitter:description, twitter:image. Kan in bulk via de SEO-plugin worden geconfigureerd.</div>
+      </div>
+      <span class="badge badge-low">Laag</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Meta descriptions te kort op /social-media/ (121), /sea/ (128) en /over-ons/ (127)</h4>
+        <p>Target is 150–160 tekens. Drie pagina's zitten 20–40 tekens onder het optimum — gemiste kans op extra zoekresultaat-ruimte.</p>
+        <div class="finding-rec">Verleng de meta descriptions van deze 3 pagina's. Voeg een call-to-action toe: "Plan een gratis kennismaking" of "Bekijk onze cases".</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">Robots.txt &amp; Sitemap</div>
+    <div class="finding">
+      <div class="finding-status pass"></div>
+      <div class="finding-content">
+        <h4>Robots.txt correct geconfigureerd</h4>
+        <p>Geen blokkades, verwijst naar sitemap_index.xml. Geen crawl-delay. Alles groen.</p>
+      </div>
+      <span class="badge badge-pass">Pass</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status pass"></div>
+      <div class="finding-content">
+        <h4>Sitemap index aanwezig en actueel</h4>
+        <p>sitemap_index.xml verwijst naar page-sitemap.xml. Alle 12 pagina's zijn aanwezig. Meest recente lastmod: 23 februari 2026. Geen testpagina's of rommel.</p>
+      </div>
+      <span class="badge badge-pass">Pass</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status pass"></div>
+      <div class="finding-content">
+        <h4>HTTPS actief</h4>
+        <p>Site is bereikbaar via HTTPS. SSL-certificaat aanwezig.</p>
+      </div>
+      <span class="badge badge-pass">Pass</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status pass"></div>
+      <div class="finding-content">
+        <h4>HTML lang="nl-NL" correct ingesteld</h4>
+        <p>Taalattribuut correct — signaleert aan Google dat de site in het Nederlands is.</p>
+      </div>
+      <span class="badge badge-pass">Pass</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px">Security &amp; Server Headers</div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Security headers niet verifieerbaar — WordPress + Divi typisch problematisch</h4>
+        <p>HSTS, Content-Security-Policy, X-Content-Type-Options konden niet worden geverifieerd. WordPress-sites op standaard hosting missen deze headers vaak.</p>
+        <div class="finding-rec">Check via securityheaders.com. Voeg headers toe via .htaccess of een plugin zoals "Headers Security Advanced & HSTS WP".</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Divi page builder — Core Web Vitals risico</h4>
+        <p>Divi laadt standaard veel JS en CSS, ook op pagina's waar het niet nodig is. Dit heeft directe impact op LCP, FID en CLS — Google's Core Web Vitals die meewegen in rankings.</p>
+        <div class="finding-rec">Installeer WP Rocket of LiteSpeed Cache. Activeer "Defer JavaScript", "Critical CSS", en "Unused CSS verwijderen". Check Core Web Vitals via Google Search Console na implementatie.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB 4: TECHNICAL ===== -->
+<div id="tab-technical" class="tab-content">
+<div class="container">
+  <div class="section-title">Technische SEO</div>
+  <div class="section-subtitle">Infrastructuur, implementatie en technische gezondheid</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:20px">Implementatie Checklist</div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">HTTPS actief en SSL-certificaat aanwezig</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">robots.txt aanwezig, geldig en zonder blokkades</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Sitemap index (sitemap_index.xml) aanwezig en actueel</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">HTML lang="nl-NL" correct ingesteld</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Schema markup (WebPage + Organization + BreadcrumbList) aanwezig op alle pagina's</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Favicon aanwezig (d.png, 512×512)</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Schone URL-structuur (lowercase, hyphens, logische hiërarchie)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text"><strong>H1-tags ontbreken op alle 12 pagina's</strong> — kritiek</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Open Graph tags ontbreken op 11 van 12 pagina's</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Twitter Card tags ontbreken op alle pagina's</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">LocalBusiness schema ontbreekt — geen adres, telefoon, openingstijden</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Canonical tags niet geverifieerd — risico op self-canonicalization issues</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">AggregateRating schema ontbreekt (geen reviews zichtbaar)</div></div>
+    <div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text">Viewport meta — aanwezig via Divi (standaard), niet expliciet geverifieerd</div></div>
+    <div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text">Lazy loading op afbeeldingen — WordPress 5.5+ standaard, niet geverifieerd</div></div>
+    <div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text">WebP/AVIF afbeeldingen — Divi ondersteunt het, maar gebruik niet bevestigd</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Security headers (HSTS, CSP, X-Content-Type) — waarschijnlijk niet geconfigureerd</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Preload/preconnect hints voor Google Fonts en externe resources</div></div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;margin-top:32px">Schema Markup Strategie</div>
+  <div class="section-subtitle">Huidige status en aanbevolen uitbreidingen</div>
+  <div class="card" style="overflow-x:auto;padding:0">
+    <table class="page-table">
+      <thead>
+        <tr><th>Pagina</th><th>Huidige Schema</th><th>Aanbevolen Toevoegingen</th><th>Prioriteit</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="page-url">/</span></td><td>WebPage + Organization + WebSite</td><td>LocalBusiness + AggregateRating + SiteLinksSearchBox</td><td><span class="badge badge-critical">Kritiek</span></td></tr>
+        <tr><td><span class="page-url">/sea/</span></td><td>WebPage + BreadcrumbList</td><td>Service + FAQPage</td><td><span class="badge badge-high">Hoog</span></td></tr>
+        <tr><td><span class="page-url">/seo/</span></td><td>WebPage + BreadcrumbList</td><td>Service + FAQPage</td><td><span class="badge badge-high">Hoog</span></td></tr>
+        <tr><td><span class="page-url">/social-media/</span></td><td>WebPage + BreadcrumbList</td><td>Service + FAQPage</td><td><span class="badge badge-high">Hoog</span></td></tr>
+        <tr><td><span class="page-url">/website/</span></td><td>WebPage + BreadcrumbList</td><td>Service + FAQPage</td><td><span class="badge badge-high">Hoog</span></td></tr>
+        <tr><td><span class="page-url">/over-ons/</span></td><td>WebPage + Organization</td><td>Person schema (teamleden) + AboutPage</td><td><span class="badge badge-medium">Medium</span></td></tr>
+        <tr><td><span class="page-url">/ons-werk/*</span></td><td>WebPage + ImageObject</td><td>Article/CaseStudy + Review/Testimonial</td><td><span class="badge badge-medium">Medium</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="font-size:18px;margin-top:32px">Performance Indicatoren</div>
+  <div class="section-subtitle">Bekende risico's voor laadsnelheid en Core Web Vitals</div>
+  <div class="card">
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Divi Page Builder — bloated JavaScript/CSS output</h4>
+        <p>Divi genereert standaard 500+ KB aan CSS per pagina, inclusief stijlen voor modules die niet op die specifieke pagina worden gebruikt. Dit is een bekende CWV-killer.</p>
+        <div class="finding-rec">WP Rocket + Divi critial CSS optie. Activeer "Exclude unused CSS" specifiek voor Divi. Overweeg Divi's eigen "Performance" instellingen (Dynamic CSS files).</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Google Fonts geladen via externa request</h4>
+        <p>De site laadt Google Fonts via fonts.googleapis.com en fonts.gstatic.com. Dit voegt twee extra DNS lookups en render-blocking requests toe aan de laadtijd.</p>
+        <div class="finding-rec">Gebruik een plugin zoals "OMGF | GDPR/DSGVO Compliant, Faster Google Fonts" om fonts lokaal te hosten. Voeg &lt;link rel="preconnect"&gt; toe voor fonts.googleapis.com en fonts.gstatic.com.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status pass"></div>
+      <div class="finding-content">
+        <h4>Schone URL-structuur zonder parameters</h4>
+        <p>Alle URL's zijn lowercase, hyphen-separated, en logisch gestructureerd (/ons-werk/athlon/ etc.). Geen query parameters of sessions in URLs.</p>
+      </div>
+      <span class="badge badge-pass">Pass</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB 5: CONTENT STRATEGIE ===== -->
+<div id="tab-content" class="tab-content">
+<div class="container">
+  <div class="section-title">Content Strategie</div>
+  <div class="section-subtitle">Keyword gaps, content clusters en groeikansen voor een bureau dat Utrecht targetiert</div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value" style="color:var(--red)">9</div><div class="stat-label">Dunne Content Pagina's (&lt;300 w)</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--green)">0</div><div class="stat-label">Blog Artikelen</div></div>
+    <div class="stat-card"><div class="stat-value">~2.000</div><div class="stat-label">Geschatte Totaal Woorden</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--red)">3</div><div class="stat-label">Meta Desc Te Kort</div></div>
+  </div>
+
+  <!-- Suggested keywords section -->
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-title" style="margin-bottom:12px">Aanbevolen Keyword Map — Volledige Strategie</div>
+    <div style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+      Gebaseerd op de diensten (SEA, SEO, Social Media, Website), locatie (Utrecht) en doelgroep (MKB). Alle keywords zijn Nederlands, gericht op transactionele zoekintentie.
+    </div>
+    <table class="page-table">
+      <thead>
+        <tr><th>Pagina</th><th>Primair Keyword</th><th>Secondaire Keywords</th><th>Huidige Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="page-url">/</span></td><td>online marketing bureau Utrecht</td><td>marketingbureau Utrecht, DMADS</td><td><span class="badge badge-fail">Ontbreekt in content</span></td></tr>
+        <tr><td><span class="page-url">/sea/</span></td><td>Google Ads bureau Utrecht</td><td>SEA bureau, Google advertenties, PPC bureau</td><td><span class="badge badge-fail">Ontbreekt in H1/content</span></td></tr>
+        <tr><td><span class="page-url">/seo/</span></td><td>SEO bureau Utrecht</td><td>zoekmachineoptimalisatie, organisch verkeer</td><td><span class="badge badge-fail">Ontbreekt in H1/content</span></td></tr>
+        <tr><td><span class="page-url">/social-media/</span></td><td>social media bureau Utrecht</td><td>Instagram adverteren, Facebook ads, LinkedIn</td><td><span class="badge badge-fail">Ontbreekt in H1</span></td></tr>
+        <tr><td><span class="page-url">/website/</span></td><td>website laten maken Utrecht</td><td>webdesign bureau, landingspagina, webshop</td><td><span class="badge badge-fail">Ontbreekt in H1</span></td></tr>
+        <tr><td><span class="page-url">/online-groeien/</span></td><td>online groeien met marketing</td><td>digitale groei, online strategie MKB</td><td><span class="badge badge-fail">Duplicaat van /sea/</span></td></tr>
+        <tr><td><span class="page-url">NIEUW</span></td><td>online marketing bureau Utrecht</td><td>marketingbureau MKB, full-service</td><td><span class="badge badge-warning">Pagina ontbreekt</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- LSI keywords -->
+  <div class="section-title" style="font-size:18px">LSI Keyword Dekking</div>
+  <div class="section-subtitle">Groen = aanwezig op de site | Rood = ontbreekt (moet worden toegevoegd)</div>
+  <div class="lsi-cloud">
+    <span class="lsi-tag integrated">Google Ads</span>
+    <span class="lsi-tag integrated">SEO</span>
+    <span class="lsi-tag integrated">social media</span>
+    <span class="lsi-tag integrated">website</span>
+    <span class="lsi-tag integrated">campagne</span>
+    <span class="lsi-tag integrated">doelgroep</span>
+    <span class="lsi-tag integrated">conversie</span>
+    <span class="lsi-tag integrated">design</span>
+    <span class="lsi-tag integrated">content</span>
+    <span class="lsi-tag partial">Facebook</span>
+    <span class="lsi-tag partial">Instagram</span>
+    <span class="lsi-tag partial">LinkedIn</span>
+    <span class="lsi-tag missing">Utrecht</span>
+    <span class="lsi-tag missing">online marketing bureau</span>
+    <span class="lsi-tag missing">MKB</span>
+    <span class="lsi-tag missing">tarieven / investering</span>
+    <span class="lsi-tag missing">werkproces</span>
+    <span class="lsi-tag missing">resultaten / ROI</span>
+    <span class="lsi-tag missing">Google Search Console</span>
+    <span class="lsi-tag missing">keyword onderzoek</span>
+    <span class="lsi-tag missing">linkbuilding</span>
+    <span class="lsi-tag missing">landingspagina</span>
+    <span class="lsi-tag missing">webshop</span>
+    <span class="lsi-tag missing">retargeting</span>
+    <span class="lsi-tag missing">A/B testing</span>
+    <span class="lsi-tag missing">advertentiebudget</span>
+    <span class="lsi-tag missing">CTR / CPC / ROAS</span>
+    <span class="lsi-tag missing">gratis kennismaking</span>
+    <span class="lsi-tag missing">offerte aanvragen</span>
+    <span class="lsi-tag missing">reviews / testimonials</span>
+    <span class="lsi-tag missing">geen blog</span>
+  </div>
+
+  <!-- Content clusters -->
+  <div class="section-title" style="font-size:18px;margin-top:32px">Aanbevolen Content Clusters</div>
+  <div class="section-subtitle">Structuur voor topical authority als marketing bureau in Utrecht</div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 1: Online Marketing Utrecht (PRIMAIR)</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/ (Homepage — Pillar: bureau-identiteit + Utrecht)</span>
+      <span class="cluster-page">NIEUW: /online-marketing-bureau-utrecht/</span>
+      <span class="cluster-page">/over-ons/ (aanvullen met teaminfo + missie)</span>
+      <span class="cluster-page">/ons-werk/ (case studies hub)</span>
+    </div>
+  </div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 2: Betaald Adverteren — SEA / Google Ads</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/sea/ (Pillar: Google Ads bureau Utrecht)</span>
+      <span class="cluster-page">/online-groeien/ → FIX: unieke groeistrategie-pagina</span>
+      <span class="cluster-page">BLOG: Hoeveel kost Google Ads in 2026?</span>
+      <span class="cluster-page">BLOG: Google Ads vs. Facebook Ads — wat werkt voor MKB?</span>
+    </div>
+  </div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 3: Organisch — SEO</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/seo/ (Pillar: SEO bureau Utrecht)</span>
+      <span class="cluster-page">BLOG: Wat is lokale SEO en hoe helpt het MKB?</span>
+      <span class="cluster-page">BLOG: Hoeveel tijd duurt SEO?</span>
+    </div>
+  </div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 4: Social Media Marketing</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/social-media/ (Pillar: social media bureau Utrecht)</span>
+      <span class="cluster-page">BLOG: Instagram adverteren voor MKB: stap-voor-stap gids</span>
+      <span class="cluster-page">BLOG: LinkedIn advertenties B2B: wanneer loont het?</span>
+    </div>
+  </div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 5: Website & Conversie</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/website/ (Pillar: website laten maken Utrecht)</span>
+      <span class="cluster-page">BLOG: Landingspagina vs. website: wanneer kies je wat?</span>
+    </div>
+  </div>
+
+  <!-- Content gap recommendations -->
+  <div class="section-title" style="font-size:18px;margin-top:32px">Prioritaire Content Aanbevelingen</div>
+  <div class="section-subtitle">Nieuwe pagina's en verbeteringen die direct zoekverkeer opleveren</div>
+
+  <div class="action-item">
+    <div class="action-number">1</div>
+    <div class="action-content">
+      <div class="action-title">Maak /online-marketing-bureau-utrecht/ (800+ woorden)</div>
+      <div class="action-desc">Dedicated lokale landingspagina die "online marketing bureau Utrecht" target. Inhoud: wie zijn DMADS (lokale roots), alle diensten op één plek, 3 klantresultaten, Google Maps embed of adresvermelding, LocalBusiness schema met Utrecht-coördinaten, CTA naar kennismaking.</div>
+      <div class="action-impact">Verwacht effect: #1–5 voor "online marketing bureau Utrecht" — hoogste-waarde lokale keyword</div>
+    </div>
+    <span class="badge badge-critical">Kritiek</span>
+  </div>
+  <div class="action-item">
+    <div class="action-number">2</div>
+    <div class="action-content">
+      <div class="action-title">Breid alle 5 service-pagina's uit naar 600–1000 woorden</div>
+      <div class="action-desc">Huidige servicepagina's hebben ~200 woorden. Voeg per pagina toe: werkproces stap voor stap, type klanten/branches, resultaten/statistieken, FAQ (5–8 vragen), interne link naar relevante case study. Voeg FAQPage schema toe voor rich snippets.</div>
+      <div class="action-impact">Verwacht effect: Concurrentieel met bureaus die nu hoger ranken voor dienst-gerelateerde keywords</div>
+    </div>
+    <span class="badge badge-high">Hoog</span>
+  </div>
+  <div class="action-item">
+    <div class="action-number">3</div>
+    <div class="action-content">
+      <div class="action-title">Start een blog — 1 artikel per 2 weken</div>
+      <div class="action-desc">Er is geen enkele blogpost op de site. Een blog bouwt domein-autoriteit op en pakt long-tail keywords die servicepagina's niet direct raken. Start met: "Wat kost online marketing voor MKB?", "Google Ads vs. organisch verkeer: voor wie is wat?", "5 fouten in social media advertenties die je geld kosten".</div>
+      <div class="action-impact">Verwacht effect: Long-tail organisch verkeer, autoriteitsopbouw, interne linkmogelijkheden naar services</div>
+    </div>
+    <span class="badge badge-medium">Medium</span>
+  </div>
+  <div class="action-item">
+    <div class="action-number">4</div>
+    <div class="action-content">
+      <div class="action-title">Transformeer case studies naar echte casestudies (400–600 woorden)</div>
+      <div class="action-desc">Athlon, Floating Amsterdam en GLO Entertainment Live hebben nu 50–120 woorden. Maak van elke case: klantintro → uitdaging → aanpak (welke diensten) → meetbare resultaten (% stijging, conversies, rankings) → klantcitaat. Voeg Article schema en interne link naar relevante dienstpagina toe.</div>
+      <div class="action-impact">Verwacht effect: Sterkere E-E-A-T signalen, hogere conversie van portfoliobezoeker naar lead</div>
+    </div>
+    <span class="badge badge-high">Hoog</span>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB 6: INTERNE LINKS ===== -->
+<div id="tab-linking" class="tab-content">
+<div class="container">
+  <div class="section-title">Interne Link Analyse</div>
+  <div class="section-subtitle">Link equity distributie op basis van sitemapstructuur en crawldata</div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-value">12</div><div class="stat-label">Geanalyseerde Pagina's</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--yellow)">2</div><div class="stat-label">Vermoedelijke Wees-pagina's</div></div>
+    <div class="stat-card"><div class="stat-value" style="color:var(--orange)">4</div><div class="stat-label">Dode-End Pagina's</div></div>
+    <div class="stat-card"><div class="stat-value">~3</div><div class="stat-label">Gem. Links/Pagina (nav)</div></div>
+  </div>
+
+  <div class="section-title" style="font-size:18px">Link Equity Distributie</div>
+  <div class="section-subtitle">Hoe intern verkeer en crawlbudget verdeeld zijn</div>
+  <div class="card" style="overflow-x:auto;padding:0">
+    <table class="page-table">
+      <thead>
+        <tr><th>Pagina</th><th>Inkomende Links (schatting)</th><th>Uitgaande Links</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="page-url">/</span></td><td>Alle pagina's (via logo)</td><td>Nav (5–7)</td><td><span class="badge badge-pass">Hub</span></td></tr>
+        <tr><td><span class="page-url">/sea/</span></td><td>Nav + homepage</td><td>2–3</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+        <tr><td><span class="page-url">/seo/</span></td><td>Nav + homepage</td><td>2–3</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+        <tr><td><span class="page-url">/social-media/</span></td><td>Nav + homepage</td><td>2–3</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+        <tr><td><span class="page-url">/website/</span></td><td>Nav + homepage</td><td>2–3</td><td><span class="badge badge-pass">Healthy</span></td></tr>
+        <tr><td><span class="page-url">/online-groeien/</span></td><td>Onbekend — vermoedelijk 0–1</td><td>1–2</td><td><span class="badge badge-fail">Duplicaat-weespagina</span></td></tr>
+        <tr><td><span class="page-url">/over-ons/</span></td><td>Nav</td><td>0–1</td><td><span class="badge badge-warning">Dead-end</span></td></tr>
+        <tr><td><span class="page-url">/ons-werk/</span></td><td>Nav + homepage</td><td>Case study links</td><td><span class="badge badge-pass">Hub</span></td></tr>
+        <tr><td><span class="page-url">/ons-werk/athlon/</span></td><td>1 (/ons-werk/)</td><td>0</td><td><span class="badge badge-warning">Dead-end</span></td></tr>
+        <tr><td><span class="page-url">/ons-werk/floating-amsterdam/</span></td><td>1 (/ons-werk/)</td><td>0</td><td><span class="badge badge-warning">Dead-end</span></td></tr>
+        <tr><td><span class="page-url">/ons-werk/glo-entertainment-live/</span></td><td>1 (/ons-werk/)</td><td>0</td><td><span class="badge badge-warning">Dead-end</span></td></tr>
+        <tr><td><span class="page-url">/ons-werk/tandarts-mondain/</span></td><td>1 (/ons-werk/)</td><td>0</td><td><span class="badge badge-warning">Dead-end</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="font-size:18px;margin-top:32px">Aanbevolen Interne Links</div>
+  <div class="section-subtitle">Specifieke kansen om link equity beter te verdelen en conversiepad te verbeteren</div>
+
+  <div class="action-item">
+    <div class="action-number">1</div>
+    <div class="action-content">
+      <div class="action-title">Link vanuit elke case study naar de bijbehorende dienstpagina</div>
+      <div class="action-desc">Athlon → /sea/ of /social-media/ (afhankelijk van de dienst), Floating Amsterdam → /seo/ + /website/, GLO → /seo/ + /social-media/. Alle case studies zijn nu dead-ends. Voeg onderaan toe: "Wil jij ook zo'n resultaat? Bekijk onze [SEO/SEA/Social Media] dienst."</div>
+    </div>
+    <span class="badge badge-high">Hoog</span>
+  </div>
+  <div class="action-item">
+    <div class="action-number">2</div>
+    <div class="action-content">
+      <div class="action-title">Link vanuit /over-ons/ naar dienst- en case study-pagina's</div>
+      <div class="action-desc">De "Over ons" pagina ontvangt navigatieverkeer maar stuurt bezoekers nergens naartoe (dead-end). Voeg CTA toe: "Bekijk hoe we werken" → /ons-werk/ en "Onze diensten" → /sea/, /seo/, /social-media/.</div>
+    </div>
+    <span class="badge badge-medium">Medium</span>
+  </div>
+  <div class="action-item">
+    <div class="action-number">3</div>
+    <div class="action-content">
+      <div class="action-title">Voeg cross-links toe tussen gerelateerde diensten</div>
+      <div class="action-desc">/sea/ → link naar /seo/ ("Combineer SEA met SEO voor maximaal resultaat"), /seo/ → link naar /website/ ("Een goede SEO-strategie begint met een converterende website"), /social-media/ → link naar /sea/ ("Combineer social ads met Google Ads").</div>
+    </div>
+    <span class="badge badge-medium">Medium</span>
+  </div>
+  <div class="action-item">
+    <div class="action-number">4</div>
+    <div class="action-content">
+      <div class="action-title">Zorg dat /online-groeien/ gelinkt wordt vanuit homepage en nav (of verwijder het)</div>
+      <div class="action-desc">Als /online-groeien/ een unieke pagina wordt, voeg het dan toe aan de navigatie of link er prominent naar vanuit de homepage. Als het een 301 wordt, verwijder dan alle interne links ernaar.</div>
+    </div>
+    <span class="badge badge-medium">Medium</span>
+  </div>
+</div>
+</div>
+
+<!-- ===== TAB 7: ACTIEPLAN ===== -->
+<div id="tab-actions" class="tab-content">
+<div class="container">
+  <div class="section-title">Geprioriteerd Actieplan</div>
+  <div class="section-subtitle">Alle aanbevelingen gerangschikt op impact — van urgent naar strategisch</div>
+
+  <div class="section-title" style="font-size:18px;color:var(--red)">🚨 Urgent — Deze Week</div>
+  <div style="margin-bottom:32px">
+    <div class="action-item" style="border-color:var(--red-border)">
+      <div class="action-number" style="color:var(--red)">1</div>
+      <div class="action-content">
+        <div class="action-title">Fix /online-groeien/ — duplicaat elimineren</div>
+        <div class="action-desc">301-redirect /online-groeien/ naar /sea/, verwijder uit sitemap. Of maak het een unieke pagina over groeitraject met eigen title/meta/content. Zolang dit niet opgelost is, schaden beide pagina's elkaars rankings.</div>
+        <div class="action-impact">Verwacht effect: Eliminatie van cannibalisatie-penalisatie voor /sea/</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="action-item" style="border-color:var(--red-border)">
+      <div class="action-number" style="color:var(--red)">2</div>
+      <div class="action-content">
+        <div class="action-title">H1-tags instellen in Divi op alle 12 pagina's</div>
+        <div class="action-desc">In Divi: klik op eerste heading → Geavanceerd → HTML-tag → H1. Prioriteitsvolgorde: / → /sea/ → /seo/ → /social-media/ → /website/ → overige pagina's. Dit lost het meest fundamentele SEO-probleem op in 30–60 minuten.</div>
+        <div class="action-impact">Verwacht effect: Google begrijpt nu het primaire onderwerp van elke pagina — directe ranking boost</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;color:var(--green)">Quick Wins <span style="font-size:14px;color:var(--text-muted);font-weight:400">&mdash; minder dan 1 uur elk</span></div>
+  <div style="margin-bottom:32px">
+    <div class="action-item">
+      <div class="action-number">1</div>
+      <div class="action-content">
+        <div class="action-title">Verkort alle paginatitels naar &lt;60 tekens</div>
+        <div class="action-desc">Homepage: "Online Marketing Bureau Utrecht | DMADS" (45), /website/: "Website Laten Maken Utrecht | DMADS" (38), /social-media/: "Social Media Marketing Bureau | DMADS" (37), /seo/: "SEO Bureau Utrecht | DMADS" (27). Via Yoast SEO per pagina aanpassen.</div>
+        <div class="action-impact">Verwacht effect: Titels worden niet meer afgekapt in Google — hogere CTR</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">2</div>
+      <div class="action-content">
+        <div class="action-title">Activeer Open Graph tags voor alle pagina's</div>
+        <div class="action-desc">In Yoast SEO: Uiterlijk → Sociale media → Facebook/X. Stel per pagina een unieke og:image in (1200×630px). De homepage OG-afbeelding bij voorkeur het logo of een teamfoto op witte/merkkleur achtergrond.</div>
+        <div class="action-impact">Verwacht effect: Professionele previews bij delen op LinkedIn/Facebook/WhatsApp</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">3</div>
+      <div class="action-content">
+        <div class="action-title">Verleng meta descriptions op /social-media/, /sea/ en /over-ons/ naar 150–160 tekens</div>
+        <div class="action-desc">Voeg per pagina een concrete CTA toe: "Plan een gratis kennismaking" of "Bekijk onze resultaten". Richtlijn: servicepagina's eindigen altijd met een actie-uitnodiging.</div>
+        <div class="action-impact">Verwacht effect: Hogere CTR in zoekresultaten door sterkere call-to-action</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">4</div>
+      <div class="action-content">
+        <div class="action-title">Voeg LocalBusiness schema toe op de homepage</div>
+        <div class="action-desc">Voeg JSON-LD toe via Yoast SEO's Schema-sectie of handmatig in functions.php: @type LocalBusiness, name "DMADS", adres Utrecht, telefoon, e-mail, priceRange, openingsuren. Dit activeert Google Knowledge Panel mogelijkheid.</div>
+        <div class="action-impact">Verwacht effect: Google Knowledge Panel, betere lokale rankings, rich result in Maps</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">5</div>
+      <div class="action-content">
+        <div class="action-title">Vervang de generieke sea-dmads.jpg als featured image op case study pagina's</div>
+        <div class="action-desc">Dezelfde "SEA" afbeelding staat als featured image op /ons-werk/, /ons-werk/athlon/, /ons-werk/floating-amsterdam/, /over-ons/. Gebruik per case study een relevante afbeelding met beschrijvende alt tekst.</div>
+        <div class="action-impact">Verwacht effect: Betere OG-previews, relevantere beeldsignalen voor Google afbeeldingenzoeken</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">6</div>
+      <div class="action-content">
+        <div class="action-title">Voeg interne links toe vanuit case studies naar dienstpagina's</div>
+        <div class="action-desc">Alle 4 case study pagina's zijn momenteel dead-ends. Voeg onderaan een CTA toe die linkt naar de relevante dienstpagina. 10 minuten per pagina.</div>
+        <div class="action-impact">Verwacht effect: Betere link equity verdeling, langere sessieduur, meer conversies</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;color:var(--orange)">High Impact <span style="font-size:14px;color:var(--text-muted);font-weight:400">&mdash; 1–4 uur elk</span></div>
+  <div style="margin-bottom:32px">
+    <div class="action-item">
+      <div class="action-number">1</div>
+      <div class="action-content">
+        <div class="action-title">Maak /online-marketing-bureau-utrecht/ (800+ woorden)</div>
+        <div class="action-desc">Dedicated lokale SEO-pagina als primaire lead-generator. Inhoud: intro over DMADS als lokaal bureau, alle diensten samengevat, 2–3 Utrechtse klantresultaten, Google Maps embed, LocalBusiness schema, CTA naar kennismaking. Target: "online marketing bureau Utrecht", "marketingbureau Utrecht".</div>
+        <div class="action-impact">Verwacht effect: Hoogste-waarde lokale keyword — directe lead generatie</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">2</div>
+      <div class="action-content">
+        <div class="action-title">Breid /sea/ uit naar 800+ woorden + FAQPage schema</div>
+        <div class="action-desc">Voeg toe: werkproces (intake → campagne-opzet → optimalisatie → rapportage), type campagnes (Search, Display, Performance Max, Shopping), branches waarvoor je werkt, indicatieve investering, FAQ (7–8 vragen), link naar Athlon case study.</div>
+        <div class="action-impact">Verwacht effect: Concurrentieel met bureaus die nu ranken voor "Google Ads bureau Utrecht"</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">3</div>
+      <div class="action-content">
+        <div class="action-title">Breid /seo/, /social-media/, /website/ uit naar 600–800 woorden</div>
+        <div class="action-desc">Zelfde aanpak als /sea/: werkproces, type klanten, resultaten, FAQ, interne links naar cases. Voeg FAQPage JSON-LD schema toe voor rich snippets in zoekresultaten.</div>
+        <div class="action-impact">Verwacht effect: Toprelevantie voor dienst-gerelateerde keywords in Utrecht</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">4</div>
+      <div class="action-content">
+        <div class="action-title">Transformeer case studies naar 400–600 woorden per stuk</div>
+        <div class="action-desc">Athlon, Floating Amsterdam, GLO Entertainment Live: uitbreiden van 50–120 woorden naar volledige case studies met probleem/aanpak/resultaat structuur. Voeg meetbare KPI's toe. Link vanuit elke case naar de bijbehorende dienstpagina.</div>
+        <div class="action-impact">Verwacht effect: Sterkere E-E-A-T, hogere conversie van portfolio-bezoekers</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">5</div>
+      <div class="action-content">
+        <div class="action-title">Google Business Profile aanmaken of optimaliseren voor Utrecht</div>
+        <div class="action-desc">Controleer of er een GBP bestaat voor DMADS. Vul in: categorie "Online marketing bureau", adres Utrecht, openingstijden, diensten, foto's (team/kantoor), en vraag actief reviews bij bestaande klanten. Dit is essentieel voor lokale Maps-rankings.</div>
+        <div class="action-impact">Verwacht effect: Verschijning in Google Maps Local Pack voor "online marketing bureau Utrecht"</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px;color:var(--purple)">Strategische Initiatieven <span style="font-size:14px;color:var(--text-muted);font-weight:400">&mdash; doorlopend</span></div>
+  <div style="margin-bottom:32px">
+    <div class="action-item">
+      <div class="action-number">1</div>
+      <div class="action-content">
+        <div class="action-title">Start een blog: 2 artikelen per maand</div>
+        <div class="action-desc">Er zijn geen blogposts. Begin met: "Wat kost Google Ads adverteren in 2026?", "Instagram adverteren voor MKB: complete gids", "Hoe werkt SEO voor een lokaal bedrijf?", "Social media bureau of inhouse team: wat past bij jou?". Elk artikel 700–1200 woorden, met interne links naar relevante dienstpagina.</div>
+        <div class="action-impact">Verwacht effect: Long-tail keyword traffic, domein-autoriteitsgroei, interne link kansen</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">2</div>
+      <div class="action-content">
+        <div class="action-title">Voeg AggregateRating schema toe na reviews verzamelen</div>
+        <div class="action-desc">Verzamel 5+ Google Reviews van bestaande klanten (Athlon, Floating Amsterdam, etc.). Voeg daarna AggregateRating JSON-LD toe aan de homepage en /sea/, /seo/ pagina's. Dit toont gouden sterren in zoekresultaten.</div>
+        <div class="action-impact">Verwacht effect: Significant hogere CTR door gouden sterren — bureaus met reviews winnen standaard van bureaus zonder</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">3</div>
+      <div class="action-content">
+        <div class="action-title">Core Web Vitals optimaliseren via caching plugin</div>
+        <div class="action-desc">Installeer WP Rocket of LiteSpeed Cache. Activeer Critical CSS, defer JavaScript, en lokale Google Fonts hosting. Monitor vervolgens via Google Search Console Core Web Vitals rapport.</div>
+        <div class="action-impact">Verwacht effect: Snellere laadtijd, betere Core Web Vitals score, indirecte rankingverbetering</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">4</div>
+      <div class="action-content">
+        <div class="action-title">Maak lokale dienst-pagina's voor naburige steden</div>
+        <div class="action-desc">Na succes van /online-marketing-bureau-utrecht/: maak /online-marketing-bureau-amsterdam/, /online-marketing-bureau-almere/ of /online-marketing-bureau-nieuwegein/. Elke pagina uniek met lokale context, niet gedupliceerd van Utrecht-pagina.</div>
+        <div class="action-impact">Verwacht effect: Geografische expansie van organisch bereik buiten Utrecht</div>
+      </div>
+      <span class="badge badge-low">Laag</span>
+    </div>
+  </div>
+
+  <!-- Full checklist -->
+  <div class="section-title" style="font-size:18px;margin-top:32px">Volledige Implementatie Checklist</div>
+  <div class="card">
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">🚨 301-redirect /online-groeien/ → /sea/ OF maak unieke pagina</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">🚨 H1-tags instellen via Divi op alle 12 pagina's</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Verkort homepage title naar &lt;60 tekens (bijv. "Online Marketing Bureau Utrecht | DMADS")</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Verkort /social-media/ title naar &lt;60 tekens</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Verkort /website/ title naar &lt;60 tekens</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Verkort /seo/ title naar &lt;60 tekens</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Activeer Open Graph tags voor alle 12 pagina's via Yoast/RankMath</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Activeer Twitter Card tags voor alle pagina's</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Verleng meta descriptions op /social-media/, /sea/ en /over-ons/ naar 150–160 tekens</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">LocalBusiness schema toevoegen aan homepage (adres Utrecht, telefoon, e-mail)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Vervang generieke sea-dmads.jpg op case study pagina's door relevante afbeeldingen</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Voeg interne links toe van alle case studies naar dienstpagina's</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Voeg interne links toe van /over-ons/ naar diensten en /ons-werk/</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Maak /online-marketing-bureau-utrecht/ (800+ woorden)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Breid /sea/ uit naar 800+ woorden + FAQPage schema</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Breid /seo/ uit naar 600–800 woorden + FAQPage schema</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Breid /social-media/ uit naar 600–800 woorden + FAQPage schema</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Breid /website/ uit naar 600–800 woorden + FAQPage schema</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Transformeer alle 4 case studies naar 400–600 woorden</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Google Business Profile aanmaken/optimaliseren voor Utrecht</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Verzamel 5+ Google Reviews van bestaande klanten</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">AggregateRating schema toevoegen na reviews</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Start blog met eerste 2 artikelen</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">WP Rocket/LiteSpeed Cache installeren + Critical CSS activeren</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Google Fonts lokaal hosten (OMGF plugin)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Security headers configureren via .htaccess of plugin</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Core Web Vitals controleren via Google Search Console</div></div>
+  </div>
+
+  <div style="margin-top:24px;padding:20px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;color:var(--text-muted);line-height:1.6">
+    <strong style="color:var(--text)">Auditlimiet:</strong> Deze audit is gebaseerd op directe HTML-crawl van 11 van 12 pagina's (één pagina niet bereikbaar wegens rate limiting), sitemapdata en Google-zoekresultaten. Directe Core Web Vitals meting, backlink-profiel en werkelijke zoekrankings zijn niet gemeten. Voer na implementatie een heraudit uit via Google Search Console en Screaming Frog voor definitieve data.
+  </div>
+</div>
+</div>
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  event.target.closest('.tab-btn').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+document.querySelectorAll('.collapsible-header').forEach(h => {
+  h.addEventListener('click', () => h.closest('.collapsible').classList.toggle('open'));
+});
+</script>
+</body>
+</html>
