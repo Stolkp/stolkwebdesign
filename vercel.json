@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "site",
+  "functions": {
+    "api/notion-publish.js": { "maxDuration": 60 },
+    "api/regenerate-carousel.js": { "maxDuration": 60 }
+  },
+  "headers": [
+    {
+      "source": "/api/og",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, s-maxage=3600" }
+      ]
+    }
+  ]
+}

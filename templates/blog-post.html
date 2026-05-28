@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} — Stolkwebdesign Blog</title>
+<meta name="description" content="{{EXCERPT}}">
+<meta name="keywords" content="webdesign, hosting, {{TOPIC}}, website laten bouwen, mkb">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{EXCERPT}}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{CANONICAL_URL}}">
+<meta property="og:image" content="{{OG_IMAGE_URL}}">
+<meta property="og:image:width" content="1080">
+<meta property="og:image:height" content="1080">
+<meta property="article:published_time" content="{{ISO_DATE}}">
+<meta property="article:section" content="{{TOPIC}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{OG_IMAGE_URL}}">
+<link rel="canonical" href="{{CANONICAL_URL}}">
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8a7865ef-27ca-48b5-a7f2-0235848c8787" type="text/javascript" async></script>
+<script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-5MT8XNYTF7"></script>
+<script type="text/plain" data-cookieconsent="statistics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"{{TITLE_JSON}}","description":"{{EXCERPT_JSON}}","image":"{{OG_IMAGE_URL}}","datePublished":"{{ISO_DATE}}","author":{"@type":"Person","name":"Peter Stolk"},"publisher":{"@type":"Organization","name":"Stolkwebdesign","logo":{"@type":"ImageObject","url":"https://www.stolkwebdesign.nl/favicon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"{{CANONICAL_URL}}"}}
+</script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --black:#000; --white:#FFF; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
+html { scroll-behavior: smooth; }
+body { background: var(--white); color: var(--black); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; line-height: 1.6; }
+.font-display { font-family: 'Archivo Black', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* NAV (identiek aan homepage) */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(--black); border-bottom: 2px solid var(--black); display: flex; align-items: center; justify-content: space-between; padding: 16px 48px; }
+.nav-logo { font-family: 'Archivo Black', sans-serif; font-size: 18px; text-transform: uppercase; color: var(--white); letter-spacing: -0.02em; text-decoration: none; }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--white); }
+.nav-cta { font-family: 'Archivo Black', sans-serif; font-size: 12px; text-transform: uppercase; background: var(--red); color: var(--white); border: 2px solid var(--white); padding: 13px 22px; text-decoration: none; letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta:hover { background: var(--white); color: var(--red); }
+.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+.nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); }
+.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; }
+.skip-link:focus { top:0; }
+
+/* ARTICLE HEADER */
+.article-header { background: var(--near-black); color: var(--white); padding: 140px 48px 80px; position: relative; overflow: hidden; }
+.article-header-inner { max-width: 920px; margin: 0 auto; position: relative; z-index: 2; }
+.breadcrumb { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: rgba(255,255,255,.5); margin-bottom: 28px; }
+.breadcrumb a { color: rgba(255,255,255,.5); text-decoration: none; transition: color .15s; }
+.breadcrumb a:hover { color: var(--white); }
+.breadcrumb .sep { color: var(--red); margin: 0 12px; }
+.topic-tag { display:inline-block; background: var(--red); color: var(--white); padding: 6px 14px; font-family: 'Archivo Black', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 28px; }
+h1.article-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(36px, 6vw, 72px); line-height: 1.02; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 32px; }
+.article-meta { display: flex; gap: 32px; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.55); }
+.article-meta strong { color: var(--white); font-weight: normal; }
+.article-noise { position: absolute; inset: 0; opacity: .08; mix-blend-mode: multiply; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); z-index: 1; }
+
+/* COVER */
+.article-cover { max-width: 1080px; margin: -48px auto 0; padding: 0 48px; position: relative; z-index: 5; }
+.article-cover img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border: 2px solid var(--black); box-shadow: 8px 8px 0 0 var(--red); display: block; }
+
+/* BODY */
+.article-body { max-width: 720px; margin: 0 auto; padding: 80px 48px; font-size: 18px; line-height: 1.75; color: var(--near-black); }
+.article-body h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(24px, 3vw, 36px); text-transform: uppercase; letter-spacing: -0.01em; margin: 56px 0 20px; line-height: 1.15; }
+.article-body h3 { font-family: 'Archivo Black', sans-serif; font-size: clamp(20px, 2.4vw, 26px); text-transform: uppercase; letter-spacing: -0.01em; margin: 40px 0 16px; line-height: 1.2; }
+.article-body p { margin-bottom: 24px; }
+.article-body ul, .article-body ol { margin: 0 0 24px 28px; }
+.article-body li { margin-bottom: 8px; }
+.article-body a { color: var(--black); text-decoration: none; border-bottom: 2px solid var(--red); transition: background .15s; padding: 0 2px; }
+.article-body a:hover { background: var(--red); color: var(--white); }
+.article-body blockquote { border-left: 4px solid var(--red); margin: 32px 0; padding: 8px 0 8px 24px; font-style: italic; color: var(--muted); }
+.article-body code { font-family: 'JetBrains Mono', monospace; background: var(--bone); padding: 2px 6px; font-size: 0.92em; border: 1px solid #ddd; }
+.article-body pre { background: var(--near-black); color: var(--white); padding: 20px; overflow-x: auto; margin: 24px 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.5; border: 2px solid var(--black); }
+.article-body pre code { background: none; padding: 0; border: none; color: inherit; }
+.article-body img { max-width: 100%; height: auto; margin: 32px 0; border: 2px solid var(--black); }
+.article-body hr { border: none; border-top: 2px solid var(--black); margin: 48px 0; }
+
+/* CTA AAN HET EIND */
+.article-cta { background: var(--red); color: var(--white); padding: 64px 48px; text-align: center; margin: 0; }
+.article-cta-inner { max-width: 720px; margin: 0 auto; }
+.article-cta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .25em; opacity: .8; margin-bottom: 16px; }
+.article-cta h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 4vw, 44px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 24px; }
+.article-cta p { font-size: 17px; margin-bottom: 32px; opacity: .92; }
+.article-cta-btn { display: inline-block; font-family: 'Archivo Black', sans-serif; font-size: 14px; text-transform: uppercase; background: var(--white); color: var(--red); border: 2px solid var(--black); padding: 16px 28px; text-decoration: none; letter-spacing: .04em; box-shadow: 8px 8px 0 0 var(--black); transition: transform .15s, box-shadow .15s; }
+.article-cta-btn:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--black); }
+
+/* RELATED */
+.related { background: var(--bone); padding: 80px 48px; }
+.related-inner { max-width: 1200px; margin: 0 auto; }
+.related-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .25em; color: var(--muted); margin-bottom: 16px; }
+.related h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 4vw, 44px); text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 48px; }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
+.related-card { background: var(--white); border: 2px solid var(--black); box-shadow: 8px 8px 0 0 var(--black); padding: 28px; text-decoration: none; color: var(--black); display: flex; flex-direction: column; gap: 16px; transition: transform .15s, box-shadow .15s; }
+.related-card:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--red); }
+.related-card-topic { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .2em; color: var(--red); }
+.related-card h3 { font-family: 'Archivo Black', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.2; }
+.related-card p { color: var(--muted); font-size: 14px; line-height: 1.55; }
+.related-card-link { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: var(--red); margin-top: auto; }
+
+/* FOOTER */
+footer { background: var(--black); color: var(--white); padding: 80px 48px 40px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; max-width: 1400px; margin: 0 auto 48px; }
+.footer-logo { font-size: 20px; text-transform: uppercase; margin-bottom: 16px; }
+.footer-tagline { color: rgba(255,255,255,.6); font-size: 14px; line-height: 1.6; }
+.footer-col-label { font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: rgba(255,255,255,.5); margin-bottom: 16px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 10px; }
+.footer-links a { color: rgba(255,255,255,.7); text-decoration: none; font-size: 14px; transition: color .15s; }
+.footer-links a:hover { color: var(--red); }
+.footer-bar { max-width: 1400px; margin: 0 auto; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.footer-copy { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.4); }
+
+/* MOBIEL */
+@media (max-width: 900px) {
+  nav { padding: 12px 20px; }
+  .nav-cta { display: none; }
+  .nav-hamburger { display: flex; }
+  .nav-links { display: none; }
+  .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
+  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; border-bottom:1px solid rgba(255,255,255,.1); }
+  .article-header { padding: 110px 20px 60px; }
+  .article-cover { padding: 0 20px; margin-top: -32px; }
+  .article-cover img { box-shadow: 5px 5px 0 0 var(--red); }
+  .article-body { padding: 56px 20px; font-size: 17px; }
+  .article-cta { padding: 56px 20px; }
+  .related { padding: 56px 20px; }
+  footer { padding: 56px 20px 32px; }
+  .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Naar hoofdinhoud</a>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Stolkwebdesign®</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/portfolio.html" class="hover-shift">Portfolio / 01</a></li>
+    <li><a href="/#diensten" class="hover-shift">Diensten / 02</a></li>
+    <li><a href="/#aanpak" class="hover-shift">Aanpak / 03</a></li>
+    <li><a href="/over.html" class="hover-shift">Over mij / 04</a></li>
+    <li><a href="/blog/" class="hover-shift active">Blog / 05</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false"><span></span><span></span><span></span></button>
+  <a href="/contact.html" class="nav-cta">Plan een gesprek →</a>
+</nav>
+
+<main id="main-content">
+
+<!-- HEADER -->
+<header class="article-header">
+  <div class="article-noise"></div>
+  <div class="article-header-inner">
+    <div class="breadcrumb">
+      <a href="/">Home</a><span class="sep">/</span>
+      <a href="/blog/">Blog</a><span class="sep">/</span>
+      <span>{{TOPIC}}</span>
+    </div>
+    <span class="topic-tag">{{TOPIC}}</span>
+    <h1 class="article-title">{{TITLE}}</h1>
+    <div class="article-meta">
+      <div>Door <strong>Peter Stolk</strong></div>
+      <div>Gepubliceerd <strong>{{DATE_HUMAN}}</strong></div>
+      <div>Leestijd <strong>{{READ_TIME}} min</strong></div>
+    </div>
+  </div>
+</header>
+
+<!-- COVER -->
+{{COVER_BLOCK}}
+
+<!-- BODY -->
+<article class="article-body">
+{{BODY_HTML}}
+</article>
+
+<!-- CTA -->
+<section class="article-cta">
+  <div class="article-cta-inner">
+    <div class="article-cta-label">Klaar voor je eigen project?</div>
+    <h2>Laat een website bouwen die opvalt.</h2>
+    <p>Handcrafted in HTML, CSS &amp; GSAP of WordPress — afhankelijk van wat past. Vanaf €2.500.</p>
+    <a href="https://cal.com/peter-stolk-9dkoig/30min" class="article-cta-btn">Plan een gesprek →</a>
+  </div>
+</section>
+
+<!-- RELATED -->
+{{RELATED_BLOCK}}
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo font-display">Stolkwebdesign®</div>
+      <p class="footer-tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Navigeer</div>
+      <ul class="footer-links">
+        <li><a href="/portfolio.html">Portfolio</a></li>
+        <li><a href="/#diensten">Diensten</a></li>
+        <li><a href="/over.html">Over mij</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Diensten</div>
+      <ul class="footer-links">
+        <li><a href="/#diensten">Website laten bouwen</a></li>
+        <li><a href="/#diensten">WordPress website</a></li>
+        <li><a href="/#diensten">Webhosting</a></li>
+        <li><a href="/#diensten">Onderhoud &amp; support</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://cal.com/peter-stolk-9dkoig/30min">Plan een gesprek</a></li>
+        <li><a href="https://wa.me/31650222228">WhatsApp</a></li>
+        <li><a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a></li>
+      </ul>
+      <div class="footer-col-label font-mono" style="margin-top:24px;">Volg ons</div>
+      <ul class="footer-links">
+        <li><a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-copy font-mono">© 2026 Stolkwebdesign — Uithoorn</span>
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+      <a href="/privacybeleid.html" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none;">Privacybeleid</a>
+      <a href="/algemene-voorwaarden.html" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none;">Algemene Voorwaarden</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.getElementById('nav-links');
+  toggle?.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+</script>
+</body>
+</html>

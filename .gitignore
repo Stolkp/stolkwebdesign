@@ -1,4 +1,11 @@
 .DS_Store
 *.log
 node_modules/
+.env
+.env.local
+.vercel
+
 site/assets/preview-cinematic.html
+
+# Generated blog HTML (build artifact — source = Supabase)
+site/blog/*.html
