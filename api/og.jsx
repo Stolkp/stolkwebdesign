@@ -36,7 +36,7 @@ async function fetchPost(slug) {
   if (!url || !key) return null;
   const supabase = createClient(url, key);
   const { data } = await supabase
-    .from('blog_posts')
+    .from('stolkwebdesign_blog_posts')
     .select('title, excerpt, takeaways, topic, slug')
     .eq('slug', slug)
     .maybeSingle();

@@ -4,20 +4,15 @@ Korte gids voor het naar productie brengen van de blog-pipeline. Volg in deze vo
 
 ---
 
-## 1. Supabase migration
+## 1. Supabase migration ✅ TOEGEPAST 2026-05-29
 
-**Project:** `lkcfwndigzhzcjnhxcmb` (Stolksupport admin — al in gebruik door portfolio + SEO portal).
+Migration `stolkwebdesign_blog_posts_init` is al toegepast op project `lkcfwndigzhzcjnhxcmb`. Aangemaakt:
 
-**Migration:** `migrations/blog_posts_init.sql`
-
-**Hoe:** via Supabase MCP `apply_migration` met naam `blog_posts_init` en de SQL uit het bestand, OF kopieer de inhoud naar de SQL editor in [Supabase Dashboard](https://supabase.com/dashboard/project/lkcfwndigzhzcjnhxcmb/sql/new).
-
-**Maakt aan:**
-- Tabel `blog_posts` (slug, title, excerpt, body_md, cover_url, topic, takeaways, carousel_urls, linkedin_post_url, instagram_post_url, notion_page_id, published_at)
+- Tabel `stolkwebdesign_blog_posts` (slug, title, excerpt, body_md, cover_url, topic, takeaways, carousel_urls, linkedin_post_url, instagram_post_url, notion_page_id, published_at)
 - RLS: `public read where published_at is not null`
-- Storage bucket `social-carousels` (public read)
+- Storage bucket `stolkwebdesign-carousels` (public read)
 
-**Verifieer:** `select * from blog_posts limit 1;` → werkt, geen errors.
+SQL beschikbaar in `migrations/blog_posts_init.sql` voor reference.
 
 ---
 

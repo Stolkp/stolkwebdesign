@@ -66,10 +66,10 @@ async function generateCarouselSlides(baseUrl, slug, supabase) {
     const buf = Buffer.from(await r.arrayBuffer());
     const filePath = `${slug}/slide-${i}.png`;
     const { error } = await supabase.storage
-      .from('social-carousels')
+      .from('stolkwebdesign-carousels')
       .upload(filePath, buf, { contentType: 'image/png', upsert: true });
     if (error) throw new Error(`upload slide ${i}: ${error.message}`);
-    const { data } = supabase.storage.from('social-carousels').getPublicUrl(filePath);
+    const { data } = supabase.storage.from('stolkwebdesign-carousels').getPublicUrl(filePath);
     urls.push(data.publicUrl);
   }
   return urls;
@@ -186,7 +186,7 @@ export default async function handler(req, res) {
 
     // 5. Upsert in Supabase (idempotent op notion_page_id)
     const { data: postRow, error: upsertErr } = await supabase
-      .from('blog_posts')
+      .from('stolkwebdesign_blog_posts')
       .upsert(
         {
           slug,
@@ -207,14 +207,14 @@ export default async function handler(req, res) {
     // 6. Takeaways
     const takeaways = await extractTakeaways(body_md);
     if (takeaways.length) {
-      await supabase.from('blog_posts').update({ takeaways }).eq('id', postRow.id);
+      await supabase.from('stolkwebdesign_blog_posts').update({ takeaways }).eq('id', postRow.id);
     }
 
     // 7. Carousel slides via /api/og
     const host = req.headers['x-forwarded-host'] || req.headers.host || 'www.stolkwebdesign.nl';
     const baseUrl = `https://${host}`;
     const carouselUrls = await generateCarouselSlides(baseUrl, slug, supabase);
-    await supabase.from('blog_posts').update({ carousel_urls: carouselUrls }).eq('id', postRow.id);
+    await supabase.from('stolkwebdesign_blog_posts').update({ carousel_urls: carouselUrls }).eq('id', postRow.id);
 
     // 8. Trigger Vercel rebuild (zodat /blog/[slug].html gegenereerd wordt)
     if (process.env.VERCEL_DEPLOY_HOOK_URL) {
@@ -228,7 +228,7 @@ export default async function handler(req, res) {
     const caption = `${excerpt}\n\nLees het volledige artikel: ${blogUrl}\n\n${TOPIC_HASHTAGS[topic] || ''}`.trim();
     const blotato = await postCarousel({ carouselUrls, caption });
     await supabase
-      .from('blog_posts')
+      .from('stolkwebdesign_blog_posts')
       .update({
         linkedin_post_url: blotato.linkedin?.publicUrl || null,
         instagram_post_url: blotato.instagram?.publicUrl || null,

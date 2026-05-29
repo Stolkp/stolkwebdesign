@@ -20,10 +20,10 @@ async function generateSlides(baseUrl, slug, supabase) {
     const buf = Buffer.from(await r.arrayBuffer());
     const filePath = `${slug}/slide-${i}.png`;
     const { error } = await supabase.storage
-      .from('social-carousels')
+      .from('stolkwebdesign-carousels')
       .upload(filePath, buf, { contentType: 'image/png', upsert: true });
     if (error) throw new Error(`upload slide ${i}: ${error.message}`);
-    const { data } = supabase.storage.from('social-carousels').getPublicUrl(filePath);
+    const { data } = supabase.storage.from('stolkwebdesign-carousels').getPublicUrl(filePath);
     urls.push(data.publicUrl);
   }
   return urls;
@@ -63,7 +63,7 @@ export default async function handler(req, res) {
 
   try {
     const { data: post, error } = await supabase
-      .from('blog_posts')
+      .from('stolkwebdesign_blog_posts')
       .select('*')
       .eq('slug', slug)
       .maybeSingle();
@@ -73,7 +73,7 @@ export default async function handler(req, res) {
     const host = req.headers['x-forwarded-host'] || req.headers.host || 'www.stolkwebdesign.nl';
     const baseUrl = `https://${host}`;
     const carouselUrls = await generateSlides(baseUrl, slug, supabase);
-    await supabase.from('blog_posts').update({ carousel_urls: carouselUrls }).eq('id', post.id);
+    await supabase.from('stolkwebdesign_blog_posts').update({ carousel_urls: carouselUrls }).eq('id', post.id);
 
     let blotato = null;
     if (shouldRepost) {
@@ -99,7 +99,7 @@ export default async function handler(req, res) {
         });
       }
       await supabase
-        .from('blog_posts')
+        .from('stolkwebdesign_blog_posts')
         .update({
           linkedin_post_url: blotato.linkedin?.publicUrl || null,
           instagram_post_url: blotato.instagram?.publicUrl || null,

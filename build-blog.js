@@ -139,7 +139,7 @@ async function fetchPosts() {
   }
   const supabase = createClient(url, key);
   const { data, error } = await supabase
-    .from('blog_posts')
+    .from('stolkwebdesign_blog_posts')
     .select('*')
     .not('published_at', 'is', null)
     .order('published_at', { ascending: false });
