@@ -320,6 +320,92 @@ nav {
 .pillar-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: .1em; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,.15); padding-top: 16px; }
 .pillar-price strong { color: var(--white); }
 
+/* ══════ MODULES TEASER ══════ */
+.modules-teaser {
+  background: var(--bone);
+  padding: 100px 48px;
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+  position: relative;
+  overflow: hidden;
+}
+.modules-teaser-inner { max-width: 1400px; margin: 0 auto; }
+.modules-teaser-header { margin-bottom: 48px; max-width: 880px; }
+.modules-teaser-lead {
+  font-size: clamp(15px, 1.4vw, 18px);
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 24px;
+  max-width: 620px;
+}
+.modules-row {
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  border: 2px solid var(--black);
+  background: var(--white);
+  margin-bottom: 36px;
+}
+.module-mini {
+  padding: 28px 22px;
+  border-right: 2px solid var(--black);
+  text-decoration: none;
+  color: var(--black);
+  display: flex; flex-direction: column; gap: 8px;
+  transition: background .15s;
+  position: relative;
+}
+.module-mini:last-child { border-right: none; }
+.module-mini:hover { background: var(--bone); }
+.module-mini-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  letter-spacing: .15em; text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.module-mini-num { color: var(--red); }
+.module-mini-dot {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--muted);
+}
+.module-mini-dot::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: #16a34a;
+}
+.module-mini-dot.soon::before {
+  background: transparent; border: 1px solid var(--muted);
+}
+.module-mini-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px; text-transform: uppercase;
+  letter-spacing: -0.02em; line-height: 1.05;
+}
+.module-mini-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  letter-spacing: .05em;
+  margin-top: auto;
+}
+.module-mini-price strong { color: var(--black); }
+.modules-teaser-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--black); color: var(--white);
+  border: 2px solid var(--black); padding: 16px 32px;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+.modules-teaser-cta:hover { background: var(--red); border-color: var(--red); }
+
+@media (max-width: 900px) {
+  .modules-teaser { padding: 72px 20px; }
+  .modules-row { grid-template-columns: 1fr 1fr; }
+  .module-mini { border-right: 2px solid var(--black); border-bottom: 2px solid var(--black); }
+  .module-mini:nth-child(2n) { border-right: none; }
+  .module-mini:nth-child(5) { border-right: none; grid-column: 1 / -1; }
+  .module-mini:nth-last-child(-n+2):nth-child(even) { border-bottom: none; }
+  .module-mini:last-child { border-bottom: none; }
+}
+
 /* ══════ AANPAK ══════ */
 .process { padding: 100px 48px; max-width: 1400px; margin: 0 auto; }
 .steps { margin-top: 56px; border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); }
@@ -464,9 +550,10 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <ul class="nav-links" id="nav-links">
     <li><a href="portfolio.html" class="hover-shift">Portfolio / 01</a></li>
     <li><a href="#diensten" class="hover-shift">Diensten / 02</a></li>
-    <li><a href="#aanpak" class="hover-shift">Aanpak / 03</a></li>
-    <li><a href="over.html" class="hover-shift">Over mij / 04</a></li>
-    <li><a href="/blog/" class="hover-shift">Blog / 05</a></li>
+    <li><a href="modules.html" class="hover-shift">Modules / 03</a></li>
+    <li><a href="#aanpak" class="hover-shift">Aanpak / 04</a></li>
+    <li><a href="over.html" class="hover-shift">Over mij / 05</a></li>
+    <li><a href="/blog/" class="hover-shift">Blog / 06</a></li>
     <li class="nav-cta-item"><a href="contact.html" class="nav-cta-mobile">Plan een gesprek →</a></li>
   </ul>
   <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
@@ -647,6 +734,65 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   </div>
 </section>
 
+<!-- MODULES TEASER -->
+<section class="modules-teaser" id="modules-teaser">
+  <div class="modules-teaser-inner">
+    <div class="modules-teaser-header reveal">
+      <div class="section-label">Add-on modules / 02b</div>
+      <h2 class="section-heading">Niet alleen een website —<br><span class="red">een platform.</span></h2>
+      <p class="modules-teaser-lead">
+        Vijf modules die SaaS-stapeling vervangen. CMS, facturatie, social-campagnes, SEO en blog — onder één login, op je eigen domein. Early-access tarief 2026.
+      </p>
+    </div>
+    <div class="modules-row reveal" style="transition-delay:.1s">
+      <a href="modules.html#cms" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 01</span>
+          <span class="module-mini-dot">Live</span>
+        </div>
+        <div class="module-mini-name">CMS-basis</div>
+        <div class="module-mini-price">vanaf <strong>€499</strong></div>
+      </a>
+      <a href="modules.html#factuur" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 02</span>
+          <span class="module-mini-dot">Live</span>
+        </div>
+        <div class="module-mini-name">Factuur</div>
+        <div class="module-mini-price">vanaf <strong>€199</strong></div>
+      </a>
+      <a href="modules.html#social" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 03</span>
+          <span class="module-mini-dot">Live</span>
+        </div>
+        <div class="module-mini-name">Social</div>
+        <div class="module-mini-price">vanaf <strong>€99</strong></div>
+      </a>
+      <a href="modules.html#seo" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 04</span>
+          <span class="module-mini-dot">Live</span>
+        </div>
+        <div class="module-mini-name">SEO</div>
+        <div class="module-mini-price">vanaf <strong>€99</strong></div>
+      </a>
+      <a href="modules.html#blog" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 05</span>
+          <span class="module-mini-dot soon">Q3 2026</span>
+        </div>
+        <div class="module-mini-name">Blog</div>
+        <div class="module-mini-price">vanaf <strong>€99</strong></div>
+      </a>
+    </div>
+    <a href="modules.html" class="modules-teaser-cta">
+      Alle modules bekijken
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+</section>
+
 <!-- MARQUEE 2 -->
 <div class="marquee-container">
   <div class="marquee-track" style="animation-direction:reverse; animation-duration:28s">
@@ -801,6 +947,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <ul class="footer-links">
         <li><a href="#werk">Portfolio</a></li>
         <li><a href="#diensten">Diensten</a></li>
+        <li><a href="modules.html">Modules</a></li>
         <li><a href="#aanpak">Aanpak</a></li>
         <li><a href="#peter">Over mij</a></li>
         <li><a href="#contact">Contact</a></li>

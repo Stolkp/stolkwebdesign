@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modules — Stolkwebdesign | CMS, Factuur, Social, SEO & Blog</title>
+<meta name="description" content="Vijf modules bovenop je Stolkwebdesign-website: CMS-basis, Factuur-tool, Social Campagnes, SEO Rapport en Blog. Eén login, één factuur, één designtaal. Early-access tarief 2026.">
+<meta name="keywords" content="website CMS, social media tool, SEO rapport, factuur tool, blog publiceren, Stolkwebdesign modules">
+<meta property="og:title" content="Modules — Stolkwebdesign | Eén platform, vijf modules">
+<meta property="og:description" content="CMS, facturatie, social, SEO en blog. Onder één login, op je eigen domein. Early-access tarief 2026.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.stolkwebdesign.nl/modules.html">
+<meta property="og:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
+<link rel="canonical" href="https://www.stolkwebdesign.nl/modules.html">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8a7865ef-27ca-48b5-a7f2-0235848c8787" type="text/javascript" async></script>
+<script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-5MT8XNYTF7"></script>
+<script type="text/plain" data-cookieconsent="statistics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --red: #EA2525;
+  --green: #16a34a;
+  --near-black: #0A0A0A;
+  --bone: #F5F5F5;
+  --muted: #767676;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: 'Space Grotesk', sans-serif;
+  overflow-x: hidden;
+}
+
+.font-display { font-family: 'Archivo Black', sans-serif; }
+.font-mono    { font-family: 'JetBrains Mono', monospace; }
+.red { color: var(--red); }
+
+/* ── BRUTALIST OFFSET ── */
+.brutalist-offset {
+  background: var(--white);
+  border: 2px solid var(--black);
+  box-shadow: 8px 8px 0 0 var(--black);
+  transition: transform .15s ease-out, box-shadow .15s ease-out;
+}
+.brutalist-offset:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--black); }
+.brutalist-offset-red {
+  background: var(--white);
+  border: 2px solid var(--black);
+  box-shadow: 8px 8px 0 0 var(--red);
+  transition: transform .15s ease-out, box-shadow .15s ease-out;
+}
+.brutalist-offset-red:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--red); }
+
+/* ── NOISE ── */
+.noise {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: .08; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ── REVEAL ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity .3s cubic-bezier(.8,0,.2,1), transform .3s cubic-bezier(.8,0,.2,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── HOVER SHIFT ── */
+.hover-shift {
+  display: inline-block;
+  transition: transform .2s ease-out;
+  position: relative;
+  cursor: pointer;
+}
+.hover-shift::after {
+  content: ''; position: absolute;
+  bottom: -4px; left: 0;
+  width: 0; height: 2px;
+  background: var(--red);
+  transition: width .2s ease-out;
+}
+.hover-shift:hover { transform: translateX(-4px) skewX(-3deg); }
+.hover-shift:hover::after { width: 100%; }
+.hover-shift.active { color: var(--white); }
+.hover-shift.active::after { width: 100%; }
+
+/* ══════ NAV ══════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: var(--black);
+  border-bottom: 2px solid var(--black);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 48px;
+}
+.nav-logo {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 18px; text-transform: uppercase;
+  color: var(--white); letter-spacing: -0.02em;
+  text-decoration: none;
+}
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .15em;
+  color: rgba(255,255,255,.5); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+.nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); transition:transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
+.nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.nav-cta-item { display:none; }
+.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; transition:top .15s; }
+.skip-link:focus { top:0; }
+.nav-cta {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 12px; text-transform: uppercase;
+  background: var(--red); color: var(--white);
+  border: 2px solid var(--white); padding: 13px 22px;
+  text-decoration: none; letter-spacing: .04em;
+  transition: background .15s, color .15s;
+}
+.nav-cta:hover { background: var(--white); color: var(--red); }
+
+/* ══════ COMMON ══════ */
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .2em; color: var(--red);
+  margin-bottom: 20px;
+}
+.section-heading {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(36px, 4.5vw, 68px);
+  line-height: .92; letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+/* ══════ HERO ══════ */
+.hero {
+  position: relative;
+  background: var(--near-black); color: var(--white);
+  padding: 168px 48px 100px;
+  overflow: hidden;
+}
+.hero-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 2; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  margin-bottom: 32px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .2em; color: rgba(255,255,255,.55);
+}
+.hero-eyebrow-dot { width: 10px; height: 10px; background: var(--red); flex-shrink: 0; }
+.hero-headline {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(52px, 9vw, 112px);
+  line-height: .9; letter-spacing: -0.04em;
+  text-transform: uppercase; max-width: 1100px;
+  margin-bottom: 36px;
+}
+.hero-sub {
+  font-size: clamp(15px, 1.4vw, 18px);
+  color: rgba(255,255,255,.65); max-width: 620px;
+  line-height: 1.65; margin-bottom: 44px;
+}
+.hero-sub strong { color: var(--white); font-weight: 500; }
+.hero-ctas { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 13px; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--red); color: var(--white);
+  border: 2px solid var(--red); padding: 16px 32px;
+  text-decoration: none; cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.btn-primary:hover { background: var(--white); color: var(--red); border-color: var(--white); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; text-transform: uppercase; letter-spacing: .12em;
+  color: rgba(255,255,255,.7); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.3);
+  padding-bottom: 4px;
+  transition: color .2s, border-color .2s;
+}
+.btn-ghost:hover { color: var(--white); border-color: var(--white); }
+
+/* ══════ MODULE STRIP (TOC) ══════ */
+.module-strip {
+  background: var(--bone);
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+  padding: 36px 48px;
+}
+.module-strip-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+}
+.strip-card {
+  background: var(--white);
+  border: 2px solid var(--black);
+  padding: 20px 18px;
+  text-decoration: none; color: var(--black);
+  display: flex; flex-direction: column; gap: 8px;
+  transition: transform .15s ease-out, box-shadow .15s ease-out, background .15s;
+  position: relative;
+}
+.strip-card:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 0 var(--black); }
+.strip-card-head { display: flex; align-items: center; justify-content: space-between; }
+.strip-card-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--red); letter-spacing: .12em;
+}
+.strip-status {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted);
+}
+.strip-status::before {
+  content: ''; display: block;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--green);
+}
+.strip-status.soon { color: var(--muted); }
+.strip-status.soon::before { background: transparent; border: 1px solid var(--muted); }
+.strip-card-name {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 15px; text-transform: uppercase;
+  letter-spacing: -0.02em; line-height: 1.05;
+}
+.strip-card-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--muted);
+  letter-spacing: .05em; margin-top: 2px;
+}
+.strip-card-price strong { color: var(--black); }
+
+/* ══════ MODULE SECTION ══════ */
+.module-section {
+  padding: 120px 48px;
+  border-bottom: 2px solid var(--black);
+  position: relative;
+}
+.module-section.alt { background: var(--bone); }
+.module-section.dark { background: var(--near-black); color: var(--white); }
+.module-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.module-section.reverse .module-inner > .module-visual { order: -1; }
+.module-meta {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .15em;
+}
+.module-meta-num { color: var(--red); }
+.module-section.dark .module-meta-num { color: var(--red); }
+.badge {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  background: var(--red); color: var(--white);
+  padding: 4px 9px;
+}
+.badge.muted { background: var(--black); color: var(--white); }
+.badge.dark-bg { background: var(--white); color: var(--black); }
+.module-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(34px, 4.2vw, 56px);
+  line-height: .95; letter-spacing: -0.03em;
+  text-transform: uppercase; margin-bottom: 22px;
+}
+.module-lead {
+  font-size: 17px; line-height: 1.7;
+  color: var(--muted); margin-bottom: 36px; max-width: 520px;
+}
+.module-section.dark .module-lead { color: rgba(255,255,255,.6); }
+.feature-list { border-top: 2px solid var(--black); margin-bottom: 36px; }
+.module-section.dark .feature-list { border-top-color: var(--white); }
+.feature {
+  display: grid; grid-template-columns: 28px 1fr;
+  gap: 14px; align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0,0,0,.12);
+}
+.module-section.dark .feature { border-bottom-color: rgba(255,255,255,.15); }
+.feature-plus {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px; color: var(--red);
+}
+.feature-text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px; line-height: 1.55;
+}
+.module-pricing {
+  display: flex; align-items: baseline; gap: 18px;
+  flex-wrap: wrap;
+  border-top: 2px solid var(--black);
+  padding-top: 24px; margin-bottom: 28px;
+}
+.module-section.dark .module-pricing { border-top-color: var(--white); }
+.price-main {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 28px; letter-spacing: -0.02em;
+}
+.price-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--muted);
+}
+.module-section.dark .price-tag { color: rgba(255,255,255,.55); }
+.module-cta { display: inline-flex; align-items: center; gap: 12px; }
+
+/* ── Module visual ── */
+.module-visual {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: stretch; justify-content: stretch;
+}
+.visual-frame {
+  width: 100%; height: 100%;
+  border: 2px solid var(--black);
+  background: var(--white);
+  box-shadow: 12px 12px 0 0 var(--red);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.module-section.dark .visual-frame { box-shadow: 12px 12px 0 0 var(--white); }
+.visual-bar {
+  background: var(--black); color: var(--white);
+  padding: 10px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+}
+.visual-dots { display: flex; gap: 5px; }
+.visual-dots span { width: 8px; height: 8px; background: var(--red); display: block; }
+.visual-dots span:nth-child(2) { background: rgba(255,255,255,.4); }
+.visual-dots span:nth-child(3) { background: rgba(255,255,255,.2); }
+.visual-body { flex: 1; padding: 20px; overflow: hidden; }
+
+/* ── Visual mockup: CMS ── */
+.cms-field { border: 1px solid #000; padding: 10px 12px; margin-bottom: 10px; background: var(--bone); }
+.cms-field-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.cms-field-input { font-size: 13px; color: var(--black); }
+.cms-field.editing { background: var(--white); border: 1px solid var(--red); }
+.cms-field.editing .cms-field-label { color: var(--red); }
+.cms-save-row { display: flex; justify-content: flex-end; margin-top: 10px; }
+.cms-save-btn { background: var(--red); color: var(--white); border: 0; font-family: 'Archivo Black', sans-serif; font-size: 11px; padding: 8px 14px; text-transform: uppercase; letter-spacing: .05em; }
+
+/* ── Visual mockup: Factuur ── */
+.invoice-page { font-family: 'Space Grotesk', sans-serif; font-size: 11px; color: var(--black); height: 100%; display: flex; flex-direction: column; gap: 12px; }
+.invoice-head { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 12px; border-bottom: 2px solid var(--black); }
+.invoice-head-name { font-family: 'Archivo Black', sans-serif; font-size: 14px; text-transform: uppercase; }
+.invoice-head-meta { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); text-align: right; line-height: 1.5; }
+.invoice-rows { display: flex; flex-direction: column; gap: 6px; }
+.invoice-row { display: grid; grid-template-columns: 1fr 60px 60px; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,.15); font-size: 11px; }
+.invoice-row strong { font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+.invoice-totals { margin-top: auto; padding-top: 10px; border-top: 2px solid var(--black); display: grid; grid-template-columns: 1fr auto; row-gap: 4px; font-size: 11px; }
+.invoice-total-final { font-family: 'Archivo Black', sans-serif; font-size: 14px; }
+
+/* ── Visual mockup: Social (4-grid) ── */
+.social-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  width: 100%; height: 100%;
+}
+.social-thumb {
+  border: 2px solid var(--black);
+  background: var(--bone);
+  background-size: cover; background-position: center;
+  position: relative;
+  overflow: hidden;
+}
+.social-thumb-label {
+  position: absolute; top: 8px; left: 8px;
+  background: var(--white); color: var(--black);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: .15em; text-transform: uppercase;
+  padding: 3px 7px; border: 1px solid var(--black);
+}
+
+/* ── Visual mockup: SEO ── */
+.seo-grade { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 2px solid var(--black); }
+.seo-grade-circle { width: 72px; height: 72px; border: 3px solid var(--red); display: flex; align-items: center; justify-content: center; font-family: 'Archivo Black', sans-serif; font-size: 28px; }
+.seo-grade-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; line-height: 1.6; }
+.seo-grade-meta strong { font-family: 'Archivo Black', sans-serif; font-size: 14px; color: var(--black); display: block; margin-bottom: 4px; letter-spacing: -0.02em; }
+.seo-bars { display: flex; flex-direction: column; gap: 10px; }
+.seo-bar-row { display: grid; grid-template-columns: 80px 1fr 28px; gap: 10px; align-items: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; }
+.seo-bar-track { height: 6px; background: var(--bone); border: 1px solid var(--black); position: relative; }
+.seo-bar-fill { position: absolute; top: 0; left: 0; bottom: 0; background: var(--red); }
+.seo-bar-num { text-align: right; font-family: 'Archivo Black', sans-serif; font-size: 11px; }
+
+/* ── Visual mockup: Blog ── */
+.blog-mock { display: flex; flex-direction: column; gap: 12px; }
+.blog-mock-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--red); letter-spacing: .15em; text-transform: uppercase; }
+.blog-mock-title { font-family: 'Archivo Black', sans-serif; font-size: 22px; line-height: 1; letter-spacing: -0.02em; text-transform: uppercase; }
+.blog-mock-meta { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,.15); }
+.blog-mock-body { font-size: 11px; line-height: 1.55; color: var(--muted); }
+.blog-mock-body p { margin-bottom: 6px; }
+.blog-mock-soon-overlay {
+  position: absolute; inset: 0; z-index: 5;
+  background: rgba(245,245,245,.78);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 12px;
+}
+.blog-mock-soon-overlay .badge { font-size: 12px; padding: 6px 14px; }
+.blog-mock-soon-overlay-sub { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--black); text-transform: uppercase; letter-spacing: .12em; }
+
+/* ══════ WHY ══════ */
+.why { padding: 120px 48px; background: var(--white); border-bottom: 2px solid var(--black); }
+.why-inner { max-width: 1400px; margin: 0 auto; }
+.why-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border: 2px solid var(--black); margin-top: 60px;
+}
+.why-card { padding: 44px 36px; border-right: 2px solid var(--black); }
+.why-card:last-child { border-right: none; }
+.why-num { font-family: 'Archivo Black', sans-serif; font-size: clamp(40px, 5vw, 64px); color: var(--red); line-height: 1; margin-bottom: 16px; }
+.why-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(18px, 2vw, 24px); text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 14px; line-height: 1.1; }
+.why-body { font-size: 14px; color: var(--muted); line-height: 1.75; }
+
+/* ══════ FAQ ══════ */
+.faq-section { padding: 120px 48px; background: var(--bone); border-bottom: 2px solid var(--black); }
+.faq-inner { max-width: 980px; margin: 0 auto; }
+.faq-list { margin-top: 60px; border-top: 2px solid var(--black); }
+.faq-item {
+  border-bottom: 2px solid var(--black);
+}
+.faq-item summary {
+  cursor: pointer; list-style: none;
+  padding: 26px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(16px, 1.9vw, 22px);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.2;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-toggle {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 22px; color: var(--red);
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+.faq-item[open] .faq-toggle { transform: rotate(45deg); }
+.faq-body {
+  padding: 0 0 26px;
+  font-size: 15px; line-height: 1.75;
+  max-width: 760px;
+  color: var(--black);
+}
+
+/* ══════ FINAL CTA ══════ */
+.final-cta { background: var(--red); color: var(--white); padding: 120px 48px; position: relative; overflow: hidden; }
+.final-cta .noise { opacity: .12; mix-blend-mode: multiply; }
+.final-cta-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+.final-cta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: rgba(255,255,255,.65); margin-bottom: 28px; }
+.final-cta-heading { font-family: 'Archivo Black', sans-serif; font-size: clamp(44px, 8vw, 120px); line-height: .88; letter-spacing: -0.04em; text-transform: uppercase; max-width: 1050px; margin-bottom: 48px; }
+.final-cta-ctas { display: flex; gap: 24px; align-items: center; flex-wrap: wrap; }
+.btn-white {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 14px; text-transform: uppercase; letter-spacing: .04em;
+  background: var(--white); color: var(--red);
+  border: 2px solid var(--white); padding: 18px 36px;
+  text-decoration: none; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.btn-white:hover { background: var(--red); color: var(--white); }
+.btn-outline-white {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--white); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.4);
+  padding-bottom: 4px;
+  transition: color .2s, border-color .2s;
+}
+.btn-outline-white:hover { border-color: var(--white); }
+
+/* ══════ FOOTER ══════ */
+footer { background: var(--black); color: var(--white); padding: 60px 48px 36px; border-top: 2px solid var(--red); }
+.footer-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+.footer-logo { font-family: 'Archivo Black', sans-serif; font-size: 20px; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 14px; }
+.footer-tagline { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; line-height: 1.7; }
+.footer-col-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: var(--red); margin-bottom: 14px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 9px; }
+.footer-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.45); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--white); }
+.footer-bar { max-width: 1400px; margin: 0 auto; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: space-between; }
+.footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,.25); letter-spacing: .08em; text-transform: uppercase; }
+
+/* ══════ MODAL ══════ */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.78);
+  z-index: 200;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: var(--white);
+  border: 2px solid var(--black);
+  box-shadow: 12px 12px 0 0 var(--red);
+  max-width: 560px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  position: relative;
+}
+.modal-head {
+  background: var(--black); color: var(--white);
+  padding: 18px 28px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.modal-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 16px; text-transform: uppercase; letter-spacing: -0.02em;
+}
+.modal-close {
+  background: none; border: none; color: var(--white);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 22px; cursor: pointer;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { color: var(--red); }
+.modal-body { padding: 28px; }
+.modal-intro { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 22px; }
+.form-group { margin-bottom: 18px; }
+.form-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; text-transform: uppercase; letter-spacing: .15em;
+  color: var(--black); margin-bottom: 7px;
+}
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid var(--black);
+  background: var(--white);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+}
+.form-input:focus { outline: none; border-color: var(--red); }
+.form-textarea { min-height: 90px; resize: vertical; font-family: 'Space Grotesk', sans-serif; }
+.module-checks {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+}
+.module-check {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  border: 2px solid var(--black);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  cursor: pointer;
+  user-select: none;
+  background: var(--white);
+}
+.module-check input { accent-color: var(--red); width: 14px; height: 14px; }
+.module-check.checked { background: var(--black); color: var(--white); }
+.modal-submit {
+  width: 100%;
+  background: var(--red); color: var(--white); border: 2px solid var(--red);
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 13px; text-transform: uppercase; letter-spacing: .04em;
+  padding: 16px 22px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  margin-top: 10px;
+}
+.modal-submit:hover { background: var(--white); color: var(--red); }
+.modal-submit:disabled { opacity: .6; cursor: wait; }
+.modal-error { color: var(--red); font-family: 'JetBrains Mono', monospace; font-size: 11px; margin-top: 12px; }
+.modal-success {
+  padding: 40px 28px;
+  text-align: center;
+}
+.modal-success-icon {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 48px; color: var(--red); margin-bottom: 16px;
+}
+.modal-success-title { font-family: 'Archivo Black', sans-serif; font-size: 24px; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 14px; }
+.modal-success-body { font-size: 15px; line-height: 1.65; color: var(--muted); }
+
+/* ══════ RESPONSIVE ══════ */
+@media (max-width: 980px) {
+  nav { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .nav-cta { display:none; }
+  .nav-hamburger { display:flex; }
+  .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
+  .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
+  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
+  .nav-links.open .nav-cta-item { display:block; border-bottom:none; padding-top:16px; }
+  .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
+
+  .hero { padding: 130px 20px 72px; }
+  .module-strip { padding: 24px 20px; }
+  .module-strip-inner { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .module-section { padding: 72px 20px; }
+  .module-inner { grid-template-columns: 1fr; gap: 48px; }
+  .module-section.reverse .module-inner > .module-visual { order: 0; }
+  .why { padding: 72px 20px; }
+  .why-grid { grid-template-columns: 1fr; }
+  .why-card { border-right: none; border-bottom: 2px solid var(--black); }
+  .why-card:last-child { border-bottom: none; }
+  .faq-section { padding: 72px 20px; }
+  .final-cta { padding: 80px 20px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; padding: 0; }
+  footer { padding: 48px 20px 28px; }
+  .module-checks { grid-template-columns: 1fr; }
+  .module-visual { aspect-ratio: 4 / 5; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none; opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Stolkwebdesign®</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="portfolio.html" class="hover-shift">Portfolio / 01</a></li>
+    <li><a href="index.html#diensten" class="hover-shift">Diensten / 02</a></li>
+    <li><a href="modules.html" class="hover-shift active">Modules / 03</a></li>
+    <li><a href="index.html#aanpak" class="hover-shift">Aanpak / 04</a></li>
+    <li><a href="over.html" class="hover-shift">Over mij / 05</a></li>
+    <li><a href="/blog/" class="hover-shift">Blog / 06</a></li>
+    <li class="nav-cta-item"><a href="contact.html" class="nav-cta-mobile">Plan een gesprek →</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="contact.html" class="nav-cta">Plan een gesprek →</a>
+</nav>
+
+<main id="main-content">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="noise"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      <span>Modules / 03 — Early access 2026</span>
+    </div>
+    <h1 class="hero-headline">
+      Eén platform —<br>vijf <span class="red">modules.</span>
+    </h1>
+    <p class="hero-sub">
+      Modules die <strong>losse SaaS-abonnementen vervangen</strong>. CMS, facturatie, social-campagnes, SEO en blog — gebouwd boven op je Stolkwebdesign-website, gefactureerd zoals je dat zelf wil. Geen plugin-hel. Geen ticketsysteem.
+    </p>
+    <div class="hero-ctas">
+      <a href="#strip" class="btn-primary">
+        Modules bekijken
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
+      </a>
+      <a href="#" class="btn-ghost" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view"}'>
+        Plan een call →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE STRIP (TOC) -->
+<section class="module-strip" id="strip">
+  <div class="module-strip-inner">
+    <a href="#cms" class="strip-card">
+      <div class="strip-card-head">
+        <span class="strip-card-num font-mono">/ 01</span>
+        <span class="strip-status">Live</span>
+      </div>
+      <div class="strip-card-name">CMS-basis</div>
+      <div class="strip-card-price font-mono">vanaf <strong>€499</strong></div>
+    </a>
+    <a href="#factuur" class="strip-card">
+      <div class="strip-card-head">
+        <span class="strip-card-num font-mono">/ 02</span>
+        <span class="strip-status">Live</span>
+      </div>
+      <div class="strip-card-name">Factuur-tool</div>
+      <div class="strip-card-price font-mono">vanaf <strong>€199</strong></div>
+    </a>
+    <a href="#social" class="strip-card">
+      <div class="strip-card-head">
+        <span class="strip-card-num font-mono">/ 03</span>
+        <span class="strip-status">Live</span>
+      </div>
+      <div class="strip-card-name">Social Campagnes</div>
+      <div class="strip-card-price font-mono">vanaf <strong>€99</strong></div>
+    </a>
+    <a href="#seo" class="strip-card">
+      <div class="strip-card-head">
+        <span class="strip-card-num font-mono">/ 04</span>
+        <span class="strip-status">Live</span>
+      </div>
+      <div class="strip-card-name">SEO Rapport</div>
+      <div class="strip-card-price font-mono">vanaf <strong>€99</strong></div>
+    </a>
+    <a href="#blog" class="strip-card">
+      <div class="strip-card-head">
+        <span class="strip-card-num font-mono">/ 05</span>
+        <span class="strip-status soon">Q3 2026</span>
+      </div>
+      <div class="strip-card-name">Blog</div>
+      <div class="strip-card-price font-mono">vanaf <strong>€99</strong></div>
+    </a>
+  </div>
+</section>
+
+<!-- MODULE 01 — CMS -->
+<section class="module-section" id="cms">
+  <div class="module-inner">
+    <div class="reveal">
+      <div class="module-meta">
+        <span class="module-meta-num">Module / 01</span>
+        <span class="badge">Early access 2026</span>
+      </div>
+      <h2 class="module-title">CMS-basis<br><span class="red">— content & foto's.</span></h2>
+      <p class="module-lead">
+        Eén login. Pas teksten en foto's aan op elke pagina van je site — zonder technisch inzicht, zonder externe partij, direct live.
+      </p>
+      <div class="feature-list">
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Alle teksten per pagina-locatie bewerkbaar (Hero, Over, Diensten, Contact).</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Foto's uploaden per locatie — automatische compressie naar WebP.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Wijzigingen verschijnen direct op je live site, zonder publicatie-knop.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén factuur, geen losse plugin-abonnementen.</span></div>
+      </div>
+      <div class="module-pricing">
+        <div class="price-main">€499<span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> eenmalig</span></div>
+        <div class="price-tag">— Activatie + onbeperkt bewerken</div>
+      </div>
+      <button class="btn-primary module-cta" data-waitlist data-module="cms">
+        Op de wachtlijst
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div class="module-visual reveal" style="transition-delay:.1s">
+      <div class="visual-frame">
+        <div class="visual-bar">
+          <span>bestsupport08.nl / cms</span>
+          <span class="visual-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="visual-body">
+          <div class="cms-field">
+            <div class="cms-field-label">Hero — headline</div>
+            <div class="cms-field-input">Juridisch advies dat aanvoelt als een gesprek.</div>
+          </div>
+          <div class="cms-field editing">
+            <div class="cms-field-label">Over Mij — intro</div>
+            <div class="cms-field-input">Ik ben Brenda. Ondernemers vertrouwen me hun juridische beslissingen toe omdat ik luister voordat ik adviseer.</div>
+          </div>
+          <div class="cms-field">
+            <div class="cms-field-label">Contact — telefoon</div>
+            <div class="cms-field-input">06 — 12 34 56 78</div>
+          </div>
+          <div class="cms-save-row">
+            <button class="cms-save-btn">Opslaan</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 02 — FACTUUR -->
+<section class="module-section alt reverse" id="factuur">
+  <div class="module-inner">
+    <div class="reveal">
+      <div class="module-meta">
+        <span class="module-meta-num">Module / 02</span>
+        <span class="badge">Early access 2026</span>
+      </div>
+      <h2 class="module-title">Factuur-tool<br><span class="red">— A4, PDF, klaar.</span></h2>
+      <p class="module-lead">
+        Maak een factuur in 60 seconden. Live A4-preview, BTW-keuze, IBAN én Tikkie. Eén klik naar PDF — geen abonnement per factuur.
+      </p>
+      <div class="feature-list">
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Live A4-preview — wat je ziet, is wat de klant ontvangt.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">BTW-tarief 21% / 9% / 0% per regel, automatische totalisering.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Twee betaalmethoden ingebakken: IBAN en Tikkie-link.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén klik → PDF in je downloads. Geen Moneybird of Mollie nodig.</span></div>
+      </div>
+      <div class="module-pricing">
+        <div class="price-main">€199<span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> eenmalig</span></div>
+        <div class="price-tag">— Onbeperkt facturen, geen per-stuk-kosten</div>
+      </div>
+      <button class="btn-primary module-cta" data-waitlist data-module="factuur">
+        Op de wachtlijst
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div class="module-visual reveal" style="transition-delay:.1s">
+      <div class="visual-frame">
+        <div class="visual-bar">
+          <span>Factuur 2026-014.pdf</span>
+          <span class="visual-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="visual-body">
+          <div class="invoice-page">
+            <div class="invoice-head">
+              <div>
+                <div class="invoice-head-name">Bestsupport08</div>
+                <div style="font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--muted);margin-top:4px;">Brenda Verrijk · Uithoorn</div>
+              </div>
+              <div class="invoice-head-meta">
+                2026-014<br>
+                14 mei 2026<br>
+                Vervalt 28 mei
+              </div>
+            </div>
+            <div class="invoice-rows">
+              <div class="invoice-row"><span>Advies arbeidsrecht (2 uur)</span><span>21%</span><span style="text-align:right;"><strong>€ 290</strong></span></div>
+              <div class="invoice-row"><span>Contract-review huurovereenkomst</span><span>21%</span><span style="text-align:right;"><strong>€ 175</strong></span></div>
+              <div class="invoice-row"><span>Reiskosten Amsterdam</span><span>0%</span><span style="text-align:right;"><strong>€ 38</strong></span></div>
+            </div>
+            <div class="invoice-totals">
+              <span>Subtotaal</span><span style="text-align:right;">€ 503,00</span>
+              <span>BTW (21%)</span><span style="text-align:right;">€ 97,65</span>
+              <span class="invoice-total-final">TOTAAL</span><span class="invoice-total-final" style="text-align:right;color:var(--red);">€ 600,65</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 03 — SOCIAL -->
+<section class="module-section dark" id="social">
+  <div class="module-inner">
+    <div class="reveal">
+      <div class="module-meta">
+        <span class="module-meta-num">Module / 03</span>
+        <span class="badge dark-bg">Early access 2026</span>
+      </div>
+      <h2 class="module-title">Social Campagnes<br><span class="red">— vier formaten, één klik.</span></h2>
+      <p class="module-lead">
+        Schrijf één post. Krijg vier formaten terug: Instagram-vierkant, LinkedIn-landschap, Google Bedrijfsprofiel én Story. Brand-consistent, AI-ondersteund, klaar om te posten.
+      </p>
+      <div class="feature-list">
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Brief-wizard (6 velden) → AI genereert een eerste concept.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén-klik render naar 4 formaten (IG 1080² / LinkedIn 1200×627 / GBP / Story).</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Approve-flow: eerst tekst goedkeuren, daarna pas beelden renderen.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Download alle vier tegelijk als ZIP, klaar om te posten.</span></div>
+      </div>
+      <div class="module-pricing">
+        <div class="price-main">€99<span style="font-size:14px;color:rgba(255,255,255,.5);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> activatie</span></div>
+        <div class="price-tag">+ €149 per campagne</div>
+      </div>
+      <button class="btn-primary module-cta" data-waitlist data-module="social">
+        Op de wachtlijst
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div class="module-visual reveal" style="transition-delay:.1s">
+      <div class="visual-frame" style="background:transparent;border-color:var(--white);">
+        <div class="visual-bar" style="background:var(--white);color:var(--black);border-bottom:2px solid var(--white);">
+          <span>campagne / launch-2026 / post-03</span>
+          <span class="visual-dots"><span style="background:var(--red);"></span><span style="background:rgba(0,0,0,.4);"></span><span style="background:rgba(0,0,0,.2);"></span></span>
+        </div>
+        <div class="visual-body" style="background:var(--near-black);padding:14px;">
+          <div class="social-grid">
+            <div class="social-thumb" style="background-image:url('assets/modules/03-relaties-ig.jpg');">
+              <span class="social-thumb-label">Instagram</span>
+            </div>
+            <div class="social-thumb" style="background-image:url('assets/modules/03-relaties-li.jpg');">
+              <span class="social-thumb-label">LinkedIn</span>
+            </div>
+            <div class="social-thumb" style="background-image:url('assets/modules/03-relaties-gbp.jpg');">
+              <span class="social-thumb-label">Google</span>
+            </div>
+            <div class="social-thumb" style="background-image:url('assets/modules/03-relaties-story.jpg');">
+              <span class="social-thumb-label">Story</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 04 — SEO -->
+<section class="module-section alt reverse" id="seo">
+  <div class="module-inner">
+    <div class="reveal">
+      <div class="module-meta">
+        <span class="module-meta-num">Module / 04</span>
+        <span class="badge">Early access 2026</span>
+      </div>
+      <h2 class="module-title">SEO Rapport<br><span class="red">+ actiepunten.</span></h2>
+      <p class="module-lead">
+        Site-brede audit met score, prioriteiten en concreet actieplan. Per actiepunt kies je: zelf oppakken — of laat Peter het doen tegen een vaste prijs.
+      </p>
+      <div class="feature-list">
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Score per dimensie: technisch, content, structuur, autoriteit.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Per pagina: meta-detectie, headings, ontbrekende alt-tags, broken links.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Actieplan in drie buckets: Quick Wins · Hoge Impact · Strategisch.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Per actiepunt knop "Laat Peter dit doen" — vaste offerte, geen verrassing.</span></div>
+      </div>
+      <div class="module-pricing">
+        <div class="price-main">€99<span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> rapport</span></div>
+        <div class="price-tag">+ vaste prijs per actiepunt</div>
+      </div>
+      <button class="btn-primary module-cta" data-waitlist data-module="seo">
+        Op de wachtlijst
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div class="module-visual reveal" style="transition-delay:.1s">
+      <div class="visual-frame">
+        <div class="visual-bar">
+          <span>SEO Rapport — stolkwebdesign.nl</span>
+          <span class="visual-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="visual-body">
+          <div class="seo-grade">
+            <div class="seo-grade-circle">76</div>
+            <div class="seo-grade-meta">
+              <strong>Grade B</strong>
+              25 mei 2026<br>
+              42 pagina's gescand
+            </div>
+          </div>
+          <div class="seo-bars">
+            <div class="seo-bar-row">
+              <span>Technisch</span>
+              <div class="seo-bar-track"><div class="seo-bar-fill" style="width:88%;"></div></div>
+              <span class="seo-bar-num">88</span>
+            </div>
+            <div class="seo-bar-row">
+              <span>Content</span>
+              <div class="seo-bar-track"><div class="seo-bar-fill" style="width:72%;"></div></div>
+              <span class="seo-bar-num">72</span>
+            </div>
+            <div class="seo-bar-row">
+              <span>Structuur</span>
+              <div class="seo-bar-track"><div class="seo-bar-fill" style="width:81%;"></div></div>
+              <span class="seo-bar-num">81</span>
+            </div>
+            <div class="seo-bar-row">
+              <span>Autoriteit</span>
+              <div class="seo-bar-track"><div class="seo-bar-fill" style="width:62%;"></div></div>
+              <span class="seo-bar-num">62</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 05 — BLOG -->
+<section class="module-section" id="blog">
+  <div class="module-inner">
+    <div class="reveal">
+      <div class="module-meta">
+        <span class="module-meta-num">Module / 05</span>
+        <span class="badge muted">Beschikbaar Q3 2026</span>
+      </div>
+      <h2 class="module-title">Blog —<br><span class="red">long-tail SEO.</span></h2>
+      <p class="module-lead">
+        Publiceer kennis-artikelen die jouw doelgroep zoekt. AI-ondersteund, geredigeerd door jou. Automatische SEO-meta en interne linking naar je diensten-pagina's.
+      </p>
+      <div class="feature-list">
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Brief-wizard → eerste concept binnen 30 seconden.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Edit & approve in dezelfde omgeving — geen Google Docs heen-en-weer.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Publiceren naar je eigen /blog op je eigen domein.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Automatische meta-tags, OG-image en interne links naar diensten.</span></div>
+      </div>
+      <div class="module-pricing">
+        <div class="price-main">€99<span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> activatie</span></div>
+        <div class="price-tag">+ €89 per gepubliceerde blog</div>
+      </div>
+      <button class="btn-primary module-cta" data-waitlist data-module="blog">
+        Hou me op de hoogte
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div class="module-visual reveal" style="transition-delay:.1s">
+      <div class="visual-frame">
+        <div class="visual-bar">
+          <span>jouwsite.nl / blog / nieuw-artikel</span>
+          <span class="visual-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="visual-body" style="position:relative;">
+          <div class="blog-mock">
+            <span class="blog-mock-eyebrow">Artikel / Juridisch</span>
+            <div class="blog-mock-title">Hoe stel je je algemene voorwaarden op?</div>
+            <div class="blog-mock-meta">12 mei 2026 · 6 min lezen · Brenda Verrijk</div>
+            <div class="blog-mock-body">
+              <p>Algemene voorwaarden zijn vaak het laatste waar je als ondernemer aan denkt — totdat een klant niet betaalt en je merkt dat je geen poot hebt om op te staan.</p>
+              <p>In dit artikel leg ik uit welke clausules je écht nodig hebt, welke je beter weglaat, en hoe je voorkomt dat een advocaat aan de andere kant…</p>
+            </div>
+          </div>
+          <div class="blog-mock-soon-overlay">
+            <span class="badge">Binnenkort</span>
+            <span class="blog-mock-soon-overlay-sub">Q3 2026</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why">
+  <div class="why-inner">
+    <div class="reveal">
+      <div class="section-label">Waarom dit anders is / —</div>
+      <h2 class="section-heading">Niet zomaar<br>vijf <span class="red">tools.</span></h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-num">01</div>
+        <div class="why-title">Eén login. Eén factuur.</div>
+        <p class="why-body">Geen WordPress-plugin-jungle. Geen vier verschillende SaaS-abonnementen. Eén platform, één designtaal, één keer per maand betalen.</p>
+      </div>
+      <div class="why-card reveal" style="transition-delay:.08s">
+        <div class="why-num">02</div>
+        <div class="why-title">Eenmalig + per use.</div>
+        <p class="why-body">Geen verplichte maandabonnementen die optellen. Je betaalt voor activatie en alleen bij actief gebruik — een campagne, een blog, een actiepunt.</p>
+      </div>
+      <div class="why-card reveal" style="transition-delay:.16s">
+        <div class="why-num">03</div>
+        <div class="why-title">Peter is je contactpersoon.</div>
+        <p class="why-body">Geen ticketsysteem. Geen "we komen er binnen 5 werkdagen op terug." Direct lijntje met de mens die je website heeft gebouwd.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="faq-inner">
+    <div class="reveal">
+      <div class="section-label">Veelgestelde vragen / —</div>
+      <h2 class="section-heading">Eerlijke antwoorden,<br>geen <span class="red">marketingpraat.</span></h2>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Kan ik losse modules kopen?<span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Ja. Elke module is los te activeren. Je hoeft niet eerst CMS-basis te kopen om bijvoorbeeld het SEO-rapport te bestellen. De modules werken naadloos samen, maar staan ook op zichzelf.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Werkt dit ook zonder een Stolkwebdesign-website?<span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Op termijn ja. Op dit moment zijn de modules ontworpen voor websites die door Stolkwebdesign zijn gebouwd, omdat de embed-route en het design-systeem standaard zijn ingebakken. Vanaf Q3 2026 komt er een variant voor bestaande sites — meld je aan op de wachtlijst om als eerste te horen wanneer.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Wanneer kan ik beginnen?<span class="faq-toggle">+</span></summary>
+        <div class="faq-body">CMS-basis, Factuur, Social en SEO zijn vanaf zomer 2026 beschikbaar voor early-access-klanten. Blog volgt in Q3 2026. Wachtlijst-aanmeldingen krijgen voorrang en behouden het early-access tarief, ook na de officiële launch.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Wat als ik na een jaar wil stoppen?<span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Je activatie-fee is eenmalig, geen abonnement. Stoppen kan op elk moment — je betaalt simpelweg geen per-use bedragen meer. Je content en factuur-gegevens kun je altijd exporteren.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Kan ik mijn eigen domeinnaam gebruiken?<span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Ja, altijd. Het CMS draait op jouwsite.nl/cms, je blog op jouwsite.nl/blog. Geen subdomein van Stolkwebdesign, geen "powered by"-balk.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Krijg ik korting bij meerdere modules?<span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Voor early-access-klanten die meerdere modules tegelijk activeren is er een bundeltarief. Plan een korte call met Peter — hij rekent het ter plekke voor je uit.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="noise"></div>
+  <div class="final-cta-inner">
+    <div class="final-cta-label font-mono">/ Early access — wachtlijst open</div>
+    <h2 class="final-cta-heading font-display">
+      Klaar voor een platform<br>dat met je <span style="color:var(--white);">meegroeit</span>?
+    </h2>
+    <div class="final-cta-ctas">
+      <button class="btn-white" data-waitlist data-module="all">
+        Zet me op de wachtlijst
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+      <a href="#" class="btn-outline-white" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view"}'>Plan eerst een call →</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo font-display">Stolkwebdesign®</div>
+      <p class="footer-tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Navigeer</div>
+      <ul class="footer-links">
+        <li><a href="portfolio.html">Portfolio</a></li>
+        <li><a href="index.html#diensten">Diensten</a></li>
+        <li><a href="modules.html">Modules</a></li>
+        <li><a href="index.html#aanpak">Aanpak</a></li>
+        <li><a href="over.html">Over mij</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Modules</div>
+      <ul class="footer-links">
+        <li><a href="modules.html#cms">CMS-basis</a></li>
+        <li><a href="modules.html#factuur">Factuur-tool</a></li>
+        <li><a href="modules.html#social">Social Campagnes</a></li>
+        <li><a href="modules.html#seo">SEO Rapport</a></li>
+        <li><a href="modules.html#blog">Blog</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://cal.com/peter-stolk-9dkoig/30min">Plan een gesprek</a></li>
+        <li><a href="https://wa.me/31650222228">WhatsApp</a></li>
+        <li><a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a></li>
+      </ul>
+      <div class="footer-col-label font-mono" style="margin-top:24px;">Volg ons</div>
+      <ul class="footer-links">
+        <li><a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-copy font-mono">© 2026 Stolkwebdesign — Uithoorn</span>
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+      <a href="privacybeleid.html" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none;">Privacybeleid</a>
+      <a href="algemene-voorwaarden.html" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none;">Algemene Voorwaarden</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WAITLIST MODAL -->
+<div class="modal-backdrop" id="waitlist-modal" role="dialog" aria-modal="true" aria-labelledby="waitlist-title">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="waitlist-title">Op de wachtlijst</span>
+      <button class="modal-close" id="waitlist-close" aria-label="Sluiten">×</button>
+    </div>
+    <div class="modal-body" id="waitlist-form">
+      <p class="modal-intro">
+        Vul je gegevens in — Peter neemt persoonlijk contact op zodra de modules live gaan. Wachtlijst-aanmeldingen behouden het early-access tarief 2026.
+      </p>
+      <form id="waitlist-form-el" autocomplete="on" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="wl-email">E-mailadres *</label>
+          <input class="form-input" type="email" id="wl-email" name="email" required autocomplete="email" placeholder="jij@bedrijf.nl">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wl-name">Naam</label>
+          <input class="form-input" type="text" id="wl-name" name="name" autocomplete="name" placeholder="Voor- en achternaam">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wl-company">Bedrijf</label>
+          <input class="form-input" type="text" id="wl-company" name="company" autocomplete="organization" placeholder="Naam van je bedrijf">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Welke modules interesseren je? *</label>
+          <div class="module-checks" id="wl-modules">
+            <label class="module-check"><input type="checkbox" value="cms"> CMS-basis</label>
+            <label class="module-check"><input type="checkbox" value="factuur"> Factuur</label>
+            <label class="module-check"><input type="checkbox" value="social"> Social</label>
+            <label class="module-check"><input type="checkbox" value="seo"> SEO</label>
+            <label class="module-check"><input type="checkbox" value="blog"> Blog</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wl-notes">Vraag of opmerking</label>
+          <textarea class="form-input form-textarea" id="wl-notes" name="notes" placeholder="Wat wil je weten van Peter?"></textarea>
+        </div>
+        <button type="submit" class="modal-submit" id="wl-submit">Op de wachtlijst zetten →</button>
+        <div class="modal-error" id="wl-error" style="display:none;"></div>
+      </form>
+    </div>
+    <div class="modal-body modal-success" id="waitlist-success" style="display:none;">
+      <div class="modal-success-icon font-display">✓</div>
+      <div class="modal-success-title">Je staat op de lijst.</div>
+      <p class="modal-success-body">
+        Peter neemt persoonlijk contact op zodra de modules live gaan.<br>
+        Wachtlijst-positie + early-access tarief 2026 zijn vastgelegd.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── Reveal observer ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ── Nav border state ──
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.borderBottomColor = window.scrollY > 60 ? 'var(--red)' : 'var(--black)';
+  });
+
+  // ── Hamburger ──
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const links = document.getElementById('nav-links');
+    const open = links.classList.toggle('open');
+    document.getElementById('nav-toggle').classList.toggle('open', open);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
+  });
+
+  // ── Cal.com popup ──
+  (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+  Cal("init", "30min", {origin:"https://cal.com"});
+  Cal.ns["30min"]("ui", {"hideEventTypeDetails":false,"layout":"month_view"});
+  document.querySelectorAll('[data-cal-link]').forEach(el => {
+    el.addEventListener('click', e => e.preventDefault());
+  });
+
+  // ── Module check toggle UI ──
+  document.querySelectorAll('.module-check input').forEach(cb => {
+    cb.addEventListener('change', e => e.target.closest('.module-check').classList.toggle('checked', e.target.checked));
+  });
+
+  // ── Waitlist modal ──
+  const modal      = document.getElementById('waitlist-modal');
+  const formArea   = document.getElementById('waitlist-form');
+  const successEl  = document.getElementById('waitlist-success');
+  const closeBtn   = document.getElementById('waitlist-close');
+  const formEl     = document.getElementById('waitlist-form-el');
+  const submitBtn  = document.getElementById('wl-submit');
+  const errorEl    = document.getElementById('wl-error');
+
+  function openWaitlist(moduleSlug, source) {
+    // reset to form state
+    formArea.style.display = 'block';
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    formEl.reset();
+    document.querySelectorAll('.module-check').forEach(el => el.classList.remove('checked'));
+
+    // pre-select module(s)
+    if (moduleSlug && moduleSlug !== 'all') {
+      const cb = document.querySelector(`.module-check input[value="${moduleSlug}"]`);
+      if (cb) { cb.checked = true; cb.closest('.module-check').classList.add('checked'); }
+    }
+    modal.dataset.source = source || 'modules-page';
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('wl-email').focus(), 80);
+  }
+  function closeWaitlist() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.querySelectorAll('[data-waitlist]').forEach(btn => {
+    btn.addEventListener('click', () => openWaitlist(btn.dataset.module, btn.dataset.source || 'modules-page'));
+  });
+  closeBtn.addEventListener('click', closeWaitlist);
+  modal.addEventListener('click', e => { if (e.target === modal) closeWaitlist(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) closeWaitlist(); });
+
+  // ── Submit handler ──
+  const supa = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  formEl.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorEl.style.display = 'none';
+    const email = document.getElementById('wl-email').value.trim();
+    if (!email) { errorEl.textContent = 'E-mailadres is verplicht.'; errorEl.style.display = 'block'; return; }
+    const modules = Array.from(document.querySelectorAll('.module-check input:checked')).map(c => c.value);
+    if (!modules.length) { errorEl.textContent = 'Selecteer minstens één module.'; errorEl.style.display = 'block'; return; }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Bezig…';
+
+    try {
+      const { error } = await supa.from('stolkwebdesign_module_waitlist').insert({
+        email,
+        name:    document.getElementById('wl-name').value.trim() || null,
+        company: document.getElementById('wl-company').value.trim() || null,
+        modules,
+        notes:   document.getElementById('wl-notes').value.trim() || null,
+        source:  modal.dataset.source || 'modules-page'
+      });
+      if (error) throw error;
+      formArea.style.display = 'none';
+      successEl.style.display = 'block';
+    } catch (err) {
+      console.error(err);
+      errorEl.innerHTML = 'Er ging iets mis. Stuur in plaats daarvan een mail naar <a href="mailto:info@stolkwebdesign.nl" style="color:var(--red);">info@stolkwebdesign.nl</a>.';
+      errorEl.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Op de wachtlijst zetten →';
+    }
+  });
+
+  // ── Deep-link: ?waitlist=cms opens modal with module pre-selected ──
+  const params = new URLSearchParams(location.search);
+  if (params.has('waitlist')) {
+    setTimeout(() => openWaitlist(params.get('waitlist'), 'deep-link'), 300);
+  }
+</script>
+
+</body>
+</html>
