@@ -1,0 +1,4 @@
+project_id = "lkcfwndigzhzcjnhxcmb"
+
+[functions.waitlist-to-notion]
+verify_jwt = false
