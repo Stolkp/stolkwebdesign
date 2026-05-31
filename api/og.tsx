@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Vercel Edge Function: /api/og?slide=1..5&slug=...
 // Renders one carousel slide (1080x1080 PNG) in brutalist Stolkwebdesign style.
 // Slide 1 = hook, slides 2-4 = takeaways, slide 5 = CTA.

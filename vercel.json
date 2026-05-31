@@ -4,8 +4,12 @@
   "outputDirectory": "site",
   "functions": {
     "api/notion-publish.js": { "maxDuration": 60 },
-    "api/regenerate-carousel.js": { "maxDuration": 60 }
+    "api/regenerate-carousel.js": { "maxDuration": 60 },
+    "api/poll-notion.js": { "maxDuration": 60 }
   },
+  "crons": [
+    { "path": "/api/poll-notion", "schedule": "*/5 * * * *" }
+  ],
   "headers": [
     {
       "source": "/api/og",
