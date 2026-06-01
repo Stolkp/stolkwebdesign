@@ -30,6 +30,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -116,6 +118,7 @@ body {
   transform: translateY(110%);
   opacity: 0;
   animation: smashUp .4s cubic-bezier(.16,1,.3,1) forwards;
+  animation-play-state: paused;
   line-height: .9;
   padding-bottom: .05em;
 }
@@ -194,6 +197,16 @@ nav {
   display: flex; flex-direction: column; justify-content: flex-end;
   overflow: hidden;
 }
+.hero-still, .hero-video {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; z-index: 0;
+}
+.hero-video { z-index: 1; transition: opacity .9s ease; }
+.hero-video.ended { opacity: 0; }
+.hero.revealed .smash-inner,
+.hero.revealed .hero-label,
+.hero.revealed .hero-sub,
+.hero.revealed .hero-ctas { animation-play-state: running; }
 .hero-video-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(to bottom, rgba(10,10,10,.3) 0%, rgba(10,10,10,.6) 60%, var(--near-black) 100%);
@@ -209,6 +222,7 @@ nav {
   display: flex; align-items: center; gap: 12px;
   margin-bottom: 40px; opacity: 0;
   animation: smashUp .6s ease forwards .2s;
+  animation-play-state: paused;
 }
 .hero-label-dot { width: 10px; height: 10px; background: var(--red); flex-shrink: 0; }
 .hero-label-text {
@@ -229,11 +243,13 @@ nav {
   color: rgba(255,255,255,.6); max-width: 540px;
   line-height: 1.65; margin-bottom: 48px;
   opacity: 0; animation: smashUp .7s ease forwards 1.4s;
+  animation-play-state: paused;
 }
 .hero-sub strong { color: var(--white); font-weight: 500; }
 .hero-ctas {
   display: flex; align-items: center; gap: 20px;
   opacity: 0; animation: smashUp .6s ease forwards 1.7s;
+  animation-play-state: paused;
 }
 .btn-primary {
   display: inline-flex; align-items: center; gap: 10px;
@@ -506,6 +522,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 
 /* ══════ RESPONSIVE ══════ */
 @media (max-width: 900px) {
+  .hero-video { display: none; }
   nav { padding: 14px 20px; }
   .nav-links { display: none; }
   .nav-cta { display:none; }
@@ -536,6 +553,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
   .smash-inner { animation: none; opacity: 1; transform: none; }
+  .hero-label, .hero-sub, .hero-ctas { animation: none; opacity: 1; }
   .reveal { transition: none; opacity: 1; transform: none; }
 }
 </style>
@@ -566,8 +584,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 
 <!-- HERO -->
 <section class="hero">
-  <video autoplay loop muted playsinline style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(100%) contrast(1.5);opacity:.5;z-index:0;">
-    <source src="hero-video.mp4" type="video/mp4">
+  <img class="hero-still" src="assets/stolkwebdesign-hero.png" alt="" aria-hidden="true">
+  <video class="hero-video" autoplay muted playsinline preload="auto">
+    <source src="assets/hero-header-video.mp4" type="video/mp4" media="(min-width: 901px)">
   </video>
   <div class="hero-video-overlay"></div>
   <div class="noise"></div>
@@ -629,7 +648,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="section-label">Geselecteerd werk / 01</div>
       <h2 class="section-heading">Elk project<br>een <span class="red">statement.</span></h2>
     </div>
-    <div class="portfolio-grid">
+    <div class="portfolio-grid" id="werk-grid">
       <div class="port-card reveal">
         <div class="port-bg port-bg-1">
           <div class="port-overlay"></div>
@@ -986,6 +1005,35 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </footer>
 
 <script>
+  // Hero intro: video speelt 1x, fade naar PNG, daarna tekst + knoppen onthullen
+  (function () {
+    const hero = document.querySelector('.hero');
+    const video = hero && hero.querySelector('.hero-video');
+    const reveal = () => hero && hero.classList.add('revealed');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobile = window.matchMedia('(max-width: 900px)').matches;
+
+    // mobiel of geen motion -> geen video, meteen PNG + tekst tonen
+    if (!video || reduce || mobile) { reveal(); return; }
+
+    const finish = () => { video.classList.add('ended'); reveal(); };
+    video.addEventListener('ended', finish, { once: true });
+    video.addEventListener('error', finish, { once: true });
+
+    // fallback als 'ended' nooit komt (autoplay-block, stalled): max ~12s
+    let fallback = setTimeout(finish, 12000);
+    video.addEventListener('loadedmetadata', () => {
+      if (isFinite(video.duration)) {
+        clearTimeout(fallback);
+        fallback = setTimeout(finish, video.duration * 1000 + 600);
+      }
+    }, { once: true });
+
+    // autoplay geweigerd -> meteen reveal (PNG blijft staan)
+    const p = video.play && video.play();
+    if (p && p.catch) p.catch(() => finish());
+  })();
+
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1015,6 +1063,42 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   document.querySelectorAll('[data-cal-link]').forEach(el => {
     el.addEventListener('click', e => e.preventDefault());
   });
+
+  // Geselecteerd werk — laad de eerste projecten (op sort_order) live uit Supabase met afbeeldingen.
+  // Faalt het laden? Dan blijven de hardcoded fallback-kaarten staan.
+  (async function loadWerk() {
+    const grid = document.getElementById('werk-grid');
+    if (!grid || typeof window.supabase === 'undefined' || typeof SUPABASE_URL === 'undefined') return;
+    const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    try {
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const { data, error } = await db.from('projects').select('*').order('sort_order');
+      if (error || !data || !data.length) return;   // fallback-kaarten behouden
+      const items = data.slice(0, 5);
+      grid.innerHTML = items.map((p, i) => {
+        const bgStyle = p.img
+          ? `background-image:url('${esc(p.img)}');background-size:cover;background-position:center;`
+          : `background:${p.bg || 'linear-gradient(145deg,#111,#333)'};`;
+        return `
+          <div class="port-card reveal" style="transition-delay:${i * 0.08}s" data-url="${esc(p.url || '')}">
+            <div class="port-bg" style="${bgStyle}">
+              <div class="port-overlay"></div>
+              <div class="port-info">
+                <div class="port-tag">${esc(p.tag || '')}</div>
+                <div class="port-name">${esc(p.name)}</div>
+                <div class="port-type">${esc(p.type || '')}</div>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+      grid.querySelectorAll('.port-card').forEach(card => {
+        const url = card.dataset.url;
+        if (url) card.addEventListener('click', () => window.open(url, '_blank'));
+        else card.style.cursor = 'default';
+      });
+      grid.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    } catch (e) { /* fallback-kaarten behouden */ }
+  })();
 </script>
 
 

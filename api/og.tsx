@@ -144,8 +144,8 @@ export default async function handler(req) {
   const post = await fetchPost(slug);
   const { archivoBlackFont, spaceGroteskFont } = await loadFonts();
   const fonts = [
-    { name: 'Archivo Black', data: archivoBlackFont, weight: 900, style: 'normal' },
-    { name: 'Space Grotesk', data: spaceGroteskFont, weight: 500, style: 'normal' },
+    { name: 'Archivo Black', data: archivoBlackFont, weight: 900 as const, style: 'normal' as const },
+    { name: 'Space Grotesk', data: spaceGroteskFont, weight: 500 as const, style: 'normal' as const },
   ];
 
   let element;

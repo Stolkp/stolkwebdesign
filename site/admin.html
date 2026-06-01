@@ -73,13 +73,18 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 /* PROJECT LIST */
 .project-list { display:flex; flex-direction:column; gap:3px; margin-bottom:24px; }
 .project-row {
-  display:grid; grid-template-columns:1fr auto auto auto;
+  display:grid; grid-template-columns:auto 1fr auto auto auto;
   gap:16px; align-items:center;
   background:#111; border:1px solid #1a1a1a;
   padding:20px 24px;
-  transition:border-color .15s;
+  transition:border-color .15s, opacity .15s;
 }
 .project-row:hover { border-color:#333; }
+.project-row.dragging { opacity:.35; border-color:var(--red); }
+.project-row.drag-over { border-top:2px solid var(--red); }
+.drag-handle { color:#555; cursor:grab; font-size:18px; line-height:1; user-select:none; letter-spacing:-2px; transition:color .15s; }
+.drag-handle:hover { color:var(--white); }
+.project-row:active .drag-handle, .drag-handle:active { cursor:grabbing; }
 .project-row-name { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:-0.01em; }
 .project-row-tag { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:4px; }
 .project-row-type { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:var(--red); background:rgba(234,37,37,.1); border:1px solid rgba(234,37,37,.2); padding:4px 10px; white-space:nowrap; }
@@ -294,10 +299,9 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
       <input type="text" id="f-img" class="form-input" placeholder="assets/sauberhaus.jpg">
     </div>
 
-    <div class="form-group">
-      <label class="form-label font-mono">Volgorde (lager = eerst)</label>
-      <input type="number" id="f-order" class="form-input" value="99" min="1">
-    </div>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#555;line-height:1.7;margin-bottom:4px;">
+      ⠿ Volgorde wijzig je door projecten in de lijst te slepen. Nieuwe projecten komen onderaan.
+    </p>
 
     <div class="form-actions">
       <button class="btn-cancel font-mono" onclick="closeModal()">Annuleren</button>
@@ -371,13 +375,20 @@ function esc(str) {
 async function renderProjects() {
   const list = document.getElementById('project-list');
   list.innerHTML = '<div style="padding:40px 24px;text-align:center;font-family:JetBrains Mono,monospace;font-size:11px;color:#444;text-transform:uppercase;letter-spacing:.1em;">Laden...</div>';
-  const projects = await fetchProjects();
-  if (!projects.length) {
+  await fetchProjects();
+  renderProjectRows();
+}
+
+// Render uit currentProjects (zonder opnieuw te fetchen — gebruikt na slepen/herordenen)
+function renderProjectRows() {
+  const list = document.getElementById('project-list');
+  if (!currentProjects.length) {
     list.innerHTML = '<div style="padding:40px 24px;text-align:center;font-family:JetBrains Mono,monospace;font-size:11px;color:#444;text-transform:uppercase;letter-spacing:.1em;">Nog geen projecten — voeg er een toe.</div>';
     return;
   }
-  list.innerHTML = projects.map(p => `
-    <div class="project-row">
+  list.innerHTML = currentProjects.map(p => `
+    <div class="project-row" draggable="true" data-id="${p.id}">
+      <span class="drag-handle" title="Sleep om de volgorde te wijzigen">⠿</span>
       <div>
         <div class="project-row-name font-display">${esc(p.name)}</div>
         <div class="project-row-tag font-mono">${esc(p.tag)} · Volgorde ${p.sort_order}</div>
@@ -387,6 +398,59 @@ async function renderProjects() {
       <button class="row-btn danger font-mono" onclick="deleteProject(${p.id})">Verwijderen</button>
     </div>
   `).join('');
+  attachDnD();
+}
+
+// ── DRAG & DROP HERORDENEN ──
+let dragSrcId = null;
+function attachDnD() {
+  document.querySelectorAll('.project-row').forEach(row => {
+    row.addEventListener('dragstart', e => {
+      dragSrcId = parseInt(row.dataset.id);
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', () => {
+      row.classList.remove('dragging');
+      document.querySelectorAll('.project-row').forEach(r => r.classList.remove('drag-over'));
+    });
+    row.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      if (parseInt(row.dataset.id) !== dragSrcId) row.classList.add('drag-over');
+    });
+    row.addEventListener('dragleave', () => row.classList.remove('drag-over'));
+    row.addEventListener('drop', e => {
+      e.preventDefault();
+      row.classList.remove('drag-over');
+      const targetId = parseInt(row.dataset.id);
+      if (dragSrcId != null && dragSrcId !== targetId) reorderProjects(dragSrcId, targetId);
+    });
+  });
+}
+
+async function reorderProjects(srcId, targetId) {
+  const arr = [...currentProjects];
+  const from = arr.findIndex(p => p.id === srcId);
+  const to = arr.findIndex(p => p.id === targetId);
+  if (from < 0 || to < 0) return;
+  const [moved] = arr.splice(from, 1);
+  arr.splice(to, 0, moved);
+
+  // hernummer sort_order = positie (1..n); verzamel alleen de gewijzigde rijen
+  const updates = [];
+  arr.forEach((p, i) => {
+    const newOrder = i + 1;
+    if (p.sort_order !== newOrder) { p.sort_order = newOrder; updates.push({ id: p.id, sort_order: newOrder }); }
+  });
+  currentProjects = arr;
+  renderProjectRows();   // directe visuele update
+
+  if (!updates.length) return;
+  const results = await Promise.all(updates.map(u => db.from('projects').update({ sort_order: u.sort_order }).eq('id', u.id)));
+  const failed = results.find(r => r.error);
+  if (failed) { toast('Volgorde opslaan mislukt: ' + failed.error.message, true); renderProjects(); return; }
+  toast('Volgorde opgeslagen');
 }
 
 // ── MODAL ──
@@ -403,11 +467,9 @@ function openModal(id = null) {
       document.getElementById('f-bg').value = p.bg || '';
       document.getElementById('f-url').value = p.url || '';
       document.getElementById('f-img').value = p.img || '';
-      document.getElementById('f-order').value = p.sort_order || 99;
     }
   } else {
     ['f-name','f-tag','f-type','f-desc','f-bg','f-url','f-img'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('f-order').value = 99;
   }
   document.getElementById('modal').classList.add('open');
   setTimeout(() => document.getElementById('f-name').focus(), 100);
@@ -428,13 +490,16 @@ async function saveProject() {
     bg:          document.getElementById('f-bg').value.trim() || 'linear-gradient(145deg,#111,#333)',
     url:         document.getElementById('f-url').value.trim(),
     img:         document.getElementById('f-img').value.trim(),
-    sort_order:  parseInt(document.getElementById('f-order').value) || 99,
   };
 
   let error;
   if (editId) {
+    // volgorde laten staan — die beheer je via slepen, niet via dit formulier
     ({ error } = await db.from('projects').update(project).eq('id', parseInt(editId)));
   } else {
+    // nieuw project komt onderaan: volgende sort_order
+    const maxOrder = currentProjects.reduce((m, p) => Math.max(m, p.sort_order || 0), 0);
+    project.sort_order = maxOrder + 1;
     ({ error } = await db.from('projects').insert(project));
   }
   if (error) { toast('Fout: ' + error.message, true); return; }

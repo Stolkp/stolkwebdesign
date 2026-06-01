@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>SEO Strategie Rapport — stolksupport.nl</title>
+<script src="/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async () => {
+  if (typeof SUPABASE_URL !== 'undefined' && typeof SUPABASE_ANON_KEY !== 'undefined') {
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) window.location.replace('/seo/');
+  }
+})();
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: rgba(255,255,255,0.03);
+    --bg-card-hover: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.08);
+    --border-hover: rgba(255,255,255,0.15);
+    --text: #e8e8ed;
+    --text-secondary: #8b8b9e;
+    --text-muted: #5a5a6e;
+    --accent: #6366f1;
+    --accent-glow: rgba(99,102,241,0.3);
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.12);
+    --green-border: rgba(34,197,94,0.25);
+    --yellow: #eab308;
+    --yellow-bg: rgba(234,179,8,0.12);
+    --yellow-border: rgba(234,179,8,0.25);
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,0.12);
+    --red-border: rgba(239,68,68,0.25);
+    --blue: #3b82f6;
+    --blue-bg: rgba(59,130,246,0.12);
+    --orange: #f97316;
+    --orange-bg: rgba(249,115,22,0.12);
+    --orange-border: rgba(249,115,22,0.25);
+    --purple: #a78bfa;
+    --purple-bg: rgba(167,139,250,0.08);
+    --purple-border: rgba(167,139,250,0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 6px;
+  }
+
+  ::selection { background: var(--accent); color: white; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(ellipse at 20% 50%, rgba(99,102,241,0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(139,92,246,0.04) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(59,130,246,0.03) 0%, transparent 50%);
+    z-index: -1;
+    animation: ambientDrift 20s ease-in-out infinite;
+  }
+  @keyframes ambientDrift {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(-2%, 1%); }
+    66% { transform: translate(1%, -1%); }
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  .header { padding: 40px 0 0; text-align: center; }
+  .header-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 12px; font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 20px;
+  }
+  .header-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .header h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 42px; font-weight: 700; line-height: 1.15;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #fff 0%, #a5a5c0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header .subtitle { font-size: 16px; color: var(--text-secondary); margin-bottom: 32px; }
+
+  .score-section {
+    display: flex; align-items: center; gap: 48px;
+    margin-bottom: 40px; padding: 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    backdrop-filter: blur(20px);
+  }
+  .score-circle-wrap { position: relative; flex-shrink: 0; }
+  .score-circle {
+    width: 180px; height: 180px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; flex-direction: column;
+    position: relative;
+  }
+  .score-circle svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .score-circle svg circle { fill: none; stroke-width: 6; stroke-linecap: round; }
+  .score-circle svg .bg-ring { stroke: rgba(255,255,255,0.06); }
+  .score-circle svg .progress-ring {
+    stroke: var(--orange);
+    stroke-dasharray: 502;
+    stroke-dashoffset: 206;
+    filter: drop-shadow(0 0 6px rgba(249,115,22,0.3));
+    transition: stroke-dashoffset 1.5s ease-out;
+  }
+  .score-number { font-family: 'Space Grotesk', sans-serif; font-size: 56px; font-weight: 700; line-height: 1; color: white; position: relative; z-index: 1; }
+  .score-label { font-size: 13px; color: var(--text-secondary); font-weight: 500; position: relative; z-index: 1; margin-top: 4px; }
+  .score-grade { font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 600; color: var(--orange); text-transform: uppercase; letter-spacing: 1px; position: relative; z-index: 1; margin-top: 2px; }
+  .score-details { flex: 1; }
+  .score-details h2 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 600; margin-bottom: 8px; }
+  .score-details p { color: var(--text-secondary); font-size: 15px; line-height: 1.7; margin-bottom: 20px; }
+
+  .sub-scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
+  .sub-score { padding: 14px 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .sub-score-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 6px; }
+  .sub-score-value { font-family: 'Space Grotesk', sans-serif; font-size: 28px; font-weight: 700; }
+  .sub-score-bar { height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06); margin-top: 8px; overflow: hidden; }
+  .sub-score-bar-fill { height: 100%; border-radius: 2px; transition: width 1s ease-out; }
+
+  .tabs { position: sticky; top: 0; z-index: 100; background: rgba(10,10,15,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0; }
+  .tabs-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .tabs-inner::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 16px 24px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; color: var(--text-muted); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: all 0.2s; position: relative; }
+  .tab-btn:hover { color: var(--text-secondary); }
+  .tab-btn.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab-btn .tab-count { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 100px; font-size: 11px; font-weight: 600; margin-left: 8px; color: var(--text-secondary); }
+  .tab-btn.active .tab-count { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .tab-content { display: none; padding: 40px 0 80px; }
+  .tab-content.active { display: block; }
+
+  .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+  .section-subtitle { color: var(--text-secondary); font-size: 15px; margin-bottom: 24px; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 40px; }
+  .stat-card { padding: 24px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); text-align: center; transition: border-color 0.2s; }
+  .stat-card:hover { border-color: var(--border-hover); }
+  .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: white; margin-bottom: 4px; }
+  .stat-label { font-size: 13px; color: var(--text-secondary); }
+
+  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 16px; transition: border-color 0.2s; }
+  .card:hover { border-color: var(--border-hover); }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 12px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 600; letter-spacing: 0.3px; }
+  .badge-critical { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .badge-high { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-medium { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-low { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .badge-warning { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+  .finding { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.04); display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: start; }
+  .finding:last-child { border-bottom: none; }
+  .finding-status { width: 8px; height: 8px; border-radius: 50%; margin-top: 8px; }
+  .finding-status.pass { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.4); }
+  .finding-status.warning { background: var(--yellow); box-shadow: 0 0 6px rgba(234,179,8,0.4); }
+  .finding-status.fail { background: var(--red); box-shadow: 0 0 6px rgba(239,68,68,0.4); }
+  .finding-content h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .finding-content p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .finding-rec { margin-top: 8px; padding: 10px 14px; background: rgba(99,102,241,0.06); border-left: 3px solid var(--accent); border-radius: 0 var(--radius-xs) var(--radius-xs) 0; font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  .collapsible { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s; }
+  .collapsible:hover { border-color: var(--border-hover); }
+  .collapsible-header { padding: 20px 24px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .collapsible-header:hover { background: rgba(255,255,255,0.02); }
+  .collapsible-title { font-weight: 600; color: var(--text); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+  .collapsible-body { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+  .collapsible.open .collapsible-body { max-height: 5000px; }
+  .collapsible-body-inner { padding: 0 24px 24px; }
+  .collapse-icon { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--text-muted); transition: transform 0.3s, background 0.2s; flex-shrink: 0; }
+  .collapsible.open .collapse-icon { transform: rotate(180deg); }
+
+  .page-table { width: 100%; border-collapse: collapse; margin-top: 0; }
+  .page-table th { text-align: left; padding: 12px 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); border-bottom: 1px solid var(--border); font-weight: 600; }
+  .page-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top; }
+  .page-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .page-url { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); word-break: break-all; }
+
+  .checklist-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .checklist-item:last-child { border-bottom: none; }
+  .check-icon { width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; margin-top: 1px; }
+  .check-icon.pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .check-icon.fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .check-icon.warn { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .check-text { font-size: 14px; color: var(--text); }
+  .check-text.muted { color: var(--text-secondary); }
+
+  .action-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 24px; margin-bottom: 12px; display: flex; gap: 20px; align-items: flex-start; transition: border-color 0.2s; }
+  .action-item:hover { border-color: var(--border-hover); }
+  .action-number { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; color: var(--accent); flex-shrink: 0; width: 36px; text-align: center; opacity: 0.5; }
+  .action-content { flex: 1; }
+  .action-title { font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 6px; }
+  .action-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.6; }
+  .action-impact { margin-top: 8px; font-size: 13px; color: var(--green); font-weight: 500; }
+
+  .cluster { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+  .cluster-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; color: var(--purple); font-size: 16px; margin-bottom: 12px; }
+  .cluster-pages { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cluster-page { padding: 6px 14px; border-radius: 100px; background: var(--purple-bg); border: 1px solid var(--purple-border); font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--text-secondary); }
+  .cluster-page.pillar { background: rgba(167,139,250,0.15); border-color: rgba(167,139,250,0.3); color: var(--purple); font-weight: 600; }
+
+  .lsi-cloud { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .lsi-tag { padding: 6px 14px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); border-radius: 100px; font-size: 13px; font-family: 'JetBrains Mono', monospace; color: var(--text); transition: all 0.2s; }
+  .lsi-tag.integrated { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
+  .lsi-tag.missing { background: var(--red-bg); border-color: var(--red-border); color: var(--red); opacity: 0.8; }
+
+  .reviewbox { padding: 20px 24px; background: rgba(167,139,250,0.06); border: 1px solid var(--purple-border); border-radius: var(--radius-sm); margin-bottom: 24px; }
+  .reviewbox-label { display: inline-block; padding: 3px 10px; background: var(--purple); color: white; border-radius: 100px; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+  .reviewbox h4 { font-family: 'Space Grotesk', sans-serif; font-size: 16px; margin-bottom: 8px; color: var(--purple); }
+  .reviewbox p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+
+  @media (max-width: 768px) {
+    .header h1 { font-size: 28px; }
+    .score-section { flex-direction: column; text-align: center; padding: 24px; gap: 24px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .sub-scores { grid-template-columns: repeat(2, 1fr); }
+    .action-item { flex-direction: column; gap: 12px; }
+  }
+  @media print {
+    .tabs { display: none; }
+    .tab-content { display: block !important; page-break-before: always; }
+    body::before { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="header-badge"><span class="dot"></span> Site-Wide SEO Audit</div>
+    <h1>stolksupport.nl</h1>
+    <p class="subtitle">Volledige analyse van 8 pagina's — Gegenereerd 23 mei 2026</p>
+  </div>
+</div>
+
+<div class="container" style="padding-top: 0; padding-bottom: 32px;">
+  <div class="score-section">
+    <div class="score-circle-wrap">
+      <div class="score-circle">
+        <svg viewBox="0 0 160 160">
+          <circle class="bg-ring" cx="80" cy="80" r="74"/>
+          <circle class="progress-ring" cx="80" cy="80" r="74"/>
+        </svg>
+        <span class="score-number">59</span>
+        <span class="score-grade">D</span>
+        <span class="score-label">Overall Health</span>
+      </div>
+    </div>
+    <div class="score-details">
+      <h2>Sterke content op een onafgemaakt SEO-fundament</h2>
+      <p>De inhoud van Stolksupport is uitzonderlijk goed — heldere positionering, concrete dienstbeschrijvingen en blogposts met substance. Maar de technische basis ontbreekt vrijwel volledig: geen sitemap, geen robots.txt, geen schema markup, geen Open Graph tags, en geen canonical-tags. Voor een jonge site die lead-gen wil halen uit organisch verkeer is dat het verschil tussen "vindbaar worden" en "onzichtbaar blijven". Dit rapport prioriteert acties die binnen één werkdag de score van D naar B kunnen tillen.</p>
+      <div class="sub-scores">
+        <div class="sub-score">
+          <div class="sub-score-label">Technical</div>
+          <div class="sub-score-value" style="color: var(--orange)">45</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:45%; background: var(--orange)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Content</div>
+          <div class="sub-score-value" style="color: var(--green)">88</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:88%; background: var(--green)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Architecture</div>
+          <div class="sub-score-value" style="color: var(--yellow)">66</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:66%; background: var(--yellow)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Cross-Page</div>
+          <div class="sub-score-value" style="color: var(--green)">80</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:80%; background: var(--green)"></div></div>
+        </div>
+        <div class="sub-score">
+          <div class="sub-score-label">Social &amp; Schema</div>
+          <div class="sub-score-value" style="color: var(--red)">5</div>
+          <div class="sub-score-bar"><div class="sub-score-bar-fill" style="width:5%; background: var(--red)"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="switchTab('executive', event)">Executive Summary</button>
+    <button class="tab-btn" onclick="switchTab('pages', event)">Per Pagina <span class="tab-count">8</span></button>
+    <button class="tab-btn" onclick="switchTab('sitewide', event)">Site-Wide Issues <span class="tab-count">12</span></button>
+    <button class="tab-btn" onclick="switchTab('technical', event)">Technisch</button>
+    <button class="tab-btn" onclick="switchTab('content', event)">Content &amp; Keywords</button>
+    <button class="tab-btn" onclick="switchTab('linking', event)">Interne Linking</button>
+    <button class="tab-btn" onclick="switchTab('local', event)">Lokale SEO</button>
+    <button class="tab-btn" onclick="switchTab('actions', event)">Actieplan</button>
+  </div>
+</div>
+
+<!-- ==================== TAB 1: EXECUTIVE SUMMARY ==================== -->
+<div id="tab-executive" class="tab-content active">
+<div class="container">
+
+  <div class="section-title">Executive Summary</div>
+  <div class="section-subtitle">Overzicht van de SEO-status van stolksupport.nl met focus op lead-generatie via de service-pagina's (NL/Randstad)</div>
+
+  <div class="reviewbox">
+    <span class="reviewbox-label">Belangrijke aanname</span>
+    <h4>Geen audit-toegang tot GSC, Lighthouse of backlink-data</h4>
+    <p>Dit rapport is gebaseerd op de HTML-output van 8 live pagina's plus de site-wide resources (robots.txt, sitemap.xml). Werkelijke pagespeed, Core Web Vitals, indexering-status en backlink-profiel zijn niet meegenomen — koppel Google Search Console en run een Lighthouse-audit voor het volledige beeld. De recommendations in dit rapport zijn echter onafhankelijk van die data correct.</p>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">8</div>
+      <div class="stat-label">Pagina's geaudit</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">5</div>
+      <div class="stat-label">Kritieke issues</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">9</div>
+      <div class="stat-label">Hoge prioriteit</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">~720</div>
+      <div class="stat-label">Gem. woordtelling</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">0%</div>
+      <div class="stat-label">Schema coverage</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">0%</div>
+      <div class="stat-label">OG tag coverage</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="card-title" style="margin-bottom: 16px;">Belangrijkste bevindingen</div>
+    <div style="color: var(--text-secondary); font-size: 15px; line-height: 1.8;">
+      <p style="margin-bottom: 12px;"><strong style="color: var(--text);">Content is sterk, fundament is onaf.</strong> De 8 pagina's leveren samen ~5.700 woorden hoogwaardige content op met heldere positionering ("AI automatisering die aantoonbaar werkt"), concrete prijzen (€1.500-€8.000) en een eerlijke tone-of-voice. Geen thin content, geen duplicate titles. Dit is het fundament waarop ranking-werk kan bouwen.</p>
+      <p style="margin-bottom: 12px;"><strong style="color: var(--text);">Vijf kritische technische gaten.</strong> <code style="background:rgba(239,68,68,0.1); color: var(--red); padding: 2px 6px; border-radius: 4px;">/robots.txt</code> en <code style="background:rgba(239,68,68,0.1); color: var(--red); padding: 2px 6px; border-radius: 4px;">/sitemap.xml</code> retourneren 404. Geen enkele pagina heeft schema.org markup, Open Graph tags, of een canonical-tag. Voor Google betekent dit: trager crawlen, minder rich results, geen LinkedIn-preview als iemand de site deelt.</p>
+      <p style="margin-bottom: 12px;"><strong style="color: var(--text);">Blog-cards op de homepage gebruiken picsum.photos placeholders.</strong> De drie blog-afbeeldingen op de homepage zijn willekeurige stock-foto's van <code>https://picsum.photos/800/450?random=11</code>. Voor zowel bezoekers als Google is dat een directe vertrouwensbreuk — placeholder-images signaleren een onafgemaakte site.</p>
+      <p style="margin-bottom: 12px;"><strong style="color: var(--text);">URL-strategie inconsistent.</strong> De homepage werkt op <code>/</code>, maar interne links wijzen naar <code>/index.html</code>. Dat is technisch een duplicaat-URL zonder canonical-tag om Google te vertellen welke versie de "echte" is. Hetzelfde geldt voor de diensten-pagina's met <code>.html</code> extensies — clean URLs (<code>/diensten/ai-oplossingen</code>) werken niet (404 op productie).</p>
+      <p><strong style="color: var(--text);">Lokale SEO (Randstad) niet gesignaleerd.</strong> Het woord "Randstad" komt 1× voor (op /over-ons). Geen LocalBusiness-schema, geen NAP-blok (Name/Address/Phone), geen Google Business Profile-referentie. Voor "AI automatisering Amstelveen" of "AI bedrijf Randstad" mist het signaal volledig.</p>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size: 18px; margin-top: 32px;">Top 3 prioriteiten</div>
+  <div class="section-subtitle">De acties met de hoogste impact, te realiseren binnen één werkdag</div>
+
+  <div class="action-item">
+    <div class="action-number">1</div>
+    <div class="action-content">
+      <div class="action-title">Maak en publiceer sitemap.xml + robots.txt</div>
+      <div class="action-desc">Beide bestanden retourneren nu 404. Zonder sitemap moet Google elke pagina via interne links ontdekken (en die linking is beperkt). Zonder robots.txt geen sitemap-verwijzing of crawl-instructie. Tijdsinvestering: 30 minuten. Plaats <code>robots.txt</code> en <code>sitemap.xml</code> in de site root (Vercel: in <code>public/</code> of <code>site/</code>).</div>
+      <div class="action-impact">Verwachte impact: Google indexeert binnen 1-2 weken alle 8 pagina's in plaats van alleen de homepage.</div>
+    </div>
+    <span class="badge badge-critical">Kritiek</span>
+  </div>
+
+  <div class="action-item">
+    <div class="action-number">2</div>
+    <div class="action-content">
+      <div class="action-title">Voeg JSON-LD schema toe (Organization + LocalBusiness + Service)</div>
+      <div class="action-desc">Geen enkele pagina heeft schema.org markup. Voor lead-gen op service-pagina's is dit het krachtigste type structured data. Minimum: <code>Organization</code> + <code>LocalBusiness</code> op homepage, <code>Service</code> op de 3 diensten-pagina's, <code>BlogPosting</code> op de 3 blog posts. LocalBusiness met postcode Randstad-regio (bv. Amstelveen) is essentieel voor "AI automatisering [stad]" queries.</div>
+      <div class="action-impact">Verwachte impact: rich results in SERP (sterren, prijs-ranges, locatie), 30-40% hogere CTR op organische listings.</div>
+    </div>
+    <span class="badge badge-critical">Kritiek</span>
+  </div>
+
+  <div class="action-item">
+    <div class="action-number">3</div>
+    <div class="action-content">
+      <div class="action-title">Vervang picsum.photos placeholders door echte afbeeldingen + voeg OG tags toe</div>
+      <div class="action-desc">De drie blog-cards op de homepage gebruiken willekeurige stock-foto's. Vervang door echte visuals (AI-generated met /img skill is prima — Peter heeft die in stack). Tegelijkertijd: voeg <code>og:title</code>, <code>og:description</code>, <code>og:image</code>, <code>og:url</code>, <code>og:type</code> toe aan alle pagina's. Zonder OG image: links naar je site op LinkedIn/WhatsApp/Slack tonen niets.</div>
+      <div class="action-impact">Verwachte impact: zichtbare upgrade van trust (homepage oogt af), social shares krijgen branded preview-cards.</div>
+    </div>
+    <span class="badge badge-high">Hoog</span>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB 2: PER PAGINA ==================== -->
+<div id="tab-pages" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Page-by-Page Breakdown</div>
+  <div class="section-subtitle">Individuele audit-resultaten voor elke van de 8 gecrawlde pagina's</div>
+
+  <div class="card" style="overflow-x: auto; padding: 0; margin-bottom: 32px;">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>URL</th>
+          <th>Title (chars)</th>
+          <th>Woorden</th>
+          <th>H1</th>
+          <th>Meta</th>
+          <th>Schema</th>
+          <th>OG</th>
+          <th>Issues</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="page-url">/</span></td>
+          <td>43</td>
+          <td>~1100</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/over-ons.html</span></td>
+          <td>24</td>
+          <td>~600</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/diensten/ai-oplossingen.html</span></td>
+          <td>28</td>
+          <td>~900</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/diensten/strategie-advies.html</span></td>
+          <td>32</td>
+          <td>~700</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-warning">Short</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/diensten/maatwerk-websites.html</span></td>
+          <td>35</td>
+          <td>~400</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>6</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/blog/agentic-ai.html</span></td>
+          <td>48</td>
+          <td>~900</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-warning">Short</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/blog/premium-design.html</span></td>
+          <td>56</td>
+          <td>~650</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-warning">Short</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/blog/gsap-vs-css.html</span></td>
+          <td>44</td>
+          <td>~900</td>
+          <td><span class="badge badge-pass">Pass</span></td>
+          <td><span class="badge badge-warning">Short</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td><span class="badge badge-fail">Fail</span></td>
+          <td>5</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Per page collapsibles -->
+  <div class="collapsible open">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/ (Homepage)</span>
+        <span class="badge badge-high">6 issues</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <div class="finding">
+          <div class="finding-status pass"></div>
+          <div class="finding-content">
+            <h4>Title tag (43 tekens)</h4>
+            <p>"Stolksupport — Automatiseer wat jou afremt." Goede lengte, vangt brand + USP. Mist een keyword-modifier zoals "AI automatisering Nederland".</p>
+            <div class="finding-rec">Optioneel: "Stolksupport — AI Automatisering &amp; Workflows voor MKB" (55 chars) — voegt rankbare keyword toe zonder branding op te geven.</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Meta description (160 tekens — borderline)</h4>
+            <p>Op de grens van wat Google toont. Goed geschreven, USP-heavy. Risico: kan worden afgekapt op mobiel waar limiet ~120 tekens is.</p>
+            <div class="finding-rec">Kort in tot ~150 chars: "AI-automatisering en workflows voor ambitieuze MKB-bedrijven. Chatbots, integraties en systemen die jouw dag teruggeven."</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Blog-cards gebruiken picsum.photos placeholders</h4>
+            <p>De 3 blog-cards op de homepage tonen <code>https://picsum.photos/800/450?random=11/12/13</code> — willekeurige stockfoto's. Bezoekers zien dit; Google indexeert ze in image search.</p>
+            <div class="finding-rec">Vervang door echte previews. Genereer 3 thematische covers via /img (GPT Image 2.0) — kost ~€0.66 totaal. Plaats in <code>/assets/blog/</code>.</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Blog-data zijn 2023 (oktober/november)</h4>
+            <p>Drie blog posts dateren uit 2023, maar de site is in 2026 gelanceerd. Voor bezoekers (en Google's freshness-signaal) lijkt de site verlaten.</p>
+            <div class="finding-rec">Update naar 2026-data of verberg de datum tot er recente posts zijn. Bij blog-posts: voeg "Bijgewerkt op [datum]" tag toe.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Logo-link is gebroken (<code>#</code>)</h4>
+            <p>De brand-link in de hoofdnav verwijst naar <code>href="https://www.stolksupport.nl/#"</code> — een leeg anker dat niets doet behalve scroll-to-top. Verwachting van gebruikers: logo = home.</p>
+            <div class="finding-rec">Wijzig naar <code>href="/"</code> of <code>href="/index.html"</code>. Belangrijk: gebruik consistent één van beide voor canonical-stabiliteit.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen schema.org markup</h4>
+            <p>Geen JSON-LD voor Organization, LocalBusiness, of WebSite. Voor brand-search ("Stolksupport") en lokale queries is dit cruciaal.</p>
+            <div class="finding-rec">Voeg minimaal <code>Organization</code> + <code>LocalBusiness</code> + <code>WebSite</code> JSON-LD toe. Zie tab "Technisch" voor template.</div>
+          </div>
+          <span class="badge badge-critical">Kritiek</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen Open Graph / Twitter Card / Canonical</h4>
+            <p>Geen <code>og:image</code>, <code>og:title</code>, <code>og:description</code>, <code>og:url</code>. Geen <code>&lt;link rel="canonical"&gt;</code>. Combinatie betekent: LinkedIn-shares tonen geen preview, en <code>/</code> + <code>/index.html</code> = duplicate URLs zonder canonical-signaal.</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/diensten/ai-oplossingen.html</span>
+        <span class="badge badge-high">5 issues (PRIORITY)</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;padding:12px;background:rgba(99,102,241,0.06);border-left:3px solid var(--accent);border-radius:6px;">Dit is de #1 lead-gen pagina van de site. Elke optimalisatie hier heeft directe omzet-impact.</p>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Title te kort (28 chars): "AI Oplossingen — Stolksupport"</h4>
+            <p>Vier woorden, geen keyword-modifier zoals "MKB", "Chatbot", "Workflow" of "Randstad". Mist 30+ tekens aan ranking-ruimte.</p>
+            <div class="finding-rec">"AI Oplossingen voor MKB — Chatbots, Workflows &amp; Integraties | Stolksupport" (74 chars). Of: "AI Oplossingen: Chatbots, n8n Workflows &amp; Documentverwerking — Stolksupport" (76 chars).</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status pass"></div>
+          <div class="finding-content">
+            <h4>Sterke H1 met USP-positionering</h4>
+            <p>"Niet 'iets met AI'. Maar dit specifieke probleem oplossen met AI." Niet keyword-rich, maar uitstekend voor differentiatie. Behoud.</p>
+            <div class="finding-rec">Optioneel: voeg een secundaire H2 toe direct onder de hero: "AI Oplossingen voor MKB Bedrijven in Nederland" — krijgt keyword binnen zonder de H1-stem te verstoren.</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Sub-nav verwijst naar zichzelf met <code>style="color:#fff"</code> ipv aria-current</h4>
+            <p>Visueel werkt het, maar het mist semantische signalen voor screen readers en Google. De andere diensten-pagina's gebruiken wél <code>aria-current="page"</code> correct.</p>
+            <div class="finding-rec">Vervang inline-style door <code>aria-current="page"</code> + CSS-selector <code>[aria-current="page"]</code>. Toegankelijkheid + consistent met andere pagina's.</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen Service-schema (FAQPage geschikt voor 6 solution-cards)</h4>
+            <p>De pagina heeft 6 solution-cards (chatbot, e-mail, document, workflow, content, dashboard) die zich uitstekend lenen voor <code>Service</code>-schema en/of <code>FAQPage</code>-schema. Rich results in SERP zouden CTR aanzienlijk verhogen.</p>
+            <div class="finding-rec">Voeg <code>ItemList</code> met 6 <code>Service</code> items toe in JSON-LD. Voeg een FAQ-sectie toe onderaan met 4-6 vragen ("Wat kost een AI-chatbot?", "Hoeveel tijd kost implementatie?") + bijbehorende FAQPage schema.</div>
+          </div>
+          <span class="badge badge-critical">Kritiek</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen contact-conversie op de pagina zelf</h4>
+            <p>De CTA-knop "Start een gesprek →" linkt naar <code>/index.html#contact</code> — bezoeker moet naar de homepage scrollen om te converteren. Dat is een conversie-leak voor de #1 lead-gen pagina.</p>
+            <div class="finding-rec">Bouw een korte inline-form sectie onderaan (alleen e-mail + bericht) die naar dezelfde Notion-endpoint POSTet. Of: maak <code>/contact.html</code> als losse pagina zodat geen redirect/scroll nodig is.</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/diensten/strategie-advies.html</span>
+        <span class="badge badge-medium">5 issues</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Title te generiek (32 chars): "Strategie &amp; Advies — Stolksupport"</h4>
+            <p>"Strategie &amp; Advies" zegt niets specifieks. Mist commerciële keyword-modifier.</p>
+            <div class="finding-rec">"Strategie &amp; Advies AI / Digitaal — Stolksupport" of "Digitaal Strategie Advies — Tech-Stack &amp; AI Roadmap | Stolksupport"</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Meta description (125 chars) iets te kort</h4>
+            <p>Iets onder de aanbevolen 150-160. Ruimte voor extra value-prop of CTA.</p>
+            <div class="finding-rec">"Positionering, tech-stack keuzes en AI-strategie voor mkb. Concrete aanbevelingen, geen vage rapporten — vanaf €750 per dagdeel." (146 chars)</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status pass"></div>
+          <div class="finding-content">
+            <h4>Sterke content (700 woorden + concrete prijzen)</h4>
+            <p>Pricing (€750/dagdeel, €1.200 audit) staat direct op de pagina. Dat is een lead-gen multiplier — minder rondzoekers, meer beslissers.</p>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen Service-schema met prijs</h4>
+            <p>Concrete prijzen (€750, €1.200) zijn perfect schema-materiaal. Google kan ze tonen in SERP via <code>Service</code> + <code>Offer</code> markup.</p>
+            <div class="finding-rec">Schema-template: zie tab "Technisch". Levert kans op pricing snippet in zoekresultaat — direct hogere CTR voor commerciële zoekers.</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Cannibalisatie-risico met /diensten/ai-oplossingen voor "AI strategie"</h4>
+            <p>De solution-card "AI-integratiestrategie" op deze pagina overlapt thematisch met de "Documentverwerking + AI" content op /ai-oplossingen.</p>
+            <div class="finding-rec">Differentieer: strategie-advies = pre-build advisory (geen code), ai-oplossingen = build/implementatie. Maak de scheiding scherper in de H1's en intro's.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/diensten/maatwerk-websites.html</span>
+        <span class="badge badge-medium">6 issues</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Title brandt verkeerde site: "Maatwerk Websites — Stolkwebdesign"</h4>
+            <p>Title eindigt op "Stolkwebdesign" terwijl deze pagina op stolksupport.nl staat. Verwarrend voor Google en bezoekers in SERP.</p>
+            <div class="finding-rec">"Maatwerk Websites: Naar Stolkwebdesign — Stolksupport" of behoud Stolksupport branding consistent.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Thinnest service-page (~400 woorden)</h4>
+            <p>Significant minder content dan AI Oplossingen (~900) of Strategie (~700). Hoort bij de "soft-redirect" intentie van deze pagina, maar dunt de ranking-kans uit voor "maatwerk website".</p>
+            <div class="finding-rec">Twee opties: (A) Voeg een uitgebreid "Wat is het verschil tussen Stolksupport en Stolkwebdesign?" sectie toe (~300 extra woorden) — kan goed scoren als info-zoekend keyword. (B) Vervang deze pagina door een 301-redirect naar stolkwebdesign.nl met UTM-tracking (cleaner architectuur).</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Cross-domain link zonder dofollow strategie</h4>
+            <p>De pagina linkt 2× naar <code>stolkwebdesign.nl</code> met <code>rel="noopener"</code> maar zonder duidelijke link-equity strategie. Vraag: wil je dat link-juice naar Stolkwebdesign gaat?</p>
+            <div class="finding-rec">Indien Stolkwebdesign een hoofdsite is en Stolksupport satellite: dofollow okay. Indien Stolksupport ook ranking moet bouwen: overweeg <code>rel="nofollow noopener"</code> op deze cross-domain links om link-equity te behouden.</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen schema (zelfde issue als rest van site)</h4>
+            <p>Geen Service-schema. Geen WebPage-schema.</p>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Architectuur-vraag: hoort deze pagina hier?</h4>
+            <p>De pagina is in essentie een "ga naar onze zustersite" doorverwijzing. Voor SEO is dat een verlies (eigen domein levert geen content-waarde) maar wel een trust-signaal voor de bezoeker ("dezelfde maker").</p>
+            <div class="finding-rec">Strategische keuze. Aanbeveling: behoud de pagina maar maak hem inhoudelijker (zie issue boven). Of: replace met simpele <code>&lt;meta http-equiv="refresh"&gt;</code> redirect en haal hem uit de sub-nav.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen lokale Randstad-context</h4>
+            <p>Pagina noemt geen plaats, geen "lokaal werkbereik" — terwijl premium websites bij voorkeur lokaal lead-gen krijgen ("Webdesigner Amstelveen", "Webdesign Amsterdam").</p>
+            <div class="finding-rec">Voeg een korte alinea toe: "Stolkwebdesign en Stolksupport zijn beide gevestigd in [stad] — we werken voor klanten in heel Nederland, met een focus op de Randstad."</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/over-ons.html</span>
+        <span class="badge badge-medium">5 issues</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Title te kort (24 chars): "Over ons — Stolksupport"</h4>
+            <p>Mist persoonsnaam en USP. Vooral voor brand-search ("Peter Stolk") relevant.</p>
+            <div class="finding-rec">"Over Stolksupport — Peter Stolk, AI-Integrator Randstad" (56 chars). Combineert brand + persoon + locatie.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status pass"></div>
+          <div class="finding-content">
+            <h4>Sterke E-E-A-T signalen</h4>
+            <p>Concrete vermelding van Peter Stolk + sinds 2016 + Stolkwebdesign zustersite = sterke authoriteits-signalen. Mist alleen een foto en/of LinkedIn-link bij de persoon.</p>
+            <div class="finding-rec">Voeg een professionele foto van Peter toe + zichtbare LinkedIn-link. Person-schema toevoegen.</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen Person + Organization schema</h4>
+            <p>Perfecte pagina voor structured data: <code>Person</code> (Peter Stolk, founder) + <code>Organization</code> (Stolksupport, since 2026, founder Peter Stolk).</p>
+            <div class="finding-rec">Voeg JSON-LD blok toe met beide. Helpt bij Knowledge Panel voor de brand.</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Eén Randstad-vermelding, geen specifieke plaats</h4>
+            <p>"Peter Stolk is developer en digitaal strateeg, gevestigd in de Randstad." Goed signaal, maar te vaag voor lokale lead-gen.</p>
+            <div class="finding-rec">Specifeer naar gemeente (bv. "gevestigd in Amstelveen, werkbereik heel de Randstad"). Combineer met LocalBusiness-schema.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>CTA verlaat de pagina (naar /index.html#contact)</h4>
+            <p>Alle "Start een gesprek" knoppen op subpagina's verwijzen terug naar de homepage. Bezoeker moet scrollen om te converteren.</p>
+            <div class="finding-rec">Maak een dedicated <code>/contact.html</code> of inline-form per pagina. Zie ook /ai-oplossingen finding.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/blog/agentic-ai.html</span>
+        <span class="badge badge-medium">5 issues</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <div class="finding">
+          <div class="finding-status pass"></div>
+          <div class="finding-content">
+            <h4>Inhoudelijk sterk + correcte H2-structuur</h4>
+            <p>~900 woorden, 5 H2's, concrete voorbeelden (lead-kwalificatie, inkoopverwerking, klantenservice). Goed long-form content.</p>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Meta description te kort (99 chars)</h4>
+            <p>"Waarom autonome AI-agents de volgende stap zijn na chatbots — en wat dat betekent voor jouw bedrijf." Te kort, mist Nederlandse SEO-keywords.</p>
+            <div class="finding-rec">"Autonome AI-agents nemen handmatig werk over: leadkwalificatie, factuurverwerking, klantenservice. Voor MKB-bedrijven die willen schalen." (140 chars)</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen BlogPosting / Article schema</h4>
+            <p>Blogpost mist <code>BlogPosting</code>-schema met author, datePublished, dateModified, image. Resultaat: geen rich snippet in SERP, geen Discover-eligibility.</p>
+            <div class="finding-rec">Voeg <code>BlogPosting</code> JSON-LD toe met author=Peter Stolk, datePublished=2023-10-12, image, headline.</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Datum oktober 2023 — niet "fresh" voor 2026</h4>
+            <p>De auteur-datum is 12 oktober 2023, maar de site is in 2026 live. Voor "AI-agents" als topic is freshness essentieel — het veld beweegt razendsnel.</p>
+            <div class="finding-rec">Herzie het artikel met 2026-bewoording (Claude 4.X, recent agent-frameworks zoals MCP), publiceer als "Updated for 2026" met nieuwe <code>dateModified</code>.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen interne links naar service-pagina</h4>
+            <p>De content beschrijft exact wat /diensten/ai-oplossingen verkoopt (lead-kwalificatie agents, factuurverwerking), maar linkt niet naar die pagina. Alleen één link naar #contact op homepage. Verloren interne link equity.</p>
+            <div class="finding-rec">Voeg 2-3 contextuele links toe naar /diensten/ai-oplossingen.html in de body — bv. bij "Leadkwalificatie-agent" link naar de chatbot-card.</div>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/blog/premium-design.html</span>
+        <span class="badge badge-medium">5 issues</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Topic-mismatch met Stolksupport-focus</h4>
+            <p>Artikel gaat puur over webdesign-conversie — dat is het domein van Stolkwebdesign. Op Stolksupport zou dit qua keyword-targeting niet bijdragen aan "AI automatisering" rankings.</p>
+            <div class="finding-rec">Overweeg dit artikel te verhuizen naar stolkwebdesign.nl met 301-redirect, of het te herwerken naar een AI-relevante hoek ("Premium design + AI-personalisatie").</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen BlogPosting schema (zelfde issue als andere blogs)</h4>
+            <p>Mist Article structured data.</p>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Externe bron niet gelinkt ("Carleton University onderzoek")</h4>
+            <p>Het artikel refereert naar Carleton University onderzoek (50ms first impression) zonder bronlink. Mist autoriteits-signaal + E-E-A-T.</p>
+            <div class="finding-rec">Link naar de oorspronkelijke studie (Lindgaard et al., 2006). Externe links naar authoritieve bronnen versterken het artikel.</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Datum 28 oktober 2023</h4>
+            <p>Zie ook agentic-ai.html — oude data op een nieuwe site.</p>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen CTA aan einde artikel</h4>
+            <p>Artikel eindigt zonder conversie-prompt. Geen "wil je weten of jouw site dit doet?" naar /contact of /strategie-advies (waar website-audit als dienst staat voor €1.200).</p>
+            <div class="finding-rec">Voeg een korte conversie-blok toe aan het einde: "Wil je weten hoe jouw site scoort? Bestel een website audit (€1.200, 5 werkdagen) →".</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collapsible">
+    <div class="collapsible-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="collapsible-title">
+        <span class="page-url">/blog/gsap-vs-css.html</span>
+        <span class="badge badge-medium">5 issues</span>
+      </span>
+      <span class="collapse-icon">&#9660;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="collapsible-body-inner">
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Off-topic voor Stolksupport's AI-focus</h4>
+            <p>Technisch dev-artikel hoort eerder bij Stolkwebdesign. Voor "AI automatisering" zoekers geen waarde.</p>
+            <div class="finding-rec">Verhuis naar stolkwebdesign.nl/blog (301), of accepteer als developer-audience content (dev SEO is geen lead-gen voor Stolksupport's diensten).</div>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status pass"></div>
+          <div class="finding-content">
+            <h4>Goede technische diepte (~900 woorden, code-voorbeelden)</h4>
+            <p>Hoogwaardig technical content met concreet beslisschema. Past in een design-blog uitstekend.</p>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status fail"></div>
+          <div class="finding-content">
+            <h4>Geen BlogPosting / TechArticle schema</h4>
+          </div>
+          <span class="badge badge-high">Hoog</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Datum 5 november 2023</h4>
+            <p>Idem oude datum.</p>
+          </div>
+          <span class="badge badge-medium">Medium</span>
+        </div>
+        <div class="finding">
+          <div class="finding-status warning"></div>
+          <div class="finding-content">
+            <h4>Code blocks zonder syntax highlighting / language attribute</h4>
+            <p>Code voorbeelden in <code>&lt;pre&gt;&lt;code&gt;</code> blokken zonder taalspecificatie. Voor zowel UX als minor SEO-signaal niet ideaal.</p>
+            <div class="finding-rec">Voeg <code>class="language-css"</code> toe en gebruik bv. Prism.js of highlight.js voor syntax highlighting.</div>
+          </div>
+          <span class="badge badge-low">Laag</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB 3: SITE-WIDE ISSUES ==================== -->
+<div id="tab-sitewide" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Site-Wide Issues</div>
+  <div class="section-subtitle">Patronen die alle pagina's tegelijk raken</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">Crawlability &amp; Indexering</div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>robots.txt retourneert 404</h4>
+        <p>Geen robots.txt op <code>https://www.stolksupport.nl/robots.txt</code>. Google's crawler heeft geen directieven, en — kritieker — geen sitemap-referentie om alle pagina's te ontdekken.</p>
+        <div class="finding-rec">Maak <code>robots.txt</code>: <code>User-agent: *\nAllow: /\nSitemap: https://www.stolksupport.nl/sitemap.xml</code></div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>sitemap.xml retourneert 404</h4>
+        <p>Geen sitemap. Voor een site met 8 pagina's en geen sterke interne linking is dit het verschil tussen "binnen 1 week geïndexeerd" en "binnen 4-6 weken".</p>
+        <div class="finding-rec">Genereer <code>sitemap.xml</code> met alle 8 URLs + <code>&lt;lastmod&gt;</code> + <code>&lt;changefreq&gt;</code>. Submit handmatig via Google Search Console.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Firecrawl-map detecteerde alleen homepage</h4>
+        <p>Bij een <code>firecrawl_map</code> op de root werd alleen de homepage gevonden. Dit duidt op zwakke interne discoverability — geen sitemap helpt, en de homepage links niet expliciet naar over-ons/blog/etc. via crawlbare anchor-tags (alleen via JS-getriggered #-anchors).</p>
+        <div class="finding-rec">Naast sitemap.xml: zorg dat de footer of een centrale plek expliciete links naar alle hoofdpagina's heeft (Sitemap-link, niet alleen JS-modal).</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">URL-strategie &amp; Canonical</div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>Duplicate URLs zonder canonical: <code>/</code> vs <code>/index.html</code></h4>
+        <p>Beide URL's renderen identieke content. Inner pages linken naar <code>/index.html</code>, homepage zelf wordt geserveerd op <code>/</code>. Voor Google = 2 pagina's met identieke inhoud → ranking-dilutie.</p>
+        <div class="finding-rec">Voeg op alle pagina's <code>&lt;link rel="canonical" href="https://www.stolksupport.nl/PAGE"&gt;</code> toe. Voor homepage: <code>https://www.stolksupport.nl/</code> (zonder index.html).</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>.html extensies in URLs (clean URLs werken niet)</h4>
+        <p>Vercel served standaard wel zonder .html, maar op productie geeft <code>/diensten/ai-oplossingen</code> (zonder .html) een 404. Suggereert handmatig static export zonder Vercel's clean-URLs feature aan.</p>
+        <div class="finding-rec">In <code>vercel.json</code>: voeg <code>"cleanUrls": true</code> toe. Of: maak .html versies redirects en gebruik clean URLs als canonical. Beslist VÓÓR live links binnenkomen (anders 301-keten nodig).</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Nav-link "Werk" wijst naar #blog ipv #portfolio</h4>
+        <p>Hoofdnav heeft <code>&lt;a href="/#blog"&gt;Werk&lt;/a&gt;</code> — maar Werk en Blog zijn verschillende dingen. Op /over-ons.html staat zelfs <code>#portfolio</code> als Werk-link, terwijl die anchor niet bestaat op de homepage.</p>
+        <div class="finding-rec">Beslis: bouw een echte portfolio-sectie op de homepage met de nieuwe portfolio-folder (in <code>Projecten/Stolksupport/portfolio/</code>), of haal "Werk" uit de nav. Inconsistente links zijn UX-doodlopers.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">Structured Data &amp; Rich Results</div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>0% schema.org dekking — geen enkele pagina heeft JSON-LD</h4>
+        <p>Geen <code>Organization</code>, geen <code>LocalBusiness</code>, geen <code>Service</code>, geen <code>BlogPosting</code>, geen <code>BreadcrumbList</code>, geen <code>WebSite</code>. Voor lead-gen via service-pagina's is dit een grote miss.</p>
+        <div class="finding-rec">Implementatie-volgorde: (1) Organization + WebSite + LocalBusiness op homepage. (2) Service-schema op 3 diensten. (3) BlogPosting op 3 blogs. (4) BreadcrumbList op alle subpagina's. Templates in tab "Technisch".</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>0% Open Graph dekking</h4>
+        <p>Geen og:title, og:description, og:image, og:type, og:url. LinkedIn/WhatsApp/Slack-shares tonen geen branded preview.</p>
+        <div class="finding-rec">Voeg per pagina set OG-tags toe. Genereer 1 default OG-image (1200×630, branded) als fallback voor alle pagina's; later vervang per pagina.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>0% Twitter Card dekking</h4>
+        <p>Geen <code>twitter:card</code> tags. Twitter/X-shares vallen terug op OG, maar zonder OG vallen ze ook daar terug op niets.</p>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">Internationale targeting</div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>JS-based NL/EN i18n zonder hreflang</h4>
+        <p>De site gebruikt <code>data-nl</code>/<code>data-en</code> attributes met JS-toggle. Google ziet alleen de initiële NL-render. Geen hreflang-tags = geen signaal van taal-targeting.</p>
+        <div class="finding-rec">Twee opties: (A) Voor NL-only focus: laat i18n aan client-side. (B) Voor EN-vindbaarheid: bouw aparte EN-pagina's onder <code>/en/</code> met server-rendered EN-content + hreflang-tags. Aanbeveling: nu (A), focus volledig op NL.</div>
+      </div>
+      <span class="badge badge-low">Laag</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 16px;">Security Headers (Vercel defaults aanwezig, custom missend)</div>
+    <div class="finding">
+      <div class="finding-status pass"></div>
+      <div class="finding-content">
+        <h4>HTTPS overal aanwezig + HSTS waarschijnlijk via Vercel</h4>
+        <p>Site werkt op HTTPS. Vercel-edge stuurt standaard HSTS. Niet expliciet gevalideerd in deze audit, maar verwacht aanwezig.</p>
+      </div>
+      <span class="badge badge-low">Laag</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Geen Content Security Policy (CSP)</h4>
+        <p>Geen CSP-header opgemerkt. Niet kritiek voor SEO, maar wel een security hardening miss.</p>
+        <div class="finding-rec">Optioneel: voeg CSP toe via Vercel headers config voor extra hardening. Niet SEO-prioriteit.</div>
+      </div>
+      <span class="badge badge-low">Laag</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB 4: TECHNISCH ==================== -->
+<div id="tab-technical" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Technische SEO Checklist</div>
+  <div class="section-subtitle">Implementatie-status van alle technische checks + ready-to-paste templates</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 20px;">Implementatie-status</div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">HTTPS overal actief</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Viewport meta tag op alle 8 pagina's</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">UTF-8 charset declared</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text"><code>&lt;html lang="nl"&gt;</code> consistent gezet</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Google Fonts via preconnect (performance hint)</div></div>
+    <div class="checklist-item"><div class="check-icon pass">✓</div><div class="check-text">Vercel-deploy: compressie automatisch, HTTP/2</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted"><strong>robots.txt</strong> — 404, niet aanwezig</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted"><strong>sitemap.xml</strong> — 404, niet aanwezig</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted"><strong>JSON-LD schema</strong> — 0% coverage</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted"><strong>Canonical tags</strong> — 0% coverage</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted"><strong>Open Graph tags</strong> — 0% coverage</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted"><strong>Twitter Cards</strong> — 0% coverage</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text muted"><strong>Breadcrumb markup</strong> — geen BreadcrumbList schema</div></div>
+    <div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text muted">Clean URLs niet aan (Vercel: <code>cleanUrls: true</code> ontbreekt)</div></div>
+    <div class="checklist-item"><div class="check-icon warn">!</div><div class="check-text muted">Geen image lazy-loading consistent toegepast (blog images wel, anderen niet getest)</div></div>
+  </div>
+
+  <!-- Schema templates -->
+  <div class="section-title" style="font-size: 18px; margin-top: 32px;">Schema-templates (ready to paste)</div>
+  <div class="section-subtitle">Plak per pagina in <code>&lt;head&gt;</code> binnen <code>&lt;script type="application/ld+json"&gt;</code></div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 12px;">1. Homepage — Organization + LocalBusiness + WebSite</div>
+    <pre style="background:#1a1a24; color:#a5a5c0; padding:20px; border-radius:8px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;">{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.stolksupport.nl/#organization",
+      "name": "Stolksupport",
+      "url": "https://www.stolksupport.nl/",
+      "logo": "https://www.stolksupport.nl/assets/logo.png",
+      "founder": { "@type": "Person", "name": "Peter Stolk" },
+      "foundingDate": "2026",
+      "sameAs": [
+        "https://www.linkedin.com/company/stolksupport"
+      ],
+      "description": "AI-automatisering en slimme systemen voor MKB."
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": "https://www.stolksupport.nl/#localbusiness",
+      "name": "Stolksupport",
+      "image": "https://www.stolksupport.nl/assets/og-default.jpg",
+      "telephone": "+31-XXX-XXXXXXX",
+      "email": "info@stolksupport.nl",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Amstelveen",
+        "addressRegion": "Noord-Holland",
+        "postalCode": "1181 XX",
+        "addressCountry": "NL"
+      },
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Randstad" },
+        { "@type": "Country", "name": "Nederland" }
+      ],
+      "priceRange": "€€€"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.stolksupport.nl/#website",
+      "url": "https://www.stolksupport.nl/",
+      "name": "Stolksupport",
+      "publisher": { "@id": "https://www.stolksupport.nl/#organization" },
+      "inLanguage": "nl-NL"
+    }
+  ]
+}</pre>
+    <p style="font-size:13px; color:var(--text-secondary); margin-top:12px;">Vul je telefoonnummer + exact adres in voor LocalBusiness. Zonder volledige NAP-data scoort de schema lager voor lokale queries.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 12px;">2. /diensten/ai-oplossingen — Service-schema</div>
+    <pre style="background:#1a1a24; color:#a5a5c0; padding:20px; border-radius:8px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;">{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "AI Automatisering voor MKB",
+  "provider": { "@id": "https://www.stolksupport.nl/#organization" },
+  "serviceType": "AI &amp; Workflow Automatisering",
+  "areaServed": { "@type": "Country", "name": "Nederland" },
+  "description": "Concrete AI-oplossingen: chatbots, n8n workflows, documentverwerking, AI-integraties op maat.",
+  "offers": {
+    "@type": "AggregateOffer",
+    "lowPrice": "1500",
+    "highPrice": "8000",
+    "priceCurrency": "EUR"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "AI Diensten",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Klantchatbot" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "E-mail automatisering" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Documentverwerking" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Workflow automatisering n8n" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "AI contentgeneratie" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Intern kennisdashboard" } }
+    ]
+  }
+}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 12px;">3. /blog/agentic-ai — BlogPosting</div>
+    <pre style="background:#1a1a24; color:#a5a5c0; padding:20px; border-radius:8px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "De opkomst van agentic AI",
+  "description": "Waarom autonome AI-agents de volgende stap zijn na chatbots.",
+  "image": "https://www.stolksupport.nl/assets/blog/agentic-ai-cover.jpg",
+  "datePublished": "2023-10-12",
+  "dateModified": "2026-05-23",
+  "author": {
+    "@type": "Person",
+    "name": "Peter Stolk",
+    "url": "https://www.stolksupport.nl/over-ons.html"
+  },
+  "publisher": { "@id": "https://www.stolksupport.nl/#organization" },
+  "mainEntityOfPage": "https://www.stolksupport.nl/blog/agentic-ai.html"
+}</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 12px;">4. robots.txt (ready-to-paste)</div>
+    <pre style="background:#1a1a24; color:#a5a5c0; padding:20px; border-radius:8px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;">User-agent: *
+Allow: /
+Disallow: /cms/
+Disallow: /seo/
+
+Sitemap: https://www.stolksupport.nl/sitemap.xml</pre>
+    <p style="font-size:13px; color:var(--text-secondary); margin-top:12px;">CMS- en SEO-portal blokken om te voorkomen dat admin-pagina's geïndexeerd worden.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 12px;">5. sitemap.xml (ready-to-paste)</div>
+    <pre style="background:#1a1a24; color:#a5a5c0; padding:20px; border-radius:8px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;weekly&lt;/changefreq&gt;
+    &lt;priority&gt;1.0&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/diensten/ai-oplossingen.html&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.9&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/diensten/strategie-advies.html&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.9&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/diensten/maatwerk-websites.html&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.7&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/over-ons.html&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.8&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/blog/agentic-ai.html&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.6&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/blog/premium-design.html&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.5&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://www.stolksupport.nl/blog/gsap-vs-css.html&lt;/loc&gt;
+    &lt;lastmod&gt;2026-05-23&lt;/lastmod&gt;
+    &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+    &lt;priority&gt;0.5&lt;/priority&gt;
+  &lt;/url&gt;
+&lt;/urlset&gt;</pre>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom: 12px;">6. Open Graph + Twitter (per pagina)</div>
+    <pre style="background:#1a1a24; color:#a5a5c0; padding:20px; border-radius:8px; overflow-x:auto; font-family:'JetBrains Mono',monospace; font-size:12px; line-height:1.6;">&lt;!-- Open Graph --&gt;
+&lt;meta property="og:type" content="website"&gt;
+&lt;meta property="og:url" content="https://www.stolksupport.nl/"&gt;
+&lt;meta property="og:title" content="Stolksupport — Automatiseer wat jou afremt."&gt;
+&lt;meta property="og:description" content="AI-automatisering voor MKB. Chatbots, workflows, integraties."&gt;
+&lt;meta property="og:image" content="https://www.stolksupport.nl/assets/og-default.jpg"&gt;
+&lt;meta property="og:locale" content="nl_NL"&gt;
+&lt;meta property="og:site_name" content="Stolksupport"&gt;
+
+&lt;!-- Twitter Card --&gt;
+&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:title" content="Stolksupport — Automatiseer wat jou afremt."&gt;
+&lt;meta name="twitter:description" content="AI-automatisering voor MKB."&gt;
+&lt;meta name="twitter:image" content="https://www.stolksupport.nl/assets/og-default.jpg"&gt;
+
+&lt;!-- Canonical --&gt;
+&lt;link rel="canonical" href="https://www.stolksupport.nl/"&gt;</pre>
+    <p style="font-size:13px; color:var(--text-secondary); margin-top:12px;">Genereer <code>og-default.jpg</code> (1200×630) als branded fallback. Optioneel per pagina overschrijven.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB 5: CONTENT &amp; KEYWORDS ==================== -->
+<div id="tab-content" class="tab-content">
+<div class="container">
+
+  <div class="reviewbox">
+    <span class="reviewbox-label">Voor jouw review</span>
+    <h4>Keyword-suggesties (jij koos "analyseer en stel voor")</h4>
+    <p>Onderstaande target keywords zijn afgeleid van de huidige sitecontent + competitor-onderzoek (ploko.nl, denkbot.nl, hulpstation.nl, timmermansmedia.nl). Geen vastgestelde targets — beoordeel of ze passen bij jouw lead-gen prioriteit voor de Randstad, en pas aan waar nodig voordat je content gaat optimaliseren.</p>
+  </div>
+
+  <div class="section-title">Voorgestelde primaire keywords</div>
+  <div class="section-subtitle">3-5 hoofd-keywords gericht op lead-gen voor mkb in de Randstad</div>
+
+  <div class="card" style="overflow-x:auto; padding:0; margin-bottom:24px;">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Prioriteit</th>
+          <th>Keyword (suggestie)</th>
+          <th>Intent</th>
+          <th>Doelpagina</th>
+          <th>Concurrentie NL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-critical">P1</span></td>
+          <td><strong>AI automatisering MKB</strong></td>
+          <td>Commerciële intentie</td>
+          <td><span class="page-url">/diensten/ai-oplossingen.html</span></td>
+          <td>Medium-hoog (ploko, denkbot, hulpstation ranken)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-critical">P1</span></td>
+          <td><strong>AI chatbot laten bouwen</strong></td>
+          <td>Transactioneel</td>
+          <td><span class="page-url">/diensten/ai-oplossingen.html</span></td>
+          <td>Medium</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-high">P2</span></td>
+          <td><strong>n8n workflow automatisering Nederland</strong></td>
+          <td>Tool-specifiek, hoge intent</td>
+          <td><span class="page-url">/diensten/ai-oplossingen.html</span></td>
+          <td>Laag-medium (kans!)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-high">P2</span></td>
+          <td><strong>AI integratie bedrijf Randstad</strong></td>
+          <td>Lokale commercie</td>
+          <td><span class="page-url">/</span> (homepage)</td>
+          <td>Laag (kans!)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-medium">P3</span></td>
+          <td><strong>workflow automatisering mkb</strong></td>
+          <td>Commercieel</td>
+          <td><span class="page-url">/diensten/ai-oplossingen.html</span></td>
+          <td>Medium</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-medium">P3</span></td>
+          <td><strong>AI strategie advies</strong></td>
+          <td>Advisory commercie</td>
+          <td><span class="page-url">/diensten/strategie-advies.html</span></td>
+          <td>Medium</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-low">P4</span></td>
+          <td><strong>AI agents Nederland</strong></td>
+          <td>Informational → commercieel</td>
+          <td><span class="page-url">/blog/agentic-ai.html</span></td>
+          <td>Laag (top-of-funnel)</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-low">P4</span></td>
+          <td><strong>document AI verwerking factuur</strong></td>
+          <td>Hoge intent, niche</td>
+          <td><span class="page-url">/diensten/ai-oplossingen.html</span></td>
+          <td>Laag (kans!)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title" style="font-size:18px;">LSI / Semantische Keywords</div>
+  <div class="section-subtitle">Termen die op alle hoofdpagina's vaker moeten voorkomen om topical authority op te bouwen. Groen = al aanwezig, rood = ontbreekt of marginal.</div>
+
+  <h4 style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:24px; margin-bottom:8px;">Proces &amp; Technische termen</h4>
+  <div class="lsi-cloud">
+    <span class="lsi-tag integrated">chatbot</span>
+    <span class="lsi-tag integrated">workflow</span>
+    <span class="lsi-tag integrated">n8n</span>
+    <span class="lsi-tag integrated">Make</span>
+    <span class="lsi-tag integrated">automatisering</span>
+    <span class="lsi-tag integrated">API-integratie</span>
+    <span class="lsi-tag integrated">Claude API</span>
+    <span class="lsi-tag integrated">AI-agent</span>
+    <span class="lsi-tag missing">Zapier</span>
+    <span class="lsi-tag missing">RPA</span>
+    <span class="lsi-tag missing">webhook</span>
+    <span class="lsi-tag missing">MCP-server</span>
+    <span class="lsi-tag missing">prompt engineering</span>
+    <span class="lsi-tag missing">vector database</span>
+    <span class="lsi-tag missing">RAG</span>
+    <span class="lsi-tag missing">fine-tuning</span>
+  </div>
+
+  <h4 style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:24px; margin-bottom:8px;">Kosten &amp; ROI</h4>
+  <div class="lsi-cloud">
+    <span class="lsi-tag integrated">€1.500</span>
+    <span class="lsi-tag integrated">prijs</span>
+    <span class="lsi-tag integrated">ROI</span>
+    <span class="lsi-tag integrated">besparing</span>
+    <span class="lsi-tag integrated">kosten</span>
+    <span class="lsi-tag missing">tijdsbesparing</span>
+    <span class="lsi-tag missing">terugverdientijd</span>
+    <span class="lsi-tag missing">prijsindicatie</span>
+    <span class="lsi-tag missing">eenmalig vs abonnement</span>
+    <span class="lsi-tag missing">API-kosten Claude</span>
+  </div>
+
+  <h4 style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:24px; margin-bottom:8px;">Trust &amp; Kwaliteit</h4>
+  <div class="lsi-cloud">
+    <span class="lsi-tag integrated">aantoonbaar</span>
+    <span class="lsi-tag integrated">transparant</span>
+    <span class="lsi-tag integrated">maatwerk</span>
+    <span class="lsi-tag integrated">sinds 2016</span>
+    <span class="lsi-tag missing">case study</span>
+    <span class="lsi-tag missing">klantcase</span>
+    <span class="lsi-tag missing">testimonial</span>
+    <span class="lsi-tag missing">portfolio</span>
+    <span class="lsi-tag missing">referenties</span>
+    <span class="lsi-tag missing">KvK-geregistreerd</span>
+    <span class="lsi-tag missing">btw-nummer</span>
+    <span class="lsi-tag missing">privacyverklaring</span>
+    <span class="lsi-tag missing">AVG-compliant</span>
+  </div>
+
+  <h4 style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:24px; margin-bottom:8px;">Probleem &amp; Pijnpunt</h4>
+  <div class="lsi-cloud">
+    <span class="lsi-tag integrated">handmatig werk</span>
+    <span class="lsi-tag integrated">repetitief</span>
+    <span class="lsi-tag integrated">knelpunt</span>
+    <span class="lsi-tag integrated">tijdrovend</span>
+    <span class="lsi-tag integrated">foutgevoelig</span>
+    <span class="lsi-tag missing">backoffice</span>
+    <span class="lsi-tag missing">administratieve last</span>
+    <span class="lsi-tag missing">datasilo</span>
+    <span class="lsi-tag missing">leadleak</span>
+  </div>
+
+  <h4 style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:24px; margin-bottom:8px;">Locatie (Randstad-focus)</h4>
+  <div class="lsi-cloud">
+    <span class="lsi-tag integrated">Randstad</span>
+    <span class="lsi-tag missing">Amsterdam</span>
+    <span class="lsi-tag missing">Amstelveen</span>
+    <span class="lsi-tag missing">Utrecht</span>
+    <span class="lsi-tag missing">Haarlem</span>
+    <span class="lsi-tag missing">Hoofddorp</span>
+    <span class="lsi-tag missing">Almere</span>
+    <span class="lsi-tag missing">Den Haag</span>
+    <span class="lsi-tag missing">Schiphol-regio</span>
+    <span class="lsi-tag missing">Nederland</span>
+    <span class="lsi-tag missing">Noord-Holland</span>
+  </div>
+
+  <h4 style="font-size:13px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:24px; margin-bottom:8px;">MKB / Sector-termen</h4>
+  <div class="lsi-cloud">
+    <span class="lsi-tag missing">MKB</span>
+    <span class="lsi-tag missing">midden- en kleinbedrijf</span>
+    <span class="lsi-tag missing">zzp</span>
+    <span class="lsi-tag missing">accountant</span>
+    <span class="lsi-tag missing">advocaat</span>
+    <span class="lsi-tag missing">makelaar</span>
+    <span class="lsi-tag missing">e-commerce</span>
+    <span class="lsi-tag missing">B2B SaaS</span>
+    <span class="lsi-tag missing">consultancy</span>
+    <span class="lsi-tag missing">marketingbureau</span>
+  </div>
+
+  <div class="reviewbox" style="margin-top:32px;">
+    <span class="reviewbox-label">Belangrijke observatie</span>
+    <h4>"MKB" komt slechts 1× voor op de site, "Randstad" ook</h4>
+    <p>Voor lead-gen op MKB-keywords moet "mkb" of "midden- en kleinbedrijf" minimaal 3-5× voorkomen op de homepage + service-pagina's. Voor lokale Randstad-targeting moet je minimaal 2-3 plaatsen noemen (Amsterdam, Amstelveen, Utrecht) als "werkbereik". Deze termen integreren in bestaande tekst is 30 minuten werk en levert meteen breder ranking-potentieel op.</p>
+  </div>
+
+  <div class="section-title" style="font-size:18px; margin-top:32px;">Voorgestelde Content Clusters (Pillar/Cluster)</div>
+  <div class="section-subtitle">Hoe huidige pagina's hergroepen voor topical authority</div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 1 — AI Automatisering (PILLAR)</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/diensten/ai-oplossingen.html (Pillar)</span>
+      <span class="cluster-page">/blog/agentic-ai.html (supporting)</span>
+      <span class="cluster-page">+ NIEUW: /blog/zapier-vs-make-vs-n8n (gap)</span>
+      <span class="cluster-page">+ NIEUW: /blog/wat-kost-een-ai-chatbot (gap)</span>
+      <span class="cluster-page">+ NIEUW: /blog/factuurverwerking-ai (gap)</span>
+    </div>
+  </div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 2 — Digitale Strategie</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/diensten/strategie-advies.html (Pillar)</span>
+      <span class="cluster-page">+ NIEUW: /blog/ai-roadmap-mkb (gap)</span>
+      <span class="cluster-page">+ NIEUW: /blog/tech-stack-keuzes-2026 (gap)</span>
+    </div>
+  </div>
+
+  <div class="cluster">
+    <div class="cluster-title">Cluster 3 — Premium Design (gedeeltelijk overlap met Stolkwebdesign)</div>
+    <div class="cluster-pages">
+      <span class="cluster-page pillar">/diensten/maatwerk-websites.html (Pillar)</span>
+      <span class="cluster-page">/blog/premium-design.html</span>
+      <span class="cluster-page">/blog/gsap-vs-css.html</span>
+    </div>
+  </div>
+
+  <div class="reviewbox" style="margin-top:24px;">
+    <span class="reviewbox-label">Strategische keuze</span>
+    <h4>Wil je Cluster 3 hier of op Stolkwebdesign?</h4>
+    <p>Premium design + GSAP-content overlapt thematisch met Stolkwebdesign. Voor topical authority op Stolksupport (= AI focus) zou je Cluster 3 mogelijk beter naar Stolkwebdesign.nl verhuizen (met 301-redirects). Dat versterkt beide brands. Beslis voordat je nieuwe content schrijft.</p>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB 6: INTERNE LINKING ==================== -->
+<div id="tab-linking" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Interne Linking Analyse</div>
+  <div class="section-subtitle">Hoe link-equity wordt verdeeld over de 8 pagina's</div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-value">~32</div>
+      <div class="stat-label">Totaal interne links</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Orphan pages</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Dead-end pages</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">4</div>
+      <div class="stat-label">Gem. links per pagina</div>
+    </div>
+  </div>
+
+  <div class="card" style="overflow-x:auto; padding:0; margin-bottom:24px;">
+    <table class="page-table">
+      <thead>
+        <tr>
+          <th>Pagina</th>
+          <th>Inkomende links</th>
+          <th>Uitgaande interne links</th>
+          <th>Externe links</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="page-url">/</span></td>
+          <td>7 (alle inner pagina's linken terug)</td>
+          <td>9</td>
+          <td>2 (LinkedIn, Stolkwebdesign)</td>
+          <td><span class="badge badge-pass">Hub</span></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/over-ons.html</span></td>
+          <td>5 (homepage + 3 dienstpages + sub-nav)</td>
+          <td>4 (allemaal naar homepage anchors of dienst-subnav)</td>
+          <td>2</td>
+          <td><span class="badge badge-pass">Gezond</span></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/diensten/ai-oplossingen.html</span></td>
+          <td>5 (homepage + 2 sister-diensten + others)</td>
+          <td>6 (homepage anchors + sister-diensten)</td>
+          <td>1</td>
+          <td><span class="badge badge-pass">Gezond</span></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/diensten/strategie-advies.html</span></td>
+          <td>4</td>
+          <td>6</td>
+          <td>1</td>
+          <td><span class="badge badge-pass">Gezond</span></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/diensten/maatwerk-websites.html</span></td>
+          <td>4</td>
+          <td>6</td>
+          <td>2 (stolkwebdesign 2×)</td>
+          <td><span class="badge badge-pass">Gezond</span></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/blog/agentic-ai.html</span></td>
+          <td>1 (alleen vanaf homepage)</td>
+          <td>1 (alleen #contact)</td>
+          <td>1</td>
+          <td><span class="badge badge-fail">Dead-end</span></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/blog/premium-design.html</span></td>
+          <td>1 (alleen vanaf homepage)</td>
+          <td>0</td>
+          <td>0</td>
+          <td><span class="badge badge-fail">Dead-end</span></td>
+        </tr>
+        <tr>
+          <td><span class="page-url">/blog/gsap-vs-css.html</span></td>
+          <td>1 (alleen vanaf homepage)</td>
+          <td>1 (alleen #contact)</td>
+          <td>0</td>
+          <td><span class="badge badge-fail">Dead-end</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px;">Dead-end pagina's: de 3 blog posts</div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>Blog posts hebben geen interne uitgaande links naar service-pagina's</h4>
+        <p>Alle 3 blog posts ontvangen alleen 1 inkomende link (vanaf de homepage blog-card), en sturen alleen door naar <code>#contact</code> op de homepage. Geen contextuele links naar de relevante dienst-pagina.</p>
+        <div class="finding-rec"><strong>Gemiste lead-gen kans.</strong> Een lezer van "agentic-ai" is exact je doelgroep voor /diensten/ai-oplossingen. Voeg 2-3 contextuele anchor-text links toe per blog naar de relevante service-pagina.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px;">Suggested Internal Links (concreet)</div>
+    <div class="action-item">
+      <div class="action-number">1</div>
+      <div class="action-content">
+        <div class="action-title">/blog/agentic-ai → /diensten/ai-oplossingen.html (3×)</div>
+        <div class="action-desc">Bij de zin "Leadkwalificatie-agent: Een potentiële klant vult een formulier in..." → link "Leadkwalificatie-agent" naar #klantchatbot card op AI Oplossingen. Bij "Inkoopverwerking-agent" → link naar #documentverwerking. Bij "Klantenservice-agent" → link naar /diensten/ai-oplossingen.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">2</div>
+      <div class="action-content">
+        <div class="action-title">/blog/premium-design → /diensten/strategie-advies (1×)</div>
+        <div class="action-desc">Bij "Wat 'premium' concreet betekent" → contextueel verwijzen naar de website-audit-dienst (€1.200) op /diensten/strategie-advies.html.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">3</div>
+      <div class="action-content">
+        <div class="action-title">/diensten/ai-oplossingen → /blog/agentic-ai (1×)</div>
+        <div class="action-desc">Bij het kopje "Wat ik concreet bouw" → een "Lees meer over hoe AI-agents werken →" link naar /blog/agentic-ai.html. Geeft diepgang en signaal aan Google dat deze pagina topical depth heeft.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">4</div>
+      <div class="action-content">
+        <div class="action-title">Footer-sitemap toevoegen</div>
+        <div class="action-desc">Voeg een tertiaire footer-rij toe met expliciete links naar alle 8 pagina's. Verbetert crawl-discovery en geeft elke pagina een baseline inkomende link.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">5</div>
+      <div class="action-content">
+        <div class="action-title">"Verwante posts" sectie onderaan blog</div>
+        <div class="action-desc">Elke blog post eindigt nu zonder verwante content. Voeg een statische "Verwante artikelen" sectie toe met 2 andere blog-cards. Verhoogt session-duration en pages/session.</div>
+      </div>
+      <span class="badge badge-low">Laag</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB 7: LOKALE SEO ==================== -->
+<div id="tab-local" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Lokale SEO — Randstad Focus</div>
+  <div class="section-subtitle">Specifieke analyse op basis van jouw keuze "NL — Randstad / lokaal"</div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px;">Huidige status</div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>Geen LocalBusiness schema</h4>
+        <p>Cruciaal signaal voor lokale queries ontbreekt. Zonder LocalBusiness-markup wordt Stolksupport niet getoond bij "AI bedrijf Amstelveen" of "AI consultant Randstad".</p>
+        <div class="finding-rec">Implementeer LocalBusiness JSON-LD (template in tab "Technisch") met exact adres, postcode, openingstijden, areaServed.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>NAP-data (Name/Address/Phone) ontbreekt</h4>
+        <p>Naam: ✓ (Stolksupport). Adres: ✗ (geen). Telefoon: ✗ (geen). Alleen e-mailadres in footer. Voor lokale SEO is consistente NAP-data op alle pagina's essentieel.</p>
+        <div class="finding-rec">Voeg een footer-NAP-blok toe: bedrijfsnaam + adres + telefoon + KvK + btw. Identiek op elke pagina. Liefst gestructureerd als <code>&lt;address&gt;</code> element.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>"Randstad" 1× vermeld, geen specifieke gemeente</h4>
+        <p>"Peter Stolk is developer en digitaal strateeg, gevestigd in de Randstad" — staat alleen op /over-ons.html. Geen exacte locatie genoemd.</p>
+        <div class="finding-rec">Vervang/aanvul naar bijvoorbeeld: "Gevestigd in Amstelveen, werkbereik heel de Randstad — Amsterdam, Utrecht, Den Haag." Levert 4-5 lokatie-keywords op één plek.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status fail"></div>
+      <div class="finding-content">
+        <h4>Geen Google Business Profile-vermelding</h4>
+        <p>Geen embedded Google Maps. Geen "Bekijk ons op Google" link.</p>
+        <div class="finding-rec">Maak een Google Business Profile aan voor "Stolksupport" (categorie: Software Company / IT Consultant). Plaats op /over-ons of /contact een embedded Map + reviews-widget. Direct lokaal trust-signaal.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="finding">
+      <div class="finding-status warning"></div>
+      <div class="finding-content">
+        <h4>Geen aparte contact-pagina (alleen #contact anchor)</h4>
+        <p>Een dedicated <code>/contact.html</code> is voor lokale SEO de juiste plek voor LocalBusiness-schema + adres + map + openingstijden. Een anchor op homepage doet die rol minder goed.</p>
+        <div class="finding-rec">Bouw <code>/contact.html</code> met (a) NAP, (b) embedded Google Map, (c) LocalBusiness schema, (d) reactie-tijd statement, (e) zelfde formulier als homepage.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px;">Lokale Lead-Gen Opportunities</div>
+    <div class="action-item">
+      <div class="action-number">1</div>
+      <div class="action-content">
+        <div class="action-title">Bouw 3 locatie-pagina's voor de Randstad</div>
+        <div class="action-desc">Maak <code>/regio/amsterdam.html</code>, <code>/regio/amstelveen.html</code>, <code>/regio/utrecht.html</code>. Per pagina: lokale variant van AI Oplossingen content + lokale referenties + LocalBusiness met areaServed=stad. Pak laaghangend fruit voor "AI bedrijf [stad]" queries.</div>
+        <div class="action-impact">Verwachte impact: 3 extra ranking-doelen voor lokale queries, schaalt naar andere steden.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">2</div>
+      <div class="action-content">
+        <div class="action-title">Vraag 5 lokale klanten om Google review</div>
+        <div class="action-desc">Lokaal SEO leeft op reviews. Vraag 5 huidige klanten (incl. Stolkwebdesign-klanten in de Randstad) om een korte Google review op het profiel van Stolksupport.</div>
+        <div class="action-impact">Reviews zijn de #1 ranking-factor voor Google Maps / lokaal pack. 5+ reviews = top-3 zichtbaarheid in lokaal pack mogelijk.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">3</div>
+      <div class="action-content">
+        <div class="action-title">Lokale directories: KvK, FreelanceMap, OpenForBusiness</div>
+        <div class="action-desc">Submit Stolksupport bij relevante NL-directories (KvK is automatisch, plus: nlondernemen.nl, openforbusiness.nl, eventueel branche-specifiek). Levert lokale backlinks + NAP-citations.</div>
+        <div class="action-impact">5-10 backlinks van NL-directories versterken lokale relevantie-signaal.</div>
+      </div>
+      <span class="badge badge-low">Laag</span>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ==================== TAB 8: ACTIEPLAN ==================== -->
+<div id="tab-actions" class="tab-content">
+<div class="container">
+
+  <div class="section-title">Geprioriteerd Actieplan</div>
+  <div class="section-subtitle">Alle aanbevelingen gerangschikt op impact, gegroepeerd op effort</div>
+
+  <div class="reviewbox">
+    <span class="reviewbox-label">Lees dit eerst</span>
+    <h4>Service-pagina lead-gen acties krijgen extra weging</h4>
+    <p>Je primaire SEO-doel is lead-gen op de 3 diensten-pagina's. Actiepunten die /diensten/ai-oplossingen, /strategie-advies en (eventueel) /maatwerk-websites direct sterker maken zijn vetgedrukt in onderstaande lijst — die eerst aanpakken.</p>
+  </div>
+
+  <div class="section-title" style="font-size:18px; color: var(--green);">Quick Wins <span style="font-size:14px; color: var(--text-muted); font-weight:400;">— minder dan 1 uur per stuk</span></div>
+  <div style="margin-bottom:24px;">
+    <div class="action-item">
+      <div class="action-number">1</div>
+      <div class="action-content">
+        <div class="action-title">Maak robots.txt (paste-and-go)</div>
+        <div class="action-desc">Plaats <code>robots.txt</code> in <code>site/</code> met sitemap-referentie. Template staat in tab "Technisch".</div>
+        <div class="action-impact">5 minuten. Direct effect na deploy.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">2</div>
+      <div class="action-content">
+        <div class="action-title">Maak sitemap.xml (paste-and-go)</div>
+        <div class="action-desc">Plaats <code>sitemap.xml</code> in <code>site/</code>. Submit handmatig via Google Search Console na deploy.</div>
+        <div class="action-impact">10 minuten. Versnelt indexering van 4-6 weken naar 1-2 weken.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">3</div>
+      <div class="action-content">
+        <div class="action-title">Voeg canonical-tag toe op alle 8 pagina's</div>
+        <div class="action-desc">Eén regel per pagina: <code>&lt;link rel="canonical" href="https://www.stolksupport.nl/PAGE"&gt;</code>. Lost <code>/</code> vs <code>/index.html</code> duplicaat-probleem op.</div>
+        <div class="action-impact">15 minuten voor alle 8.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">4</div>
+      <div class="action-content">
+        <div class="action-title">Fix gebroken logo-link (#)</div>
+        <div class="action-desc">Wijzig homepage logo <code>href="/#"</code> naar <code>href="/"</code>.</div>
+        <div class="action-impact">1 minuut.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">5</div>
+      <div class="action-content">
+        <div class="action-title">Update title /diensten/ai-oplossingen.html (PRIO)</div>
+        <div class="action-desc">Wijzig <code>&lt;title&gt;AI Oplossingen — Stolksupport&lt;/title&gt;</code> naar <code>&lt;title&gt;AI Oplossingen voor MKB — Chatbots, Workflows &amp; Integraties | Stolksupport&lt;/title&gt;</code>.</div>
+        <div class="action-impact">2 minuten. Eerste keyword-uplift voor #1 lead-gen pagina.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">6</div>
+      <div class="action-content">
+        <div class="action-title">Update titles van andere subpagina's</div>
+        <div class="action-desc">Strategie: "Strategie &amp; Advies AI / Digitaal — Stolksupport". Maatwerk: "Maatwerk Websites: Stolkwebdesign — Stolksupport". Over: "Over Stolksupport — Peter Stolk, AI-Integrator Randstad".</div>
+        <div class="action-impact">10 minuten.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">7</div>
+      <div class="action-content">
+        <div class="action-title">Voeg 3 LSI-termen toe aan homepage hero/intro</div>
+        <div class="action-desc">"MKB", "Randstad", "Amstelveen" (of jouw exacte locatie). Niet forceren — verweven in bestaande tekst. Bv. "AI-automatisering voor MKB-bedrijven in de Randstad."</div>
+        <div class="action-impact">15 minuten. Directe lokale + MKB-signalering.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">8</div>
+      <div class="action-content">
+        <div class="action-title">Voeg NAP-blok toe aan footer</div>
+        <div class="action-desc">Bedrijfsnaam + adres + telefoon + KvK + btw — gestructureerd in <code>&lt;address&gt;</code>. Consistent op alle 8 pagina's.</div>
+        <div class="action-impact">30 minuten (en NAP-data verzamelen).</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px; color: var(--orange);">High Impact <span style="font-size:14px; color: var(--text-muted); font-weight:400;">— 1-4 uur per stuk</span></div>
+  <div style="margin-bottom:24px;">
+    <div class="action-item">
+      <div class="action-number">9</div>
+      <div class="action-content">
+        <div class="action-title">Implementeer JSON-LD schema (Organization + LocalBusiness + Service + BlogPosting)</div>
+        <div class="action-desc">Plak templates uit tab "Technisch" in de <code>&lt;head&gt;</code> van elke relevante pagina. Vul met echte data. Test met Google Rich Results Test.</div>
+        <div class="action-impact">2-3 uur totaal. Belangrijkste single SEO-impact in deze audit.</div>
+      </div>
+      <span class="badge badge-critical">Kritiek</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">10</div>
+      <div class="action-content">
+        <div class="action-title">Voeg OG-tags + Twitter Cards toe (alle 8 pagina's)</div>
+        <div class="action-desc">Genereer default OG-image (1200×630, branded) via /img skill. Plak OG-template (zie Technisch) in elke <code>&lt;head&gt;</code>. Per pagina overschrijven met specifieke title/description/image.</div>
+        <div class="action-impact">2 uur totaal. Direct effect op LinkedIn/WhatsApp/X-shares.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">11</div>
+      <div class="action-content">
+        <div class="action-title">Vervang picsum-placeholders door echte blog-covers</div>
+        <div class="action-desc">Genereer via /img skill 3 thematische covers (AI agents, premium design, GSAP code). Plaats in <code>/assets/blog/</code>. Update <code>&lt;img src&gt;</code> in homepage en blog posts.</div>
+        <div class="action-impact">1 uur. ~€0.66 OpenRouter-kosten. Verwijdert "onafgemaakte site"-indruk.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">12</div>
+      <div class="action-content">
+        <div class="action-title">Voeg interne links toe (blog → service-pagina's, service → blog)</div>
+        <div class="action-desc">Concrete suggesties in tab "Interne Linking" (5 specifieke links benoemd). Lift dead-end blog-pagina's en versterkt service-pagina autoriteit.</div>
+        <div class="action-impact">1 uur. Directe lead-gen funnel-versterking.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">13</div>
+      <div class="action-content">
+        <div class="action-title">Bouw aparte /contact.html pagina</div>
+        <div class="action-desc">Dedicated contact-pagina met NAP, embedded map, LocalBusiness-schema, formulier. Vervangt #contact-anchor als primaire CTA-bestemming op subpagina's.</div>
+        <div class="action-impact">3-4 uur (incl. design + map embed). Verhoogt conversie van service-pagina CTA's.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">14</div>
+      <div class="action-content">
+        <div class="action-title">Update blog-data + dateModified</div>
+        <div class="action-desc">Herzie 3 blog posts naar 2026-context (Claude 4.X-tijdperk, recent agent-frameworks). Voeg "Bijgewerkt op 2026-05-XX" toe. Schrijf eerlijk wat is veranderd sinds 2023.</div>
+        <div class="action-impact">2-3 uur. Freshness-signaal naar Google + bezoekers.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">15</div>
+      <div class="action-content">
+        <div class="action-title">Maak Google Business Profile aan</div>
+        <div class="action-desc">Verifieer bedrijf via Google (postcard of telefoon). Vul categorie (Software Company), foto's, openingstijden, USP's. Vraag eerste 3 reviews.</div>
+        <div class="action-impact">1 uur initial + 1-2 weken verificatie. Lokaal pack eligibility.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px; color: var(--purple);">Strategische Initiatieven <span style="font-size:14px; color: var(--text-muted); font-weight:400;">— doorlopend, 3-6 maanden</span></div>
+  <div style="margin-bottom:24px;">
+    <div class="action-item">
+      <div class="action-number">16</div>
+      <div class="action-content">
+        <div class="action-title">Maandelijks 1 long-form blog post (cluster-strategie)</div>
+        <div class="action-desc">Schrijf voor AI Oplossingen cluster: "Zapier vs Make vs n8n: welke kiezen?", "Wat kost een AI-chatbot in 2026?", "Factuurverwerking met AI: stappenplan". Voor Strategie-cluster: "AI roadmap voor MKB", "Tech-stack keuzes 2026". Topical depth bouwt rankings.</div>
+        <div class="action-impact">3-6 uur per post. Na 6 posts: meetbare authority op AI-keywords NL.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">17</div>
+      <div class="action-content">
+        <div class="action-title">Bouw portfolio-sectie met cases</div>
+        <div class="action-desc">De nav linkt naar /portfolio dat niet bestaat. Bouw eerst 3 anonieme case studies ("Hoe een Amsterdamse accountant 12u/week bespaarde met AI-factuurverwerking"). Voeg toe als sectie op homepage of als losse <code>/portfolio.html</code>.</div>
+        <div class="action-impact">Per case ~4-6 uur (incl. interview/data). Trust-multiplier + bevestigt nav-link.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">18</div>
+      <div class="action-content">
+        <div class="action-title">Lokale locatie-pagina's (Amsterdam, Amstelveen, Utrecht)</div>
+        <div class="action-desc">Bouw <code>/regio/[stad].html</code> per Randstad-stad met lokale variant van AI Oplossingen content + LocalBusiness areaServed. Pak laaghangend fruit voor "AI bedrijf [stad]" queries.</div>
+        <div class="action-impact">3-4 uur per stad. Schaalt naar andere regio's later.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">19</div>
+      <div class="action-content">
+        <div class="action-title">Beslis: Cluster 3 (Design) op Stolksupport of verplaatsen naar Stolkwebdesign?</div>
+        <div class="action-desc">/diensten/maatwerk-websites + /blog/premium-design + /blog/gsap-vs-css zitten thematisch dichter bij Stolkwebdesign. Verhuizen versterkt topical authority op beide sites. Beslis strategisch.</div>
+        <div class="action-impact">Eenmalig 2 uur denkwerk + 1 uur per pagina voor 301-redirects.</div>
+      </div>
+      <span class="badge badge-medium">Medium</span>
+    </div>
+    <div class="action-item">
+      <div class="action-number">20</div>
+      <div class="action-content">
+        <div class="action-title">Koppel Google Search Console + Plausible/GA4</div>
+        <div class="action-desc">Verifieer domain in GSC. Monitor: indexering, queries, CTR. Plus analytics (Plausible aanbevolen, GDPR-vriendelijk).</div>
+        <div class="action-impact">30 minuten setup. Geeft data voor toekomstige audits.</div>
+      </div>
+      <span class="badge badge-high">Hoog</span>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:18px; margin-top:32px;">Volledige Implementatie-Checklist</div>
+  <div class="section-subtitle">Alle 20 acties als checkbare lijst</div>
+  <div class="card">
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Maak <strong>robots.txt</strong> + plaats in site root</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Maak <strong>sitemap.xml</strong> + submit via Google Search Console</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Voeg <strong>canonical-tags</strong> toe op alle 8 pagina's</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Fix logo-link op homepage (<code>/#</code> → <code>/</code>)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Update title /diensten/ai-oplossingen.html</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Update titles van overige subpagina's</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Voeg "MKB", "Randstad", "Amstelveen" toe aan homepage hero/intro</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Voeg NAP-blok toe in footer</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Implementeer JSON-LD schema (Organization + LocalBusiness + Service + BlogPosting)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Voeg OG + Twitter Cards toe + default OG-image genereren</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Vervang picsum-placeholders door echte blog-covers (via /img)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Voeg 5 interne links toe (blog → service, service → blog) per suggestie</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Bouw <code>/contact.html</code> als aparte pagina</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Update blog-data + dateModified naar 2026</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Maak Google Business Profile aan + verifieer</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Plan maandelijkse blog post-frequentie (cluster-strategie)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Bouw portfolio-sectie of <code>/portfolio.html</code> met 3 cases</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Maak 3 lokale regio-pagina's (Amsterdam, Amstelveen, Utrecht)</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Beslis cluster 3 (Design) — hier of naar Stolkwebdesign</div></div>
+    <div class="checklist-item"><div class="check-icon fail">✗</div><div class="check-text">Koppel Google Search Console + analytics-tool</div></div>
+  </div>
+
+  <div class="reviewbox" style="margin-top:32px;">
+    <span class="reviewbox-label">Verwachte score-uplift</span>
+    <h4>Van 59 (D) naar 75-80 (B) na quick wins + high impact-acties</h4>
+    <p>Na acties 1-15 (één werkweek werk) verwachten we Technical-score 45→75, Social/Schema-score 5→85, en daarmee overall 59→78. Volledige B-grade is haalbaar binnen 4-6 weken. Voor A-grade (85+): vereist consistent maandelijks content + 3-6 maanden ranking-tijd.</p>
+  </div>
+
+</div>
+</div>
+
+<script>
+function switchTab(tabId, event) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  if (event && event.target) {
+    event.target.closest('.tab-btn').classList.add('active');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>

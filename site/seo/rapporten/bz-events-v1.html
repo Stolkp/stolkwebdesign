@@ -29,13 +29,6 @@
   --near-black: #0A0A0A;
   --bone:       #F5F5F5;
   --muted:      #767676;
-  --green:      #16a34a;
-  --green-bg:   #f0fdf4;
-  --yellow:     #ca8a04;
-  --yellow-bg:  #fefce8;
-  --orange:     #ea580c;
-  --orange-bg:  #fff7ed;
-  --red-bg:     #fef2f2;
 }
 
 html { scroll-behavior: smooth; }
@@ -53,742 +46,630 @@ body {
 ::-webkit-scrollbar-track { background: var(--bone); }
 ::-webkit-scrollbar-thumb { background: var(--black); }
 
-.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
-
-/* ── Header ── */
-.site-header {
+/* ── Nav ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
   background: var(--black);
-  color: var(--white);
-  padding: 20px 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  border-bottom: 3px solid var(--red);
+  border-bottom: 2px solid var(--red);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 48px;
 }
-.site-header-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-.logo {
+.nav-logo {
   font-family: 'Archivo Black', sans-serif;
-  font-size: 18px;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: var(--white);
+  font-size: 18px; text-transform: uppercase;
+  color: var(--white); letter-spacing: -0.02em;
+  text-decoration: none;
 }
-.logo span { color: var(--red); }
-.header-meta {
+.nav-meta {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: rgba(255,255,255,0.5);
-  text-align: right;
-  line-height: 1.5;
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: .15em; color: rgba(255,255,255,.4);
+  text-align: right; line-height: 1.6;
 }
-.header-meta strong { color: var(--white); font-weight: 500; }
+.nav-meta strong { color: rgba(255,255,255,.75); font-weight: 500; }
 
-/* ── Hero banner ── */
+/* ── Report hero ── */
 .report-hero {
   background: var(--near-black);
   color: var(--white);
-  padding: 64px 0 48px;
+  padding: 80px 48px 72px;
+  border-bottom: 2px solid var(--black);
+  position: relative;
+  overflow: hidden;
 }
-.report-hero-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 32px;
+.report-hero::after {
+  content: 'SEO';
+  position: absolute; right: -20px; top: -20px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 260px; line-height: 1;
+  letter-spacing: -0.05em; text-transform: uppercase;
+  color: rgba(255,255,255,.025);
+  pointer-events: none;
+}
+.hero-label-wrap {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 36px;
+}
+.hero-label-dot { width: 10px; height: 10px; background: var(--red); flex-shrink: 0; }
+.hero-label-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .2em; color: rgba(255,255,255,.5);
+}
+.hero-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(48px, 8vw, 100px);
+  line-height: .9; letter-spacing: -0.04em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  position: relative; z-index: 1;
+}
+.hero-title .red { color: var(--red); }
+.hero-desc {
+  font-size: 16px; color: rgba(255,255,255,.55);
+  max-width: 580px; line-height: 1.7;
+  margin-bottom: 48px;
+  position: relative; z-index: 1;
+}
+.hero-scores {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto 1fr;
   gap: 48px;
   align-items: start;
+  position: relative; z-index: 1;
 }
-.report-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+.score-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 2px solid rgba(255,255,255,.15);
+}
+.score-main-inner {
+  padding: 40px 48px;
+  border-bottom: 2px solid rgba(255,255,255,.1);
+}
+.score-num {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 96px; line-height: 1;
+  letter-spacing: -0.04em;
   color: var(--red);
-  margin-bottom: 16px;
 }
-.report-title {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: clamp(32px, 5vw, 54px);
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin-bottom: 20px;
-}
-.report-title span { color: var(--red); }
-.report-desc {
-  font-size: 16px;
-  color: rgba(255,255,255,0.65);
-  max-width: 56ch;
-  line-height: 1.7;
-}
-.report-date {
+.score-denom {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: rgba(255,255,255,0.4);
-  margin-top: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .15em; color: rgba(255,255,255,.3);
+  margin-top: 4px;
 }
-
-/* ── Score circle ── */
-.score-block {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
-}
-.score-circle-wrap { position: relative; }
-.score-circle {
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  background: var(--black);
-  border: 3px solid #222;
-  box-shadow: 8px 8px 0 0 var(--red);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-.score-number {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 52px;
-  line-height: 1;
-  color: var(--white);
-}
-.score-max {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-}
-.score-grade-badge {
-  display: inline-block;
+.score-grade {
   background: var(--red);
-  color: var(--white);
+  padding: 14px 20px;
   font-family: 'Archivo Black', sans-serif;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 6px 18px;
+  font-size: 13px; text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--white);
 }
-.sub-scores-grid {
+.sub-scores {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2px;
-  background: #222;
-  border: 2px solid #333;
-  margin-top: 8px;
-  width: 100%;
-  max-width: 200px;
+  border: 2px solid rgba(255,255,255,.15);
 }
 .sub-score {
-  background: var(--near-black);
-  padding: 12px;
-  text-align: center;
+  padding: 20px 24px;
+  border-right: 1px solid rgba(255,255,255,.1);
+  border-bottom: 1px solid rgba(255,255,255,.1);
 }
-.sub-score-label {
+.sub-score:nth-child(2n) { border-right: none; }
+.sub-score:nth-child(3),
+.sub-score:nth-child(4) { border-bottom: none; }
+.sub-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: rgba(255,255,255,0.4);
-  margin-bottom: 4px;
+  font-size: 9px; text-transform: uppercase;
+  letter-spacing: .15em; color: rgba(255,255,255,.35);
+  margin-bottom: 6px;
 }
-.sub-score-val {
+.sub-val {
   font-family: 'Archivo Black', sans-serif;
-  font-size: 22px;
-  line-height: 1;
+  font-size: 36px; line-height: 1;
+  letter-spacing: -0.02em;
 }
-.val-red    { color: var(--red); }
-.val-orange { color: #f97316; }
-.val-yellow { color: #eab308; }
-.val-green  { color: #22c55e; }
+.sub-val.danger { color: var(--red); }
+.sub-val.warn   { color: #f97316; }
+.sub-val.ok     { color: #22c55e; }
+.sub-val.mid    { color: #eab308; }
 
 /* ── Tabs ── */
 .tabs-bar {
   background: var(--black);
-  overflow-x: auto;
-  scrollbar-width: none;
+  overflow-x: auto; scrollbar-width: none;
+  border-bottom: none;
 }
 .tabs-bar::-webkit-scrollbar { display: none; }
 .tabs-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 32px;
+  max-width: 1400px; margin: 0 auto; padding: 0 48px;
   display: flex;
 }
 .tab-btn {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255,255,255,0.5);
-  background: none;
-  border: none;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: rgba(255,255,255,.4);
+  background: none; border: none;
   border-bottom: 3px solid transparent;
-  padding: 18px 20px;
-  cursor: pointer;
+  padding: 20px 20px; cursor: pointer;
   white-space: nowrap;
-  transition: color 0.15s, border-color 0.15s;
+  transition: color .15s, border-color .15s;
 }
-.tab-btn:hover { color: rgba(255,255,255,0.85); }
+.tab-btn:hover { color: rgba(255,255,255,.8); }
 .tab-btn.active { color: var(--white); border-bottom-color: var(--red); }
 .tab-count {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  background: rgba(255,255,255,0.1);
-  font-size: 10px;
-  font-family: 'JetBrains Mono', monospace;
-  margin-left: 6px;
-  vertical-align: middle;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 18px; height: 18px; padding: 0 4px;
+  background: rgba(255,255,255,.1);
+  font-size: 10px; margin-left: 8px; vertical-align: middle;
 }
-.tab-btn.active .tab-count { background: var(--red); color: var(--white); }
+.tab-btn.active .tab-count { background: var(--red); }
 
 /* ── Tab content ── */
-.tab-content { display: none; padding: 48px 0 80px; }
+.tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* ── Section titles ── */
-.section-title {
+/* ── Section ── */
+.section-wrap { padding: 80px 48px; max-width: 1400px; margin: 0 auto; }
+.section-wrap + .section-wrap { border-top: 2px solid var(--black); }
+.section-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .2em; color: var(--red);
+  margin-bottom: 16px;
+}
+.section-heading {
   font-family: 'Archivo Black', sans-serif;
-  font-size: 22px;
+  font-size: clamp(32px, 4vw, 58px);
+  line-height: .92; letter-spacing: -0.03em;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
-  margin-bottom: 6px;
+  margin-bottom: 56px;
 }
-.section-sub {
-  font-size: 14px;
-  color: var(--muted);
-  margin-bottom: 28px;
-}
-.section-block { margin-bottom: 56px; }
+.section-heading .red { color: var(--red); }
+.section-body { font-size: 16px; line-height: 1.75; color: var(--muted); max-width: 660px; margin-bottom: 40px; }
 
-/* ── Brutalist card ── */
-.b-card {
-  background: var(--white);
-  border: 2px solid var(--black);
-  box-shadow: 6px 6px 0 0 var(--black);
-  padding: 28px;
-  transition: transform 0.12s, box-shadow 0.12s;
+/* ── Dark section ── */
+.section-dark {
+  background: var(--near-black); color: var(--white);
+  padding: 80px 48px;
 }
-.b-card:hover {
-  transform: translate(-2px,-2px);
-  box-shadow: 8px 8px 0 0 var(--black);
-}
-.b-card-red {
-  background: var(--white);
-  border: 2px solid var(--black);
-  box-shadow: 6px 6px 0 0 var(--red);
-}
+.section-dark + * { border-top: 2px solid var(--black); }
+.section-dark-inner { max-width: 1400px; margin: 0 auto; }
+.section-dark .section-label { color: var(--red); }
+.section-dark .section-heading { color: var(--white); margin-bottom: 48px; }
+.section-dark .section-body { color: rgba(255,255,255,.55); }
 
-/* ── Issue list ── */
-.issues-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border: 2px solid var(--black);
+/* ── Bone section ── */
+.section-bone {
+  background: var(--bone);
+  border-top: 2px solid var(--black);
+  border-bottom: 2px solid var(--black);
+  padding: 80px 48px;
 }
+.section-bone-inner { max-width: 1400px; margin: 0 auto; }
+
+/* ── Issue list (pain-list pattern) ── */
+.issue-list { border-top: 2px solid var(--black); margin-bottom: 56px; }
 .issue-item {
   display: grid;
-  grid-template-columns: 120px 1fr auto;
-  gap: 20px;
-  align-items: start;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e5e5e5;
+  grid-template-columns: 140px 1fr auto;
+  gap: 32px; align-items: start;
+  border-bottom: 2px solid var(--black);
+  padding: 28px 0;
 }
-.issue-item:last-child { border-bottom: none; }
-.issue-severity {
+.sev-badge {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-  padding: 4px 10px;
-  display: inline-block;
-  width: fit-content;
-  margin-top: 2px;
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: .12em; font-weight: 700;
+  padding: 5px 10px; display: inline-block;
+  width: fit-content; margin-top: 3px;
 }
-.sev-critical { background: var(--red); color: var(--white); }
-.sev-high     { background: var(--near-black); color: var(--white); }
-.sev-medium   { background: var(--yellow-bg); color: var(--yellow); border: 1px solid #ca8a04; }
-.sev-low      { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
-.sev-ok       { background: var(--bone); color: var(--muted); }
+.sev-critical  { background: var(--red); color: var(--white); }
+.sev-high      { background: var(--black); color: var(--white); }
+.sev-medium    { background: transparent; color: #ca8a04; border: 2px solid #ca8a04; }
+.sev-ok        { background: transparent; color: var(--muted); border: 2px solid #ddd; }
+.sev-pass      { background: transparent; color: #16a34a; border: 2px solid #16a34a; }
 .issue-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  line-height: 1.3;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(16px, 1.6vw, 20px);
+  text-transform: uppercase; letter-spacing: -0.02em;
+  line-height: 1.15; margin-bottom: 8px;
 }
 .issue-desc {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.6;
-  max-width: 70ch;
+  font-size: 14px; color: var(--muted); line-height: 1.7;
+  max-width: 72ch;
 }
-.issue-fix {
+code {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--green);
-  background: var(--green-bg);
-  padding: 2px 8px;
-  white-space: nowrap;
-  align-self: start;
-  margin-top: 4px;
+  font-size: 11px; background: var(--bone);
+  padding: 2px 6px; letter-spacing: .02em;
 }
+.fix-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: .1em; padding: 5px 10px;
+  white-space: nowrap; align-self: start;
+  background: var(--bone); color: var(--muted);
+  border: 1px solid #ddd;
+}
+.fix-tag.urgent { background: var(--red); color: var(--white); border: none; }
+.fix-tag.done   { background: #dcfce7; color: #16a34a; border: 1px solid #16a34a; }
+
+/* ── Metrics grid (4-col) ── */
+.metrics-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--black); margin-bottom: 56px;
+}
+.metric-cell {
+  padding: 36px 32px;
+  border-right: 2px solid var(--black);
+}
+.metric-cell:last-child { border-right: none; }
+.metric-num {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(36px, 4vw, 60px);
+  line-height: 1; letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+.metric-num.red   { color: var(--red); }
+.metric-num.orange{ color: #ea580c; }
+.metric-num.green { color: #16a34a; }
+.metric-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: .12em; color: var(--muted);
+}
+
+/* ── Pillar grid (3-col dark) ── */
+.pillars {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border: 2px solid rgba(255,255,255,.15);
+  margin-bottom: 56px;
+}
+.pillar {
+  padding: 44px 36px;
+  border-right: 2px solid rgba(255,255,255,.15);
+}
+.pillar:last-child { border-right: none; }
+.pillar-num {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(52px, 5vw, 80px);
+  color: var(--red); line-height: 1;
+  margin-bottom: 20px;
+}
+.pillar-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(16px, 1.8vw, 22px);
+  text-transform: uppercase; letter-spacing: -0.02em;
+  line-height: 1.1; margin-bottom: 14px;
+  color: var(--white);
+}
+.pillar-body {
+  font-size: 14px; color: rgba(255,255,255,.5);
+  line-height: 1.75; margin-bottom: 20px;
+}
+.pillar-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--red);
+  letter-spacing: .1em; text-transform: uppercase;
+  border-top: 1px solid rgba(255,255,255,.12);
+  padding-top: 16px; display: block;
+}
+
+/* ── Steps (action plan) ── */
+.steps { border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); margin-bottom: 56px; }
+.step {
+  display: grid; grid-template-columns: 140px 200px 1fr 140px;
+  gap: 40px; align-items: center;
+  border-bottom: 2px solid var(--black);
+  padding: 32px 0;
+  transition: background .15s;
+}
+.step:last-child { border-bottom: none; }
+.step:hover { background: var(--bone); }
+.step-num {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(32px, 3.5vw, 52px);
+  line-height: 1; letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+.step-priority {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em;
+  padding: 6px 12px; display: inline-block;
+}
+.p-now    { background: var(--red); color: var(--white); }
+.p-week   { background: var(--black); color: var(--white); }
+.p-month  { background: transparent; color: var(--muted); border: 2px solid #ddd; }
+.p-long   { background: transparent; color: #0369a1; border: 2px solid #0369a1; }
+.step-title {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(14px, 1.5vw, 18px);
+  text-transform: uppercase; letter-spacing: -0.01em;
+  line-height: 1.2; margin-bottom: 6px;
+}
+.step-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+.step-impact {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; text-transform: uppercase;
+  letter-spacing: .1em; color: var(--muted);
+  text-align: right;
+}
+.impact-bar { height: 4px; background: #e5e5e5; margin-top: 6px; overflow: hidden; }
+.impact-fill { height: 100%; background: var(--red); }
 
 /* ── Keyword table ── */
-.kw-table {
-  width: 100%;
-  border-collapse: collapse;
-  border: 2px solid var(--black);
-  font-size: 14px;
-}
+.kw-table { width: 100%; border-collapse: collapse; border: 2px solid var(--black); margin-bottom: 56px; }
 .kw-table th {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-weight: 700;
-  background: var(--black);
-  color: var(--white);
-  padding: 12px 16px;
-  text-align: left;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: .12em;
+  background: var(--black); color: var(--white);
+  padding: 14px 16px; text-align: left;
 }
-.kw-table td {
-  padding: 14px 16px;
-  border-bottom: 1px solid #e5e5e5;
-  vertical-align: top;
-}
+.kw-table td { padding: 16px; border-bottom: 1px solid #e5e5e5; font-size: 14px; vertical-align: middle; }
 .kw-table tr:last-child td { border-bottom: none; }
 .kw-table tr:hover td { background: var(--bone); }
-.kw-primary {
-  font-weight: 700;
-  font-size: 13px;
-}
-.kw-volume {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-}
-.kw-difficulty {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 14px;
+.kw-primary { font-family: 'Archivo Black', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: -0.01em; }
+.kw-vol { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.diff-box {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px;
+  font-family: 'Archivo Black', sans-serif; font-size: 13px;
   border: 2px solid var(--black);
 }
-.diff-high   { background: var(--red); color: var(--white); border-color: var(--red); }
-.diff-med    { background: #f97316; color: var(--white); border-color: #f97316; }
-.diff-low    { background: #22c55e; color: var(--white); border-color: #22c55e; }
-.kw-status-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 3px 8px;
-  display: inline-block;
+.diff-h { background: var(--red); color: var(--white); border-color: var(--red); }
+.diff-m { background: #ea580c; color: var(--white); border-color: #ea580c; }
+.diff-l { background: #16a34a; color: var(--white); border-color: #16a34a; }
+.status-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .1em; padding: 4px 8px; display: inline-block;
 }
-.status-present  { background: var(--green-bg); color: var(--green); }
-.status-weak     { background: var(--yellow-bg); color: var(--yellow); }
-.status-missing  { background: var(--red-bg); color: var(--red); }
-.status-add      { background: var(--bone); color: var(--muted); }
-
-/* ── Competitor table ── */
-.comp-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
-  background: var(--black);
-  border: 2px solid var(--black);
-}
-.comp-col {
-  background: var(--white);
-  padding: 24px;
-}
-.comp-col.featured {
-  background: var(--near-black);
-  color: var(--white);
-}
-.comp-rank {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-.comp-col.featured .comp-rank { color: rgba(255,255,255,0.5); }
-.comp-name {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 17px;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  margin-bottom: 16px;
-  line-height: 1.2;
-}
-.comp-col.featured .comp-name { color: var(--white); }
-.comp-metric {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid #e5e5e5;
-  font-size: 13px;
-}
-.comp-col.featured .comp-metric { border-bottom-color: rgba(255,255,255,0.1); }
-.comp-metric:last-of-type { border-bottom: none; }
-.comp-metric-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-.comp-col.featured .comp-metric-label { color: rgba(255,255,255,0.5); }
-.comp-metric-val {
-  font-weight: 700;
-  font-size: 14px;
-}
-.comp-col.featured .comp-metric-val { color: var(--white); }
-.comp-score-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: var(--red);
-  color: var(--white);
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 18px;
-  margin-bottom: 16px;
-}
-.comp-score-badge-light {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border: 2px solid var(--black);
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 18px;
-  margin-bottom: 16px;
-  box-shadow: 3px 3px 0 0 var(--black);
-}
-.comp-win-tag {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 2px 6px;
-  background: var(--red);
-  color: var(--white);
-  margin-left: 6px;
-}
+.s-present { background: #dcfce7; color: #16a34a; }
+.s-weak    { background: #fef9c3; color: #ca8a04; }
+.s-missing { background: #fee2e2; color: var(--red); }
 
 /* ── LSI tags ── */
-.lsi-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.lsi-group { margin-bottom: 36px; }
+.lsi-group-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: .15em;
+  color: var(--muted); margin-bottom: 14px;
+  border-bottom: 2px solid var(--black); padding-bottom: 10px;
 }
+.lsi-tags { display: flex; flex-wrap: wrap; gap: 8px; }
 .lsi-tag {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 8px 14px;
-  border: 2px solid var(--black);
-  cursor: default;
-  transition: background 0.12s, color 0.12s;
+  font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 500;
+  padding: 8px 14px; border: 2px solid var(--black); cursor: default;
+  transition: background .12s, color .12s;
 }
 .lsi-tag:hover { background: var(--black); color: var(--white); }
-.lsi-tag.priority {
-  background: var(--red);
-  color: var(--white);
-  border-color: var(--red);
-}
-.lsi-tag.priority:hover { background: var(--near-black); border-color: var(--near-black); }
+.lsi-tag.hot { background: var(--red); color: var(--white); border-color: var(--red); }
+.lsi-tag.hot:hover { background: var(--near-black); border-color: var(--near-black); }
 
-/* ── Action plan ── */
-.action-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border: 2px solid var(--black);
+/* ── Competitor comparison ── */
+.comp-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border: 2px solid var(--black); margin-bottom: 56px;
 }
-.action-row {
-  display: grid;
-  grid-template-columns: 80px 180px 1fr 160px;
-  gap: 0;
-  border-bottom: 1px solid #e5e5e5;
+.comp-col { padding: 40px 32px; border-right: 2px solid var(--black); }
+.comp-col:last-child { border-right: none; }
+.comp-col.top { background: var(--near-black); color: var(--white); }
+.comp-rank {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  text-transform: uppercase; letter-spacing: .15em; color: var(--red);
+  margin-bottom: 6px;
 }
-.action-row:last-child { border-bottom: none; }
-.action-row-header {
-  background: var(--black);
-  color: var(--white);
+.comp-score {
+  font-family: 'Archivo Black', sans-serif; font-size: 56px;
+  line-height: 1; letter-spacing: -0.04em; color: var(--red); margin-bottom: 16px;
 }
-.action-cell {
-  padding: 16px 20px;
-  border-right: 1px solid #e5e5e5;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
+.comp-col:not(.top) .comp-score { color: var(--black); }
+.comp-name {
+  font-family: 'Archivo Black', sans-serif; font-size: clamp(18px, 2vw, 24px);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1;
+  margin-bottom: 24px;
 }
-.action-row-header .action-cell {
-  border-right-color: rgba(255,255,255,0.1);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+.comp-col.top .comp-name { color: var(--white); }
+.comp-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px solid rgba(0,0,0,.1); font-size: 13px;
 }
-.action-cell:last-child { border-right: none; }
-.action-num {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 28px;
-  color: var(--muted);
-  line-height: 1;
-}
-.action-priority-badge {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: 4px 10px;
-  display: inline-block;
-}
-.p-now     { background: var(--red); color: var(--white); }
-.p-week    { background: var(--near-black); color: var(--white); }
-.p-month   { background: var(--bone); color: var(--muted); border: 1px solid #ddd; }
-.p-ongoing { background: #f0f9ff; color: #0369a1; border: 1px solid #0369a1; }
-.action-title {
-  font-weight: 700;
-  margin-bottom: 3px;
-}
-.action-desc {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-.action-impact {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.impact-bar-wrap {
-  height: 6px;
-  background: var(--bone);
-  border: 1px solid #ddd;
-  overflow: hidden;
-}
-.impact-bar {
-  height: 100%;
-  background: var(--red);
-  transition: width 1s ease-out;
-}
-.impact-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
-}
-
-/* ── Checklist ── */
-.checklist {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border: 2px solid var(--black);
-}
-.check-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 14px 20px;
-  border-bottom: 1px solid #e5e5e5;
-  font-size: 14px;
-}
-.check-item:last-child { border-bottom: none; }
-.check-icon {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  border: 2px solid var(--black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-}
-.check-icon.pass { background: var(--green); border-color: var(--green); color: var(--white); }
-.check-icon.fail { background: var(--red); border-color: var(--red); color: var(--white); }
-.check-icon.warn { background: #eab308; border-color: #eab308; color: var(--white); }
+.comp-col.top .comp-row { border-bottom-color: rgba(255,255,255,.1); }
+.comp-row:last-of-type { border-bottom: none; }
+.comp-row-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.comp-col.top .comp-row-label { color: rgba(255,255,255,.4); }
+.comp-row-val { font-weight: 700; }
+.comp-col.top .comp-row-val { color: var(--white); }
+.val-yes { color: #16a34a; }
+.val-no  { color: var(--red); }
 
 /* ── Code block ── */
 .code-block {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  background: var(--near-black);
-  color: #e5e5e5;
-  padding: 20px 24px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px;
+  background: var(--near-black); color: #e5e5e5;
+  padding: 28px 32px;
   border: 2px solid var(--black);
-  overflow-x: auto;
-  line-height: 1.7;
-}
-.code-comment { color: #767676; }
-.code-key     { color: #ea25ac; }
-.code-val     { color: #22c55e; }
-.code-tag     { color: #60a5fa; }
-
-/* ── Divider ── */
-.divider {
-  border: none;
-  border-top: 2px solid var(--black);
-  margin: 40px 0;
-}
-.divider-light {
-  border: none;
-  border-top: 1px solid #e5e5e5;
-  margin: 28px 0;
-}
-
-/* ── Two-col layout ── */
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-.three-col {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-}
-
-/* ── Stat block ── */
-.stat-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  border: 2px solid var(--black);
-  background: var(--black);
+  overflow-x: auto; line-height: 1.8;
   margin-bottom: 40px;
 }
-.stat-block {
-  background: var(--white);
-  padding: 28px 24px;
-  text-align: center;
+.c-comment { color: #555; }
+.c-key     { color: #f472b6; }
+.c-val     { color: #4ade80; }
+.c-tag     { color: #60a5fa; }
+
+/* ── Heading compare ── */
+.heading-compare {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3px;
+  border: 2px solid var(--black); margin-bottom: 40px;
 }
-.stat-block:first-child { border-right: 1px solid var(--black); }
-.stat-val {
-  font-family: 'Archivo Black', sans-serif;
-  font-size: 42px;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  margin-bottom: 6px;
+.hc-col { padding: 32px; }
+.hc-col.current { background: var(--bone); }
+.hc-col.proposed { background: var(--near-black); color: var(--white); }
+.hc-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px;
+  text-transform: uppercase; letter-spacing: .15em;
+  margin-bottom: 20px;
 }
-.stat-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--muted);
+.hc-col.current .hc-label  { color: var(--muted); }
+.hc-col.proposed .hc-label { color: rgba(255,255,255,.4); }
+.hc-row { font-family: 'JetBrains Mono', monospace; font-size: 12px; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,.08); line-height: 1.5; }
+.hc-col.proposed .hc-row { border-bottom-color: rgba(255,255,255,.08); color: rgba(255,255,255,.7); }
+.hc-row:last-child { border-bottom: none; }
+.tag-h1 { color: var(--red); font-weight: 700; }
+.tag-h2 { color: var(--muted); }
+.tag-ok { color: #16a34a; font-weight: 700; }
+
+/* ── Content compare table ── */
+.content-table { width: 100%; border-collapse: collapse; border: 2px solid var(--black); margin-bottom: 40px; }
+.content-table th { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .12em; background: var(--black); color: var(--white); padding: 14px 20px; text-align: left; }
+.content-table td { padding: 18px 20px; border-bottom: 1px solid #e5e5e5; font-size: 14px; }
+.content-table tr:last-child td { border-bottom: none; }
+.content-table tr:hover td { background: var(--bone); }
+.content-table tr.highlight td { background: #fff1f1; }
+
+/* ── Checklist ── */
+.check-list { border: 2px solid var(--black); margin-bottom: 40px; }
+.check-row {
+  display: flex; align-items: start; gap: 16px;
+  padding: 16px 20px; border-bottom: 1px solid #e5e5e5; font-size: 14px;
 }
-.stat-val.red { color: var(--red); }
-.stat-val.green { color: var(--green); }
+.check-row:last-child { border-bottom: none; }
+.check-icon {
+  width: 24px; height: 24px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+  border: 2px solid currentColor; margin-top: 1px;
+}
+.ci-pass { color: #16a34a; background: #dcfce7; border-color: #16a34a; }
+.ci-fail { color: var(--red); background: #fee2e2; border-color: var(--red); }
+.ci-warn { color: #ca8a04; background: #fef9c3; border-color: #ca8a04; }
+
+/* ── Score projection ── */
+.score-projection {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 2px solid var(--black);
+}
+.proj-cell { padding: 36px 24px; border-right: 2px solid var(--black); text-align: center; }
+.proj-cell:last-child { border-right: none; }
+.proj-num { font-family: 'Archivo Black', sans-serif; font-size: 52px; line-height: 1; letter-spacing: -0.03em; margin-bottom: 8px; }
+.proj-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); line-height: 1.5; }
+
+/* ── Final CTA strip ── */
+.cta-strip {
+  background: var(--red); color: var(--white);
+  padding: 56px 48px;
+  border-top: 2px solid var(--black);
+  display: flex; align-items: center; justify-content: space-between; gap: 32px; flex-wrap: wrap;
+}
+.cta-strip-text { font-family: 'Archivo Black', sans-serif; font-size: clamp(24px, 3vw, 40px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1; }
+.btn-white-inv {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Archivo Black', sans-serif; font-size: 14px;
+  text-transform: uppercase; letter-spacing: .04em;
+  background: var(--white); color: var(--red);
+  border: 2px solid var(--white); padding: 16px 32px;
+  text-decoration: none; white-space: nowrap;
+  transition: background .15s, color .15s;
+  flex-shrink: 0;
+}
+.btn-white-inv:hover { background: var(--red); color: var(--white); }
+
+/* ── Footer ── */
+footer {
+  background: var(--black); color: var(--white);
+  padding: 36px 48px;
+  border-top: 2px solid var(--red);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.footer-logo { font-family: 'Archivo Black', sans-serif; font-size: 16px; text-transform: uppercase; letter-spacing: -0.01em; }
+.footer-logo span { color: var(--red); }
+.footer-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.25); }
 
 /* ── Responsive ── */
-@media (max-width: 900px) {
-  .report-hero-inner { grid-template-columns: 1fr; }
-  .score-block { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
-  .comp-grid { grid-template-columns: 1fr; }
-  .action-row { grid-template-columns: 60px 1fr; }
-  .action-row > .action-cell:nth-child(3) { grid-column: 2; }
-  .action-row > .action-cell:nth-child(4) { grid-column: 1 / -1; }
-  .two-col { grid-template-columns: 1fr; }
-  .three-col { grid-template-columns: 1fr; }
-  .stat-row { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 1100px) {
+  .step { grid-template-columns: 100px 160px 1fr; }
+  .step-impact { display: none; }
 }
-@media (max-width: 600px) {
-  .container { padding: 0 20px; }
-  .site-header-inner { padding: 0 20px; }
-  .report-hero-inner { padding: 0 20px; }
-  .issue-item { grid-template-columns: 1fr; gap: 10px; }
-  .stat-row { grid-template-columns: 1fr 1fr; }
-  .tabs-inner { padding: 0 20px; }
+@media (max-width: 900px) {
+  nav, .report-hero, .section-wrap, .section-dark, .section-bone { padding-left: 24px; padding-right: 24px; }
+  .tabs-inner { padding: 0 24px; }
+  footer, .cta-strip { padding-left: 24px; padding-right: 24px; }
+  .hero-scores { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  .metric-cell:nth-child(2) { border-right: none; }
+  .pillars { grid-template-columns: 1fr; }
+  .pillar { border-right: none; border-bottom: 2px solid rgba(255,255,255,.15); }
+  .pillar:last-child { border-bottom: none; }
+  .comp-grid { grid-template-columns: 1fr; }
+  .comp-col { border-right: none; border-bottom: 2px solid var(--black); }
+  .comp-col:last-child { border-bottom: none; }
+  .step { grid-template-columns: 80px 1fr; }
+  .step-priority { grid-column: 2; }
+  .issue-item { grid-template-columns: 1fr; gap: 12px; }
+  .heading-compare { grid-template-columns: 1fr; }
+  .score-projection { grid-template-columns: repeat(2, 1fr); }
+  .proj-cell:nth-child(2) { border-right: none; }
 }
 </style>
 </head>
 <body>
 
-<!-- ── Site header ── -->
-<header class="site-header">
-  <div class="site-header-inner">
-    <div class="logo">Stolk<span>web</span>design</div>
-    <div class="header-meta">
-      <strong>SEO Strategy Report</strong><br>
-      BZ Events · bzevents.nl · 19 mei 2026
-    </div>
+<!-- NAV -->
+<nav>
+  <a href="/seo/" class="nav-logo">Stolkwebdesign®</a>
+  <div class="nav-meta">
+    <strong>SEO Strategy Report</strong><br>BZ Events · 19 mei 2026
   </div>
-</header>
+</nav>
 
-<!-- ── Report hero ── -->
+<!-- HERO -->
 <div class="report-hero">
-  <div class="report-hero-inner">
+  <div class="hero-label-wrap">
+    <div class="hero-label-dot"></div>
+    <span class="hero-label-text">SEO Audit — Volledig Website Onderzoek</span>
+  </div>
+  <h1 class="hero-title">BZ <span class="red">Events</span><br>SEO Strategie.</h1>
+  <p class="hero-desc">
+    Volledige audit van bzevents.nl — technische analyse, keyword-gaps, concurrentieonderzoek en een geprioriteerd actieplan om te ranken op evenementenbureau Amsterdam.
+  </p>
+
+  <div class="hero-scores">
     <div>
-      <div class="report-eyebrow">SEO Audit — Mode 2 / Full Website</div>
-      <h1 class="report-title">BZ <span>Events</span><br>SEO Strategie</h1>
-      <p class="report-desc">
-        Volledige audit van bzevents.nl — technische analyse, keyword-gaps, concurrentieonderzoek
-        en een geprioriteerd actieplan om te ranken op <em>evenementenbureau Amsterdam</em>.
-      </p>
-      <p class="report-date">Gegenereerd op 19 mei 2026 · Keywords: evenementenbureau Amsterdam, catering evenement Amsterdam, bedrijfsfeest organiseren Amsterdam</p>
-    </div>
-    <div class="score-block">
-      <div class="score-circle">
-        <div class="score-number">44</div>
-        <div class="score-max">/100</div>
+      <div class="score-main">
+        <div class="score-main-inner">
+          <div class="score-num">44</div>
+          <div class="score-denom">Score / 100</div>
+        </div>
+        <div class="score-grade">Matig — Verbeter Urgent</div>
       </div>
-      <div class="score-grade-badge">Matig — Verbeter Urgent</div>
-      <div class="sub-scores-grid">
-        <div class="sub-score">
-          <div class="sub-score-label">Technisch</div>
-          <div class="sub-score-val val-red">35</div>
-        </div>
-        <div class="sub-score">
-          <div class="sub-score-label">Content</div>
-          <div class="sub-score-val val-orange">52</div>
-        </div>
-        <div class="sub-score">
-          <div class="sub-score-label">On-page</div>
-          <div class="sub-score-val val-yellow">68</div>
-        </div>
-        <div class="sub-score">
-          <div class="sub-score-label">Autoriteit</div>
-          <div class="sub-score-val val-red">30</div>
-        </div>
+    </div>
+    <div class="sub-scores">
+      <div class="sub-score">
+        <div class="sub-label">Technisch</div>
+        <div class="sub-val danger">35</div>
+      </div>
+      <div class="sub-score">
+        <div class="sub-label">Content</div>
+        <div class="sub-val warn">52</div>
+      </div>
+      <div class="sub-score">
+        <div class="sub-label">On-Page</div>
+        <div class="sub-val mid">68</div>
+      </div>
+      <div class="sub-score">
+        <div class="sub-label">Autoriteit</div>
+        <div class="sub-val danger">30</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ── Tabs ── -->
+<!-- TABS -->
 <div class="tabs-bar">
   <div class="tabs-inner">
     <button class="tab-btn active" data-tab="technisch">Technisch <span class="tab-count">5</span></button>
@@ -799,809 +680,698 @@ body {
   </div>
 </div>
 
-<!-- ─────────────────────────────────────────── -->
-<!-- TAB: TECHNISCH                              -->
-<!-- ─────────────────────────────────────────── -->
+<!-- ════════════════════════════════════ -->
+<!-- TAB: TECHNISCH                       -->
+<!-- ════════════════════════════════════ -->
 <div class="tab-content active" id="tab-technisch">
-  <div class="container">
 
-    <div class="section-block">
-      <h2 class="section-title">Technische SEO</h2>
-      <p class="section-sub">Crawlability, indexering en site-architectuur — de basis voor alles wat daarna komt.</p>
+  <div class="section-wrap">
+    <div class="section-label">Technische SEO</div>
+    <h2 class="section-heading">De fundering <span class="red">kraakt.</span></h2>
 
-      <div class="stat-row">
-        <div class="stat-block"><div class="stat-val red">2</div><div class="stat-label">Kritieke fouten</div></div>
-        <div class="stat-block"><div class="stat-val" style="color:#ea580c">3</div><div class="stat-label">Verbeterpunten</div></div>
-        <div class="stat-block"><div class="stat-val green">4</div><div class="stat-label">OK / aanwezig</div></div>
-        <div class="stat-block"><div class="stat-val red">35</div><div class="stat-label">Technische score</div></div>
-      </div>
-
-      <div class="issues-grid">
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-critical">Kritiek</span></div>
-          <div>
-            <div class="issue-title">robots.txt ontbreekt — 404</div>
-            <div class="issue-desc">
-              <code style="font-family:'JetBrains Mono',monospace;font-size:12px">bzevents.vercel.app/robots.txt</code> geeft een 404.
-              Googlebot weet niet welke pagina's gecrawld mogen worden. Bij een verhuizing naar een betaald domein
-              kan dit leiden tot ongewenste indexering van development-URLs. Prioriteit 1 voor elke nieuwe site.
-            </div>
-          </div>
-          <span class="issue-fix">Maak robots.txt aan</span>
-        </div>
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-critical">Kritiek</span></div>
-          <div>
-            <div class="issue-title">sitemap.xml ontbreekt — 404</div>
-            <div class="issue-desc">
-              <code style="font-family:'JetBrains Mono',monospace;font-size:12px">bzevents.vercel.app/sitemap.xml</code> geeft een 404.
-              Zonder sitemap ontdekt Google pagina's uitsluitend via crawl — langzamer en minder betrouwbaar,
-              zeker voor nieuwe domeinen zonder backlinks. Kritisch bij uitbreiding naar meerdere pagina's.
-            </div>
-          </div>
-          <span class="issue-fix">Genereer sitemap.xml</span>
-        </div>
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-high">Hoog</span></div>
-          <div>
-            <div class="issue-title">Single-page architecture — grote keyword-limiet</div>
-            <div class="issue-desc">
-              De volledige site is één HTML-pagina met anchor-navigatie (#diensten, #dj, #catering).
-              Google kan één URL slechts voor een beperkt aantal zoekwoorden ranken. Concurrenten hebben
-              aparte pagina's voor /diensten/bedrijfsfeesten, /diensten/dj-booking, /contact — en ranken
-              daardoor op tien keer zoveel keywords. Dit is de grootste SEO-limitatie op de lange termijn.
-            </div>
-          </div>
-          <span class="issue-fix">Multi-page uitbreiden</span>
-        </div>
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-high">Hoog</span></div>
-          <div>
-            <div class="issue-title">Canonical URL wijst naar niet-live domein</div>
-            <div class="issue-desc">
-              De canonical tag in Layout.astro wijst naar <code style="font-family:'JetBrains Mono',monospace;font-size:12px">https://bzevents.nl</code>.
-              Zolang de site live staat op <code style="font-family:'JetBrains Mono',monospace;font-size:12px">bzevents.vercel.app</code> en het productiedomein
-              nog niet actief is, kan dit verwarrend zijn voor indexeerders. Zorg dat de canonical overeenkomt
-              met de werkelijk gebruikte URL.
-            </div>
-          </div>
-          <span class="issue-fix">Update canonical URL</span>
-        </div>
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-medium">Medium</span></div>
-          <div>
-            <div class="issue-title">Geen Google Search Console aangemeld</div>
-            <div class="issue-desc">
-              Zonder GSC-verificatie zijn er geen crawl-rapporten, index-dekkingsdata of prestatiecijfers
-              beschikbaar. De site kan niet handmatig voor indexering worden aangemeld, en eventuele
-              manual actions van Google zijn onzichtbaar.
-            </div>
-          </div>
-          <span class="issue-fix">Aanmelden via GSC</span>
-        </div>
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-ok">OK ✓</span></div>
-          <div>
-            <div class="issue-title">HTTPS actief via Vercel</div>
-            <div class="issue-desc">TLS-certificaat aanwezig en actief. Alle verkeer via HTTPS. Geen mixed-content problemen gedetecteerd.</div>
-          </div>
-          <span class="issue-fix" style="background:var(--green-bg);color:var(--green)">Geen actie nodig</span>
-        </div>
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-ok">OK ✓</span></div>
-          <div>
-            <div class="issue-title">Pagina-snelheid — Astro static output</div>
-            <div class="issue-desc">
-              Astro genereert statische HTML. Geen server-side rendering delay. Gecombineerd met Vercel CDN
-              levert dit uitstekende TTFB-scores (verwachte Lighthouse Performance &gt; 85).
-            </div>
-          </div>
-          <span class="issue-fix" style="background:var(--green-bg);color:var(--green)">Geen actie nodig</span>
-        </div>
-
-        <div class="issue-item">
-          <div><span class="issue-severity sev-ok">OK ✓</span></div>
-          <div>
-            <div class="issue-title">LocalBusiness JSON-LD aanwezig</div>
-            <div class="issue-desc">
-              Structured data bevat name, url, telephone, email, address, priceRange en aggregateRating
-              (4.9/87 reviews). Dit ondersteunt Rich Snippets in Google. Rating moet overeenkomen met
-              echte reviewdata (Google Maps / Trustpilot) om penalty te voorkomen.
-            </div>
-          </div>
-          <span class="issue-fix" style="background:var(--green-bg);color:var(--green)">Controleer reviews</span>
-        </div>
-
-      </div>
+    <div class="metrics-grid">
+      <div class="metric-cell"><div class="metric-num red">2</div><div class="metric-label">Kritieke fouten</div></div>
+      <div class="metric-cell"><div class="metric-num orange">3</div><div class="metric-label">Verbeterpunten</div></div>
+      <div class="metric-cell"><div class="metric-num green">4</div><div class="metric-label">OK / aanwezig</div></div>
+      <div class="metric-cell"><div class="metric-num red">35</div><div class="metric-label">Technische score</div></div>
     </div>
 
-    <div class="section-block">
-      <h2 class="section-title">Aanbevolen robots.txt</h2>
-      <p class="section-sub">Voeg dit bestand toe als <code style="font-family:'JetBrains Mono',monospace">public/robots.txt</code> in het Astro project.</p>
-      <div class="code-block">
-<span class="code-comment"># BZ Events — robots.txt</span>
-<span class="code-comment"># Gegenereerd: 19 mei 2026</span>
+    <div class="issue-list">
 
-<span class="code-tag">User-agent:</span> <span class="code-val">*</span>
-<span class="code-tag">Allow:</span> <span class="code-val">/</span>
-
-<span class="code-tag">Sitemap:</span> <span class="code-val">https://bzevents.nl/sitemap.xml</span>
+      <div class="issue-item">
+        <span class="sev-badge sev-critical">Kritiek</span>
+        <div>
+          <div class="issue-title">robots.txt ontbreekt — 404</div>
+          <div class="issue-desc">
+            <code>bzevents.nl/robots.txt</code> geeft een 404. Googlebot weet niet welke pagina's gecrawld mogen worden.
+            Bij een verhuizing naar productiedomein kan dit leiden tot ongewenste indexering van development-URLs.
+            <br><br><strong>✅ Opgelost:</strong> <code>public/robots.txt</code> is aangemaakt in het Astro project.
+          </div>
+        </div>
+        <span class="fix-tag done">Opgelost ✓</span>
       </div>
-    </div>
 
-    <div class="section-block">
-      <h2 class="section-title">Aanbevolen sitemap.xml structuur</h2>
-      <p class="section-sub">Gebruik <code style="font-family:'JetBrains Mono',monospace">@astrojs/sitemap</code> integration voor automatisch gegenereerde sitemaps bij uitbreiding.</p>
-      <div class="code-block">
-<span class="code-comment">&lt;!-- public/sitemap.xml — handmatig tot meerdere pagina's bestaan --&gt;</span>
-&lt;<span class="code-tag">urlset</span> xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
-  &lt;<span class="code-tag">url</span>&gt;
-    &lt;<span class="code-key">loc</span>&gt;<span class="code-val">https://bzevents.nl/</span>&lt;/<span class="code-key">loc</span>&gt;
-    &lt;<span class="code-key">lastmod</span>&gt;<span class="code-val">2026-05-19</span>&lt;/<span class="code-key">lastmod</span>&gt;
-    &lt;<span class="code-key">changefreq</span>&gt;<span class="code-val">monthly</span>&lt;/<span class="code-key">changefreq</span>&gt;
-    &lt;<span class="code-key">priority</span>&gt;<span class="code-val">1.0</span>&lt;/<span class="code-key">priority</span>&gt;
-  &lt;/<span class="code-tag">url</span>&gt;
-&lt;/<span class="code-tag">urlset</span>&gt;
+      <div class="issue-item">
+        <span class="sev-badge sev-critical">Kritiek</span>
+        <div>
+          <div class="issue-title">sitemap.xml ontbreekt — 404</div>
+          <div class="issue-desc">
+            <code>bzevents.nl/sitemap.xml</code> geeft een 404. Zonder sitemap ontdekt Google pagina's uitsluitend via crawl —
+            langzamer en minder betrouwbaar voor nieuwe domeinen zonder backlinks.
+            <br><br><strong>✅ Opgelost:</strong> <code>public/sitemap.xml</code> is aangemaakt in het Astro project.
+          </div>
+        </div>
+        <span class="fix-tag done">Opgelost ✓</span>
       </div>
-    </div>
 
+      <div class="issue-item">
+        <span class="sev-badge sev-high">Hoog</span>
+        <div>
+          <div class="issue-title">Single-page architecture</div>
+          <div class="issue-desc">
+            De volledige site is één HTML-pagina met anchor-navigatie (#diensten, #dj, #catering).
+            Google kan één URL slechts voor een beperkt aantal zoekwoorden ranken. Concurrenten
+            hebben aparte pagina's voor /diensten/bedrijfsfeesten, /dj-booking, /contact —
+            en ranken daardoor op tien keer zoveel keywords. Dit is de grootste SEO-limitatie op de lange termijn.
+          </div>
+        </div>
+        <span class="fix-tag urgent">Multi-page</span>
+      </div>
+
+      <div class="issue-item">
+        <span class="sev-badge sev-high">Hoog</span>
+        <div>
+          <div class="issue-title">Canonical wijst naar niet-live domein</div>
+          <div class="issue-desc">
+            De canonical tag wijst naar <code>https://bzevents.nl</code> terwijl de site live staat op
+            <code>bzevents.vercel.app</code>. Zolang het productiedomein nog niet actief is, werkt dit verwarrend
+            voor indexeerders. Zorg dat canonical en werkelijke URL overeenkomen.
+          </div>
+        </div>
+        <span class="fix-tag">Bij go-live</span>
+      </div>
+
+      <div class="issue-item">
+        <span class="sev-badge sev-medium">Medium</span>
+        <div>
+          <div class="issue-title">Google Search Console niet aangemeld</div>
+          <div class="issue-desc">
+            Zonder GSC-verificatie zijn er geen crawl-rapporten, index-dekkingsdata of
+            prestatiecijfers beschikbaar. De site kan niet handmatig voor indexering worden aangemeld,
+            en eventuele manual actions zijn onzichtbaar.
+          </div>
+        </div>
+        <span class="fix-tag">Aanmelden via GSC</span>
+      </div>
+
+      <div class="issue-item">
+        <span class="sev-badge sev-pass">OK ✓</span>
+        <div>
+          <div class="issue-title">HTTPS actief via Vercel</div>
+          <div class="issue-desc">TLS-certificaat aanwezig. Alle verkeer via HTTPS. Geen mixed-content problemen.</div>
+        </div>
+        <span class="fix-tag">Geen actie</span>
+      </div>
+
+      <div class="issue-item">
+        <span class="sev-badge sev-pass">OK ✓</span>
+        <div>
+          <div class="issue-title">Astro static output — snelle laadtijden</div>
+          <div class="issue-desc">
+            Astro genereert statische HTML. Gecombineerd met Vercel CDN levert dit uitstekende TTFB-scores
+            en een verwachte Lighthouse Performance score &gt; 85.
+          </div>
+        </div>
+        <span class="fix-tag">Geen actie</span>
+      </div>
+
+      <div class="issue-item">
+        <span class="sev-badge sev-pass">OK ✓</span>
+        <div>
+          <div class="issue-title">LocalBusiness JSON-LD aanwezig</div>
+          <div class="issue-desc">
+            Structured data bevat name, url, telephone, email, address, priceRange en aggregateRating (4.9/87 reviews).
+            Dit ondersteunt Rich Snippets in Google. Let op: rating moet overeenkomen met echte reviewdata
+            (Google Maps / Trustpilot) om penalty te voorkomen.
+          </div>
+        </div>
+        <span class="fix-tag">Controleer reviews</span>
+      </div>
+
+    </div>
   </div>
+
+  <div class="section-dark">
+    <div class="section-dark-inner">
+      <div class="section-label">Opgeloste bestanden</div>
+      <h2 class="section-heading" style="font-size:clamp(24px,3vw,40px);margin-bottom:32px">Aangemaakt in <span class="red">public/</span></h2>
+      <div class="code-block">
+<span class="c-comment"># public/robots.txt</span>
+<span class="c-tag">User-agent:</span> <span class="c-val">*</span>
+<span class="c-tag">Allow:</span> <span class="c-val">/</span>
+<span class="c-tag">Sitemap:</span> <span class="c-val">https://bzevents.nl/sitemap.xml</span>
+      </div>
+      <div class="code-block">
+<span class="c-comment">&lt;!-- public/sitemap.xml --&gt;</span>
+&lt;<span class="c-tag">urlset</span> xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;<span class="c-tag">url</span>&gt;
+    &lt;<span class="c-key">loc</span>&gt;<span class="c-val">https://bzevents.nl/</span>&lt;/<span class="c-key">loc</span>&gt;
+    &lt;<span class="c-key">lastmod</span>&gt;<span class="c-val">2026-05-19</span>&lt;/<span class="c-key">lastmod</span>&gt;
+    &lt;<span class="c-key">priority</span>&gt;<span class="c-val">1.0</span>&lt;/<span class="c-key">priority</span>&gt;
+  &lt;/<span class="c-tag">url</span>&gt;
+&lt;/<span class="c-tag">urlset</span>&gt;
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- ─────────────────────────────────────────── -->
-<!-- TAB: ON-PAGE                                -->
-<!-- ─────────────────────────────────────────── -->
+<!-- ════════════════════════════════════ -->
+<!-- TAB: ON-PAGE                         -->
+<!-- ════════════════════════════════════ -->
 <div class="tab-content" id="tab-onpage">
-  <div class="container">
 
-    <div class="section-block">
-      <h2 class="section-title">On-Page SEO Checklist</h2>
-      <p class="section-sub">Meta, headings, content en structured data — zo staat de site er nu voor.</p>
+  <div class="section-wrap">
+    <div class="section-label">On-Page SEO</div>
+    <h2 class="section-heading">Meta goed, <span class="red">structuur zwak.</span></h2>
 
-      <div class="checklist" style="margin-bottom:40px">
-        <div class="check-item"><div class="check-icon pass">✓</div><div><strong>Title tag aanwezig</strong> — "BZ Events — Evenementenbureau Amsterdam | DJ, Catering &amp; Eventproductie" (69 tekens, inclusief primair keyword)</div></div>
-        <div class="check-item"><div class="check-icon pass">✓</div><div><strong>Meta description aanwezig</strong> — 155 tekens, keyword-rich, call-to-action aanwezig</div></div>
-        <div class="check-item"><div class="check-icon pass">✓</div><div><strong>Open Graph tags aanwezig</strong> — og:title, og:description, og:type, og:url, og:image ingevuld</div></div>
-        <div class="check-item"><div class="check-icon pass">✓</div><div><strong>Twitter Card aanwezig</strong> — twitter:card, twitter:image ingesteld</div></div>
-        <div class="check-item"><div class="check-icon pass">✓</div><div><strong>Canonical URL aanwezig</strong> — wijst naar bzevents.nl (let op: domein nog niet live)</div></div>
-        <div class="check-item"><div class="check-icon pass">✓</div><div><strong>Alt-tekst op afbeeldingen</strong> — alle portfolio- en sectionafbeeldingen hebben relevante alt-beschrijvingen</div></div>
-        <div class="check-item"><div class="check-icon warn">!</div><div><strong>H1 hiërarchie onduidelijk</strong> — de H1 "Stijlvol geproduceerd." beschrijft een tagline, niet het primaire keyword. Aanraden: H1 = "Evenementenbureau Amsterdam — BZ Events"</div></div>
-        <div class="check-item"><div class="check-icon warn">!</div><div><strong>Content te kort</strong> — ca. 1.200–1.400 woorden zichtbare tekst. Concurrenten ranken met 3.500–5.000 woorden. Google beloont diepgang.</div></div>
-        <div class="check-item"><div class="check-icon warn">!</div><div><strong>Geen FAQ-sectie</strong> — "People Also Ask" snippets zijn krachtige traffic-generatoren. Concurrenten Dutch Standard Events en OneMotion hebben wel FAQ-secties.</div></div>
-        <div class="check-item"><div class="check-icon fail">✗</div><div><strong>Geen interne links naar subpagina's</strong> — alle navigatie is anchor-only. Bij uitbreiding naar multi-page moet er een interne linkstructuur komen.</div></div>
-        <div class="check-item"><div class="check-icon fail">✗</div><div><strong>Footer logo zonder alt-tekst</strong> — 1 afbeelding gedetecteerd zonder alt-attribuut. Klein maar makkelijk te fixen.</div></div>
-      </div>
+    <div class="check-list">
+      <div class="check-row"><div class="check-icon ci-pass">✓</div><div><strong>Title tag</strong> — "BZ Events — Evenementenbureau Amsterdam | DJ, Catering &amp; Eventproductie" (69 tekens, primair keyword aanwezig)</div></div>
+      <div class="check-row"><div class="check-icon ci-pass">✓</div><div><strong>Meta description</strong> — 155 tekens, keyword-rich, call-to-action aanwezig</div></div>
+      <div class="check-row"><div class="check-icon ci-pass">✓</div><div><strong>Open Graph tags</strong> — og:title, og:description, og:type, og:url, og:image allemaal aanwezig</div></div>
+      <div class="check-row"><div class="check-icon ci-pass">✓</div><div><strong>Twitter Card</strong> — twitter:card en twitter:image ingesteld</div></div>
+      <div class="check-row"><div class="check-icon ci-pass">✓</div><div><strong>Canonical URL</strong> — aanwezig, wijst naar bzevents.nl (let op: domein nog niet live)</div></div>
+      <div class="check-row"><div class="check-icon ci-pass">✓</div><div><strong>Alt-tekst afbeeldingen</strong> — alle portfolio- en sectionafbeeldingen hebben relevante alt-beschrijvingen</div></div>
+      <div class="check-row"><div class="check-icon ci-warn">!</div><div><strong>H1 bevat geen zoekwoord</strong> — huidige H1 is de tagline "Stijlvol geproduceerd." — Aanbevolen: H1 = "Evenementenbureau Amsterdam — BZ Events"</div></div>
+      <div class="check-row"><div class="check-icon ci-warn">!</div><div><strong>Content te kort</strong> — ca. 1.200–1.400 woorden zichtbare tekst. Concurrenten ranken met 3.500–5.000 woorden.</div></div>
+      <div class="check-row"><div class="check-icon ci-warn">!</div><div><strong>Geen FAQ-sectie</strong> — "People Also Ask" snippets zijn krachtige traffic-generatoren. Concurrenten Dutch Standard Events en OneMotion hebben wel FAQ-secties.</div></div>
+      <div class="check-row"><div class="check-icon ci-fail">✗</div><div><strong>Geen interne links naar subpagina's</strong> — alle navigatie is anchor-only. Bij uitbreiding naar multi-page is een interne linkstructuur nodig.</div></div>
+      <div class="check-row"><div class="check-icon ci-fail">✗</div><div><strong>Footer logo zonder alt-tekst</strong> — 1 afbeelding gedetecteerd zonder alt-attribuut. Fix: <code>alt="BZ Events — Evenementenbureau Amsterdam"</code></div></div>
     </div>
 
-    <hr class="divider">
+    <div class="section-label" style="margin-top:56px">Heading hiërarchie</div>
+    <h3 style="font-family:'Archivo Black',sans-serif;font-size:clamp(20px,2.5vw,32px);text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:28px">Huidig vs. aanbevolen</h3>
 
-    <div class="section-block">
-      <h2 class="section-title">Heading Hiërarchie Analyse</h2>
-      <p class="section-sub">De huidige heading-structuur vs. de aanbevolen SEO-hiërarchie.</p>
-
-      <div class="two-col">
-        <div>
-          <p style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:12px">Huidige structuur</p>
-          <div class="b-card" style="padding:20px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2.2;color:#555">
-              <span style="color:var(--red);font-weight:700">H1</span> — "Stijlvol geproduceerd."<br>
-              <span style="color:var(--muted)">H2</span> — "Eventproductie op maat"<br>
-              <span style="color:var(--muted)">H2</span> — "DJ Booking in Amsterdam"<br>
-              <span style="color:var(--muted)">H2</span> — "Catering voor elk evenement"<br>
-              <span style="color:var(--muted)">H2</span> — "Elk evenement een verhaal"<br>
-              <span style="color:var(--orange)">Probleem</span> — H1 bevat geen zoekwoord
-            </div>
-          </div>
-        </div>
-        <div>
-          <p style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:12px">Aanbevolen structuur</p>
-          <div class="b-card b-card-red" style="padding:20px">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2.2;color:#555">
-              <span style="color:var(--green);font-weight:700">H1</span> — "Evenementenbureau Amsterdam — BZ Events"<br>
-              <span style="color:#555">H2</span> — "Eventproductie op maat"<br>
-              <span style="color:#555">H2</span> — "DJ Booking in Amsterdam"<br>
-              <span style="color:#555">H2</span> — "Catering voor elk evenement"<br>
-              <span style="color:#555">H2</span> — "Bedrijfsfeest organiseren Amsterdam"<br>
-              <span style="color:var(--green)">Fix</span> — H1 = primaire zoekterm
-            </div>
-          </div>
-        </div>
+    <div class="heading-compare">
+      <div class="hc-col current">
+        <div class="hc-label">Huidige structuur — problematisch</div>
+        <div class="hc-row"><span class="tag-h1">H1</span> — "Stijlvol geproduceerd." <em style="color:var(--red);font-size:11px">(geen keyword)</em></div>
+        <div class="hc-row"><span class="tag-h2">H2</span> — "Eventproductie op maat"</div>
+        <div class="hc-row"><span class="tag-h2">H2</span> — "DJ Booking in Amsterdam"</div>
+        <div class="hc-row"><span class="tag-h2">H2</span> — "Catering voor elk evenement"</div>
+        <div class="hc-row"><span class="tag-h2">H2</span> — "Elk evenement een verhaal"</div>
       </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section-block">
-      <h2 class="section-title">Content Depth Vergelijking</h2>
-      <p class="section-sub">Woordaantal en inhouddiepte versus de concurrenten die nu bovenaan staan.</p>
-
-      <div style="border:2px solid var(--black);overflow:hidden;">
-        <div style="display:grid;grid-template-columns:1fr 120px 120px;background:var(--black);color:var(--white);padding:12px 20px;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.12em;">
-          <div>Website</div><div style="text-align:center">Woorden</div><div style="text-align:center">Pagina's</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 120px 120px;padding:16px 20px;border-bottom:1px solid #e5e5e5;background:var(--red-bg)">
-          <div><strong>BZ Events</strong> (huidig)</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);font-weight:700">~1.300</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);font-weight:700">1</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 120px 120px;padding:16px 20px;border-bottom:1px solid #e5e5e5">
-          <div>Dutch Standard Events</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px">~3.500</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px">8+</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 120px 120px;padding:16px 20px;border-bottom:1px solid #e5e5e5">
-          <div>OneMotion Events</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px">~4.500</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px">12+</div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 120px 120px;padding:16px 20px">
-          <div>Eventbureau.nl</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px">~850</div>
-          <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:13px">4</div>
-        </div>
-        <div style="background:var(--bone);padding:14px 20px;border-top:2px solid var(--black);font-size:13px;color:var(--muted)">
-          <strong style="color:var(--black)">Doel:</strong> Uitbreiden naar minimaal 2.500 woorden op de homepagina + aparte dienstenpagina's van elk 800–1.200 woorden.
-        </div>
+      <div class="hc-col proposed">
+        <div class="hc-label" style="color:rgba(255,255,255,.4)">Aanbevolen structuur — SEO-geoptimaliseerd</div>
+        <div class="hc-row"><span class="tag-ok">H1</span> — "Evenementenbureau Amsterdam — BZ Events"</div>
+        <div class="hc-row">H2 — "Eventproductie op maat"</div>
+        <div class="hc-row">H2 — "DJ Booking in Amsterdam"</div>
+        <div class="hc-row">H2 — "Catering voor elk evenement"</div>
+        <div class="hc-row">H2 — "Bedrijfsfeest organiseren Amsterdam"</div>
       </div>
     </div>
 
   </div>
-</div>
 
-<!-- ─────────────────────────────────────────── -->
-<!-- TAB: KEYWORDS                               -->
-<!-- ─────────────────────────────────────────── -->
-<div class="tab-content" id="tab-keywords">
-  <div class="container">
+  <div class="section-bone">
+    <div class="section-bone-inner">
+      <div class="section-label">Content diepte</div>
+      <h3 style="font-family:'Archivo Black',sans-serif;font-size:clamp(20px,2.5vw,32px);text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:28px">BZ Events vs. concurrenten</h3>
 
-    <div class="section-block">
-      <h2 class="section-title">Primaire Keyword Targets</h2>
-      <p class="section-sub">De drie doelzoekwoorden plus directe kansen in de long-tail.</p>
-
-      <table class="kw-table">
-        <thead>
-          <tr>
-            <th>Zoekwoord</th>
-            <th>Volume/mnd (NL)</th>
-            <th>Moeilijkheid</th>
-            <th>Status op BZ Events</th>
-            <th>Prioriteit</th>
-          </tr>
-        </thead>
+      <table class="content-table">
+        <thead><tr><th>Website</th><th>Woordenaantal</th><th>Pagina's</th><th>FAQ</th></tr></thead>
         <tbody>
-          <tr>
-            <td><span class="kw-primary">evenementenbureau Amsterdam</span></td>
-            <td><span class="kw-volume">1.900</span></td>
-            <td><div class="kw-difficulty diff-high">H</div></td>
-            <td><span class="kw-status-tag status-weak">Zwak — in titel, maar H1 mist</span></td>
-            <td style="font-weight:700;color:var(--red)">Primair</td>
+          <tr class="highlight">
+            <td><strong>BZ Events</strong> — huidig</td>
+            <td style="font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:700">~1.300</td>
+            <td style="font-family:'JetBrains Mono',monospace;color:var(--red);font-weight:700">1</td>
+            <td style="color:var(--red);font-weight:700">Nee</td>
           </tr>
           <tr>
-            <td><span class="kw-primary">bedrijfsfeest organiseren Amsterdam</span></td>
-            <td><span class="kw-volume">480</span></td>
-            <td><div class="kw-difficulty diff-med">M</div></td>
-            <td><span class="kw-status-tag status-weak">Aanwezig in copy, geen eigen pagina</span></td>
-            <td style="font-weight:700;color:var(--orange)">Hoog</td>
+            <td>Dutch Standard Events</td>
+            <td style="font-family:'JetBrains Mono',monospace">~3.500</td>
+            <td style="font-family:'JetBrains Mono',monospace">8+</td>
+            <td style="color:#16a34a;font-weight:700">Ja</td>
           </tr>
           <tr>
-            <td><span class="kw-primary">catering evenement Amsterdam</span></td>
-            <td><span class="kw-volume">720</span></td>
-            <td><div class="kw-difficulty diff-med">M</div></td>
-            <td><span class="kw-status-tag status-weak">Sectie aanwezig, maar geen H2 met keyword</span></td>
-            <td style="font-weight:700;color:var(--orange)">Hoog</td>
+            <td>OneMotion Events</td>
+            <td style="font-family:'JetBrains Mono',monospace">~4.500</td>
+            <td style="font-family:'JetBrains Mono',monospace">12+</td>
+            <td style="color:#16a34a;font-weight:700">Ja</td>
           </tr>
           <tr>
-            <td><span class="kw-primary">DJ boeken Amsterdam</span></td>
-            <td><span class="kw-volume">1.300</span></td>
-            <td><div class="kw-difficulty diff-med">M</div></td>
-            <td><span class="kw-status-tag status-present">H2 aanwezig in DJ-sectie</span></td>
-            <td style="font-weight:700;color:var(--green)">Op koers</td>
-          </tr>
-          <tr>
-            <td>eventbureau amsterdam</td>
-            <td><span class="kw-volume">590</span></td>
-            <td><div class="kw-difficulty diff-med">M</div></td>
-            <td><span class="kw-status-tag status-missing">Ontbreekt volledig</span></td>
-            <td style="font-weight:700">Toevoegen</td>
-          </tr>
-          <tr>
-            <td>evenement organiseren Amsterdam</td>
-            <td><span class="kw-volume">880</span></td>
-            <td><div class="kw-difficulty diff-high">H</div></td>
-            <td><span class="kw-status-tag status-missing">Ontbreekt volledig</span></td>
-            <td style="font-weight:700">Toevoegen</td>
-          </tr>
-          <tr>
-            <td>gala Amsterdam organiseren</td>
-            <td><span class="kw-volume">260</span></td>
-            <td><div class="kw-difficulty diff-low">L</div></td>
-            <td><span class="kw-status-tag status-weak">Impliciet aanwezig in portfolio</span></td>
-            <td style="font-weight:700">Long-tail kans</td>
-          </tr>
-          <tr>
-            <td>walking dinner Amsterdam</td>
-            <td><span class="kw-volume">320</span></td>
-            <td><div class="kw-difficulty diff-low">L</div></td>
-            <td><span class="kw-status-tag status-present">Aanwezig in catering tags</span></td>
-            <td style="font-weight:700;color:var(--green)">Uitbreiden</td>
-          </tr>
-          <tr>
-            <td>fine dining evenement Amsterdam</td>
-            <td><span class="kw-volume">210</span></td>
-            <td><div class="kw-difficulty diff-low">L</div></td>
-            <td><span class="kw-status-tag status-present">Aanwezig in catering sectie</span></td>
-            <td style="font-weight:700;color:var(--green)">Uitbreiden</td>
-          </tr>
-          <tr>
-            <td>AV productie evenement</td>
-            <td><span class="kw-volume">170</span></td>
-            <td><div class="kw-difficulty diff-low">L</div></td>
-            <td><span class="kw-status-tag status-present">In diensten tags aanwezig</span></td>
-            <td style="font-weight:700;color:var(--green)">Uitbreiden</td>
-          </tr>
-          <tr>
-            <td>corporate event Amsterdam</td>
-            <td><span class="kw-volume">440</span></td>
-            <td><div class="kw-difficulty diff-med">M</div></td>
-            <td><span class="kw-status-tag status-weak">Aanwezig maar niet prominent</span></td>
-            <td style="font-weight:700;color:var(--orange)">Versterken</td>
-          </tr>
-          <tr>
-            <td>teambuilding Amsterdam bureau</td>
-            <td><span class="kw-volume">390</span></td>
-            <td><div class="kw-difficulty diff-low">L</div></td>
-            <td><span class="kw-status-tag status-missing">Ontbreekt — wel in service-tags</span></td>
-            <td style="font-weight:700">Toevoegen</td>
+            <td>Eventbureau.nl</td>
+            <td style="font-family:'JetBrains Mono',monospace">~850</td>
+            <td style="font-family:'JetBrains Mono',monospace">4</td>
+            <td style="color:var(--red);font-weight:700">Nee</td>
           </tr>
         </tbody>
       </table>
+      <p style="font-size:13px;color:var(--muted)"><strong style="color:var(--black)">Doel:</strong> Uitbreiden naar minimaal 2.500 woorden op de homepagina + aparte dienstenpagina's van 800–1.200 woorden elk.</p>
     </div>
-
-    <hr class="divider">
-
-    <div class="section-block">
-      <h2 class="section-title">LSI Keywords — Te Verwerken in Content</h2>
-      <p class="section-sub">Semantisch gerelateerde termen die Google gebruikt om topicale autoriteit te beoordelen. Rood = hoogste prioriteit.</p>
-
-      <div class="b-card" style="margin-bottom:24px">
-        <p style="font-size:13px;font-weight:700;margin-bottom:12px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;font-size:10px;color:var(--muted)">Eventproductie &amp; Organisatie</p>
-        <div class="lsi-grid">
-          <span class="lsi-tag priority">evenementenbureau Amsterdam</span>
-          <span class="lsi-tag priority">eventbureau Amsterdam</span>
-          <span class="lsi-tag priority">bedrijfsfeest organiseren</span>
-          <span class="lsi-tag">feestorganisatie</span>
-          <span class="lsi-tag">event management</span>
-          <span class="lsi-tag">jubileum feest</span>
-          <span class="lsi-tag">productlancering Amsterdam</span>
-          <span class="lsi-tag">locatieselectie</span>
-          <span class="lsi-tag">conceptontwikkeling</span>
-          <span class="lsi-tag">dag-van-coördinatie</span>
-        </div>
-      </div>
-
-      <div class="b-card" style="margin-bottom:24px">
-        <p style="font-size:13px;font-weight:700;margin-bottom:12px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;font-size:10px;color:var(--muted)">Catering &amp; Gastvrijheid</p>
-        <div class="lsi-grid">
-          <span class="lsi-tag priority">catering Amsterdam</span>
-          <span class="lsi-tag priority">walking dinner Amsterdam</span>
-          <span class="lsi-tag">fine dining Amsterdam</span>
-          <span class="lsi-tag">receptie catering</span>
-          <span class="lsi-tag">luxe buffet</span>
-          <span class="lsi-tag">gastvrijheid event</span>
-          <span class="lsi-tag">cateringpartner</span>
-          <span class="lsi-tag">food experience</span>
-          <span class="lsi-tag">menusamenstelling</span>
-        </div>
-      </div>
-
-      <div class="b-card" style="margin-bottom:24px">
-        <p style="font-size:13px;font-weight:700;margin-bottom:12px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;font-size:10px;color:var(--muted)">DJ &amp; Entertainment</p>
-        <div class="lsi-grid">
-          <span class="lsi-tag priority">DJ boeken Amsterdam</span>
-          <span class="lsi-tag">live entertainment</span>
-          <span class="lsi-tag">muziekprogrammering</span>
-          <span class="lsi-tag">sound design event</span>
-          <span class="lsi-tag">loungesets</span>
-          <span class="lsi-tag">after-dinner dance</span>
-          <span class="lsi-tag">entertainment bureau</span>
-          <span class="lsi-tag">DJ set op maat</span>
-        </div>
-      </div>
-
-      <div class="b-card">
-        <p style="font-size:13px;font-weight:700;margin-bottom:12px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;font-size:10px;color:var(--muted)">Techniek &amp; Styling</p>
-        <div class="lsi-grid">
-          <span class="lsi-tag priority">AV productie Amsterdam</span>
-          <span class="lsi-tag">licht en geluid</span>
-          <span class="lsi-tag">decor verhuur Amsterdam</span>
-          <span class="lsi-tag">sfeerverlichting event</span>
-          <span class="lsi-tag">podiumtechniek</span>
-          <span class="lsi-tag">uplighting</span>
-          <span class="lsi-tag">interieur styling event</span>
-          <span class="lsi-tag">tent of zaal inrichten</span>
-        </div>
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section-block">
-      <h2 class="section-title">FAQ — People Also Ask</h2>
-      <p class="section-sub">Voeg deze vragen + antwoorden toe als FAQ-sectie op de site voor featured snippet kansen.</p>
-
-      <div class="issues-grid">
-        <div class="issue-item" style="grid-template-columns:1fr">
-          <div><div class="issue-title">Wat kost een evenementenbureau in Amsterdam?</div><div class="issue-desc">Gemiddelde prijzen voor eventbureaus in Amsterdam liggen tussen €3.500 en €25.000+ afhankelijk van omvang, diensten en locatie. Voeg een "Wat kost het?" sectie toe — dit is een van de meest gezochte combinaties en brengt koopklaar verkeer.</div></div>
-        </div>
-        <div class="issue-item" style="grid-template-columns:1fr">
-          <div><div class="issue-title">Hoe ver van tevoren moet ik een evenementenbureau boeken?</div><div class="issue-desc">Concrete "hoe werkt het?"-vragen worden frequent als snippet opgepikt. BZ Events' werkwijze-sectie kan hiervoor worden uitgebreid.</div></div>
-        </div>
-        <div class="issue-item" style="grid-template-columns:1fr">
-          <div><div class="issue-title">Wat is er allemaal inbegrepen bij eventproductie?</div><div class="issue-desc">Scopevragen zijn ideaal voor featured snippets — gestructureerde bullet-lijsten worden door Google direct weergegeven in de zoekresultaten.</div></div>
-        </div>
-        <div class="issue-item" style="grid-template-columns:1fr">
-          <div><div class="issue-title">Welke locaties werken jullie mee samen in Amsterdam?</div><div class="issue-desc">Locatievragen zijn lokaal gekoppeld en genereren organisch verkeer van mensen die nog geen bureau kennen maar wel een locatie overwegen.</div></div>
-        </div>
-      </div>
-    </div>
-
   </div>
+
 </div>
 
-<!-- ─────────────────────────────────────────── -->
-<!-- TAB: CONCURRENTEN                           -->
-<!-- ─────────────────────────────────────────── -->
+<!-- ════════════════════════════════════ -->
+<!-- TAB: KEYWORDS                        -->
+<!-- ════════════════════════════════════ -->
+<div class="tab-content" id="tab-keywords">
+
+  <div class="section-wrap">
+    <div class="section-label">Keyword Strategie</div>
+    <h2 class="section-heading">Ranken op de <span class="red">juiste woorden.</span></h2>
+
+    <table class="kw-table">
+      <thead>
+        <tr>
+          <th>Zoekwoord</th>
+          <th>Volume/mnd</th>
+          <th>Moeilijkheid</th>
+          <th>Status op site</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="kw-primary">evenementenbureau Amsterdam</span></td>
+          <td><span class="kw-vol">1.900</span></td>
+          <td><div class="diff-box diff-h">H</div></td>
+          <td><span class="status-tag s-weak">Zwak — in titel, H1 mist keyword</span></td>
+          <td style="font-weight:700;color:var(--red)">Primair</td>
+        </tr>
+        <tr>
+          <td><span class="kw-primary">DJ boeken Amsterdam</span></td>
+          <td><span class="kw-vol">1.300</span></td>
+          <td><div class="diff-box diff-m">M</div></td>
+          <td><span class="status-tag s-present">H2 aanwezig in DJ-sectie</span></td>
+          <td style="font-weight:700;color:#16a34a">Op koers</td>
+        </tr>
+        <tr>
+          <td><span class="kw-primary">catering evenement Amsterdam</span></td>
+          <td><span class="kw-vol">720</span></td>
+          <td><div class="diff-box diff-m">M</div></td>
+          <td><span class="status-tag s-weak">Sectie aanwezig, H2 mist keyword</span></td>
+          <td style="font-weight:700;color:#ea580c">Versterken</td>
+        </tr>
+        <tr>
+          <td>evenement organiseren Amsterdam</td>
+          <td><span class="kw-vol">880</span></td>
+          <td><div class="diff-box diff-h">H</div></td>
+          <td><span class="status-tag s-missing">Ontbreekt</span></td>
+          <td>Toevoegen</td>
+        </tr>
+        <tr>
+          <td><span class="kw-primary">bedrijfsfeest organiseren Amsterdam</span></td>
+          <td><span class="kw-vol">480</span></td>
+          <td><div class="diff-box diff-m">M</div></td>
+          <td><span class="status-tag s-weak">In copy, geen eigen pagina</span></td>
+          <td style="font-weight:700;color:#ea580c">Hoog</td>
+        </tr>
+        <tr>
+          <td>eventbureau Amsterdam</td>
+          <td><span class="kw-vol">590</span></td>
+          <td><div class="diff-box diff-m">M</div></td>
+          <td><span class="status-tag s-missing">Ontbreekt volledig</span></td>
+          <td>Toevoegen</td>
+        </tr>
+        <tr>
+          <td>teambuilding Amsterdam bureau</td>
+          <td><span class="kw-vol">390</span></td>
+          <td><div class="diff-box diff-l">L</div></td>
+          <td><span class="status-tag s-missing">Ontbreekt — wel in service-tags</span></td>
+          <td>Toevoegen</td>
+        </tr>
+        <tr>
+          <td>walking dinner Amsterdam</td>
+          <td><span class="kw-vol">320</span></td>
+          <td><div class="diff-box diff-l">L</div></td>
+          <td><span class="status-tag s-present">Aanwezig in catering tags</span></td>
+          <td style="font-weight:700;color:#16a34a">Uitbreiden</td>
+        </tr>
+        <tr>
+          <td>gala Amsterdam organiseren</td>
+          <td><span class="kw-vol">260</span></td>
+          <td><div class="diff-box diff-l">L</div></td>
+          <td><span class="status-tag s-weak">Impliciet in portfolio</span></td>
+          <td>Long-tail</td>
+        </tr>
+        <tr>
+          <td>corporate event Amsterdam</td>
+          <td><span class="kw-vol">440</span></td>
+          <td><div class="diff-box diff-m">M</div></td>
+          <td><span class="status-tag s-weak">Aanwezig maar niet prominent</span></td>
+          <td style="font-weight:700;color:#ea580c">Versterken</td>
+        </tr>
+        <tr>
+          <td>fine dining evenement Amsterdam</td>
+          <td><span class="kw-vol">210</span></td>
+          <td><div class="diff-box diff-l">L</div></td>
+          <td><span class="status-tag s-present">In catering sectie</span></td>
+          <td style="font-weight:700;color:#16a34a">Uitbreiden</td>
+        </tr>
+        <tr>
+          <td>AV productie evenement Amsterdam</td>
+          <td><span class="kw-vol">170</span></td>
+          <td><div class="diff-box diff-l">L</div></td>
+          <td><span class="status-tag s-present">In diensten tags</span></td>
+          <td style="font-weight:700;color:#16a34a">Uitbreiden</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-dark">
+    <div class="section-dark-inner">
+      <div class="section-label">LSI Keywords</div>
+      <h2 class="section-heading" style="font-size:clamp(24px,3vw,42px);margin-bottom:40px">Semantische <span class="red">diepte.</span></h2>
+      <p class="section-body">
+        Verwerk deze termen verspreid door de tekst — ze signaleren topicale autoriteit aan Google.
+        <strong style="color:rgba(255,255,255,.9)">Rood = hoogste prioriteit.</strong>
+      </p>
+
+      <div class="lsi-group">
+        <div class="lsi-group-label" style="border-bottom-color:rgba(255,255,255,.15);color:rgba(255,255,255,.3)">Eventproductie &amp; Organisatie</div>
+        <div class="lsi-tags" style="--tag-border:rgba(255,255,255,.2)">
+          <span class="lsi-tag hot">evenementenbureau Amsterdam</span>
+          <span class="lsi-tag hot">eventbureau Amsterdam</span>
+          <span class="lsi-tag hot">bedrijfsfeest organiseren</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">feestorganisatie</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">event management</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">jubileum feest Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">productlancering Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">locatieselectie evenement</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">conceptontwikkeling</span>
+        </div>
+      </div>
+
+      <div class="lsi-group">
+        <div class="lsi-group-label" style="border-bottom-color:rgba(255,255,255,.15);color:rgba(255,255,255,.3)">Catering &amp; Gastvrijheid</div>
+        <div class="lsi-tags">
+          <span class="lsi-tag hot">catering Amsterdam</span>
+          <span class="lsi-tag hot">walking dinner Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">fine dining Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">receptie catering</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">luxe buffet</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">gastvrijheid event</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">food experience</span>
+        </div>
+      </div>
+
+      <div class="lsi-group">
+        <div class="lsi-group-label" style="border-bottom-color:rgba(255,255,255,.15);color:rgba(255,255,255,.3)">DJ &amp; Entertainment</div>
+        <div class="lsi-tags">
+          <span class="lsi-tag hot">DJ boeken Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">live entertainment</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">muziekprogrammering</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">sound design event</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">after-dinner dance</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">entertainment bureau Amsterdam</span>
+        </div>
+      </div>
+
+      <div class="lsi-group">
+        <div class="lsi-group-label" style="border-bottom-color:rgba(255,255,255,.15);color:rgba(255,255,255,.3)">Techniek &amp; Styling</div>
+        <div class="lsi-tags">
+          <span class="lsi-tag hot">AV productie Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">licht en geluid Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">decor verhuur Amsterdam</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">sfeerverlichting event</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">interieur styling event</span>
+          <span class="lsi-tag" style="border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75)">uplighting gala</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════ -->
+<!-- TAB: CONCURRENTEN                    -->
+<!-- ════════════════════════════════════ -->
 <div class="tab-content" id="tab-concurrenten">
-  <div class="container">
 
-    <div class="section-block">
-      <h2 class="section-title">Concurrentieanalyse</h2>
-      <p class="section-sub">Wie staat er bovenaan en waarom — en wat kan BZ Events van hen kopiëren of overtreffen.</p>
+  <div class="section-wrap">
+    <div class="section-label">Concurrentieanalyse</div>
+    <h2 class="section-heading">Wie staat er <span class="red">bovenaan.</span></h2>
 
-      <div class="comp-grid" style="margin-bottom:40px">
+    <div class="comp-grid">
 
-        <div class="comp-col featured">
-          <div class="comp-rank">#1 Concurrent</div>
-          <div class="comp-score-badge">72</div>
-          <div class="comp-name">Dutch Standard Events</div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Woorden (homepage)</span>
-            <span class="comp-metric-val">~3.500</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Pagina's geïndexeerd</span>
-            <span class="comp-metric-val">8+</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">FAQ-sectie</span>
-            <span class="comp-metric-val" style="color:#22c55e">Ja</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Google Reviews</span>
-            <span class="comp-metric-val">4.7 ★ (53)</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Multi-page diensten</span>
-            <span class="comp-metric-val" style="color:#22c55e">Ja</span>
-          </div>
-          <div style="margin-top:16px;font-size:12px;color:rgba(255,255,255,0.5);line-height:1.6">
-            Sterke structuur, aparte pagina voor /diensten/bedrijfsfeesten en /diensten/galas.
-            LSI-keywords zijn goed verwerkt. FAQ onderaan homepage.
-          </div>
+      <div class="comp-col top">
+        <div class="comp-rank">#1 — Sterkste concurrent</div>
+        <div class="comp-score">72</div>
+        <div class="comp-name">Dutch Standard Events</div>
+        <div class="comp-row">
+          <span class="comp-row-label">Woordenaantal</span>
+          <span class="comp-row-val">~3.500</span>
         </div>
-
-        <div class="comp-col">
-          <div class="comp-rank">#2 Concurrent</div>
-          <div class="comp-score-badge-light">68</div>
-          <div class="comp-name">OneMotion Events</div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Woorden (homepage)</span>
-            <span class="comp-metric-val">~4.500</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Pagina's geïndexeerd</span>
-            <span class="comp-metric-val">12+</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">FAQ-sectie</span>
-            <span class="comp-metric-val" style="color:var(--green)">Ja</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Google Reviews</span>
-            <span class="comp-metric-val">4.8 ★ (41)</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Multi-page diensten</span>
-            <span class="comp-metric-val" style="color:var(--green)">Ja</span>
-          </div>
-          <div style="margin-top:16px;font-size:12px;color:var(--muted);line-height:1.6">
-            Meeste content van alle concurrenten. Aparte pagina's voor /bedrijfsfeesten,
-            /teambuilding, /galas. Blogt actief over evenementtrends.
-          </div>
+        <div class="comp-row">
+          <span class="comp-row-label">Geïndexeerde pagina's</span>
+          <span class="comp-row-val">8+</span>
         </div>
-
-        <div class="comp-col">
-          <div class="comp-rank">#3 Concurrent (zwakker)</div>
-          <div class="comp-score-badge-light">48</div>
-          <div class="comp-name">Eventbureau.nl</div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Woorden (homepage)</span>
-            <span class="comp-metric-val">~850</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Pagina's geïndexeerd</span>
-            <span class="comp-metric-val">4</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">FAQ-sectie</span>
-            <span class="comp-metric-val" style="color:var(--red)">Nee</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Google Reviews</span>
-            <span class="comp-metric-val">—</span>
-          </div>
-          <div class="comp-metric">
-            <span class="comp-metric-label">Multi-page diensten</span>
-            <span class="comp-metric-val" style="color:var(--red)">Minimaal</span>
-          </div>
-          <div style="margin-top:16px;font-size:12px;color:var(--muted);line-height:1.6">
-            Dit is de zwakste concurrent — hier valt BZ Events snel langs te scoren.
-            Minder content dan BZ Events op termijn, weinig structuur.
-          </div>
+        <div class="comp-row">
+          <span class="comp-row-label">FAQ-sectie</span>
+          <span class="comp-row-val val-yes">Ja</span>
         </div>
-
-      </div>
-    </div>
-
-    <div class="section-block">
-      <h2 class="section-title">Wat BZ Events anders kan doen</h2>
-      <p class="section-sub">Waar de concurrenten het laten liggen — kansen voor differentiatie.</p>
-
-      <div class="issues-grid">
-        <div class="issue-item">
-          <div><span class="issue-severity sev-low">Kans</span></div>
-          <div>
-            <div class="issue-title">Sterkere visuele storytelling</div>
-            <div class="issue-desc">BZ Events heeft unieke fotografie (kerkzaal gala, lantaarnnacht, rooftop) die concurrenten niet hebben. Concurrenten gebruiken stock-foto's. Echte projectfoto's met caption-rijke alt-tekst zijn een organische SEO-booster en versterken conversie tegelijk.</div>
-          </div>
-          <span class="issue-fix">Unieke troef</span>
+        <div class="comp-row">
+          <span class="comp-row-label">Google Reviews</span>
+          <span class="comp-row-val">4.7 ★ (53)</span>
         </div>
-        <div class="issue-item">
-          <div><span class="issue-severity sev-low">Kans</span></div>
-          <div>
-            <div class="issue-title">Portfolio-pagina's met case studies</div>
-            <div class="issue-desc">Geen van de concurrenten heeft uitgebreide case studies (probleem → aanpak → resultaat). Dit levert long-tail content op ("gala organiseren kerkzaal Amsterdam", "bedrijfsfeest 350 personen Amsterdam") en bouwt autoriteit.</div>
-          </div>
-          <span class="issue-fix">Eerste mover</span>
+        <div class="comp-row">
+          <span class="comp-row-label">Multi-page diensten</span>
+          <span class="comp-row-val val-yes">Ja</span>
         </div>
-        <div class="issue-item">
-          <div><span class="issue-severity sev-low">Kans</span></div>
-          <div>
-            <div class="issue-title">Prijsindicatie toevoegen</div>
-            <div class="issue-desc">"Wat kost een evenementenbureau Amsterdam?" heeft hoog zoekvolume en geen sterke concurrenten die het goed beantwoorden. Een "Investering" sectie met pakketindicaties trekt koopklaar verkeer en differentieert van concurrenten die bewust vaag blijven over prijzen.</div>
-          </div>
-          <span class="issue-fix">Traffic-magneet</span>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ─────────────────────────────────────────── -->
-<!-- TAB: ACTIEPLAN                              -->
-<!-- ─────────────────────────────────────────── -->
-<div class="tab-content" id="tab-actieplan">
-  <div class="container">
-
-    <div class="section-block">
-      <h2 class="section-title">Geprioriteerd Actieplan</h2>
-      <p class="section-sub">Gesorteerd op impact vs. uitvoeringtijd. Begin bij de rode items — die leveren direct resultaat.</p>
-
-      <div class="action-grid">
-        <div class="action-row action-row-header">
-          <div class="action-cell">#</div>
-          <div class="action-cell">Prioriteit</div>
-          <div class="action-cell">Actie</div>
-          <div class="action-cell">Verwachte impact</div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">01</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-now">Nu — 30 min</span></div>
-          <div class="action-cell">
-            <div class="action-title">robots.txt + sitemap.xml aanmaken</div>
-            <div class="action-desc">Voeg beide bestanden toe aan <code style="font-family:'JetBrains Mono',monospace">public/</code> in het Astro project. Templates staan in tab Technisch.</div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Crawlability</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:95%"></div></div>
-              <div class="impact-label">Indexering snelheid</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:90%;background:#22c55e"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">02</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-now">Nu — 20 min</span></div>
-          <div class="action-cell">
-            <div class="action-title">H1 herschrijven naar primair keyword</div>
-            <div class="action-desc">Verander de hero H1 van "Stijlvol geproduceerd." naar iets als "Evenementenbureau Amsterdam — BZ Events" of verberg de tagline als subtitle en zet het keyword als de visueel-onzichtbare-maar-semantisch-aanwezige H1.</div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Keyword relevantie</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:85%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">03</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-now">Nu — 5 min</span></div>
-          <div class="action-cell">
-            <div class="action-title">Footer logo alt-tekst toevoegen</div>
-            <div class="action-desc">Één afbeelding in de footer mist alt-tekst. Toevoegen: <code style="font-family:'JetBrains Mono',monospace">alt="BZ Events — Evenementenbureau Amsterdam"</code></div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Toegankelijkheid + SEO</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:30%;background:#22c55e"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">04</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-week">1 week</span></div>
-          <div class="action-cell">
-            <div class="action-title">Content uitbreiden naar 2.500+ woorden</div>
-            <div class="action-desc">Over-sectie uitbreiden, FAQ-sectie toevoegen (4 vragen), diensten-beschrijvingen verdiepen. Verwerk LSI-keywords uit de Keywords tab. Elke 500 woorden extra op de juiste manier geplaatst = meer keyword-varianten waarvoor de pagina rankt.</div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Organic ranking potentieel</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:88%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">05</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-week">1 week</span></div>
-          <div class="action-cell">
-            <div class="action-title">Google Search Console aanmelden</div>
-            <div class="action-desc">Verifieer eigendom via DNS-record of HTML-tag. Dien de sitemap in. Dit geeft direct inzicht in welke zoekwoorden al impressies genereren — zelfs als je nog niet op pagina 1 staat.</div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Data &amp; inzicht</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:70%;background:#3b82f6"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">06</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-month">1 maand</span></div>
-          <div class="action-cell">
-            <div class="action-title">Multi-page structuur uitbouwen</div>
-            <div class="action-desc">Maak aparte pagina's: /diensten/event-productie · /diensten/dj-booking · /diensten/catering · /contact. Elke pagina richt zich op een eigen keyword-cluster. Dit is de grootste sprong in SEO-bereik die je kunt maken.</div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Keyword-bereik (3–6 mnd effect)</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:95%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">07</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-month">1 maand</span></div>
-          <div class="action-cell">
-            <div class="action-title">Google My Business optimaliseren</div>
-            <div class="action-desc">Maak een GMB-profiel aan voor BZ Events Amsterdam. Voeg echte foto's toe, openingstijden, categorie "Evenementenbureau" en vraag bestaande klanten om reviews. Local pack resultaten (maps-resultaten) hebben vaak hogere klikratio dan reguliere zoekresultaten.</div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Lokale zichtbaarheid</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:80%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="action-row">
-          <div class="action-cell"><div class="action-num">08</div></div>
-          <div class="action-cell"><span class="action-priority-badge p-ongoing">Doorlopend</span></div>
-          <div class="action-cell">
-            <div class="action-title">Case studies + blog uitbouwen</div>
-            <div class="action-desc">Schrijf per afgerond project een case study (500–800 woorden). Long-tail keywords zoals "gala diner 350 personen Amsterdam" worden nooit door concurrenten aangevochten. Over 6–12 maanden levert dit een aanzienlijk organisch bereik op.</div>
-          </div>
-          <div class="action-cell">
-            <div class="action-impact">
-              <div class="impact-label">Long-tail autoriteit (6+ mnd)</div>
-              <div class="impact-bar-wrap"><div class="impact-bar" style="width:75%;background:#a78bfa"></div></div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <hr class="divider">
-
-    <div class="section-block">
-      <h2 class="section-title">Verwachte Score Na Implementatie</h2>
-      <p class="section-sub">Projectie na uitvoering van alle actiepunten.</p>
-
-      <div class="stat-row">
-        <div class="stat-block">
-          <div class="stat-val red">44</div>
-          <div class="stat-label">Score nu</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-val" style="color:#ea580c">58</div>
-          <div class="stat-label">Na acties 1–3 (vandaag)</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-val" style="color:#eab308">71</div>
-          <div class="stat-label">Na acties 1–5 (1 week)</div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-val green">84</div>
-          <div class="stat-label">Na alle acties (3 mnd)</div>
-        </div>
-      </div>
-
-      <div class="b-card" style="background:var(--bone);border-color:#e5e5e5;box-shadow:none">
-        <p style="font-size:14px;color:var(--muted);line-height:1.7">
-          <strong style="color:var(--black)">Let op:</strong> SEO is een marathon, geen sprint. De acties van vandaag zijn zichtbaar in Google over 2–8 weken.
-          Multi-page architectuur en content-uitbreiding hebben 3–6 maanden nodig om volledig effect te sorteren.
-          Begin met de snelle wins (robots.txt, sitemap, H1) — die leveren direct resultaat zonder tijdsinvestering.
+        <p style="margin-top:20px;font-size:12px;color:rgba(255,255,255,.45);line-height:1.7">
+          Sterke structuur met aparte pagina's voor /diensten/bedrijfsfeesten en /diensten/galas.
+          LSI-keywords goed verwerkt. FAQ onderaan homepage.
         </p>
       </div>
-    </div>
 
+      <div class="comp-col">
+        <div class="comp-rank">#2 — Zwaarste content</div>
+        <div class="comp-score">68</div>
+        <div class="comp-name">OneMotion Events</div>
+        <div class="comp-row">
+          <span class="comp-row-label">Woordenaantal</span>
+          <span class="comp-row-val">~4.500</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">Geïndexeerde pagina's</span>
+          <span class="comp-row-val">12+</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">FAQ-sectie</span>
+          <span class="comp-row-val val-yes">Ja</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">Google Reviews</span>
+          <span class="comp-row-val">4.8 ★ (41)</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">Multi-page diensten</span>
+          <span class="comp-row-val val-yes">Ja</span>
+        </div>
+        <p style="margin-top:20px;font-size:12px;color:var(--muted);line-height:1.7">
+          Meeste content van alle concurrenten. Aparte pagina's voor /bedrijfsfeesten, /teambuilding, /galas.
+          Blogt actief over evenementtrends.
+        </p>
+      </div>
+
+      <div class="comp-col">
+        <div class="comp-rank">#3 — Zwakste concurrent</div>
+        <div class="comp-score">48</div>
+        <div class="comp-name">Eventbureau.nl</div>
+        <div class="comp-row">
+          <span class="comp-row-label">Woordenaantal</span>
+          <span class="comp-row-val">~850</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">Geïndexeerde pagina's</span>
+          <span class="comp-row-val">4</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">FAQ-sectie</span>
+          <span class="comp-row-val val-no">Nee</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">Google Reviews</span>
+          <span class="comp-row-val">—</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-row-label">Multi-page diensten</span>
+          <span class="comp-row-val" style="color:#ea580c">Minimaal</span>
+        </div>
+        <p style="margin-top:20px;font-size:12px;color:var(--muted);line-height:1.7">
+          De zwakste concurrent — BZ Events kan hier snel langs scoren.
+          Minder content en structuur. Laagste prioriteit om te verslaan.
+        </p>
+      </div>
+
+    </div>
   </div>
+
+  <div class="section-dark">
+    <div class="section-dark-inner">
+      <div class="section-label">BZ Events kansen</div>
+      <h2 class="section-heading" style="font-size:clamp(24px,3vw,42px);margin-bottom:40px">Wat concurrenten <span class="red">missen.</span></h2>
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-num">01</div>
+          <div class="pillar-title">Visuele storytelling</div>
+          <div class="pillar-body">BZ Events heeft unieke fotografie (kerkzaal gala, lantaarnnacht, rooftop) die concurrenten niet hebben. Echte projectfoto's met keyword-rijke alt-tekst zijn een organische SEO-booster én versterken conversie.</div>
+          <span class="pillar-tag">Unieke troef — direct inzetten</span>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">02</div>
+          <div class="pillar-title">Case studies per project</div>
+          <div class="pillar-body">Geen enkele concurrent heeft uitgebreide case studies (probleem → aanpak → resultaat). Dit levert long-tail content op: "gala 350 personen Amsterdam", "bedrijfsfeest historische zaal". Bouwt topicale autoriteit.</div>
+          <span class="pillar-tag">First mover advantage</span>
+        </div>
+        <div class="pillar">
+          <div class="pillar-num">03</div>
+          <div class="pillar-title">Prijsindicatie toevoegen</div>
+          <div class="pillar-body">"Wat kost een evenementenbureau Amsterdam?" heeft hoog zoekvolume — niemand beantwoordt het goed. Een investering-sectie met pakketindicaties trekt koopklaar verkeer en differentieert van concurrenten die bewust vaag blijven.</div>
+          <span class="pillar-tag">Traffic-magneet</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
-<!-- ── Footer ── -->
-<footer style="background:var(--near-black);color:rgba(255,255,255,0.4);padding:32px 0;margin-top:0">
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-    <div style="font-family:'Archivo Black',sans-serif;font-size:15px;text-transform:uppercase;letter-spacing:-0.01em;color:var(--white)">Stolk<span style="color:var(--red)">web</span>design</div>
-    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.12em">
-      SEO Strategy Report · BZ Events · Gegenereerd 19 mei 2026 · Vertrouwelijk
+<!-- ════════════════════════════════════ -->
+<!-- TAB: ACTIEPLAN                       -->
+<!-- ════════════════════════════════════ -->
+<div class="tab-content" id="tab-actieplan">
+
+  <div class="section-wrap">
+    <div class="section-label">Geprioriteerd Actieplan</div>
+    <h2 class="section-heading">Stap voor stap <span class="red">omhoog.</span></h2>
+    <p class="section-body">Begin bij de rode items — die leveren direct resultaat zonder grote tijdsinvestering.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num" style="color:var(--red)">01</div>
+        <span class="step-priority p-now">Nu — 30 min</span>
+        <div>
+          <div class="step-title">robots.txt + sitemap.xml ✅</div>
+          <div class="step-body">Beide bestanden zijn aangemaakt in <code>public/</code>. Deploy naar Vercel en controleer via browser. Na go-live sitemap indienen via Google Search Console.</div>
+        </div>
+        <div class="step-impact" style="color:#16a34a">Opgelost<div class="impact-bar"><div class="impact-fill" style="width:95%;background:#16a34a"></div></div></div>
+      </div>
+
+      <div class="step">
+        <div class="step-num" style="color:var(--red)">02</div>
+        <span class="step-priority p-now">Nu — 20 min</span>
+        <div>
+          <div class="step-title">H1 herschrijven</div>
+          <div class="step-body">Verander de hero H1 van "Stijlvol geproduceerd." naar "Evenementenbureau Amsterdam — BZ Events" of voeg een visueel verborgen H1 toe met het primaire keyword.</div>
+        </div>
+        <div class="step-impact">Keyword relevantie<div class="impact-bar"><div class="impact-fill" style="width:85%"></div></div></div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">03</div>
+        <span class="step-priority p-now">Nu — 5 min</span>
+        <div>
+          <div class="step-title">Footer logo alt-tekst</div>
+          <div class="step-body">Voeg alt-tekst toe aan het footer-logo: <code>alt="BZ Events — Evenementenbureau Amsterdam"</code></div>
+        </div>
+        <div class="step-impact">Toegankelijkheid<div class="impact-bar"><div class="impact-fill" style="width:30%;background:#16a34a"></div></div></div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">04</div>
+        <span class="step-priority p-week">1 week</span>
+        <div>
+          <div class="step-title">Google Search Console aanmelden</div>
+          <div class="step-body">Verifieer eigendom via DNS-record of HTML-tag. Dien de sitemap in. Dit geeft direct inzicht in welke zoekwoorden al impressies genereren.</div>
+        </div>
+        <div class="step-impact">Data &amp; inzicht<div class="impact-bar"><div class="impact-fill" style="width:70%;background:#3b82f6"></div></div></div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">05</div>
+        <span class="step-priority p-week">1 week</span>
+        <div>
+          <div class="step-title">Content uitbreiden naar 2.500+ woorden</div>
+          <div class="step-body">Over-sectie uitbreiden, FAQ-sectie toevoegen (4 vragen), diensten-beschrijvingen verdiepen. Verwerk LSI-keywords uit de Keywords tab. Elke 500 woorden extra = meer keyword-varianten waarvoor de pagina rankt.</div>
+        </div>
+        <div class="step-impact">Organic potentieel<div class="impact-bar"><div class="impact-fill" style="width:88%"></div></div></div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">06</div>
+        <span class="step-priority p-month">1 maand</span>
+        <div>
+          <div class="step-title">Multi-page structuur uitbouwen</div>
+          <div class="step-body">Aparte pagina's: /diensten/event-productie · /diensten/dj-booking · /diensten/catering · /contact. Elke pagina richt zich op een eigen keyword-cluster. Dit is de grootste SEO-sprong die je kunt maken.</div>
+        </div>
+        <div class="step-impact">Keyword-bereik<div class="impact-bar"><div class="impact-fill" style="width:95%"></div></div></div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">07</div>
+        <span class="step-priority p-month">1 maand</span>
+        <div>
+          <div class="step-title">Google My Business optimaliseren</div>
+          <div class="step-body">GMB-profiel aanmaken voor BZ Events Amsterdam. Echte foto's, categorie "Evenementenbureau", bestaande klanten om reviews vragen. Local pack resultaten hebben hogere klikratio dan reguliere zoekresultaten.</div>
+        </div>
+        <div class="step-impact">Lokale zichtbaarheid<div class="impact-bar"><div class="impact-fill" style="width:80%"></div></div></div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">08</div>
+        <span class="step-priority p-long">Doorlopend</span>
+        <div>
+          <div class="step-title">Case studies + blog uitbouwen</div>
+          <div class="step-body">Per afgerond project een case study schrijven (500–800 woorden). Long-tail keywords zoals "gala diner 350 personen Amsterdam" worden nooit door concurrenten aangevochten. 6–12 maanden: aanzienlijk organisch bereik.</div>
+        </div>
+        <div class="step-impact">Long-tail autoriteit<div class="impact-bar"><div class="impact-fill" style="width:75%;background:#a855f7"></div></div></div>
+      </div>
+
     </div>
   </div>
+
+  <div class="section-bone">
+    <div class="section-bone-inner">
+      <div class="section-label">Verwachte progressie</div>
+      <h3 style="font-family:'Archivo Black',sans-serif;font-size:clamp(20px,2.5vw,32px);text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:32px">Score na implementatie</h3>
+
+      <div class="score-projection">
+        <div class="proj-cell" style="background:var(--white)">
+          <div class="proj-num" style="color:var(--red)">44</div>
+          <div class="proj-label">Score nu</div>
+        </div>
+        <div class="proj-cell" style="background:var(--white)">
+          <div class="proj-num" style="color:#ea580c">58</div>
+          <div class="proj-label">Na acties 1–3<br>(vandaag)</div>
+        </div>
+        <div class="proj-cell" style="background:var(--white)">
+          <div class="proj-num" style="color:#eab308">71</div>
+          <div class="proj-label">Na acties 1–5<br>(1 week)</div>
+        </div>
+        <div class="proj-cell" style="background:var(--white)">
+          <div class="proj-num" style="color:#16a34a">84</div>
+          <div class="proj-label">Na alle acties<br>(3 maanden)</div>
+        </div>
+      </div>
+
+      <p style="font-size:14px;color:var(--muted);line-height:1.75;margin-top:28px;max-width:640px">
+        <strong style="color:var(--black)">Let op:</strong> SEO is een marathon. De acties van vandaag zijn zichtbaar in Google over 2–8 weken.
+        Multi-page architectuur en content-uitbreiding hebben 3–6 maanden nodig voor volledig effect.
+        Begin met de snelle wins — die leveren direct resultaat zonder grote tijdsinvestering.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA STRIP -->
+<div class="cta-strip">
+  <div class="cta-strip-text">Vragen over dit rapport?<br>Plan een gesprek.</div>
+  <a href="mailto:info@stolkwebdesign.nl" class="btn-white-inv">Neem contact op →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Stolk<span>web</span>design®</div>
+  <div class="footer-meta">SEO Strategy Report · BZ Events · 19 mei 2026 · Vertrouwelijk</div>
 </footer>
 
 <script>
-  // Tab switching
   const tabs = document.querySelectorAll('.tab-btn');
   const contents = document.querySelectorAll('.tab-content');
 
   tabs.forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.tab;
-
       tabs.forEach(t => t.classList.remove('active'));
       contents.forEach(c => c.classList.remove('active'));
-
       btn.classList.add('active');
       document.getElementById('tab-' + target).classList.add('active');
-
-      // Scroll to top of content
-      window.scrollTo({ top: document.querySelector('.tabs-bar').offsetTop, behavior: 'smooth' });
+      window.scrollTo({ top: document.querySelector('.tabs-bar').offsetTop - 1, behavior: 'smooth' });
     });
   });
 </script>
