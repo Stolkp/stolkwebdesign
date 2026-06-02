@@ -172,6 +172,92 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
   .form-row { grid-template-columns:1fr; }
   .photo-slot { grid-template-columns:1fr; }
 }
+
+/* FACTUUR */
+.factuur-toolbar { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:28px; }
+.fact-hint { font-size:10px; color:#555; letter-spacing:.08em; text-transform:uppercase; }
+.factuur-layout { display:grid; grid-template-columns:minmax(0,420px) 1fr; gap:36px; align-items:start; }
+.factuur-form .fact-item-row { background:#0e0e0e; border:1px solid #1a1a1a; padding:14px; margin-bottom:10px; }
+.fact-item-grid { display:grid; grid-template-columns:1fr 70px 90px 28px; gap:10px; align-items:end; }
+.fact-del { padding:8px 0; }
+.factuur-preview-wrap { overflow-x:auto; }
+.invoice-paper {
+  width:210mm; min-height:297mm; background:#fff; color:#111; padding:20mm 18mm;
+  font-family:'Space Grotesk',sans-serif; box-shadow:0 0 0 1px #1a1a1a, 16px 16px 0 0 rgba(234,37,37,.18);
+  transform-origin:top left;
+}
+.inv-head { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #000; padding-bottom:18px; margin-bottom:28px; }
+.inv-brand { font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-0.02em; }
+.inv-reg { color:var(--red); }
+.inv-title { font-family:'Archivo Black',sans-serif; font-size:40px; text-transform:uppercase; letter-spacing:-0.03em; line-height:1; }
+.inv-meta-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; margin-bottom:30px; }
+.inv-block-label { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.2em; color:#999; margin-bottom:8px; }
+.inv-block { font-size:12px; line-height:1.7; color:#222; }
+.inv-kv { display:flex; justify-content:space-between; gap:10px; }
+.inv-kv span:first-child { color:#999; }
+.inv-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+.inv-th { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.15em; color:#999; text-align:left; padding:0 8px 8px; border-bottom:2px solid #000; }
+.inv-td { font-size:12px; padding:11px 8px; border-bottom:1px solid #eee; vertical-align:top; }
+.inv-item-title { font-weight:700; }
+.inv-item-sub { font-size:11px; color:#888; margin-top:2px; }
+.inv-num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.inv-foot { font-size:12px; padding:7px 8px; color:#444; }
+.inv-total { font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; padding:12px 8px; border-top:2px solid #000; }
+.inv-total-val { color:var(--red); font-size:18px; }
+.inv-paybox { background:#F5F5F5; border-left:3px solid var(--red); padding:16px 18px; margin-bottom:18px; }
+.inv-paylabel { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.15em; color:#999; margin-bottom:6px; }
+.inv-payval { font-size:14px; font-weight:700; font-variant-numeric:tabular-nums; }
+.inv-paysub { font-size:11px; color:#888; margin-top:2px; }
+.inv-notes { font-size:12px; color:#444; line-height:1.6; border-top:1px solid #eee; padding-top:14px; margin-bottom:18px; white-space:pre-line; }
+.inv-footer { font-family:'JetBrains Mono',monospace; font-size:10px; color:#aaa; letter-spacing:.05em; border-top:1px solid #eee; padding-top:12px; }
+
+@media(max-width:1100px) {
+  .factuur-layout { grid-template-columns:1fr; }
+  .invoice-paper { transform:scale(.62); }
+}
+
+@media print {
+  body * { visibility:hidden !important; }
+  #invoice-paper, #invoice-paper * { visibility:visible !important; }
+  #invoice-paper { position:absolute; left:0; top:0; width:210mm; min-height:auto; margin:0; padding:18mm 16mm; box-shadow:none !important; transform:none !important; }
+  @page { size:A4; margin:0; }
+  * { animation:none !important; transition:none !important; }
+}
+
+/* SOCIAL CAMPAGNES */
+.social-bar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:28px; }
+.social-empty { padding:40px 24px; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; text-transform:uppercase; letter-spacing:.1em; background:#0a0a0a; border:1px solid #1a1a1a; }
+.social-post { display:grid; grid-template-columns:300px 1fr; gap:28px; align-items:start; background:#0e0e0e; border:1px solid #1a1a1a; padding:22px; margin-bottom:18px; }
+.social-post-preview { position:sticky; top:88px; }
+.social-actions { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:18px; }
+.social-dl { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; padding:9px 14px; border:1px solid #333; color:var(--muted); text-decoration:none; transition:all .15s; }
+.social-dl:hover { border-color:var(--red); color:var(--white); }
+
+/* live preview (CSS-benadering van de PNG) */
+.sp-frame { width:300px; height:300px; display:flex; flex-direction:column; justify-content:space-between; padding:24px; position:relative; overflow:hidden; background-size:cover; background-position:center; }
+.sp-black { background:#000; color:#fff; }
+.sp-red { background:var(--red); color:#fff; }
+.sp-bone { background:#F5F5F5; color:#000; }
+.sp-bg { background-color:#000; color:#fff; }
+.sp-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.8)); }
+.sp-frame > *:not(.sp-overlay) { position:relative; z-index:1; }
+.sp-eyebrow { display:flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.18em; text-transform:uppercase; opacity:.75; }
+.sp-dot { width:8px; height:8px; background:var(--red); }
+.sp-red .sp-dot { background:#000; }
+.sp-mid { display:flex; flex-direction:column; }
+.sp-bar { width:54px; height:7px; background:var(--red); margin-bottom:10px; }
+.sp-red .sp-bar { background:#fff; }
+.sp-head { font-family:'Archivo Black',sans-serif; font-size:26px; line-height:1.02; text-transform:uppercase; letter-spacing:-1px; }
+.sp-sub { font-family:'Space Grotesk',sans-serif; font-size:12px; line-height:1.35; opacity:.8; margin-top:8px; }
+.sp-foot { display:flex; flex-direction:column; gap:3px; }
+.sp-cta { font-family:'Archivo Black',sans-serif; font-size:11px; text-transform:uppercase; color:var(--red); }
+.sp-red .sp-cta { color:#fff; }
+.sp-brand { font-family:'Archivo Black',sans-serif; font-size:11px; text-transform:uppercase; letter-spacing:-0.3px; }
+
+@media(max-width:900px) {
+  .social-post { grid-template-columns:1fr; }
+  .social-post-preview { position:static; }
+}
 </style>
 </head>
 <body>
@@ -210,6 +296,14 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
         <div class="sidebar-item font-mono" onclick="showSection('content', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 7h12M2 11h8"/></svg>
           Content
+        </div>
+        <div class="sidebar-item font-mono" onclick="showSection('factuur', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1.5" width="10" height="13"/><path d="M5.5 5h5M5.5 8h5M5.5 11h3"/></svg>
+          Factuur
+        </div>
+        <div class="sidebar-item font-mono" onclick="showSection('social', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="6" height="6"/><rect x="8.5" y="1.5" width="6" height="6"/><rect x="1.5" y="8.5" width="6" height="6"/><rect x="8.5" y="8.5" width="6" height="6"/></svg>
+          Campagnes
         </div>
         <div class="sidebar-item font-mono" onclick="showSection('settings', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
@@ -253,6 +347,44 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 
         <div style="margin-top:28px; padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
           ℹ Lege velden tonen de standaardtekst die in de site staat. Wijzigingen verschijnen direct op je live site na opslaan.
+        </div>
+      </div>
+
+      <!-- FACTUUR -->
+      <div id="section-factuur" class="page-section">
+        <div class="page-title font-display">Factuur-tool</div>
+        <div class="page-sub font-mono">Live A4-preview · print naar PDF · concept wordt lokaal bewaard</div>
+
+        <div class="factuur-toolbar no-print">
+          <button class="content-save-btn font-display" id="fact-print">↧ Print / opslaan als PDF</button>
+          <button class="settings-btn font-mono" id="fact-reset" style="margin:0;">↺ Nieuw concept</button>
+          <span class="fact-hint font-mono">Tip: kies in het printvenster "Bewaar als PDF" · marges "Geen" · achtergronden aanvinken.</span>
+        </div>
+
+        <div class="factuur-layout">
+          <div class="factuur-form no-print" id="factuur-form"></div>
+          <div class="factuur-preview-wrap">
+            <div id="invoice-paper" class="invoice-paper"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOCIAL CAMPAGNES -->
+      <div id="section-social" class="page-section">
+        <div class="page-title font-display">Social Campagnes</div>
+        <div class="page-sub font-mono">Schrijf één post → download 'm in 4 formaten (Instagram · LinkedIn · Google · Story)</div>
+
+        <div class="social-bar">
+          <select class="form-input" id="social-campaign-select" style="max-width:320px;" onchange="onCampaignChange(this.value)"></select>
+          <button class="add-btn font-display" style="margin:0;font-size:11px;padding:11px 18px;" onclick="createCampaign()">+ Nieuwe campagne</button>
+          <button class="settings-btn font-mono" style="margin:0;" onclick="addPost()">+ Post toevoegen</button>
+          <button class="settings-btn font-mono" style="margin:0;border-color:rgba(234,37,37,.4);color:rgba(234,37,37,.6);" onclick="deleteCampaign()">Campagne verwijderen</button>
+        </div>
+
+        <div id="social-posts"></div>
+
+        <div style="margin-top:24px; padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
+          ℹ De preview is een indicatie. De download-knoppen genereren de échte PNG's via <code>/api/render-social-post</code> (werkt op de live site). Captions kopieer je los per platform.
         </div>
       </div>
 
@@ -391,6 +523,7 @@ function showAdmin() {
   document.getElementById('admin-screen').style.display = 'block';
   renderProjects();
   loadContent();
+  loadSocial();
 }
 
 function showLogin() {
@@ -802,6 +935,36 @@ const CONTENT_PAGES = [
       T('modules.blog_price', 'Prijs (getal)', '€99'),
       T('modules.blog_pricetag', 'Prijs — bijschrift', '+ €89 per gepubliceerde blog'),
     ]},
+    { title: 'Waarom dit anders is', fields: [
+      T('modules.why_label', 'Sectielabel', 'Waarom dit anders is / —'),
+      H('modules.why_heading', 'Kop', 'Niet zomaar<br>vijf <span class="red">tools.</span>'),
+      T('modules.why1_title', 'Blok 1 — titel', 'Eén login. Eén factuur.'),
+      A('modules.why1_body', 'Blok 1 — tekst', 'Geen WordPress-plugin-jungle. Geen vier verschillende SaaS-abonnementen. Eén platform, één designtaal, één keer per maand betalen.'),
+      T('modules.why2_title', 'Blok 2 — titel', 'Eenmalig + per use.'),
+      A('modules.why2_body', 'Blok 2 — tekst', 'Geen verplichte maandabonnementen die optellen. Je betaalt voor activatie en alleen bij actief gebruik — een campagne, een blog, een actiepunt.'),
+      T('modules.why3_title', 'Blok 3 — titel', 'Peter is je contactpersoon.'),
+      A('modules.why3_body', 'Blok 3 — tekst', 'Geen ticketsysteem. Geen "we komen er binnen 5 werkdagen op terug." Direct lijntje met de mens die je website heeft gebouwd.'),
+    ]},
+    { title: 'Veelgestelde vragen', fields: [
+      T('modules.faq_label', 'Sectielabel', 'Veelgestelde vragen / —'),
+      H('modules.faq_heading', 'Kop', 'Eerlijke antwoorden,<br>geen <span class="red">marketingpraat.</span>'),
+      T('modules.faq1_q', 'Vraag 1', 'Kan ik losse modules kopen?'),
+      A('modules.faq1_a', 'Antwoord 1', 'Ja. Elke module is los te activeren. Je hoeft niet eerst CMS-basis te kopen om bijvoorbeeld het SEO-rapport te bestellen. De modules werken naadloos samen, maar staan ook op zichzelf.'),
+      T('modules.faq2_q', 'Vraag 2', 'Werkt dit ook zonder een Stolkwebdesign-website?'),
+      A('modules.faq2_a', 'Antwoord 2', 'Op termijn ja. Op dit moment zijn de modules ontworpen voor websites die door Stolkwebdesign zijn gebouwd, omdat de embed-route en het design-systeem standaard zijn ingebakken. Vanaf Q3 2026 komt er een variant voor bestaande sites — meld je aan op de wachtlijst om als eerste te horen wanneer.'),
+      T('modules.faq3_q', 'Vraag 3', 'Wanneer kan ik beginnen?'),
+      A('modules.faq3_a', 'Antwoord 3', 'CMS-basis, Factuur, Social en SEO zijn vanaf zomer 2026 beschikbaar voor early-access-klanten. Blog volgt in Q3 2026. Wachtlijst-aanmeldingen krijgen voorrang en behouden het early-access tarief, ook na de officiële launch.'),
+      T('modules.faq4_q', 'Vraag 4', 'Wat als ik na een jaar wil stoppen?'),
+      A('modules.faq4_a', 'Antwoord 4', 'Je activatie-fee is eenmalig, geen abonnement. Stoppen kan op elk moment — je betaalt simpelweg geen per-use bedragen meer. Je content en factuur-gegevens kun je altijd exporteren.'),
+      T('modules.faq5_q', 'Vraag 5', 'Kan ik mijn eigen domeinnaam gebruiken?'),
+      A('modules.faq5_a', 'Antwoord 5', 'Ja, altijd. Het CMS draait op jouwsite.nl/cms, je blog op jouwsite.nl/blog. Geen subdomein van Stolkwebdesign, geen "powered by"-balk.'),
+      T('modules.faq6_q', 'Vraag 6', 'Krijg ik korting bij meerdere modules?'),
+      A('modules.faq6_a', 'Antwoord 6', 'Voor early-access-klanten die meerdere modules tegelijk activeren is er een bundeltarief. Plan een korte call met Peter — hij rekent het ter plekke voor je uit.'),
+    ]},
+    { title: 'Slot-CTA', fields: [
+      T('modules.finalcta_label', 'Labeltekst', '/ Early access — wachtlijst open'),
+      H('modules.finalcta_heading', 'Kop', 'Klaar voor een platform<br>dat met je <span style="color:var(--white);">meegroeit</span>?'),
+    ]},
   ]},
 ];
 
@@ -944,6 +1107,177 @@ async function onPhotoPick(key, input) {
   input.value = '';
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// SOCIAL CAMPAGNES MODULE (tabellen stolkwebdesign_social_campaigns / _posts)
+// ════════════════════════════════════════════════════════════════════════════
+let socialCampaigns = [], socialActiveId = null, socialPosts = [], socialBound = false;
+
+function slugify(s) {
+  return String(s || '').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 48) || 'campagne';
+}
+
+async function loadSocial() {
+  const sel = document.getElementById('social-campaign-select');
+  if (!sel) return;
+  if (!socialBound) {
+    document.getElementById('section-social').addEventListener('input', onSocialInput);
+    socialBound = true;
+  }
+  const { data, error } = await db.from('stolkwebdesign_social_campaigns').select('*').order('created_at');
+  if (error) { toast('Campagnes laden mislukt: ' + error.message, true); return; }
+  socialCampaigns = data || [];
+  if (!socialActiveId || !socialCampaigns.some(c => c.id === socialActiveId)) socialActiveId = socialCampaigns[0]?.id || null;
+  sel.innerHTML = socialCampaigns.length
+    ? socialCampaigns.map(c => `<option value="${c.id}"${c.id === socialActiveId ? ' selected' : ''}>${esc(c.name)}</option>`).join('')
+    : '<option value="">— nog geen campagnes —</option>';
+  if (socialActiveId) await loadSocialPosts(); else renderSocialPosts();
+}
+
+async function createCampaign() {
+  const name = prompt('Naam van de campagne (bv. "Launch 2026"):');
+  if (!name) return;
+  const slug = slugify(name) + '-' + Math.random().toString(36).slice(2, 5);
+  const { data, error } = await db.from('stolkwebdesign_social_campaigns').insert({ name, slug }).select().single();
+  if (error) { toast('Fout: ' + error.message, true); return; }
+  socialActiveId = data.id; await loadSocial(); toast('Campagne aangemaakt');
+}
+
+async function deleteCampaign() {
+  if (!socialActiveId) return;
+  const c = socialCampaigns.find(x => x.id === socialActiveId);
+  if (!confirm(`Campagne "${c ? c.name : ''}" en alle posts verwijderen?`)) return;
+  const { error } = await db.from('stolkwebdesign_social_campaigns').delete().eq('id', socialActiveId);
+  if (error) { toast('Fout: ' + error.message, true); return; }
+  socialActiveId = null; await loadSocial(); toast('Campagne verwijderd');
+}
+
+function onCampaignChange(v) { socialActiveId = v || null; if (socialActiveId) loadSocialPosts(); else renderSocialPosts(); }
+
+async function loadSocialPosts() {
+  const { data, error } = await db.from('stolkwebdesign_social_posts').select('*').eq('campaign_id', socialActiveId).order('position');
+  if (error) { toast('Posts laden mislukt: ' + error.message, true); return; }
+  socialPosts = data || [];
+  renderSocialPosts();
+}
+
+async function addPost() {
+  if (!socialActiveId) { toast('Maak eerst een campagne aan', true); return; }
+  const pos = socialPosts.reduce((m, p) => Math.max(m, p.position || 0), 0) + 1;
+  const { error } = await db.from('stolkwebdesign_social_posts').insert({ campaign_id: socialActiveId, position: pos, headline: 'Nieuwe post', theme: 'black' });
+  if (error) { toast('Fout: ' + error.message, true); return; }
+  await loadSocialPosts(); toast('Post toegevoegd');
+}
+
+async function deletePost(id) {
+  if (!confirm('Deze post verwijderen?')) return;
+  const { error } = await db.from('stolkwebdesign_social_posts').delete().eq('id', id);
+  if (error) { toast('Fout: ' + error.message, true); return; }
+  await loadSocialPosts();
+}
+
+function socialPreviewHTML(p) {
+  const hasBg = p.bg_image && /^https?:\/\//.test(p.bg_image);
+  const cls = hasBg ? 'sp-bg' : ('sp-' + (p.theme || 'black'));
+  return `<div class="sp-frame ${cls}"${hasBg ? ` style="background-image:url('${esc(p.bg_image)}')"` : ''}>
+    ${hasBg ? '<div class="sp-overlay"></div>' : ''}
+    <div class="sp-eyebrow"><span class="sp-dot"></span>${esc(p.eyebrow) || 'Stolkwebdesign'}</div>
+    <div class="sp-mid"><div class="sp-bar"></div><div class="sp-head">${esc(p.headline) || 'Jouw kop'}</div>${p.sub ? `<div class="sp-sub">${esc(p.sub)}</div>` : ''}</div>
+    <div class="sp-foot">${p.cta ? `<div class="sp-cta">${esc(p.cta)} →</div>` : ''}<div class="sp-brand">Stolkwebdesign®</div></div>
+  </div>`;
+}
+
+function renderSocialPosts() {
+  const wrap = document.getElementById('social-posts');
+  if (!wrap) return;
+  if (!socialActiveId) { wrap.innerHTML = '<div class="social-empty">Maak een campagne aan om posts toe te voegen.</div>'; return; }
+  if (!socialPosts.length) { wrap.innerHTML = '<div class="social-empty">Nog geen posts — klik op “+ Post toevoegen”.</div>'; return; }
+  const origin = location.origin;
+  wrap.innerHTML = socialPosts.map(p => {
+    const dl = fmt => `${origin}/api/render-social-post?post=${p.id}&fmt=${fmt}&dl=1`;
+    return `<div class="social-post">
+      <div class="social-post-preview" id="prev-${p.id}">${socialPreviewHTML(p)}</div>
+      <div class="social-post-fields">
+        <div class="form-group"><label class="form-label font-mono">Eyebrow (labeltekst)</label><input class="form-input" data-spost="${p.id}" data-sfield="eyebrow" value="${esc(p.eyebrow)}"></div>
+        <div class="form-group"><label class="form-label font-mono">Kop</label><input class="form-input" data-spost="${p.id}" data-sfield="headline" value="${esc(p.headline)}"></div>
+        <div class="form-group"><label class="form-label font-mono">Subtekst</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="sub">${esc(p.sub)}</textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label font-mono">CTA</label><input class="form-input" data-spost="${p.id}" data-sfield="cta" value="${esc(p.cta)}" placeholder="Plan een gesprek"></div>
+          <div class="form-group"><label class="form-label font-mono">Thema</label><select class="form-input" data-spost="${p.id}" data-sfield="theme">
+            <option value="black"${(p.theme || 'black') === 'black' ? ' selected' : ''}>Zwart</option>
+            <option value="red"${p.theme === 'red' ? ' selected' : ''}>Rood</option>
+            <option value="bone"${p.theme === 'bone' ? ' selected' : ''}>Licht</option>
+          </select></div>
+        </div>
+        <div class="form-group"><label class="form-label font-mono">Achtergrondfoto (optioneel)</label><br>
+          <input type="file" accept="image/*" id="sbg-${p.id}" style="display:none" onchange="onSocialBg('${p.id}', this)">
+          <button class="photo-upload-btn" onclick="document.getElementById('sbg-${p.id}').click()">↑ Foto kiezen</button>
+          ${p.bg_image ? `<button class="photo-upload-btn" onclick="clearSocialBg('${p.id}')">✕ Verwijderen</button>` : ''}
+        </div>
+        <div class="cms-group-title" style="margin:18px 0 10px;font-size:11px;">Captions per platform</div>
+        <div class="form-group"><label class="form-label font-mono">LinkedIn</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_linkedin">${esc(p.caption_linkedin)}</textarea></div>
+        <div class="form-group"><label class="form-label font-mono">Instagram</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_instagram">${esc(p.caption_instagram)}</textarea></div>
+        <div class="form-group"><label class="form-label font-mono">Google Bedrijfsprofiel</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_gbp">${esc(p.caption_gbp)}</textarea></div>
+        <div class="social-actions">
+          <button class="content-save-btn" onclick="saveSocialPost('${p.id}', this)">Opslaan</button>
+          <a class="social-dl" href="${dl('ig')}" target="_blank" rel="noopener">↧ Instagram 1080²</a>
+          <a class="social-dl" href="${dl('li')}" target="_blank" rel="noopener">↧ LinkedIn</a>
+          <a class="social-dl" href="${dl('gbp')}" target="_blank" rel="noopener">↧ Google</a>
+          <a class="social-dl" href="${dl('story')}" target="_blank" rel="noopener">↧ Story</a>
+          <button class="row-btn danger font-mono" onclick="deletePost('${p.id}')">Verwijder post</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function onSocialInput(e) {
+  const el = e.target.closest('[data-spost]'); if (!el) return;
+  const id = el.getAttribute('data-spost'), field = el.getAttribute('data-sfield');
+  const p = socialPosts.find(x => x.id === id); if (!p) return;
+  p[field] = el.value;
+  const prev = document.getElementById('prev-' + id);
+  if (prev) prev.innerHTML = socialPreviewHTML(p);
+}
+
+async function saveSocialPost(id, btn) {
+  const p = socialPosts.find(x => x.id === id); if (!p) return;
+  btn.disabled = true; const t = btn.textContent; btn.textContent = 'Opslaan…';
+  const { error } = await db.from('stolkwebdesign_social_posts').update({
+    eyebrow: p.eyebrow || '', headline: p.headline || '', sub: p.sub || '', cta: p.cta || '', cta_link: p.cta_link || '',
+    theme: p.theme || 'black', bg_image: p.bg_image || '',
+    caption_linkedin: p.caption_linkedin || '', caption_instagram: p.caption_instagram || '', caption_gbp: p.caption_gbp || ''
+  }).eq('id', id);
+  btn.disabled = false; btn.textContent = t;
+  if (error) { toast('Fout: ' + error.message, true); return; }
+  toast('Post opgeslagen');
+}
+
+async function onSocialBg(id, input) {
+  const file = input.files[0]; if (!file) return;
+  const p = socialPosts.find(x => x.id === id); if (!p) return;
+  try {
+    toast('Foto verwerken & uploaden…');
+    const compressed = await compressImage(file);
+    const ext = (compressed.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `social/${id}-${Date.now()}.${ext}`;
+    const { error: upErr } = await db.storage.from(CONTENT_BUCKET).upload(path, compressed, { upsert: true, contentType: compressed.type });
+    if (upErr) throw upErr;
+    const url = db.storage.from(CONTENT_BUCKET).getPublicUrl(path).data.publicUrl;
+    p.bg_image = url;
+    await db.from('stolkwebdesign_social_posts').update({ bg_image: url }).eq('id', id);
+    renderSocialPosts(); toast('Achtergrondfoto toegevoegd');
+  } catch (e) { toast('Upload mislukt: ' + (e.message || e), true); }
+  input.value = '';
+}
+
+async function clearSocialBg(id) {
+  const p = socialPosts.find(x => x.id === id); if (!p) return;
+  p.bg_image = '';
+  await db.from('stolkwebdesign_social_posts').update({ bg_image: '' }).eq('id', id);
+  renderSocialPosts();
+}
+
 // ── TOAST ──
 function toast(msg, isError = false) {
   const el = document.getElementById('toast');
@@ -955,5 +1289,6 @@ function toast(msg, isError = false) {
 
 initAuth();
 </script>
+<script src="admin-factuur.js"></script>
 </body>
 </html>
