@@ -84,8 +84,8 @@ function Frame({ post, fmt }) {
       {/* footer */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', position: 'relative' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {post.cta ? <div style={{ fontFamily: 'Archivo Black', fontSize: f.cta, textTransform: 'uppercase', color: th.accent }}>{post.cta} →</div> : null}
-          <div style={{ fontFamily: 'Archivo Black', fontSize: f.brand, letterSpacing: -0.5, textTransform: 'uppercase', color: th.text }}>
+          {post.cta ? <div style={{ fontFamily: 'Archivo Black', fontSize: f.cta, textTransform: 'uppercase', color: th.accent }}>{post.cta + ' →'}</div> : null}
+          <div style={{ display: 'flex', alignItems: 'baseline', fontFamily: 'Archivo Black', fontSize: f.brand, letterSpacing: -0.5, textTransform: 'uppercase', color: th.text }}>
             Stolkwebdesign<span style={{ color: th.brandDot }}>®</span>
           </div>
         </div>
