@@ -8,7 +8,7 @@
     "api/poll-notion.js": { "maxDuration": 60 }
   },
   "crons": [
-    { "path": "/api/poll-notion", "schedule": "*/5 * * * *" }
+    { "path": "/api/poll-notion", "schedule": "0 8 * * *" }
   ],
   "headers": [
     {
