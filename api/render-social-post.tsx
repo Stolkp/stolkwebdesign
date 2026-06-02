@@ -57,8 +57,8 @@ function Frame({ post, fmt }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%', height: '100%', background: th.bg, color: th.text, padding: f.pad, position: 'relative' }}>
-      {hasBg && <img src={post.bg_image} width={f.w} height={f.h} style={{ position: 'absolute', top: 0, left: 0, width: f.w, height: f.h, objectFit: 'cover' }} />}
-      {hasBg && <div style={{ position: 'absolute', top: 0, left: 0, width: f.w, height: f.h, background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.78) 100%)' }} />}
+      {hasBg ? <img src={post.bg_image} width={f.w} height={f.h} style={{ position: 'absolute', top: 0, left: 0, width: f.w, height: f.h, objectFit: 'cover' }} /> : null}
+      {hasBg ? <div style={{ position: 'absolute', top: 0, left: 0, width: f.w, height: f.h, background: 'linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.78) 100%)' }} /> : null}
 
       {/* eyebrow */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, position: 'relative' }}>
@@ -114,7 +114,8 @@ export default async function handler(req) {
     ? <Frame post={post} fmt={fmt} />
     : <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', background: COLORS.black, color: COLORS.white, fontFamily: 'Archivo Black', fontSize: 44, textAlign: 'center', padding: 80 }}>Post niet gevonden</div>;
 
-  const headers = {};
+  // Geen langdurige cache: na een tekstwijziging moet dezelfde URL de nieuwe PNG geven.
+  const headers = { 'Cache-Control': 'public, max-age=0, must-revalidate' };
   if (dl) headers['Content-Disposition'] = `attachment; filename="stolkwebdesign-${fmt}-${f.w}x${f.h}.png"`;
 
   return new ImageResponse(element, { width: f.w, height: f.h, fonts, headers });
