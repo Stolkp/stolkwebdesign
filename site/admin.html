@@ -141,11 +141,36 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 .settings-info { font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:8px; }
 .export-box { background:#0a0a0a; border:1px solid #1a1a1a; padding:16px; font-family:'JetBrains Mono',monospace; font-size:11px; color:#555; line-height:1.8; white-space:pre-wrap; margin-top:12px; max-height:200px; overflow-y:auto; }
 
+/* CONTENT MODULE */
+.content-tabs { display:flex; gap:2px; margin-bottom:32px; flex-wrap:wrap; border-bottom:2px solid #1a1a1a; }
+.content-tab { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); background:transparent; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; padding:12px 18px; cursor:pointer; transition:color .15s, border-color .15s; }
+.content-tab:hover { color:var(--white); }
+.content-tab.active { color:var(--white); border-bottom-color:var(--red); }
+.content-pane { display:none; }
+.content-pane.active { display:block; }
+.cms-group { margin:0 0 4px; }
+.cms-group-title { font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.02em; color:var(--white); margin:32px 0 16px; padding-bottom:8px; border-bottom:1px solid #1a1a1a; }
+.cms-group:first-child .cms-group-title { margin-top:0; }
+.cms-hint { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.1em; color:#555; margin-top:6px; }
+.content-save-bar { position:sticky; bottom:0; background:linear-gradient(to top, var(--near-black) 60%, transparent); padding:20px 0 8px; margin-top:24px; display:flex; align-items:center; gap:16px; }
+.content-save-btn { display:inline-flex; align-items:center; gap:8px; font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.04em; background:var(--red); color:var(--white); border:none; padding:14px 28px; cursor:pointer; transition:background .15s; }
+.content-save-btn:hover { background:#c91f1f; }
+.content-save-btn:disabled { opacity:.6; cursor:not-allowed; }
+/* PHOTO SLOT */
+.photo-slot { display:grid; grid-template-columns:120px 1fr; gap:20px; align-items:start; background:#0e0e0e; border:1px solid #1a1a1a; padding:18px; margin-bottom:14px; }
+.photo-preview { width:120px; aspect-ratio:4/5; background:#000 center/cover no-repeat; border:1px solid #2a2a2a; }
+.photo-slot-info { display:flex; flex-direction:column; gap:6px; }
+.photo-slot-label { font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:-0.01em; }
+.photo-slot-guide { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:.05em; line-height:1.6; }
+.photo-upload-btn { align-self:flex-start; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; padding:10px 18px; border:1px solid #333; background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; margin-top:4px; }
+.photo-upload-btn:hover { border-color:var(--white); color:var(--white); }
+
 @media(max-width:900px) {
   .admin-body { grid-template-columns:1fr; }
   .sidebar { display:none; }
   .settings-grid { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
+  .photo-slot { grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -182,6 +207,10 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/></svg>
           Portfolio
         </div>
+        <div class="sidebar-item font-mono" onclick="showSection('content', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 7h12M2 11h8"/></svg>
+          Content
+        </div>
         <div class="sidebar-item font-mono" onclick="showSection('settings', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
           Instellingen
@@ -211,6 +240,19 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 
         <div style="padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
           ℹ Projecten worden opgeslagen in Supabase — zichtbaar op het portfolio na opslaan.
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div id="section-content" class="page-section">
+        <div class="page-title font-display">Paginateksten &amp; foto's</div>
+        <div class="page-sub font-mono">Pas teksten en foto's per pagina aan — direct live, geen publicatie-knop</div>
+
+        <div class="content-tabs" id="content-tabs"></div>
+        <div id="content-panes"></div>
+
+        <div style="margin-top:28px; padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
+          ℹ Lege velden tonen de standaardtekst die in de site staat. Wijzigingen verschijnen direct op je live site na opslaan.
         </div>
       </div>
 
@@ -348,6 +390,7 @@ function showAdmin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-screen').style.display = 'block';
   renderProjects();
+  loadContent();
 }
 
 function showLogin() {
@@ -577,6 +620,328 @@ async function resetData() {
   if (error) { toast('Fout: ' + error.message, true); return; }
   renderProjects();
   toast('Alle projecten verwijderd');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// CONTENT MODULE — paginateksten & foto's (tabel stolkwebdesign_content)
+// ════════════════════════════════════════════════════════════════════════════
+const CONTENT_BUCKET = 'stolkwebdesign-content';
+const CONTENT_TABLE  = 'stolkwebdesign_content';
+
+// Veld-helpers — type bepaalt zowel het invoerveld als hoe content-loader.js het toepast:
+//   text/area → data-content (textContent) · html → data-content-html · link → data-content-href · photo → data-content-src
+const T = (f, label, def) => ({ f, label, def, type: 'text' });
+const A = (f, label, def) => ({ f, label, def, type: 'area' });
+const H = (f, label, def) => ({ f, label, def, type: 'html' });
+const L = (f, label, def) => ({ f, label, def, type: 'link' });
+const PH = (f, label, guide, def) => ({ f, label, guide, def, type: 'photo' });
+
+const CONTENT_PAGES = [
+  { id: 'home', label: 'Home', groups: [
+    { title: 'Hero', fields: [
+      T('home.hero_label', 'Labeltekst boven titel', 'Peter Stolk — Webdesign · Amsterdam · Persoonlijk contact'),
+      H('home.hero_sub', 'Subtekst', 'Wil je een <strong>professionele website laten bouwen</strong> die echt opvalt? Ik maak handcrafted websites in HTML &amp; CSS én WordPress — volledig op maat, snel en altijd up-to-date. Van A tot Z geregeld.'),
+    ]},
+    { title: 'USP-balk', fields: [
+      T('home.usp_1', 'USP 1', 'Persoonlijk contact'),
+      T('home.usp_2', 'USP 2', 'Custom design — geen templates'),
+      T('home.usp_3', 'USP 3', 'Responsief op alle devices'),
+      T('home.usp_4', 'USP 4', 'Hosting & onderhoud mogelijk'),
+    ]},
+    { title: 'Geselecteerd werk', fields: [
+      T('home.werk_label', 'Sectielabel', 'Geselecteerd werk / 01'),
+      H('home.werk_heading', 'Kop', 'Elk project<br>een <span class="red">statement.</span>'),
+    ]},
+    { title: 'Het probleem', fields: [
+      T('home.problem_label', 'Sectielabel', 'Het probleem / —'),
+      H('home.problem_heading', 'Kop', 'Jouw site kost je <span class="red">klanten.</span>'),
+      A('home.problem_body', 'Tekst', 'Je hebt een website — maar hij converteert niet. De opmaak klopt niet op mobiel, de laadtijd is te lang en de tekst had net zo goed van een concurrent kunnen zijn. Dat is geen website. Dat is een gemiste kans.'),
+      T('home.pain_1', 'Pijnpunt 1', 'Je homepage ziet er precies uit als die van je concurrent.'),
+      T('home.pain_2', 'Pijnpunt 2', 'Bezoekers haken af voor ze je verhaal gehoord hebben.'),
+      T('home.pain_3', 'Pijnpunt 3', 'Je betaalde voor onderhoud maar hoort nooit meer iemand.'),
+    ]},
+    { title: 'Diensten', fields: [
+      T('home.diensten_label', 'Sectielabel', 'Wat ik doe / 02'),
+      H('home.diensten_heading', 'Kop', 'Van idee tot live —<br><span class="red">van A tot Z.</span>'),
+      T('home.pillar1_title', 'Dienst 1 — titel', 'Website laten bouwen'),
+      A('home.pillar1_body', 'Dienst 1 — tekst', 'Ik bouw websites in HTML & CSS met GSAP-animaties én WordPress — afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.'),
+      H('home.pillar1_price', 'Dienst 1 — prijs', 'Vanaf <strong>€2.500</strong>'),
+      T('home.pillar2_title', 'Dienst 2 — titel', 'Webhosting & beveiliging'),
+      A('home.pillar2_body', 'Dienst 2 — tekst', 'Dedicated webhosting op een snelle server. SSL-certificaat, automatische back-ups en monitoring inbegrepen. Jouw website staat altijd online en is altijd actueel — zonder dat jij er omkijken naar hebt.'),
+      H('home.pillar2_price', 'Dienst 2 — prijs', 'Vanaf <strong>€25 / maand</strong>'),
+      T('home.pillar3_title', 'Dienst 3 — titel', 'Onderhoud & support'),
+      A('home.pillar3_body', 'Dienst 3 — tekst', 'Kleine aanpassingen, nieuwe pagina\'s of technische vragen. Directe lijn met Peter — geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.'),
+      H('home.pillar3_price', 'Dienst 3 — prijs', '<strong>Op aanvraag</strong>'),
+    ]},
+    { title: 'Modules-teaser', fields: [
+      T('home.modules_label', 'Sectielabel', 'Add-on modules / 02b'),
+      H('home.modules_heading', 'Kop', 'Niet alleen een website —<br><span class="red">een platform.</span>'),
+      A('home.modules_lead', 'Tekst', 'Vijf modules die SaaS-stapeling vervangen. CMS, facturatie, social-campagnes, SEO en blog — onder één login, op je eigen domein. Early-access tarief 2026.'),
+    ]},
+    { title: 'De aanpak', fields: [
+      T('home.aanpak_label', 'Sectielabel', 'De aanpak / 03'),
+      H('home.aanpak_heading', 'Kop', 'Jouw website —<br>van brief tot <span class="red">live.</span>'),
+      T('home.step1_title', 'Stap 1 — titel', 'Kennismaken & briefen.'),
+      A('home.step1_body', 'Stap 1 — tekst', 'We spreken af — digitaal of in Amsterdam. Jij vertelt me over je wensen, je merk en je doelgroep. Ik stel de vragen die nodig zijn om het goed te doen. Daarna maak ik een voorstel op maat.'),
+      T('home.step2_title', 'Stap 2 — titel', 'Design & feedback.'),
+      A('home.step2_body', 'Stap 2 — tekst', 'Ik ontwerp een visueel aantrekkelijk en responsief design dat perfect aansluit bij jouw merk. Jij geeft feedback, ik verwerk die — direct en efficiënt. Geen eindeloze feedbackrondes.'),
+      T('home.step3_title', 'Stap 3 — titel', 'Bouwen & testen.'),
+      A('home.step3_body', 'Stap 3 — tekst', 'Ik bouw de website — snel, schoon en geoptimaliseerd. Responsief op alle devices, getest in alle browsers, klaar voor zoekmachines. Jij ziet de voortgang live.'),
+      T('home.step4_title', 'Stap 4 — titel', 'Live & klaar.'),
+      A('home.step4_body', 'Stap 4 — tekst', 'Jouw website gaat live. Ik regel de webhosting, het SSL-certificaat en de overdracht. Daarna ben ik beschikbaar voor onderhoud en support — zo lang als je wil.'),
+    ]},
+    { title: 'Wat klanten zeggen', fields: [
+      T('home.proof_label', 'Sectielabel', 'Wat klanten zeggen / —'),
+      H('home.proof_heading', 'Kop', 'Werk dat zijn<br>geld <span class="red">terugverdient.</span>'),
+      A('home.quote_text', 'Quote', '"Peter denkt mee, reageert snel en levert precies op wat hij belooft. De site ziet er prachtig uit en werkt geweldig."'),
+      T('home.quote_name', 'Quote — naam', 'Klant via Stolkwebdesign'),
+      T('home.quote_role', 'Quote — rol', 'Ondernemer — Nederland'),
+      T('home.metric1_num', 'Cijfer 1', '12+'), T('home.metric1_label', 'Cijfer 1 — label', 'Projecten opgeleverd'),
+      T('home.metric2_num', 'Cijfer 2', '7+'), T('home.metric2_label', 'Cijfer 2 — label', 'Jaar ervaring'),
+      T('home.metric3_num', 'Cijfer 3', '100%'), T('home.metric3_label', 'Cijfer 3 — label', 'Custom design'),
+      T('home.metric4_num', 'Cijfer 4', '€2.5k'), T('home.metric4_label', 'Cijfer 4 — label', 'Startprijs'),
+    ]},
+    { title: 'Over de maker', fields: [
+      T('home.about_label', 'Sectielabel', 'Over de maker / 04'),
+      H('home.about_heading', 'Kop', 'Geen bureau.<br><span class="red">Eén vakman.</span>'),
+      A('home.about_body1', 'Tekst 1', 'Ik ben Peter Stolk — zelfstandig webdesigner uit Amsterdam. Ik ontwerp en bouw visueel aantrekkelijke, responsieve websites die perfect aansluiten bij wat jij voor ogen hebt. Of dat nu een handcrafted HTML-site met GSAP-animaties is, of een gebruiksvriendelijke WordPress-website — ik kies wat het beste werkt voor jouw project.'),
+      A('home.about_body2', 'Tekst 2', 'Geen grote agency met juniors die je project afhandelen. Jij hebt direct contact met de persoon die jouw website bouwt. Dat maakt het verschil.'),
+    ]},
+    { title: 'Slot-CTA & footer', fields: [
+      T('home.finalcta_label', 'CTA — labeltekst', '/ Vertel Peter meer over je wensen'),
+      T('home.finalcta_heading', 'CTA — kop', 'Klaar voor een website die werkt?'),
+      H('home.footer_tagline', 'Footer — tagline', 'Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.'),
+    ]},
+  ]},
+
+  { id: 'over', label: 'Over mij', groups: [
+    { title: 'Pagina-header', fields: [
+      A('over.subtitle', 'Subtitel naast de titel', 'Zelfstandig webdesigner uit Uithoorn. Ik ontwerp en bouw websites die echt werken — persoonlijk, op maat en met oog voor detail.'),
+    ]},
+    { title: 'Het verhaal', fields: [
+      T('over.label', 'Sectielabel', 'Wie is Peter / —'),
+      H('over.heading', 'Kop', 'Geen bureau.<br><span class="red">Eén vakman.</span>'),
+      A('over.body1', 'Alinea 1', 'Ik ben Peter Stolk — zelfstandig webdesigner uit Uithoorn. Al meer dan 7 jaar ontwerp en bouw ik professionele websites voor ondernemers door heel Nederland. Ik werk met HTML, CSS en GSAP voor volledig handcrafted sites, én met WordPress wanneer dat de slimste keuze is voor jouw project.'),
+      A('over.body2', 'Alinea 2', 'Wat mij onderscheidt? Jij hebt altijd direct contact met mij — de persoon die jouw website daadwerkelijk bouwt. Geen account managers, geen juniors, geen offshore productie. Gewoon Peter, die begrijpt wat jij nodig hebt en dat ook levert.'),
+      A('over.body3', 'Alinea 3 (grijs)', 'Ik werk voor een selecte groep klanten tegelijk. Zo geef ik elk project de aandacht die het verdient — en jij de service die je mag verwachten.'),
+      T('over.manifesto_1', 'Manifest 1', 'Persoonlijk contact — altijd direct met Peter.'),
+      T('over.manifesto_2', 'Manifest 2', 'Custom designs — geen standaard templates.'),
+      T('over.manifesto_3', 'Manifest 3', 'Responsief op alle devices — altijd getest.'),
+      T('over.manifesto_4', 'Manifest 4', 'Ik zeg nee als een project niet bij mij past.'),
+      T('over.manifesto_5', 'Manifest 5', 'Hosting en onderhoud regel ik erbij — als jij dat wil.'),
+    ]},
+    { title: 'Tools & technieken', fields: [
+      T('over.skills_label', 'Sectielabel', 'Wat ik gebruik / —'),
+      H('over.skills_heading', 'Kop', 'Tools &amp; <span class="red">technieken.</span>'),
+      T('over.skill1_title', 'Skill 1 — titel', 'HTML & CSS'),
+      A('over.skill1_body', 'Skill 1 — tekst', 'Handcrafted, schone code zonder onnodige frameworks. Snel, veilig en onderhoudbaar. De basis van elk goed gebouwde website.'),
+      T('over.skill2_title', 'Skill 2 — titel', 'GSAP & animaties'),
+      A('over.skill2_body', 'Skill 2 — tekst', 'Scroll-driven animaties, cinematic hero-secties en interactieve elementen die bezoekers vasthouden. Professioneel en performant.'),
+      T('over.skill3_title', 'Skill 3 — titel', 'WordPress'),
+      A('over.skill3_body', 'Skill 3 — tekst', 'Custom WordPress-themes zonder page builders. Voor klanten die zelf content willen beheren — snel, gebruiksvriendelijk en op maat.'),
+      H('over.cta_title', 'Slot-CTA — kop', 'Laten we<br>kennismaken.'),
+    ]},
+    { title: "Foto's", fields: [
+      PH('fotos.peter', 'Foto van Peter', 'Staand portret — ca. 800×1000px (4:5). Verschijnt op Over én op de homepage.', 'assets/peter stolk.png'),
+    ]},
+  ]},
+
+  { id: 'contact', label: 'Contact', groups: [
+    { title: 'Intro', fields: [
+      T('contact.eyebrow', 'Labeltekst', 'Contact / —'),
+      H('contact.title', 'Kop', 'Vertel me<br>over je <span class="red">project.</span>'),
+      A('contact.body', 'Tekst', 'Ik maak een voorstel op maat — vrijblijvend en zonder verplichtingen. Plan een gesprek van 20 minuten of stuur een berichtje via WhatsApp.'),
+      H('contact.note', 'Notitie onder de opties', 'Reactie binnen 1 werkdag.<br>Uithoorn — beschikbaar door heel NL.'),
+    ]},
+    { title: 'Formulier', fields: [
+      T('contact.form_title', 'Titel', 'Stuur een bericht'),
+      T('contact.form_sub', 'Subtekst', 'Ik reageer binnen 1 werkdag'),
+    ]},
+    { title: 'Contactgegevens (gelden op álle pagina\'s)', fields: [
+      T('contact.email', 'E-mailadres (weergave)', 'info@stolkwebdesign.nl'),
+      L('contact.email_href', 'E-mail — klik-link', 'mailto:info@stolkwebdesign.nl'),
+      L('contact.cal_url', 'Plan-een-gesprek — link (Cal.com)', 'https://cal.com/peter-stolk-9dkoig/30min'),
+      L('contact.whatsapp_url', 'WhatsApp — link', 'https://wa.me/31650222228'),
+      T('contact.whatsapp_display', 'WhatsApp-nummer (weergave)', '+31 6 50 22 22 28'),
+    ]},
+  ]},
+
+  { id: 'modules', label: 'Modules', groups: [
+    { title: 'Hero', fields: [
+      T('modules.hero_eyebrow', 'Labeltekst', 'Modules / 03 — Early access 2026'),
+      H('modules.hero_heading', 'Kop', 'Eén platform —<br>vijf <span class="red">modules.</span>'),
+      H('modules.hero_sub', 'Subtekst', 'Modules die <strong>losse SaaS-abonnementen vervangen</strong>. CMS, facturatie, social-campagnes, SEO en blog — gebouwd boven op je Stolkwebdesign-website, gefactureerd zoals je dat zelf wil. Geen plugin-hel. Geen ticketsysteem.'),
+    ]},
+    { title: 'Module 1 — CMS', fields: [
+      H('modules.cms_title', 'Titel', 'CMS-basis<br><span class="red">— content &amp; foto\'s.</span>'),
+      A('modules.cms_lead', 'Tekst', 'Eén login. Pas teksten en foto\'s aan op elke pagina van je site — zonder technisch inzicht, zonder externe partij, direct live.'),
+      T('modules.cms_price', 'Prijs (getal)', '€499'),
+      T('modules.cms_pricetag', 'Prijs — bijschrift', '— Activatie + onbeperkt bewerken'),
+    ]},
+    { title: 'Module 2 — Factuur', fields: [
+      H('modules.factuur_title', 'Titel', 'Factuur-tool<br><span class="red">— A4, PDF, klaar.</span>'),
+      A('modules.factuur_lead', 'Tekst', 'Maak een factuur in 60 seconden. Live A4-preview, BTW-keuze, IBAN én Tikkie. Eén klik naar PDF — geen abonnement per factuur.'),
+      T('modules.factuur_price', 'Prijs (getal)', '€199'),
+      T('modules.factuur_pricetag', 'Prijs — bijschrift', '— Onbeperkt facturen, geen per-stuk-kosten'),
+    ]},
+    { title: 'Module 3 — Social', fields: [
+      H('modules.social_title', 'Titel', 'Social Campagnes<br><span class="red">— vier formaten, één klik.</span>'),
+      A('modules.social_lead', 'Tekst', 'Schrijf één post. Krijg vier formaten terug: Instagram-vierkant, LinkedIn-landschap, Google Bedrijfsprofiel én Story. Brand-consistent, AI-ondersteund, klaar om te posten.'),
+      T('modules.social_price', 'Prijs (getal)', '€99'),
+      T('modules.social_pricetag', 'Prijs — bijschrift', '+ €149 per campagne'),
+    ]},
+    { title: 'Module 4 — SEO', fields: [
+      H('modules.seo_title', 'Titel', 'SEO Rapport<br><span class="red">+ actiepunten.</span>'),
+      A('modules.seo_lead', 'Tekst', 'Site-brede audit met score, prioriteiten en concreet actieplan. Per actiepunt kies je: zelf oppakken — of laat Peter het doen tegen een vaste prijs.'),
+      T('modules.seo_price', 'Prijs (getal)', '€99'),
+      T('modules.seo_pricetag', 'Prijs — bijschrift', '+ vaste prijs per actiepunt'),
+    ]},
+    { title: 'Module 5 — Blog', fields: [
+      H('modules.blog_title', 'Titel', 'Blog —<br><span class="red">long-tail SEO.</span>'),
+      A('modules.blog_lead', 'Tekst', 'Publiceer kennis-artikelen die jouw doelgroep zoekt. AI-ondersteund, geredigeerd door jou. Automatische SEO-meta en interne linking naar je diensten-pagina\'s.'),
+      T('modules.blog_price', 'Prijs (getal)', '€99'),
+      T('modules.blog_pricetag', 'Prijs — bijschrift', '+ €89 per gepubliceerde blog'),
+    ]},
+  ]},
+];
+
+// Afgeleide lookups
+const CONTENT_DEFAULTS = {};
+const CONTENT_PHOTOS = [];
+CONTENT_PAGES.forEach(p => p.groups.forEach(g => g.fields.forEach(fld => {
+  if (fld.type === 'photo') CONTENT_PHOTOS.push(fld);
+  else CONTENT_DEFAULTS[fld.f] = fld.def || '';
+})));
+
+let contentMap = {};
+let contentBuilt = false;
+
+function fieldDomId(key) { return 'cf-' + key.replace(/[^a-z0-9]/gi, '_'); }
+
+function renderContentField(fld) {
+  const id = fieldDomId(fld.f);
+  if (fld.type === 'photo') {
+    return `<div class="photo-slot">
+      <div class="photo-preview" id="${id}-prev"></div>
+      <div class="photo-slot-info">
+        <div class="photo-slot-label">${esc(fld.label)}</div>
+        <div class="photo-slot-guide">${esc(fld.guide || '')}</div>
+        <input type="file" accept="image/*" id="${id}-file" style="display:none" onchange="onPhotoPick('${fld.f}', this)">
+        <button class="photo-upload-btn" onclick="document.getElementById('${id}-file').click()">↑ Nieuwe foto kiezen</button>
+      </div></div>`;
+  }
+  const label = `<label class="form-label font-mono" for="${id}">${esc(fld.label)}</label>`;
+  const input = (fld.type === 'area' || fld.type === 'html')
+    ? `<textarea class="form-textarea" id="${id}" data-key="${esc(fld.f)}" rows="3"></textarea>`
+    : `<input type="text" class="form-input" id="${id}" data-key="${esc(fld.f)}">`;
+  let hint = '';
+  if (fld.type === 'html') hint = `<div class="cms-hint">Opmaak toegestaan: &lt;strong&gt; &lt;br&gt; &lt;span class="red"&gt;…&lt;/span&gt;</div>`;
+  else if (fld.type === 'link') hint = `<div class="cms-hint">Volledige link incl. https:// , mailto: of tel:</div>`;
+  return `<div class="form-group">${label}${input}${hint}</div>`;
+}
+
+function buildContentUI() {
+  if (contentBuilt) return;
+  const tabs = document.getElementById('content-tabs');
+  const panes = document.getElementById('content-panes');
+  tabs.innerHTML = CONTENT_PAGES.map((p, i) =>
+    `<button class="content-tab${i === 0 ? ' active' : ''}" onclick="showContentTab('${p.id}', this)">${esc(p.label)}</button>`
+  ).join('');
+  panes.innerHTML = CONTENT_PAGES.map((p, i) => {
+    const groups = p.groups.map(g =>
+      `<div class="cms-group"><div class="cms-group-title">${esc(g.title)}</div>${g.fields.map(renderContentField).join('')}</div>`
+    ).join('');
+    return `<div class="content-pane${i === 0 ? ' active' : ''}" id="pane-${p.id}">${groups}
+      <div class="content-save-bar"><button class="content-save-btn font-display" onclick="saveContentPage('${p.id}', this)">Wijzigingen opslaan →</button></div>
+    </div>`;
+  }).join('');
+  contentBuilt = true;
+}
+
+function showContentTab(id, el) {
+  document.querySelectorAll('.content-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.content-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+async function loadContent() {
+  buildContentUI();
+  const { data, error } = await db.from(CONTENT_TABLE).select('section,field,value');
+  contentMap = {};
+  if (error) { toast('Content laden mislukt: ' + error.message, true); }
+  else if (data) data.forEach(r => { contentMap[r.section + '.' + r.field] = r.value; });
+
+  // Tekstvelden: DB-waarde, anders standaardtekst uit de site
+  document.querySelectorAll('#content-panes [data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    const v = (contentMap[key] != null && contentMap[key] !== '') ? contentMap[key] : (CONTENT_DEFAULTS[key] || '');
+    el.value = v;
+  });
+  // Foto's: preview tonen
+  CONTENT_PHOTOS.forEach(ph => {
+    const prev = document.getElementById(fieldDomId(ph.f) + '-prev');
+    const url = (contentMap[ph.f] != null && contentMap[ph.f] !== '') ? contentMap[ph.f] : ph.def;
+    if (prev && url) prev.style.backgroundImage = `url('${url}')`;
+  });
+}
+
+async function saveContentPage(pageId, btn) {
+  const pane = document.getElementById('pane-' + pageId);
+  if (!pane) return;
+  const pairs = [];
+  pane.querySelectorAll('[data-key]').forEach(el => {
+    const key = el.getAttribute('data-key');
+    const dot = key.indexOf('.');
+    pairs.push({ section: key.slice(0, dot), field: key.slice(dot + 1), value: el.value });
+  });
+  if (!pairs.length) return;
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Opslaan…';
+  const { error } = await db.from(CONTENT_TABLE).upsert(pairs, { onConflict: 'section,field' });
+  btn.disabled = false; btn.textContent = orig;
+  if (error) { toast('Fout: ' + error.message, true); return; }
+  pairs.forEach(p => { contentMap[p.section + '.' + p.field] = p.value; });
+  toast('Wijzigingen opgeslagen — direct live');
+}
+
+// Client-side compressie (vanilla port van Bestsupport08 imageCompress.ts)
+async function compressImage(file, max = 2000, quality = 0.85) {
+  if (file.size < 200 * 1024 || file.type === 'image/svg+xml') return file;
+  let bmp;
+  try { bmp = await createImageBitmap(file); } catch (e) { return file; }
+  let w = bmp.width, h = bmp.height;
+  if (w > max || h > max) { const r = w >= h ? max / w : max / h; w = Math.round(w * r); h = Math.round(h * r); }
+  const c = document.createElement('canvas'); c.width = w; c.height = h;
+  const ctx = c.getContext('2d'); if (!ctx) return file;
+  ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(bmp, 0, 0, w, h); if (bmp.close) bmp.close();
+  const blob = await new Promise(res => c.toBlob(res, 'image/jpeg', quality));
+  if (!blob || blob.size >= file.size) return file;
+  return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' });
+}
+
+async function onPhotoPick(key, input) {
+  const file = input.files[0]; if (!file) return;
+  const prev = document.getElementById(fieldDomId(key) + '-prev');
+  try {
+    toast('Foto verwerken & uploaden…');
+    const compressed = await compressImage(file);
+    const ext = (compressed.name.split('.').pop() || 'jpg').toLowerCase();
+    const dot = key.indexOf('.');
+    const section = key.slice(0, dot), field = key.slice(dot + 1);
+    const path = `${field}-${Date.now()}.${ext}`;
+    const { error: upErr } = await db.storage.from(CONTENT_BUCKET).upload(path, compressed, { upsert: true, contentType: compressed.type });
+    if (upErr) throw upErr;
+    const url = db.storage.from(CONTENT_BUCKET).getPublicUrl(path).data.publicUrl;
+    const { error } = await db.from(CONTENT_TABLE).upsert([{ section, field, value: url }], { onConflict: 'section,field' });
+    if (error) throw error;
+    contentMap[key] = url;
+    if (prev) prev.style.backgroundImage = `url('${url}')`;
+    toast('Foto bijgewerkt — direct live');
+  } catch (e) {
+    toast('Upload mislukt: ' + (e.message || e), true);
+  }
+  input.value = '';
 }
 
 // ── TOAST ──

@@ -32,6 +32,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
+<script src="content-loader.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -593,13 +594,13 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="hero-content">
     <div class="hero-label">
       <div class="hero-label-dot"></div>
-      <span class="hero-label-text">Peter Stolk — Webdesign · Amsterdam · Persoonlijk contact</span>
+      <span class="hero-label-text" data-content="home.hero_label">Peter Stolk — Webdesign · Amsterdam · Persoonlijk contact</span>
     </div>
     <h1 class="hero-headline">
       <span class="smash-word"><span class="smash-inner" style="animation-delay:.5s">Jouw</span></span><span class="smash-word"><span class="smash-inner" style="animation-delay:.62s">ideale</span></span><br>
       <span class="smash-word"><span class="smash-inner" style="animation-delay:.75s">website</span></span><span class="smash-word"><span class="smash-inner red" style="animation-delay:.88s">gebouwd.</span></span>
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub" data-content-html="home.hero_sub">
       Wil je een <strong>professionele website laten bouwen</strong> die echt opvalt? Ik maak handcrafted websites in HTML &amp; CSS én WordPress — volledig op maat, snel en altijd up-to-date. Van A tot Z geregeld.
     </p>
     <div class="hero-ctas">
@@ -607,7 +608,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         Plan een gesprek
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </a>
-      <a href="https://wa.me/31650222228" class="btn-wa">
+      <a href="https://wa.me/31650222228" data-content-href="contact.whatsapp_url" class="btn-wa">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.121.555 4.112 1.528 5.836L0 24l6.335-1.51A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.846 0-3.576-.49-5.068-1.346l-.362-.214-3.762.898.936-3.665-.235-.375A9.944 9.944 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
         WhatsApp
       </a>
@@ -617,10 +618,10 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 
 <!-- USP STRIP -->
 <div class="usp-strip">
-  <div class="usp-item"><span class="usp-check">✓</span> Persoonlijk contact</div>
-  <div class="usp-item"><span class="usp-check">✓</span> Custom design — geen templates</div>
-  <div class="usp-item"><span class="usp-check">✓</span> Responsief op alle devices</div>
-  <div class="usp-item"><span class="usp-check">✓</span> Hosting &amp; onderhoud mogelijk</div>
+  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_1">Persoonlijk contact</span></div>
+  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_2">Custom design — geen templates</span></div>
+  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_3">Responsief op alle devices</span></div>
+  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_4">Hosting &amp; onderhoud mogelijk</span></div>
 </div>
 
 <!-- MARQUEE 1 -->
@@ -645,8 +646,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section id="werk">
   <div class="portfolio-strip">
     <div class="portfolio-strip-header reveal">
-      <div class="section-label">Geselecteerd werk / 01</div>
-      <h2 class="section-heading">Elk project<br>een <span class="red">statement.</span></h2>
+      <div class="section-label" data-content="home.werk_label">Geselecteerd werk / 01</div>
+      <h2 class="section-heading" data-content-html="home.werk_heading">Elk project<br>een <span class="red">statement.</span></h2>
     </div>
     <div class="portfolio-grid" id="werk-grid">
       <div class="port-card reveal">
@@ -697,25 +698,25 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section style="border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); background: var(--bone);">
   <div class="problem">
     <div class="reveal">
-      <div class="section-label">Het probleem / —</div>
-      <h2 class="section-heading">Jouw site kost je <span class="red">klanten.</span></h2>
+      <div class="section-label" data-content="home.problem_label">Het probleem / —</div>
+      <h2 class="section-heading" data-content-html="home.problem_heading">Jouw site kost je <span class="red">klanten.</span></h2>
     </div>
     <div class="reveal" style="transition-delay:.1s">
-      <p class="problem-body">
+      <p class="problem-body" data-content="home.problem_body">
         Je hebt een website — maar hij converteert niet. De opmaak klopt niet op mobiel, de laadtijd is te lang en de tekst had net zo goed van een concurrent kunnen zijn. Dat is geen website. Dat is een gemiste kans.
       </p>
       <div class="pain-list">
         <div class="pain-item">
           <span class="pain-num font-mono">/01</span>
-          <span class="pain-text font-display">Je homepage ziet er precies uit als die van je concurrent.</span>
+          <span class="pain-text font-display" data-content="home.pain_1">Je homepage ziet er precies uit als die van je concurrent.</span>
         </div>
         <div class="pain-item">
           <span class="pain-num font-mono">/02</span>
-          <span class="pain-text font-display">Bezoekers haken af voor ze je verhaal gehoord hebben.</span>
+          <span class="pain-text font-display" data-content="home.pain_2">Bezoekers haken af voor ze je verhaal gehoord hebben.</span>
         </div>
         <div class="pain-item">
           <span class="pain-num font-mono">/03</span>
-          <span class="pain-text font-display">Je betaalde voor onderhoud maar hoort nooit meer iemand.</span>
+          <span class="pain-text font-display" data-content="home.pain_3">Je betaalde voor onderhoud maar hoort nooit meer iemand.</span>
         </div>
       </div>
     </div>
@@ -727,27 +728,27 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="noise" style="opacity:.05"></div>
   <div class="solution-inner">
     <div class="solution-header reveal">
-      <div class="section-label" style="color:var(--red)">Wat ik doe / 02</div>
-      <h2 class="section-heading" style="color:var(--white)">Van idee tot live —<br><span class="red">van A tot Z.</span></h2>
+      <div class="section-label" style="color:var(--red)" data-content="home.diensten_label">Wat ik doe / 02</div>
+      <h2 class="section-heading" style="color:var(--white)" data-content-html="home.diensten_heading">Van idee tot live —<br><span class="red">van A tot Z.</span></h2>
     </div>
     <div class="pillars">
       <div class="pillar reveal">
         <div class="pillar-num">01</div>
-        <div class="pillar-title">Website laten bouwen</div>
-        <p class="pillar-body">Ik bouw websites in HTML &amp; CSS met GSAP-animaties én WordPress — afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.</p>
-        <div class="pillar-price">Vanaf <strong>€2.500</strong></div>
+        <div class="pillar-title" data-content="home.pillar1_title">Website laten bouwen</div>
+        <p class="pillar-body" data-content="home.pillar1_body">Ik bouw websites in HTML &amp; CSS met GSAP-animaties én WordPress — afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.</p>
+        <div class="pillar-price" data-content-html="home.pillar1_price">Vanaf <strong>€2.500</strong></div>
       </div>
       <div class="pillar reveal" style="transition-delay:.1s">
         <div class="pillar-num">02</div>
-        <div class="pillar-title">Webhosting &amp; beveiliging</div>
-        <p class="pillar-body">Dedicated webhosting op een snelle server. SSL-certificaat, automatische back-ups en monitoring inbegrepen. Jouw website staat altijd online en is altijd actueel — zonder dat jij er omkijken naar hebt.</p>
-        <div class="pillar-price">Vanaf <strong>€25 / maand</strong></div>
+        <div class="pillar-title" data-content="home.pillar2_title">Webhosting &amp; beveiliging</div>
+        <p class="pillar-body" data-content="home.pillar2_body">Dedicated webhosting op een snelle server. SSL-certificaat, automatische back-ups en monitoring inbegrepen. Jouw website staat altijd online en is altijd actueel — zonder dat jij er omkijken naar hebt.</p>
+        <div class="pillar-price" data-content-html="home.pillar2_price">Vanaf <strong>€25 / maand</strong></div>
       </div>
       <div class="pillar reveal" style="transition-delay:.2s">
         <div class="pillar-num">03</div>
-        <div class="pillar-title">Onderhoud &amp; support</div>
-        <p class="pillar-body">Kleine aanpassingen, nieuwe pagina's of technische vragen. Directe lijn met Peter — geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.</p>
-        <div class="pillar-price"><strong>Op aanvraag</strong></div>
+        <div class="pillar-title" data-content="home.pillar3_title">Onderhoud &amp; support</div>
+        <p class="pillar-body" data-content="home.pillar3_body">Kleine aanpassingen, nieuwe pagina's of technische vragen. Directe lijn met Peter — geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.</p>
+        <div class="pillar-price" data-content-html="home.pillar3_price"><strong>Op aanvraag</strong></div>
       </div>
     </div>
   </div>
@@ -757,9 +758,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section class="modules-teaser" id="modules-teaser">
   <div class="modules-teaser-inner">
     <div class="modules-teaser-header reveal">
-      <div class="section-label">Add-on modules / 02b</div>
-      <h2 class="section-heading">Niet alleen een website —<br><span class="red">een platform.</span></h2>
-      <p class="modules-teaser-lead">
+      <div class="section-label" data-content="home.modules_label">Add-on modules / 02b</div>
+      <h2 class="section-heading" data-content-html="home.modules_heading">Niet alleen een website —<br><span class="red">een platform.</span></h2>
+      <p class="modules-teaser-lead" data-content="home.modules_lead">
         Vijf modules die SaaS-stapeling vervangen. CMS, facturatie, social-campagnes, SEO en blog — onder één login, op je eigen domein. Early-access tarief 2026.
       </p>
     </div>
@@ -832,39 +833,39 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section style="border-bottom: 2px solid var(--black);" id="aanpak">
   <div class="process">
     <div class="reveal">
-      <div class="section-label">De aanpak / 03</div>
-      <h2 class="section-heading">Jouw website —<br>van brief tot <span class="red">live.</span></h2>
+      <div class="section-label" data-content="home.aanpak_label">De aanpak / 03</div>
+      <h2 class="section-heading" data-content-html="home.aanpak_heading">Jouw website —<br>van brief tot <span class="red">live.</span></h2>
     </div>
     <div class="steps">
       <div class="step reveal">
         <div class="step-num font-display">01</div>
         <div>
-          <div class="step-title font-display">Kennismaken &amp; briefen.</div>
-          <p class="step-body">We spreken af — digitaal of in Amsterdam. Jij vertelt me over je wensen, je merk en je doelgroep. Ik stel de vragen die nodig zijn om het goed te doen. Daarna maak ik een voorstel op maat.</p>
+          <div class="step-title font-display" data-content="home.step1_title">Kennismaken &amp; briefen.</div>
+          <p class="step-body" data-content="home.step1_body">We spreken af — digitaal of in Amsterdam. Jij vertelt me over je wensen, je merk en je doelgroep. Ik stel de vragen die nodig zijn om het goed te doen. Daarna maak ik een voorstel op maat.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
       <div class="step reveal" style="transition-delay:.08s">
         <div class="step-num font-display">02</div>
         <div>
-          <div class="step-title font-display">Design &amp; feedback.</div>
-          <p class="step-body">Ik ontwerp een visueel aantrekkelijk en responsief design dat perfect aansluit bij jouw merk. Jij geeft feedback, ik verwerk die — direct en efficiënt. Geen eindeloze feedbackrondes.</p>
+          <div class="step-title font-display" data-content="home.step2_title">Design &amp; feedback.</div>
+          <p class="step-body" data-content="home.step2_body">Ik ontwerp een visueel aantrekkelijk en responsief design dat perfect aansluit bij jouw merk. Jij geeft feedback, ik verwerk die — direct en efficiënt. Geen eindeloze feedbackrondes.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
       <div class="step reveal" style="transition-delay:.16s">
         <div class="step-num font-display">03</div>
         <div>
-          <div class="step-title font-display">Bouwen &amp; testen.</div>
-          <p class="step-body">Ik bouw de website — snel, schoon en geoptimaliseerd. Responsief op alle devices, getest in alle browsers, klaar voor zoekmachines. Jij ziet de voortgang live.</p>
+          <div class="step-title font-display" data-content="home.step3_title">Bouwen &amp; testen.</div>
+          <p class="step-body" data-content="home.step3_body">Ik bouw de website — snel, schoon en geoptimaliseerd. Responsief op alle devices, getest in alle browsers, klaar voor zoekmachines. Jij ziet de voortgang live.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
       <div class="step reveal" style="transition-delay:.24s">
         <div class="step-num font-display">04</div>
         <div>
-          <div class="step-title font-display">Live &amp; klaar.</div>
-          <p class="step-body">Jouw website gaat live. Ik regel de webhosting, het SSL-certificaat en de overdracht. Daarna ben ik beschikbaar voor onderhoud en support — zo lang als je wil.</p>
+          <div class="step-title font-display" data-content="home.step4_title">Live &amp; klaar.</div>
+          <p class="step-body" data-content="home.step4_body">Jouw website gaat live. Ik regel de webhosting, het SSL-certificaat en de overdracht. Daarna ben ik beschikbaar voor onderhoud en support — zo lang als je wil.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
@@ -876,33 +877,33 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section class="social-proof">
   <div class="social-inner">
     <div class="reveal">
-      <div class="section-label">Wat klanten zeggen / —</div>
-      <h2 class="section-heading">Werk dat zijn<br>geld <span class="red">terugverdient.</span></h2>
+      <div class="section-label" data-content="home.proof_label">Wat klanten zeggen / —</div>
+      <h2 class="section-heading" data-content-html="home.proof_heading">Werk dat zijn<br>geld <span class="red">terugverdient.</span></h2>
     </div>
     <div class="quote-block brutalist-offset-red reveal" style="transition-delay:.1s">
       <span class="quote-mark">"</span>
-      <p class="quote-text">"Peter denkt mee, reageert snel en levert precies op wat hij belooft. De site ziet er prachtig uit en werkt geweldig."</p>
+      <p class="quote-text" data-content="home.quote_text">"Peter denkt mee, reageert snel en levert precies op wat hij belooft. De site ziet er prachtig uit en werkt geweldig."</p>
       <div class="quote-attr">
-        <div class="attr-name font-display">Klant via Stolkwebdesign</div>
-        <div class="attr-role font-mono">Ondernemer — Nederland</div>
+        <div class="attr-name font-display" data-content="home.quote_name">Klant via Stolkwebdesign</div>
+        <div class="attr-role font-mono" data-content="home.quote_role">Ondernemer — Nederland</div>
       </div>
     </div>
     <div class="metrics reveal" style="transition-delay:.15s">
       <div class="metric">
-        <div class="metric-num font-display">12+</div>
-        <div class="metric-label font-mono">Projecten opgeleverd</div>
+        <div class="metric-num font-display" data-content="home.metric1_num">12+</div>
+        <div class="metric-label font-mono" data-content="home.metric1_label">Projecten opgeleverd</div>
       </div>
       <div class="metric">
-        <div class="metric-num font-display">7+</div>
-        <div class="metric-label font-mono">Jaar ervaring</div>
+        <div class="metric-num font-display" data-content="home.metric2_num">7+</div>
+        <div class="metric-label font-mono" data-content="home.metric2_label">Jaar ervaring</div>
       </div>
       <div class="metric">
-        <div class="metric-num font-display">100%</div>
-        <div class="metric-label font-mono">Custom design</div>
+        <div class="metric-num font-display" data-content="home.metric3_num">100%</div>
+        <div class="metric-label font-mono" data-content="home.metric3_label">Custom design</div>
       </div>
       <div class="metric">
-        <div class="metric-num font-display">€2.5k</div>
-        <div class="metric-label font-mono">Startprijs</div>
+        <div class="metric-num font-display" data-content="home.metric4_num">€2.5k</div>
+        <div class="metric-label font-mono" data-content="home.metric4_label">Startprijs</div>
       </div>
     </div>
   </div>
@@ -912,18 +913,18 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section id="peter" style="border-top: 2px solid var(--black);">
   <div class="about">
     <div class="about-image reveal">
-      <img src="assets/peter stolk.png" alt="Peter Stolk — webdesigner Uithoorn" loading="lazy"
+      <img src="assets/peter stolk.png" data-content-src="fotos.peter" alt="Peter Stolk — webdesigner Uithoorn" loading="lazy"
            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
       <div class="noise" style="opacity:.18"></div>
       <div class="about-image-name font-display">Peter<br>Stolk</div>
     </div>
     <div class="reveal" style="transition-delay:.1s">
-      <div class="section-label">Over de maker / 04</div>
-      <h2 class="section-heading">Geen bureau.<br><span class="red">Eén vakman.</span></h2>
-      <p class="about-body">
+      <div class="section-label" data-content="home.about_label">Over de maker / 04</div>
+      <h2 class="section-heading" data-content-html="home.about_heading">Geen bureau.<br><span class="red">Eén vakman.</span></h2>
+      <p class="about-body" data-content="home.about_body1">
         Ik ben Peter Stolk — zelfstandig webdesigner uit Amsterdam. Ik ontwerp en bouw visueel aantrekkelijke, responsieve websites die perfect aansluiten bij wat jij voor ogen hebt. Of dat nu een handcrafted HTML-site met GSAP-animaties is, of een gebruiksvriendelijke WordPress-website — ik kies wat het beste werkt voor jouw project.
       </p>
-      <p class="about-body" style="color:var(--muted);">
+      <p class="about-body" style="color:var(--muted);" data-content="home.about_body2">
         Geen grote agency met juniors die je project afhandelen. Jij hebt direct contact met de persoon die jouw website bouwt. Dat maakt het verschil.
       </p>
       <div class="manifesto">
@@ -940,15 +941,15 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section class="final-cta" id="contact">
   <div class="noise"></div>
   <div class="final-cta-inner">
-    <div class="final-cta-label font-mono">/ Vertel Peter meer over je wensen</div>
-    <h2 class="final-cta-heading font-display">
+    <div class="final-cta-label font-mono" data-content="home.finalcta_label">/ Vertel Peter meer over je wensen</div>
+    <h2 class="final-cta-heading font-display" data-content="home.finalcta_heading">
       Klaar voor een website die werkt?
     </h2>
     <a href="#" class="btn-white" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view","useSlotsViewOnSmallScreen":"true"}'>
       Plan een gratis gesprek
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="0"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
     </a>
-    <span class="final-secondary font-mono">Of stuur een WhatsApp → <a href="https://wa.me/31650222228">+31 6 50 22 22 28</a></span>
+    <span class="final-secondary font-mono">Of stuur een WhatsApp → <a href="https://wa.me/31650222228" data-content-href="contact.whatsapp_url" data-content="contact.whatsapp_display">+31 6 50 22 22 28</a></span>
   </div>
 </section>
 
@@ -959,7 +960,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="footer-grid">
     <div>
       <div class="footer-logo font-display">Stolkwebdesign®</div>
-      <p class="footer-tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
+      <p class="footer-tagline" data-content-html="home.footer_tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
     </div>
     <div>
       <div class="footer-col-label font-mono">Navigeer</div>
@@ -984,9 +985,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <div>
       <div class="footer-col-label font-mono">Contact</div>
       <ul class="footer-links">
-        <li><a href="https://cal.com/peter-stolk-9dkoig/30min">Plan een gesprek</a></li>
-        <li><a href="https://wa.me/31650222228">WhatsApp</a></li>
-        <li><a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a></li>
+        <li><a href="https://cal.com/peter-stolk-9dkoig/30min" data-content-href="contact.cal_url">Plan een gesprek</a></li>
+        <li><a href="https://wa.me/31650222228" data-content-href="contact.whatsapp_url">WhatsApp</a></li>
+        <li><a href="mailto:info@stolkwebdesign.nl" data-content-href="contact.email_href" data-content="contact.email">info@stolkwebdesign.nl</a></li>
       </ul>
       <div class="footer-col-label font-mono" style="margin-top:24px;">Volg ons</div>
       <ul class="footer-links">
