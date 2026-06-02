@@ -118,5 +118,15 @@ export default async function handler(req) {
   const headers = { 'Cache-Control': 'public, max-age=0, must-revalidate' };
   if (dl) headers['Content-Disposition'] = `attachment; filename="stolkwebdesign-${fmt}-${f.w}x${f.h}.png"`;
 
+  if (url.searchParams.get('debug') === '1') {
+    try {
+      const r = new ImageResponse(element, { width: f.w, height: f.h, fonts, headers });
+      const buf = await r.arrayBuffer();
+      return new Response(`OK bytes=${buf.byteLength} hasPost=${!!post} archivo=${archivoBlackFont?.byteLength} grotesk=${spaceGroteskFont?.byteLength}`, { status: 200 });
+    } catch (err) {
+      return new Response('RENDER ERROR: ' + (err && err.stack ? err.stack : String(err)), { status: 200 });
+    }
+  }
+
   return new ImageResponse(element, { width: f.w, height: f.h, fonts, headers });
 }
