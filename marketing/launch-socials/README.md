@@ -21,9 +21,12 @@ captions.md  LinkedIn + Instagram captions per post
 |---|------|-----------|----------------|
 | 1 | **Before/After reveal** — "Zelfde naam. Andere studio." | `post1-before-after-ig-1080.png` (IG 1080²) · `post1-before-after-linkedin-1200x627.png` (LI) | beeld + caption |
 | 2 | **Het verhaal** — "Ik verkocht maatwerk — vanaf een template." | `post2-statement-ig-1080.png` (1080²) | tekstpost + 1 beeld |
-| 3 | **Wat er nu kan** — carousel | `post3-carousel-1.png` … `-5.png` (5× 1080²) | carousel/swipe |
+| 3 | **Wat er nu kan** — carousel (per-pagina prijzen + Basis CMS €149) | `post3-carousel-1.png` … `-5.png` (5× 1080²) | carousel/swipe |
+| 4 | **Transparante prijzen** — carousel ("Wat kost een site? Gewoon eerlijk.") | `post4-prijzen-1.png` … `-6.png` (6× 1080²) | carousel/swipe |
 
 Captions staan per post + per platform in [`captions.md`](./captions.md).
+
+> **Prijzen-update (03-06-2026):** post 3 ververst (slide 2 = per pagina vanaf €950, slide 3 = Basis CMS €149 + modules) en post 4 toegevoegd — een aparte carousel volledig over de transparante prijzen (per pagina · 3 pakketten · platform + modules). Template: `templates/pricing-carousel.html`.
 
 ## Opnieuw renderen (alleen als je een template aanpast)
 Playwright is niet gebundeld in dit project:
@@ -58,3 +61,23 @@ node render.mjs            # schrijft alle PNG's opnieuw naar output/
 
 > Geen zin in de API? De PNG's in `output/` zijn gewoon handmatig te plaatsen op LinkedIn + Instagram,
 > met de captions uit `captions.md`.
+
+## In je eigen CMS — Campagnes-tab (zoals Bestsupport08)
+
+Naast deze bestand-gebaseerde carousels staat er een **campagne in je CMS** (`/admin` → tab
+**Campagnes** → "Launch — nieuwe site"). Dat is hetzelfde systeem als bij Bestsupport08:
+**single posts** (kop + sub + thema + captions per platform) die je per post goedkeurt en in
+4 formaten downloadt (IG 1080² · LinkedIn 1200×627 · GBP 1200×900 · Story 1080×1920), live
+gerenderd via `/api/render-social-post`.
+
+> Verschil met de carousels hierboven: de CMS-module maakt **één beeld per post** (geen meerslide-
+> carousels). De rijke carousels blijven dus de losse bestand-versie; de CMS-campagne is de
+> beheersbare single-post-variant met de nieuwe prijzen erin verwerkt.
+
+**Seeden / bijwerken:** [`../../migrations/social_launch_seed.sql`](../../migrations/social_launch_seed.sql)
+vult `launch-2026` met **8 posts** (relaunch + per-pagina prijzen + pakketten + Basis CMS €149 +
+transparant + CTA). Draaien: Supabase Dashboard → SQL Editor → plak → Run. ⚠️ Vervangt de huidige
+3 posts van die campagne.
+
+**Daarna:** `/admin` → Campagnes → per post bewerken/goedkeuren → 4 formaten downloaden → posten
+met de bijbehorende caption (staat per platform op de post).

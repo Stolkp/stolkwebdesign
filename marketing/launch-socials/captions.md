@@ -74,8 +74,8 @@ stolkwebdesign.nl — link in bio.
 ### LinkedIn
 Nieuwe site, nieuwe standaard. En dit is wat dat voor jou betekent 👇
 
-1️⃣ Een website laten bouwen die écht opvalt — handcrafted in HTML, CSS & GSAP. Vanaf €950.
-2️⃣ Een platform dat meegroeit: CMS, facturen, social, SEO en blog als losse modules.
+1️⃣ Handcrafted, en je betaalt per pagina — homepage vanaf €950, elke extra pagina €200.
+2️⃣ Een platform dat meegroeit: Basis CMS €149, daarna Content, facturen, social, SEO en blog als losse modules.
 3️⃣ Eén vakman, directe lijn. Geen agency, geen ticketsysteem — je praat met de persoon die het bouwt.
 
 Klaar voor een site die wél bij je past? Plan een gesprek → stolkwebdesign.nl
@@ -85,10 +85,43 @@ Klaar voor een site die wél bij je past? Plan een gesprek → stolkwebdesign.nl
 ### Instagram
 NIEUWE SITE. NIEUWE STANDAARD. 🔴 Swipe →
 
-→ Handcrafted websites vanaf €950
-→ Modules die meegroeien: CMS · Factuur · Social · SEO · Blog
+→ Handcrafted, per pagina — vanaf €950
+→ Basis CMS €149 + modules die meegroeien: Content · Factuur · Social · SEO · Blog
 → Eén vakman, directe lijn. Geen agency.
 
 Plan een gesprek via de link in bio. stolkwebdesign.nl
 
 #webdesign #webdesignamsterdam #ondernemer #mkb #handcrafted #brutalism #websitelatenmaken #gsap
+
+---
+
+## POST 4 — Transparante prijzen (carousel)
+**Beeld:** `output/post4-prijzen-1.png` t/m `output/post4-prijzen-6.png` (6 slides, op volgorde)
+
+### LinkedIn
+Wat kost een website? Bij de meeste bureaus: "dat hangt ervan af." Bij mij: gewoon eerlijk. 👇
+
+Je betaalt per pagina. Een homepage vanaf €950, elke extra pagina €200 — want de eerste pagina bevat het complete ontwerp-systeem, elke volgende bouwt daarop voort.
+
+Liever een vast pakket?
+• Start — 1 pagina — €950
+• Onderneem — tot 4 pagina's — €1.500
+• Groei — tot 7 pagina's + CMS — €2.450
+
+En het platform groeit met je mee: Basis CMS €149, daarna klik je modules erbij (Content, Factuur, Social, SEO, Blog) wanneer je ze nodig hebt. Geen dubbele kosten, geen abonnementsval.
+
+Wat je ziet, is wat je betaalt. Plan een gesprek → stolkwebdesign.nl
+
+#webdesign #ondernemen #amsterdam #mkb #transparant
+
+### Instagram
+WAT KOST EEN SITE? GEWOON EERLIJK. 🔴 Swipe →
+
+→ Je betaalt per pagina: homepage vanaf €950, +€200 per pagina
+→ Of een pakket: Start €950 · Onderneem €1.500 · Groei €2.450
+→ Platform: Basis CMS €149, modules klik je erbij
+→ Geen verborgen kosten, geen abonnementsval
+
+Vaste prijs vooraf. Plan een gesprek via de link in bio. stolkwebdesign.nl
+
+#webdesign #webdesignamsterdam #ondernemer #mkb #transparanteprijzen #geenverrassingen #websitelatenmaken

@@ -31,6 +31,13 @@ const JOBS = [
   { file: 'carousel.html', selector: '.slide[data-slide="3"]',   out: 'post3-carousel-3.png' },
   { file: 'carousel.html', selector: '.slide[data-slide="4"]',   out: 'post3-carousel-4.png' },
   { file: 'carousel.html', selector: '.slide[data-slide="5"]',   out: 'post3-carousel-5.png' },
+  // Post 4 — prijzen-carousel (6 slides)
+  { file: 'pricing-carousel.html', selector: '.slide[data-slide="1"]', out: 'post4-prijzen-1.png' },
+  { file: 'pricing-carousel.html', selector: '.slide[data-slide="2"]', out: 'post4-prijzen-2.png' },
+  { file: 'pricing-carousel.html', selector: '.slide[data-slide="3"]', out: 'post4-prijzen-3.png' },
+  { file: 'pricing-carousel.html', selector: '.slide[data-slide="4"]', out: 'post4-prijzen-4.png' },
+  { file: 'pricing-carousel.html', selector: '.slide[data-slide="5"]', out: 'post4-prijzen-5.png' },
+  { file: 'pricing-carousel.html', selector: '.slide[data-slide="6"]', out: 'post4-prijzen-6.png' },
 ];
 
 await mkdir(OUT, { recursive: true });
