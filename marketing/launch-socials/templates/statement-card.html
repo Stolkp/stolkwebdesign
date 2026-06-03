@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Statement — Stolkwebdesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#000;--white:#fff;--red:#EA2525;--bone:#F5F5F5;--muted:#767676;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#222;padding:40px;display:flex;justify-content:center;font-family:'Space Grotesk',sans-serif;}
+
+  #sq{
+    position:relative;overflow:hidden;width:1080px;height:1080px;padding:72px;
+    background:var(--bone);color:var(--black);
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  #sq::after{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .top{display:flex;justify-content:space-between;align-items:center;z-index:2;}
+  .brand{font-family:'Archivo Black',sans-serif;font-size:24px;letter-spacing:-.02em;}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:10px;color:var(--black);}
+  .dot{width:11px;height:11px;background:var(--red);border-radius:50%;display:inline-block;}
+
+  .mid{z-index:2;}
+  .quote-mark{font-family:'Archivo Black',sans-serif;font-size:130px;line-height:.6;color:var(--red);height:80px;}
+  .quote{
+    font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.03em;
+    font-size:84px;line-height:1.0;margin-top:18px;
+  }
+  .quote .hl{
+    background:var(--red);color:var(--white);padding:0 12px;
+    box-decoration-break:clone;-webkit-box-decoration-break:clone;
+  }
+
+  .foot{z-index:2;display:flex;justify-content:space-between;align-items:flex-end;}
+  .attrib{font-family:'JetBrains Mono',monospace;font-size:17px;letter-spacing:.1em;text-transform:uppercase;line-height:1.5;}
+  .attrib b{font-weight:700;}
+  .attrib span{color:var(--muted);}
+  .seal{
+    font-family:'Archivo Black',sans-serif;font-size:15px;letter-spacing:.04em;text-transform:uppercase;
+    border:2px solid var(--black);box-shadow:6px 6px 0 0 var(--black);padding:12px 16px;text-align:right;line-height:1.15;
+  }
+</style>
+</head>
+<body>
+  <div id="sq">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="kicker"><span class="dot"></span> EERLIJK VERHAAL</div>
+    </div>
+
+    <div class="mid">
+      <div class="quote-mark">“</div>
+      <div class="quote">Ik verkocht<br>maatwerk —<br><span class="hl">vanaf een<br>template.</span></div>
+    </div>
+
+    <div class="foot">
+      <div class="attrib"><b>Peter Stolk</b><br><span>oprichter · stolkwebdesign.nl</span></div>
+      <div class="seal">NU 100%<br>HANDCRAFTED</div>
+    </div>
+  </div>
+</body>
+</html>

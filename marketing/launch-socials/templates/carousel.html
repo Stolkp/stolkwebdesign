@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Carousel — Stolkwebdesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--black:#000;--white:#fff;--red:#EA2525;--bone:#F5F5F5;--muted:#767676;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#222;padding:40px;display:flex;flex-wrap:wrap;gap:40px;justify-content:center;font-family:'Space Grotesk',sans-serif;}
+
+  .slide{
+    position:relative;overflow:hidden;width:1080px;height:1080px;padding:74px;
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .slide::after{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .s-dark{background:var(--black);color:var(--white);}
+  .s-bone{background:var(--bone);color:var(--black);}
+  .s-red{background:var(--red);color:var(--white);}
+
+  .top{display:flex;justify-content:space-between;align-items:center;z-index:2;}
+  .brand{font-family:'Archivo Black',sans-serif;font-size:24px;letter-spacing:-.02em;}
+  .counter{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;letter-spacing:.2em;}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:10px;}
+  .dot{width:11px;height:11px;background:var(--red);border-radius:50%;display:inline-block;}
+  .s-red .dot{background:var(--white);}
+
+  .mid{z-index:2;}
+  .accent-bar{width:180px;height:16px;background:var(--red);margin-bottom:34px;}
+  .title{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.03em;line-height:.96;font-size:92px;}
+  .title .r{color:var(--red);}
+  .s-red .title .r,.s-dark .title .r{color:var(--red);}
+
+  /* content slides */
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:26px;}
+  .numbox{
+    width:118px;height:118px;background:var(--bone);border:2px solid var(--black);
+    box-shadow:12px 12px 0 0 var(--red);display:flex;align-items:center;justify-content:center;
+    font-family:'Archivo Black',sans-serif;font-size:54px;margin-bottom:40px;
+  }
+  .c-title{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.03em;line-height:1.0;font-size:74px;}
+  .c-line{font-size:30px;line-height:1.4;margin-top:28px;max-width:760px;color:#1a1a1a;}
+  .c-line b{font-weight:700;}
+
+  .foot{z-index:2;display:flex;justify-content:space-between;align-items:flex-end;}
+  .foot .f-brand{font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:-.01em;}
+  .swipe{font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;}
+  .muted{color:var(--muted);}
+  .s-dark .muted{color:#9a9a9a;}
+
+  /* CTA slide */
+  .cta-title{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.03em;line-height:.94;font-size:104px;}
+  .cta-url{
+    display:inline-block;margin-top:36px;background:var(--white);color:var(--black);
+    border:2px solid var(--black);box-shadow:10px 10px 0 0 var(--black);
+    font-family:'Archivo Black',sans-serif;font-size:34px;padding:18px 28px;letter-spacing:-.01em;
+  }
+</style>
+</head>
+<body>
+
+  <!-- SLIDE 1 — HOOK -->
+  <div class="slide s-dark" data-slide="1">
+    <div class="top">
+      <div class="kicker"><span class="dot"></span> RELAUNCH / 2026</div>
+      <div class="counter">01 / 05</div>
+    </div>
+    <div class="mid">
+      <div class="accent-bar"></div>
+      <div class="title">Nieuwe site.<br>Nieuwe<br>standaard<span class="r">.</span></div>
+    </div>
+    <div class="foot">
+      <div class="f-brand">STOLKWEBDESIGN®</div>
+      <div class="swipe">SWIPE →</div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2 — WEBSITE BOUWEN -->
+  <div class="slide s-bone" data-slide="2">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="counter">02 / 05</div>
+    </div>
+    <div class="mid">
+      <div class="numbox">01</div>
+      <div class="eyebrow">Website laten bouwen</div>
+      <div class="c-title">Handcrafted in<br>HTML, CSS<br>&amp; GSAP</div>
+      <div class="c-line">Geen template, geen page-builder. Elke regel met de hand. <b>Vanaf €950.</b></div>
+    </div>
+    <div class="foot"><div class="f-brand">STOLKWEBDESIGN®</div><div class="swipe muted">SWIPE →</div></div>
+  </div>
+
+  <!-- SLIDE 3 — MODULES -->
+  <div class="slide s-bone" data-slide="3">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="counter">03 / 05</div>
+    </div>
+    <div class="mid">
+      <div class="numbox">02</div>
+      <div class="eyebrow">Het platform groeit mee</div>
+      <div class="c-title">Modules die je<br>erbij klikt</div>
+      <div class="c-line"><b>CMS · Factuur · Social · SEO · Blog.</b> Begin klein, breid uit wanneer je bedrijf erom vraagt.</div>
+    </div>
+    <div class="foot"><div class="f-brand">STOLKWEBDESIGN®</div><div class="swipe muted">SWIPE →</div></div>
+  </div>
+
+  <!-- SLIDE 4 — PERSOONLIJK -->
+  <div class="slide s-bone" data-slide="4">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="counter">04 / 05</div>
+    </div>
+    <div class="mid">
+      <div class="numbox">03</div>
+      <div class="eyebrow">Persoonlijk</div>
+      <div class="c-title">Eén vakman.<br>Directe lijn.</div>
+      <div class="c-line">Geen agency, geen ticketsysteem. Je praat met de persoon die het bouwt — <b>in Amsterdam.</b></div>
+    </div>
+    <div class="foot"><div class="f-brand">STOLKWEBDESIGN®</div><div class="swipe muted">SWIPE →</div></div>
+  </div>
+
+  <!-- SLIDE 5 — CTA -->
+  <div class="slide s-red" data-slide="5">
+    <div class="top">
+      <div class="kicker"><span class="dot"></span> START HIER</div>
+      <div class="counter">05 / 05</div>
+    </div>
+    <div class="mid">
+      <div class="cta-title">Plan een<br>gesprek →</div>
+      <div class="cta-url">stolkwebdesign.nl</div>
+    </div>
+    <div class="foot">
+      <div class="f-brand">STOLKWEBDESIGN®</div>
+      <div class="swipe">AMSTERDAM · PERSOONLIJK &amp; DIRECT</div>
+    </div>
+  </div>
+
+</body>
+</html>

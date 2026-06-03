@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Website laten bouwen — Peter Stolk Webdesign Amsterdam</title>
-<meta name="description" content="Wil je een professionele website laten bouwen die opvalt? Peter Stolk maakt handcrafted websites in HTML, CSS & GSAP én WordPress — snel, uniek en volledig op maat. Vanaf €2.500. Amsterdam.">
+<meta name="description" content="Wil je een professionele website laten bouwen die opvalt? Peter Stolk maakt handcrafted websites in HTML, CSS & GSAP én WordPress — snel, uniek en volledig op maat. Vanaf €950. Amsterdam.">
 <meta name="keywords" content="website laten bouwen, webdesign Amsterdam, professionele website, WordPress website laten bouwen, HTML website, custom webdesign, website onderhoud, webhosting">
 <meta property="og:title" content="Website laten bouwen — Peter Stolk Webdesign">
-<meta property="og:description" content="Handcrafted websites voor ondernemers die het verschil willen zien. HTML, CSS & GSAP én WordPress. Vanaf €2.500.">
+<meta property="og:description" content="Handcrafted websites voor ondernemers die het verschil willen zien. HTML, CSS & GSAP én WordPress. Vanaf €950.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.stolkwebdesign.nl">
 <meta property="og:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
@@ -423,6 +423,52 @@ nav {
   .module-mini:last-child { border-bottom: none; }
 }
 
+/* PAKKETTEN */
+.packages { background: var(--white); padding: 100px 48px; position: relative; overflow: hidden; }
+.packages-inner { max-width: 1400px; margin: 0 auto; }
+.packages-header { margin-bottom: 56px; max-width: 880px; }
+.packages-lead { font-size: clamp(15px, 1.4vw, 18px); color: var(--muted); line-height: 1.7; margin-top: 24px; max-width: 640px; }
+.pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
+.pkg-card { border: 2px solid var(--black); background: var(--white); box-shadow: 8px 8px 0 0 var(--black); padding: 36px 30px; display: flex; flex-direction: column; }
+.pkg-card.featured { box-shadow: 8px 8px 0 0 var(--red); position: relative; }
+.pkg-ribbon { position: absolute; top: -2px; right: -2px; background: var(--red); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; padding: 6px 12px; }
+.pkg-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.pkg-name { font-family: 'Archivo Black', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: -.02em; }
+.pkg-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--muted); padding: 4px 8px; white-space: nowrap; }
+.pkg-price { font-family: 'Archivo Black', sans-serif; font-size: 46px; letter-spacing: -.03em; line-height: 1; margin-bottom: 8px; }
+.pkg-sub { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 24px; min-height: 38px; }
+.pkg-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0 0 28px; padding: 0; flex: 1; }
+.pkg-list li { font-size: 14px; line-height: 1.5; padding-left: 24px; position: relative; }
+.pkg-list li::before { content: '+'; position: absolute; left: 0; color: var(--red); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+.pkg-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; background: var(--black); color: var(--white); border: 2px solid var(--black); padding: 14px 20px; text-decoration: none; transition: background .15s, color .15s; }
+.pkg-cta:hover { background: var(--red); border-color: var(--red); }
+.pkg-card.featured .pkg-cta { background: var(--red); border-color: var(--red); }
+.pkg-card.featured .pkg-cta:hover { background: var(--black); border-color: var(--black); }
+.pkg-foot { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 28px 48px; justify-content: space-between; align-items: flex-start; border-top: 2px solid var(--black); padding-top: 32px; }
+.pkg-alacarte { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--black); line-height: 1.6; }
+.pkg-alacarte strong { color: var(--red); }
+.pkg-scope { max-width: 680px; }
+.pkg-scope-title { font-family: 'Archivo Black', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: -.01em; margin-bottom: 10px; }
+.pkg-scope-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
+.pkg-scope-body strong { color: var(--black); }
+.pkg-custom { margin-top: 28px; background: var(--near-black); color: var(--white); border: 2px solid var(--black); box-shadow: 8px 8px 0 0 var(--red); padding: 40px; display: flex; gap: 40px; align-items: center; justify-content: space-between; }
+.pkg-custom-main { max-width: 720px; }
+.pkg-custom-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--red); margin-bottom: 14px; }
+.pkg-custom-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(22px, 2.4vw, 30px); text-transform: uppercase; letter-spacing: -.02em; line-height: 1.05; margin-bottom: 14px; }
+.pkg-custom-body { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,.7); }
+.pkg-custom-cta-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; flex-shrink: 0; }
+.pkg-custom-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); }
+.pkg-custom-cta { display: inline-flex; align-items: center; gap: 8px; font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; background: var(--red); color: var(--white); border: 2px solid var(--red); padding: 14px 24px; text-decoration: none; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
+.pkg-custom-cta:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+@media (max-width: 900px) {
+  .packages { padding: 72px 20px; }
+  .pkg-grid { grid-template-columns: 1fr; gap: 22px; }
+  .pkg-price { font-size: 42px; }
+  .pkg-sub { min-height: 0; }
+  .pkg-custom { flex-direction: column; align-items: flex-start; gap: 24px; padding: 32px 24px; }
+  .pkg-custom-cta-wrap { align-items: flex-start; }
+}
+
 /* ══════ AANPAK ══════ */
 .process { padding: 100px 48px; max-width: 1400px; margin: 0 auto; }
 .steps { margin-top: 56px; border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); }
@@ -467,18 +513,28 @@ nav {
 /* ══════ PORTFOLIO STRIP ══════ */
 .portfolio-strip { padding: 0 48px 100px; max-width: 1400px; margin: 0 auto; }
 .portfolio-strip-header { padding: 80px 0 48px; }
-.portfolio-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 3px; }
+.portfolio-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; grid-auto-rows: 1fr; gap: 4px; }
 .port-card { position: relative; overflow: hidden; cursor: pointer; }
 .port-card:first-child { grid-row: 1 / 3; }
 .port-bg {
-  width: 100%; height: 100%; min-height: 220px;
+  width: 100%; height: 100%; min-height: 232px;
   padding: 24px; display: flex; align-items: flex-end;
   border: 2px solid var(--black);
   position: relative;
+  background-size: cover; background-position: center top;
   transition: transform .5s cubic-bezier(.16,1,.3,1);
 }
-.port-card:hover .port-bg { transform: scale(1.02); }
-.port-card:first-child .port-bg { min-height: 460px; }
+.port-card:hover .port-bg { transform: scale(1.03); }
+.port-card:first-child .port-bg { min-height: 468px; }
+.port-arrow {
+  position: absolute; top: 18px; right: 18px; z-index: 2;
+  width: 40px; height: 40px; border: 2px solid rgba(255,255,255,.25);
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,255,255,.5); font-size: 16px;
+  opacity: 0; transform: translateY(-6px);
+  transition: opacity .25s, transform .25s, border-color .2s, background .2s, color .2s;
+}
+.port-card:hover .port-arrow { opacity: 1; transform: translateY(0); border-color: var(--red); background: var(--red); color: var(--white); }
 .port-bg-1 { background: linear-gradient(145deg, #111 0%, #1e0a0a 60%, #3d0a0a 100%); }
 .port-bg-2 { background: linear-gradient(145deg, #0a0a11 0%, #0a0a2e 100%); }
 .port-bg-3 { background: linear-gradient(145deg, #0a110a 0%, #0a2e0a 100%); }
@@ -736,7 +792,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="pillar-num">01</div>
         <div class="pillar-title" data-content="home.pillar1_title">Website laten bouwen</div>
         <p class="pillar-body" data-content="home.pillar1_body">Ik bouw websites in HTML &amp; CSS met GSAP-animaties én WordPress — afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.</p>
-        <div class="pillar-price" data-content-html="home.pillar1_price">Vanaf <strong>€2.500</strong></div>
+        <div class="pillar-price" data-content-html="home.pillar1_price">Vanaf <strong>€950</strong></div>
       </div>
       <div class="pillar reveal" style="transition-delay:.1s">
         <div class="pillar-num">02</div>
@@ -749,6 +805,91 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="pillar-title" data-content="home.pillar3_title">Onderhoud &amp; support</div>
         <p class="pillar-body" data-content="home.pillar3_body">Kleine aanpassingen, nieuwe pagina's of technische vragen. Directe lijn met Peter — geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.</p>
         <div class="pillar-price" data-content-html="home.pillar3_price"><strong>Op aanvraag</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAKKETTEN -->
+<section class="packages" id="pakketten">
+  <div class="packages-inner">
+    <div class="packages-header reveal">
+      <div class="section-label" style="color:var(--red)" data-content="home.pakketten_label">Pakketten / 02a</div>
+      <h2 class="section-heading" data-content-html="home.pakketten_heading">Eén pagina of een hele site —<br><span class="red">jij kiest.</span></h2>
+      <p class="packages-lead" data-content="home.pakketten_lead">Geen vaste prijs voor iets wat je niet nodig hebt. Je betaalt voor de pagina's die je wilt — de eerste bevat het complete ontwerp-systeem, elke volgende bouwt daarop voort.</p>
+    </div>
+
+    <div class="pkg-grid reveal" style="transition-delay:.1s">
+      <!-- START -->
+      <div class="pkg-card">
+        <div class="pkg-head">
+          <span class="pkg-name" data-content="home.pkg1_name">Start</span>
+          <span class="pkg-tag" data-content="home.pkg1_tag">1 pagina</span>
+        </div>
+        <div class="pkg-price" data-content-html="home.pkg1_price">€950</div>
+        <div class="pkg-sub" data-content="home.pkg1_sub">Eén krachtige homepage, inclusief het volledige ontwerp-systeem.</div>
+        <ul class="pkg-list">
+          <li>Volledig op maat ontworpen</li>
+          <li>GSAP-animaties &amp; responsive</li>
+          <li>Basis on-page SEO</li>
+          <li>1 revisieronde</li>
+        </ul>
+        <a class="pkg-cta" href="contact.html">Plan een gesprek</a>
+      </div>
+
+      <!-- ONDERNEEM (featured) -->
+      <div class="pkg-card featured">
+        <span class="pkg-ribbon" data-content="home.pkg2_ribbon">Meest gekozen</span>
+        <div class="pkg-head">
+          <span class="pkg-name" data-content="home.pkg2_name">Onderneem</span>
+          <span class="pkg-tag" data-content="home.pkg2_tag">tot 4 pagina's</span>
+        </div>
+        <div class="pkg-price" data-content-html="home.pkg2_price">€1.500</div>
+        <div class="pkg-sub" data-content="home.pkg2_sub">Homepage plus de pagina's die een ondernemer nodig heeft.</div>
+        <ul class="pkg-list">
+          <li>Alles uit Start</li>
+          <li>Tot 4 pagina's op maat</li>
+          <li>Bijv. Over, Diensten, Contact</li>
+          <li>Klaar voor add-on modules</li>
+        </ul>
+        <a class="pkg-cta" href="contact.html">Plan een gesprek</a>
+      </div>
+
+      <!-- GROEI -->
+      <div class="pkg-card">
+        <div class="pkg-head">
+          <span class="pkg-name" data-content="home.pkg3_name">Groei</span>
+          <span class="pkg-tag" data-content="home.pkg3_tag">tot 7 pagina's</span>
+        </div>
+        <div class="pkg-price" data-content-html="home.pkg3_price">€2.450</div>
+        <div class="pkg-sub" data-content="home.pkg3_sub">Een complete site met CMS, zodat je zelf teksten en foto's beheert.</div>
+        <ul class="pkg-list">
+          <li>Alles uit Onderneem</li>
+          <li>Tot 7 pagina's op maat</li>
+          <li>CMS-basis inbegrepen</li>
+          <li>Voorrang in de planning</li>
+        </ul>
+        <a class="pkg-cta" href="contact.html">Plan een gesprek</a>
+      </div>
+    </div>
+
+    <div class="pkg-custom reveal">
+      <div class="pkg-custom-main">
+        <div class="pkg-custom-label" data-content="home.pkg_custom_label">Custom / op maat</div>
+        <div class="pkg-custom-title" data-content="home.pkg_custom_title">Eigen systeem of integratie nodig?</div>
+        <p class="pkg-custom-body" data-content="home.pkg_custom_body">Een koppeling met je boekhouding, een klantportaal, een configurator of een volledig eigen platform — bouwen we van de grond af op maat. We bepalen samen de scope, daarna krijg je een vaste prijs.</p>
+      </div>
+      <div class="pkg-custom-cta-wrap">
+        <div class="pkg-custom-price" data-content="home.pkg_custom_price">Op aanvraag</div>
+        <a class="pkg-custom-cta" href="contact.html" data-content="home.pkg_custom_cta">Plan een gesprek →</a>
+      </div>
+    </div>
+
+    <div class="pkg-foot reveal">
+      <div class="pkg-alacarte" data-content-html="home.pkg_alacarte">Meer pagina's nodig?<br><strong>€200 per extra pagina.</strong></div>
+      <div class="pkg-scope">
+        <div class="pkg-scope-title" data-content="home.pkg_scope_title">Wat zit er in een pagina?</div>
+        <p class="pkg-scope-body" data-content-html="home.pkg_scope_body">Eén pagina uit het vaste ontwerp-systeem · volledig responsive · basis on-page SEO (title, meta, koppen, alt) · 1 revisieronde · standaard secties met bestaande GSAP-animaties. <strong>Meerwerk</strong> — custom animatie, formulieren met logica, koppelingen of teksten schrijven — doen we tegen een vaste meerprijs, altijd vooraf afgesproken.</p>
       </div>
     </div>
   </div>
@@ -902,7 +1043,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="metric-label font-mono" data-content="home.metric3_label">Custom design</div>
       </div>
       <div class="metric">
-        <div class="metric-num font-display" data-content="home.metric4_num">€2.5k</div>
+        <div class="metric-num font-display" data-content="home.metric4_num">€950</div>
         <div class="metric-label font-mono" data-content="home.metric4_label">Startprijs</div>
       </div>
     </div>
@@ -1078,12 +1219,14 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       const items = data.slice(0, 5);
       grid.innerHTML = items.map((p, i) => {
         const bgStyle = p.img
-          ? `background-image:url('${esc(p.img)}');background-size:cover;background-position:center;`
+          ? `background-image:url('${esc(p.img)}');`
           : `background:${p.bg || 'linear-gradient(145deg,#111,#333)'};`;
+        const dest = 'project.html?p=' + encodeURIComponent(p.slug || p.id);
         return `
-          <div class="port-card reveal" style="transition-delay:${i * 0.08}s" data-url="${esc(p.url || '')}">
+          <div class="port-card reveal" style="transition-delay:${i * 0.08}s" data-href="${esc(dest)}">
             <div class="port-bg" style="${bgStyle}">
               <div class="port-overlay"></div>
+              <div class="port-arrow">→</div>
               <div class="port-info">
                 <div class="port-tag">${esc(p.tag || '')}</div>
                 <div class="port-name">${esc(p.name)}</div>
@@ -1093,9 +1236,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           </div>`;
       }).join('');
       grid.querySelectorAll('.port-card').forEach(card => {
-        const url = card.dataset.url;
-        if (url) card.addEventListener('click', () => window.open(url, '_blank'));
-        else card.style.cursor = 'default';
+        card.addEventListener('click', () => { location.href = card.dataset.href; });
       });
       grid.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     } catch (e) { /* fallback-kaarten behouden */ }

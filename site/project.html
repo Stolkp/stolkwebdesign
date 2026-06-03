@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project — Peter Stolk Webdesign Amsterdam</title>
+<meta name="description" content="Een project uit het portfolio van Peter Stolk — handcrafted websites in HTML, CSS & GSAP én WordPress.">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
+html { scroll-behavior: smooth; }
+body { background: var(--white); color: var(--black); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+.font-display { font-family: 'Archivo Black', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+img { display: block; max-width: 100%; }
+
+/* NAV (gelijk aan portfolio.html) */
+nav { position: fixed; top:0; left:0; right:0; z-index:100; background:var(--black); border-bottom:2px solid var(--black); display:flex; align-items:center; justify-content:space-between; padding:16px 48px; }
+.nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
+.nav-links { display:flex; gap:40px; list-style:none; }
+.nav-links a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:rgba(255,255,255,.5); text-decoration:none; transition:color .2s; }
+.nav-links a:hover, .nav-links a.active { color:var(--white); }
+.nav-cta { font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; background:var(--red); color:var(--white); border:2px solid var(--white); padding:13px 22px; text-decoration:none; transition:background .15s,color .15s; }
+.nav-cta:hover { background:var(--white); color:var(--red); }
+.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+.nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); transition:transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
+.nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.nav-cta-item { display:none; }
+.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; transition:top .15s; }
+.skip-link:focus { top:0; }
+
+/* REVEAL */
+.reveal { opacity:0; transform:translateY(36px); transition:opacity .4s cubic-bezier(.8,0,.2,1),transform .4s cubic-bezier(.8,0,.2,1); }
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* HEADER / BREADCRUMB */
+.proj-top { background:var(--near-black); color:var(--white); padding:140px 48px 0; }
+.proj-top-inner { max-width:1100px; margin:0 auto; }
+.proj-back { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:rgba(255,255,255,.5); text-decoration:none; transition:color .2s; margin-bottom:40px; }
+.proj-back:hover { color:var(--white); }
+.proj-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--red); margin-bottom:18px; }
+.proj-title { font-family:'Archivo Black',sans-serif; font-size:clamp(40px,7vw,92px); text-transform:uppercase; letter-spacing:-0.04em; line-height:.9; }
+.proj-meta { display:flex; flex-wrap:wrap; gap:10px 28px; margin-top:28px; padding-bottom:8px; }
+.proj-meta-item { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.55); }
+.proj-meta-item strong { color:var(--white); font-weight:500; }
+
+/* HERO IMAGE */
+.proj-hero { background:var(--near-black); padding:56px 48px 0; }
+.proj-hero-inner { max-width:1100px; margin:0 auto; }
+.proj-hero img { width:100%; height:auto; border:2px solid var(--black); box-shadow:12px 12px 0 0 var(--red); }
+.proj-hero-fallback { width:100%; aspect-ratio:16/9; border:2px solid var(--black); box-shadow:12px 12px 0 0 var(--red); }
+
+/* BODY */
+.proj-body { max-width:1100px; margin:0 auto; padding:90px 48px 40px; }
+.proj-intro { font-size:clamp(18px,2.2vw,24px); line-height:1.6; max-width:760px; color:#1a1a1a; }
+.proj-section { margin-top:64px; }
+.proj-section-label { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--red); margin-bottom:16px; }
+.proj-section-text { font-size:17px; line-height:1.75; max-width:760px; color:#222; white-space:pre-line; }
+
+/* BEFORE / AFTER SLIDER */
+.proj-compare-wrap { margin-top:28px; }
+.compare { position:relative; width:100%; aspect-ratio:16/10; overflow:hidden; border:2px solid var(--black); user-select:none; touch-action:none; cursor:ew-resize; background:#111; }
+.compare img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none; }
+.compare-after { clip-path: inset(0 0 0 50%); }
+.compare-divider { position:absolute; top:0; bottom:0; left:50%; width:2px; background:var(--red); transform:translateX(-1px); pointer-events:none; }
+.compare-handle { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:44px; height:44px; background:var(--red); border:2px solid var(--white); display:flex; align-items:center; justify-content:center; color:var(--white); font-size:14px; pointer-events:none; }
+.compare-label { position:absolute; top:16px; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.18em; color:var(--white); background:rgba(0,0,0,.6); padding:5px 10px; pointer-events:none; }
+.compare-label.before { left:16px; }
+.compare-label.after { right:16px; }
+
+/* CTA */
+.proj-cta { max-width:1100px; margin:0 auto; padding:24px 48px 110px; display:flex; flex-wrap:wrap; gap:18px; align-items:center; }
+.btn-primary { display:inline-flex; align-items:center; gap:10px; font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:.04em; background:var(--red); color:var(--white); border:2px solid var(--red); padding:16px 30px; text-decoration:none; transition:background .15s,color .15s; }
+.btn-primary:hover { background:var(--white); color:var(--red); }
+.btn-ghost { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); text-decoration:none; border-bottom:1px solid rgba(0,0,0,.2); padding-bottom:2px; transition:color .2s,border-color .2s; }
+.btn-ghost:hover { color:var(--black); border-color:var(--black); }
+
+/* STATE */
+.proj-state { max-width:1100px; margin:0 auto; padding:200px 48px; text-align:center; }
+.proj-state-title { font-family:'Archivo Black',sans-serif; font-size:clamp(28px,5vw,52px); text-transform:uppercase; letter-spacing:-0.03em; margin-bottom:24px; }
+#project-root[hidden] { display:none; }
+
+/* CTA STRIP + FOOTER (gelijk aan portfolio.html) */
+.cta-strip { background:var(--red); color:var(--white); padding:80px 48px; border-top:2px solid var(--black); text-align:center; }
+.cta-strip-title { font-family:'Archivo Black',sans-serif; font-size:clamp(36px,5vw,72px); text-transform:uppercase; letter-spacing:-0.03em; line-height:.9; margin-bottom:40px; }
+.btn-white { display:inline-flex; align-items:center; gap:12px; font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; background:var(--white); color:var(--red); border:2px solid var(--white); padding:18px 36px; text-decoration:none; transition:background .15s,color .15s; }
+.btn-white:hover { background:var(--red); color:var(--white); }
+footer { background:var(--black); color:var(--white); padding:40px 48px; border-top:2px solid var(--red); display:flex; align-items:center; justify-content:space-between; }
+.footer-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; letter-spacing:-0.02em; }
+.footer-copy { font-family:'JetBrains Mono',monospace; font-size:11px; color:rgba(255,255,255,.3); text-transform:uppercase; letter-spacing:.08em; }
+.footer-links-row { display:flex; gap:24px; }
+.footer-links-row a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.45); text-decoration:none; transition:color .2s; }
+.footer-links-row a:hover { color:var(--white); }
+
+@media(max-width:900px) {
+  nav { padding:14px 20px; }
+  .nav-cta { display:none; }
+  .nav-links { display:none; }
+  .nav-hamburger { display:flex; }
+  .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
+  .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
+  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
+  .nav-links.open .nav-cta-item { display:block; border-bottom:none; padding-top:16px; }
+  .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
+  .proj-top { padding:120px 20px 0; }
+  .proj-hero, .proj-body, .proj-cta { padding-left:20px; padding-right:20px; }
+  .proj-hero img, .proj-hero-fallback { box-shadow:8px 8px 0 0 var(--red); }
+  .cta-strip { padding:64px 20px; }
+  footer { flex-direction:column; gap:20px; padding:32px 20px; text-align:center; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .reveal { transition:none; opacity:1; transform:none; }
+}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
+
+<nav>
+  <a href="index.html" class="nav-logo">Stolkwebdesign®</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="portfolio.html" class="active">Portfolio / 01</a></li>
+    <li><a href="index.html#diensten">Diensten / 02</a></li>
+    <li><a href="modules.html">Modules / 03</a></li>
+    <li><a href="index.html#aanpak">Aanpak / 04</a></li>
+    <li><a href="over.html">Over mij / 05</a></li>
+    <li><a href="/blog/">Blog / 06</a></li>
+    <li class="nav-cta-item"><a href="contact.html" class="nav-cta-mobile">Plan een gesprek →</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="contact.html" class="nav-cta">Plan een gesprek →</a>
+</nav>
+
+<main id="main-content">
+  <!-- Wordt dynamisch gevuld -->
+  <div id="project-loading" class="proj-state">
+    <div class="proj-state-title font-display">Laden…</div>
+  </div>
+
+  <div id="project-missing" class="proj-state" hidden>
+    <div class="proj-state-title font-display">Project niet gevonden</div>
+    <a href="portfolio.html" class="btn-primary font-display">← Terug naar portfolio</a>
+  </div>
+
+  <article id="project-root" hidden>
+    <section class="proj-top">
+      <div class="proj-top-inner">
+        <a href="portfolio.html" class="proj-back font-mono">← Terug naar portfolio</a>
+        <div class="proj-eyebrow font-mono" id="p-tag"></div>
+        <h1 class="proj-title" id="p-name"></h1>
+        <div class="proj-meta" id="p-meta"></div>
+      </div>
+    </section>
+
+    <section class="proj-hero">
+      <div class="proj-hero-inner" id="p-hero"></div>
+    </section>
+
+    <section class="proj-body">
+      <p class="proj-intro" id="p-intro"></p>
+
+      <div class="proj-section reveal" id="p-compare-section" hidden>
+        <div class="proj-section-label font-mono">Voor &amp; na</div>
+        <div class="proj-compare-wrap" id="p-compare"></div>
+      </div>
+
+      <div class="proj-section reveal" id="p-challenge-section" hidden>
+        <div class="proj-section-label font-mono">De uitdaging</div>
+        <div class="proj-section-text" id="p-challenge"></div>
+      </div>
+
+      <div class="proj-section reveal" id="p-result-section" hidden>
+        <div class="proj-section-label font-mono">Het resultaat</div>
+        <div class="proj-section-text" id="p-result"></div>
+      </div>
+    </section>
+
+    <div class="proj-cta">
+      <a id="p-livesite" class="btn-primary font-display" target="_blank" rel="noopener" hidden>
+        Bekijk live site
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+      <a href="portfolio.html" class="btn-ghost font-mono">← Meer projecten</a>
+    </div>
+  </article>
+
+  <section class="cta-strip">
+    <div class="cta-strip-title font-display">Jouw project<br>hier?</div>
+    <a href="contact.html" class="btn-white">
+      Plan een gesprek
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </section>
+
+  <footer>
+    <div class="footer-logo font-display">Stolkwebdesign®</div>
+    <div class="footer-links-row">
+      <a href="index.html">Home</a>
+      <a href="portfolio.html">Portfolio</a>
+      <a href="over.html">Over mij</a>
+      <a href="contact.html">Contact</a>
+      <span style="color:rgba(255,255,255,.15)">|</span>
+      <a href="privacybeleid.html">Privacybeleid</a>
+      <a href="algemene-voorwaarden.html">Algemene Voorwaarden</a>
+    </div>
+    <div class="footer-copy">© 2026 Stolkwebdesign — Uithoorn</div>
+  </footer>
+</main>
+
+<script>
+  const { createClient } = window.supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const $ = id => document.getElementById(id);
+
+  // ── Hamburger ──
+  $('nav-toggle').addEventListener('click', () => {
+    const links = $('nav-links');
+    const open = links.classList.toggle('open');
+    $('nav-toggle').classList.toggle('open', open);
+    $('nav-toggle').setAttribute('aria-expanded', open);
+  });
+
+  // ── Reveal-observer ──
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(x => { if (x.isIntersecting) { x.target.classList.add('visible'); obs.unobserve(x.target); } });
+  }, { threshold: .12 });
+
+  function show(el) { el.hidden = false; }
+
+  // ── Before/after slider ──
+  function buildCompare(container, beforeUrl, afterUrl) {
+    container.innerHTML = `
+      <div class="compare" id="cmp">
+        <img class="compare-before" src="${esc(beforeUrl)}" alt="Voor">
+        <img class="compare-after" id="cmp-after" src="${esc(afterUrl)}" alt="Na">
+        <div class="compare-divider" id="cmp-div"></div>
+        <div class="compare-handle" id="cmp-handle">◂▸</div>
+        <span class="compare-label before font-mono">Voor</span>
+        <span class="compare-label after font-mono">Na</span>
+      </div>`;
+    const cmp = $('cmp'), after = $('cmp-after'), divider = $('cmp-div'), handle = $('cmp-handle');
+    let dragging = false;
+    const setPos = clientX => {
+      const rect = cmp.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      after.style.clipPath = `inset(0 0 0 ${pct}%)`;
+      divider.style.left = pct + '%';
+      handle.style.left = pct + '%';
+    };
+    const start = e => { dragging = true; setPos((e.touches ? e.touches[0] : e).clientX); };
+    const move  = e => { if (dragging) setPos((e.touches ? e.touches[0] : e).clientX); };
+    const end   = () => { dragging = false; };
+    cmp.addEventListener('mousedown', start);
+    cmp.addEventListener('touchstart', start, { passive: true });
+    window.addEventListener('mousemove', move);
+    window.addEventListener('touchmove', move, { passive: true });
+    window.addEventListener('mouseup', end);
+    window.addEventListener('touchend', end);
+  }
+
+  function render(p) {
+    document.title = `${p.name} — Peter Stolk Webdesign`;
+    $('p-tag').textContent = p.tag || 'Project';
+    $('p-name').textContent = p.name || '';
+
+    // meta-rij: techniek · jaar
+    const meta = [];
+    if (p.type) meta.push(`<span class="proj-meta-item font-mono"><strong>${esc(p.type)}</strong></span>`);
+    if (p.year) meta.push(`<span class="proj-meta-item font-mono">Jaar / <strong>${esc(p.year)}</strong></span>`);
+    if (p.services) meta.push(`<span class="proj-meta-item font-mono">Diensten / <strong>${esc(p.services)}</strong></span>`);
+    $('p-meta').innerHTML = meta.join('');
+
+    // hero
+    if (p.img) {
+      $('p-hero').innerHTML = `<img src="${esc(p.img)}" alt="${esc(p.name)}">`;
+    } else {
+      $('p-hero').innerHTML = `<div class="proj-hero-fallback" style="background:${p.bg || 'linear-gradient(145deg,#111,#333)'};"></div>`;
+    }
+
+    // intro
+    if (p.description) $('p-intro').textContent = p.description;
+    else $('p-intro').remove();
+
+    // before/after (alleen als before_img)
+    if (p.before_img && p.img) {
+      buildCompare($('p-compare'), p.before_img, p.img);
+      const sec = $('p-compare-section'); show(sec); obs.observe(sec);
+    }
+
+    // uitdaging
+    if (p.challenge) { $('p-challenge').textContent = p.challenge; const s = $('p-challenge-section'); show(s); obs.observe(s); }
+    // resultaat
+    if (p.result) { $('p-result').textContent = p.result; const s = $('p-result-section'); show(s); obs.observe(s); }
+
+    // live site
+    if (p.url) { const a = $('p-livesite'); a.href = p.url; show(a); }
+
+    $('project-loading').hidden = true;
+    $('project-root').hidden = false;
+  }
+
+  async function load() {
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('p');
+    const id = params.get('id');
+    let project = null;
+
+    try {
+      if (slug) {
+        const { data } = await db.from('projects').select('*').eq('slug', slug).limit(1);
+        if (data && data.length) project = data[0];
+      }
+      if (!project && id) {
+        const { data } = await db.from('projects').select('*').eq('id', id).limit(1);
+        if (data && data.length) project = data[0];
+      }
+    } catch (e) { /* val door naar 'niet gevonden' */ }
+
+    if (!project) {
+      $('project-loading').hidden = true;
+      $('project-missing').hidden = false;
+      return;
+    }
+    render(project);
+  }
+
+  load();
+</script>
+
+</body>
+</html>

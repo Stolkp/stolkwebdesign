@@ -121,6 +121,12 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 .form-input:focus, .form-textarea:focus { outline:none; border-color:var(--red); }
 .form-textarea { resize:vertical; min-height:80px; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.img-field { display:flex; gap:12px; align-items:flex-start; }
+.img-field .form-input { flex:1; }
+.img-prev { width:56px; height:56px; flex-shrink:0; border:1px solid #2a2a2a; background:#0a0a0a; background-size:cover; background-position:center top; }
+.upload-btn { white-space:nowrap; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; padding:0 14px; height:44px; border:1px solid #333; background:transparent; color:var(--muted); cursor:pointer; transition:all .15s; }
+.upload-btn:hover { border-color:var(--white); color:var(--white); }
+.upload-btn:disabled { opacity:.5; cursor:not-allowed; }
 .form-actions { display:flex; gap:12px; margin-top:28px; padding-top:24px; border-top:1px solid #1a1a1a; }
 .btn-save { flex:1; padding:14px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; background:var(--red); color:var(--white); border:none; cursor:pointer; transition:background .15s; letter-spacing:.04em; }
 .btn-save:hover { background:#c91f1f; }
@@ -452,9 +458,30 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
       <input type="text" id="f-type" class="form-input" placeholder="bv. Webflow · Custom CSS, WordPress · GSAP, …">
     </div>
 
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label font-mono">Jaar (optioneel)</label>
+        <input type="text" id="f-year" class="form-input" placeholder="2025">
+      </div>
+      <div class="form-group">
+        <label class="form-label font-mono">Diensten / scope (optioneel)</label>
+        <input type="text" id="f-services" class="form-input" placeholder="Webdesign · Development · Hosting">
+      </div>
+    </div>
+
     <div class="form-group">
-      <label class="form-label font-mono">Omschrijving</label>
+      <label class="form-label font-mono">Omschrijving (intro op de projectpagina)</label>
       <textarea id="f-desc" class="form-textarea" placeholder="Korte omschrijving van het project..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">De uitdaging (optioneel)</label>
+      <textarea id="f-challenge" class="form-textarea" placeholder="Welk probleem moest worden opgelost?"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Het resultaat (optioneel)</label>
+      <textarea id="f-result" class="form-textarea" placeholder="Wat heeft het opgeleverd?"></textarea>
     </div>
 
     <div class="form-row">
@@ -463,14 +490,29 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
         <input type="text" id="f-bg" class="form-input" placeholder="linear-gradient(145deg,#0d0205,#4a0820)">
       </div>
       <div class="form-group">
-        <label class="form-label font-mono">Project URL (optioneel)</label>
+        <label class="form-label font-mono">Live site URL (optioneel)</label>
         <input type="url" id="f-url" class="form-input" placeholder="https://sauberhaus.nl">
       </div>
     </div>
 
     <div class="form-group">
-      <label class="form-label font-mono">Afbeelding URL (optioneel — anders kleurblok)</label>
-      <input type="text" id="f-img" class="form-input" placeholder="assets/sauberhaus.jpg">
+      <label class="form-label font-mono">Hoofdafbeelding (na / hero)</label>
+      <div class="img-field">
+        <div class="img-prev" id="f-img-prev"></div>
+        <input type="text" id="f-img" class="form-input" placeholder="upload of plak een pad/URL">
+        <button type="button" class="upload-btn" id="f-img-btn" onclick="document.getElementById('f-img-file').click()">↑ Upload</button>
+        <input type="file" accept="image/*" id="f-img-file" style="display:none" onchange="uploadProjectImage(this,'f-img')">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Before-afbeelding (optioneel — toont before/after-slider)</label>
+      <div class="img-field">
+        <div class="img-prev" id="f-before_img-prev"></div>
+        <input type="text" id="f-before_img" class="form-input" placeholder="upload of plak een pad/URL van de 'voor'-situatie">
+        <button type="button" class="upload-btn" id="f-before_img-btn" onclick="document.getElementById('f-before_img-file').click()">↑ Upload</button>
+        <input type="file" accept="image/*" id="f-before_img-file" style="display:none" onchange="uploadProjectImage(this,'f-before_img')">
+      </div>
     </div>
 
     <p style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#555;line-height:1.7;margin-bottom:4px;">
@@ -633,22 +675,66 @@ async function reorderProjects(srcId, targetId) {
 function openModal(id = null) {
   document.getElementById('modal-title').textContent = id ? 'Project bewerken' : 'Project toevoegen';
   document.getElementById('edit-id').value = id || '';
+  const fields = ['f-name','f-tag','f-type','f-year','f-services','f-desc','f-challenge','f-result','f-bg','f-url','f-img','f-before_img'];
   if (id) {
     const p = currentProjects.find(x => x.id === id);
     if (p) {
       document.getElementById('f-name').value = p.name || '';
       document.getElementById('f-tag').value = p.tag || '';
       document.getElementById('f-type').value = p.type || '';
+      document.getElementById('f-year').value = p.year || '';
+      document.getElementById('f-services').value = p.services || '';
       document.getElementById('f-desc').value = p.description || '';
+      document.getElementById('f-challenge').value = p.challenge || '';
+      document.getElementById('f-result').value = p.result || '';
       document.getElementById('f-bg').value = p.bg || '';
       document.getElementById('f-url').value = p.url || '';
       document.getElementById('f-img').value = p.img || '';
+      document.getElementById('f-before_img').value = p.before_img || '';
     }
   } else {
-    ['f-name','f-tag','f-type','f-desc','f-bg','f-url','f-img'].forEach(id => document.getElementById(id).value = '');
+    fields.forEach(fid => document.getElementById(fid).value = '');
   }
+  setImgPreview('f-img');
+  setImgPreview('f-before_img');
   document.getElementById('modal').classList.add('open');
   setTimeout(() => document.getElementById('f-name').focus(), 100);
+}
+
+// Zet mini-preview op basis van de huidige veldwaarde
+function setImgPreview(fieldId) {
+  const val = document.getElementById(fieldId).value.trim();
+  const prev = document.getElementById(fieldId + '-prev');
+  if (prev) prev.style.backgroundImage = val ? `url('${val}')` : 'none';
+}
+
+// Upload een projectafbeelding naar Storage en vul het veld + preview
+async function uploadProjectImage(input, fieldId) {
+  const file = input.files[0]; if (!file) return;
+  const btn = document.getElementById(fieldId + '-btn');
+  const orig = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  try {
+    const compressed = await compressImage(file);
+    const ext = (compressed.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `projects/${fieldId}-${Date.now()}.${ext}`;
+    const { error: upErr } = await db.storage.from(CONTENT_BUCKET).upload(path, compressed, { upsert: true, contentType: compressed.type });
+    if (upErr) throw upErr;
+    const url = db.storage.from(CONTENT_BUCKET).getPublicUrl(path).data.publicUrl;
+    document.getElementById(fieldId).value = url;
+    setImgPreview(fieldId);
+    toast('Afbeelding geüpload');
+  } catch (e) {
+    toast('Upload mislukt: ' + (e.message || e), true);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = orig; }
+    input.value = '';
+  }
+}
+
+function slugify(s) {
+  return String(s || '').toLowerCase().trim()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 }
 function editProject(id) { openModal(id); }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
@@ -662,20 +748,29 @@ async function saveProject() {
     name,
     tag:         document.getElementById('f-tag').value.trim() || 'Project',
     type:        document.getElementById('f-type').value.trim(),
+    year:        document.getElementById('f-year').value.trim(),
+    services:    document.getElementById('f-services').value.trim(),
     description: document.getElementById('f-desc').value.trim(),
+    challenge:   document.getElementById('f-challenge').value.trim(),
+    result:      document.getElementById('f-result').value.trim(),
     bg:          document.getElementById('f-bg').value.trim() || 'linear-gradient(145deg,#111,#333)',
     url:         document.getElementById('f-url').value.trim(),
     img:         document.getElementById('f-img').value.trim(),
+    before_img:  document.getElementById('f-before_img').value.trim(),
   };
 
   let error;
   if (editId) {
+    // behoud bestaande slug; genereer er een als die nog ontbreekt
+    const existing = currentProjects.find(p => p.id === parseInt(editId));
+    project.slug = (existing && existing.slug) ? existing.slug : slugify(name);
     // volgorde laten staan — die beheer je via slepen, niet via dit formulier
     ({ error } = await db.from('projects').update(project).eq('id', parseInt(editId)));
   } else {
     // nieuw project komt onderaan: volgende sort_order
     const maxOrder = currentProjects.reduce((m, p) => Math.max(m, p.sort_order || 0), 0);
     project.sort_order = maxOrder + 1;
+    project.slug = slugify(name);
     ({ error } = await db.from('projects').insert(project));
   }
   if (error) { toast('Fout: ' + error.message, true); return; }
@@ -727,6 +822,9 @@ function importJSON(input) {
         name: p.name || '', tag: p.tag || '', type: p.type || '',
         description: p.description || p.desc || '',
         bg: p.bg || '', url: p.url || '', img: p.img || '',
+        slug: p.slug || slugify(p.name || ''),
+        before_img: p.before_img || '', year: p.year || '',
+        services: p.services || '', challenge: p.challenge || '', result: p.result || '',
         sort_order: p.sort_order || p.order || 99,
       }));
       const { error } = await db.from('projects').insert(rows);
@@ -798,13 +896,39 @@ const CONTENT_PAGES = [
       H('home.diensten_heading', 'Kop', 'Van idee tot live —<br><span class="red">van A tot Z.</span>'),
       T('home.pillar1_title', 'Dienst 1 — titel', 'Website laten bouwen'),
       A('home.pillar1_body', 'Dienst 1 — tekst', 'Ik bouw websites in HTML & CSS met GSAP-animaties én WordPress — afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.'),
-      H('home.pillar1_price', 'Dienst 1 — prijs', 'Vanaf <strong>€2.500</strong>'),
+      H('home.pillar1_price', 'Dienst 1 — prijs', 'Vanaf <strong>€950</strong>'),
       T('home.pillar2_title', 'Dienst 2 — titel', 'Webhosting & beveiliging'),
       A('home.pillar2_body', 'Dienst 2 — tekst', 'Dedicated webhosting op een snelle server. SSL-certificaat, automatische back-ups en monitoring inbegrepen. Jouw website staat altijd online en is altijd actueel — zonder dat jij er omkijken naar hebt.'),
       H('home.pillar2_price', 'Dienst 2 — prijs', 'Vanaf <strong>€25 / maand</strong>'),
       T('home.pillar3_title', 'Dienst 3 — titel', 'Onderhoud & support'),
       A('home.pillar3_body', 'Dienst 3 — tekst', 'Kleine aanpassingen, nieuwe pagina\'s of technische vragen. Directe lijn met Peter — geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.'),
       H('home.pillar3_price', 'Dienst 3 — prijs', '<strong>Op aanvraag</strong>'),
+    ]},
+    { title: 'Pakketten', fields: [
+      T('home.pakketten_label', 'Sectielabel', 'Pakketten / 02a'),
+      H('home.pakketten_heading', 'Kop', 'Eén pagina of een hele site —<br><span class="red">jij kiest.</span>'),
+      A('home.pakketten_lead', 'Inleiding', 'Geen vaste prijs voor iets wat je niet nodig hebt. Je betaalt voor de pagina\'s die je wilt — de eerste bevat het complete ontwerp-systeem, elke volgende bouwt daarop voort.'),
+      T('home.pkg1_name', 'Pakket 1 — naam', 'Start'),
+      T('home.pkg1_tag', 'Pakket 1 — label', '1 pagina'),
+      H('home.pkg1_price', 'Pakket 1 — prijs', '€950'),
+      A('home.pkg1_sub', 'Pakket 1 — omschrijving', 'Eén krachtige homepage, inclusief het volledige ontwerp-systeem.'),
+      T('home.pkg2_ribbon', 'Pakket 2 — badge', 'Meest gekozen'),
+      T('home.pkg2_name', 'Pakket 2 — naam', 'Onderneem'),
+      T('home.pkg2_tag', 'Pakket 2 — label', 'tot 4 pagina\'s'),
+      H('home.pkg2_price', 'Pakket 2 — prijs', '€1.500'),
+      A('home.pkg2_sub', 'Pakket 2 — omschrijving', 'Homepage plus de pagina\'s die een ondernemer nodig heeft.'),
+      T('home.pkg3_name', 'Pakket 3 — naam', 'Groei'),
+      T('home.pkg3_tag', 'Pakket 3 — label', 'tot 7 pagina\'s'),
+      H('home.pkg3_price', 'Pakket 3 — prijs', '€2.450'),
+      A('home.pkg3_sub', 'Pakket 3 — omschrijving', 'Een complete site met CMS, zodat je zelf teksten en foto\'s beheert.'),
+      H('home.pkg_alacarte', 'Extra pagina — regel', 'Meer pagina\'s nodig?<br><strong>€200 per extra pagina.</strong>'),
+      T('home.pkg_custom_label', 'Custom — label', 'Custom / op maat'),
+      T('home.pkg_custom_title', 'Custom — kop', 'Eigen systeem of integratie nodig?'),
+      A('home.pkg_custom_body', 'Custom — tekst', 'Een koppeling met je boekhouding, een klantportaal, een configurator of een volledig eigen platform — bouwen we van de grond af op maat. We bepalen samen de scope, daarna krijg je een vaste prijs.'),
+      T('home.pkg_custom_price', 'Custom — prijslabel', 'Op aanvraag'),
+      T('home.pkg_custom_cta', 'Custom — knoptekst', 'Plan een gesprek →'),
+      T('home.pkg_scope_title', 'Scope — titel', 'Wat zit er in een pagina?'),
+      H('home.pkg_scope_body', 'Scope — tekst', 'Eén pagina uit het vaste ontwerp-systeem · volledig responsive · basis on-page SEO (title, meta, koppen, alt) · 1 revisieronde · standaard secties met bestaande GSAP-animaties. <strong>Meerwerk</strong> — custom animatie, formulieren met logica, koppelingen of teksten schrijven — doen we tegen een vaste meerprijs, altijd vooraf afgesproken.'),
     ]},
     { title: 'Modules-teaser', fields: [
       T('home.modules_label', 'Sectielabel', 'Add-on modules / 02b'),
@@ -832,7 +956,7 @@ const CONTENT_PAGES = [
       T('home.metric1_num', 'Cijfer 1', '12+'), T('home.metric1_label', 'Cijfer 1 — label', 'Projecten opgeleverd'),
       T('home.metric2_num', 'Cijfer 2', '7+'), T('home.metric2_label', 'Cijfer 2 — label', 'Jaar ervaring'),
       T('home.metric3_num', 'Cijfer 3', '100%'), T('home.metric3_label', 'Cijfer 3 — label', 'Custom design'),
-      T('home.metric4_num', 'Cijfer 4', '€2.5k'), T('home.metric4_label', 'Cijfer 4 — label', 'Startprijs'),
+      T('home.metric4_num', 'Cijfer 4', '€950'), T('home.metric4_label', 'Cijfer 4 — label', 'Startprijs'),
     ]},
     { title: 'Over de maker', fields: [
       T('home.about_label', 'Sectielabel', 'Over de maker / 04'),

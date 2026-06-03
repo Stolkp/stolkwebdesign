@@ -209,10 +209,11 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
 
     grid.innerHTML = visible.map((p, i) => {
       const bgStyle = p.img
-        ? `background-image:url('${p.img}');background-size:cover;background-position:center;`
+        ? `background-image:url('${p.img}');background-size:cover;background-position:center top;`
         : `background:${p.bg || 'linear-gradient(145deg,#111,#333)'};`;
+      const dest = 'project.html?p=' + encodeURIComponent(p.slug || p.id);
       return `
-        <div class="port-card reveal" style="transition-delay:${i*0.08}s" data-url="${p.url||''}">
+        <div class="port-card reveal" style="transition-delay:${i*0.08}s" data-href="${dest}">
           <div class="port-bg" style="${bgStyle}">
             <div class="port-overlay"></div>
             <div class="port-arrow">→</div>
@@ -226,9 +227,7 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     }).join('');
 
     grid.querySelectorAll('.port-card').forEach(card => {
-      const url = card.dataset.url;
-      if (url) card.addEventListener('click', () => window.open(url, '_blank'));
-      else card.style.cursor = 'default';
+      card.addEventListener('click', () => { location.href = card.dataset.href; });
     });
 
     grid.querySelectorAll('.reveal').forEach(el => obs.observe(el));

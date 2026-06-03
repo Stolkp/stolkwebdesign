@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Before / After — Stolkwebdesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black:#000; --white:#fff; --red:#EA2525; --bone:#F5F5F5; --muted:#767676;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#222;display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px;font-family:'Space Grotesk',sans-serif;}
+
+  .frame{
+    position:relative;overflow:hidden;background:var(--black);color:var(--white);
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .frame::after{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  #sq{width:1080px;height:1080px;padding:60px;}
+  #wide{width:1200px;height:627px;padding:48px 56px;}
+
+  /* top bar */
+  .top{display:flex;justify-content:space-between;align-items:center;z-index:2;}
+  .brand{font-family:'Archivo Black',sans-serif;font-size:24px;letter-spacing:-.02em;}
+  #wide .brand{font-size:20px;}
+  .kicker{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--white);display:flex;align-items:center;gap:10px;}
+  #wide .kicker{font-size:12px;}
+  .dot{width:11px;height:11px;background:var(--red);border-radius:50%;display:inline-block;}
+
+  /* devices row */
+  .stage{display:flex;align-items:center;justify-content:center;gap:34px;z-index:2;}
+  #wide .stage{gap:26px;}
+  .col{display:flex;flex-direction:column;align-items:center;gap:16px;}
+  #wide .col{gap:10px;}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:7px 14px;border:2px solid var(--white);}
+  #wide .badge{font-size:11px;padding:5px 11px;}
+  .badge.old{background:var(--muted);color:var(--white);border-color:var(--muted);}
+  .badge.new{background:var(--red);color:var(--white);border-color:var(--red);}
+
+  .device{background:var(--white);border:2px solid var(--black);}
+  .device .bar{height:30px;background:#111;display:flex;align-items:center;gap:7px;padding:0 12px;}
+  .device .bar i{width:9px;height:9px;border-radius:50%;background:#555;display:block;}
+  .device img{display:block;width:100%;height:auto;}
+
+  .device.old{width:392px;box-shadow:9px 9px 0 0 #5a5a5a;filter:grayscale(.12) contrast(.96);}
+  .device.new{width:392px;box-shadow:11px 11px 0 0 var(--red);}
+  #wide .device.old,#wide .device.new{width:300px;}
+  .device.old img{height:248px;object-fit:cover;object-position:top;}
+  .device.new img{height:248px;object-fit:cover;object-position:top center;}
+  #wide .device.old img,#wide .device.new img{height:190px;}
+
+  .arrow{font-family:'Archivo Black',sans-serif;font-size:64px;line-height:1;color:var(--red);transform:translateY(14px);}
+  #wide .arrow{font-size:46px;}
+
+  /* bottom statement */
+  .foot{z-index:2;}
+  .headline{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.03em;line-height:.94;}
+  #sq .headline{font-size:78px;}
+  #wide .headline{font-size:50px;}
+  .headline .r{color:var(--red);}
+  .sub{font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:#bdbdbd;margin-top:22px;}
+  #wide .sub{font-size:13px;margin-top:14px;}
+  .label-row{display:flex;justify-content:center;}
+</style>
+</head>
+<body>
+
+  <!-- ===== INSTAGRAM 1080×1080 ===== -->
+  <div class="frame" id="sq">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="kicker"><span class="dot"></span> RELAUNCH&nbsp;/&nbsp;2026</div>
+    </div>
+
+    <div class="stage">
+      <div class="col">
+        <span class="badge old">2017–2026 · TOEN</span>
+        <div class="device old">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <img src="../assets/old-site-hero.jpeg" alt="oude site">
+        </div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <span class="badge new">2026 · NU</span>
+        <div class="device new">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <img src="../assets/new-site-hero.jpeg" alt="nieuwe site">
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="headline">Zelfde naam.<br>Andere studio<span class="r">.</span></div>
+      <div class="sub">stolkwebdesign.nl — volledig opnieuw gebouwd</div>
+    </div>
+  </div>
+
+  <!-- ===== LINKEDIN 1200×627 ===== -->
+  <div class="frame" id="wide">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="kicker"><span class="dot"></span> RELAUNCH&nbsp;/&nbsp;2026</div>
+    </div>
+
+    <div class="stage">
+      <div class="col">
+        <span class="badge old">2017–2026 · TOEN</span>
+        <div class="device old">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <img src="../assets/old-site-hero.jpeg" alt="oude site">
+        </div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <span class="badge new">2026 · NU</span>
+        <div class="device new">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <img src="../assets/new-site-hero.jpeg" alt="nieuwe site">
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div class="headline">Zelfde naam. Andere studio<span class="r">.</span></div>
+      <div class="sub">stolkwebdesign.nl — volledig opnieuw gebouwd</div>
+    </div>
+  </div>
+
+</body>
+</html>

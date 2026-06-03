@@ -41,9 +41,16 @@ research/
 - **Anouk Hoogendijk** — Personal brand, WordPress
 
 ## Diensten + Prijzen
-- Website bouwen (HTML/GSAP + WordPress): **Vanaf €2.500**
-- Webhosting & beveiliging: **Vanaf €25/maand**
-- Onderhoud & support: **Op aanvraag**
+Per-pagina model (uurtarief €75) — gepresenteerd als 3 pakketten op de homepage (`#pakketten`):
+- **Start** €950 — homepage / 1 pagina, incl. volledig ontwerp-systeem
+- **Onderneem** €1.500 — tot 4 pagina's (meest gekozen)
+- **Groei** €2.450 — tot 7 pagina's + CMS-basis
+- Extra pagina buiten pakket: **€200**
+- **Custom / op maat** (eigen systeem, integratie, klantportaal, platform): **Op aanvraag** — donkere band onder de pakketten
+- Webhosting & beveiliging: **Vanaf €25/maand** · Onderhoud & support: **Op aanvraag**
+- Add-on modules los erbovenop (CMS €499, Factuur €199, Social/SEO/Blog €99+)
+
+> Prijzen tonen via HTML-defaults; CMS-bewerkbaar via `/admin.html` (keys `home.pkg*`, `home.pillar1_price`, `home.metric4_num`) → upsert in Supabase `stolkwebdesign_content`. Per 03-06-2026 stonden er 0 `home`-rijen, dus HTML is leidend tot Peter via admin opslaat.
 
 ## SEO Keywords
 - website laten bouwen (hoofd-keyword)
