@@ -5,7 +5,8 @@
   "functions": {
     "api/notion-publish.js": { "maxDuration": 60 },
     "api/regenerate-carousel.js": { "maxDuration": 60 },
-    "api/poll-notion.js": { "maxDuration": 60 }
+    "api/poll-notion.js": { "maxDuration": 60 },
+    "api/publish-social-post.js": { "maxDuration": 60 }
   },
   "crons": [
     { "path": "/api/poll-notion", "schedule": "0 8 * * *" }

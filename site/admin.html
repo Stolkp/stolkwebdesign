@@ -1317,6 +1317,34 @@ function socialPreviewHTML(p) {
   </div>`;
 }
 
+// Publiceer een post live via Blotato (LinkedIn + Instagram). Stuurt de sessie-JWT mee;
+// het endpoint verifieert server-side dat je een ingelogde admin bent.
+async function publishPost(postId, btn) {
+  if (!confirm('Deze post nu LIVE publiceren op LinkedIn én Instagram?\n\nHet verschijnt direct op je kanalen.')) return;
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Publiceren…';
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { toast('Niet ingelogd — log opnieuw in.', true); btn.disabled = false; btn.textContent = orig; return; }
+    const res = await fetch('/api/publish-social-post', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ post_id: postId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
+      toast('Gepubliceerd op LinkedIn + Instagram ✓');
+    } else {
+      const li = data.results?.linkedin?.error ? ('LinkedIn: ' + data.results.linkedin.error) : '';
+      const ig = data.results?.instagram?.error ? ('Instagram: ' + data.results.instagram.error) : '';
+      toast('Niet (volledig) gelukt — ' + (data.error || [li, ig].filter(Boolean).join(' · ') || 'onbekende fout'), true);
+    }
+  } catch (e) {
+    toast('Publiceren mislukt: ' + e.message, true);
+  }
+  btn.disabled = false; btn.textContent = orig;
+}
+
 function renderSocialPosts() {
   const wrap = document.getElementById('social-posts');
   if (!wrap) return;
@@ -1350,6 +1378,7 @@ function renderSocialPosts() {
         <div class="form-group"><label class="form-label font-mono">Google Bedrijfsprofiel</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_gbp">${esc(p.caption_gbp)}</textarea></div>
         <div class="social-actions">
           <button class="content-save-btn" onclick="saveSocialPost('${p.id}', this)">Opslaan</button>
+          <button class="content-save-btn" style="background:var(--red);border-color:var(--red);color:#fff" onclick="publishPost('${p.id}', this)">📤 Publiceer (LinkedIn + Instagram)</button>
           <a class="social-dl" href="${dl('ig')}" target="_blank" rel="noopener">↧ Instagram 1080²</a>
           <a class="social-dl" href="${dl('li')}" target="_blank" rel="noopener">↧ LinkedIn</a>
           <a class="social-dl" href="${dl('gbp')}" target="_blank" rel="noopener">↧ Google</a>
