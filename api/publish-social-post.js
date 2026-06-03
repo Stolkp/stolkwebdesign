@@ -14,12 +14,13 @@ import { createClient } from '@supabase/supabase-js';
 
 const BUCKET = 'stolkwebdesign-carousels'; // bestaande publieke bucket
 
-async function postViaBlotato({ accountId, targetType, mediaType, mediaUrls, text, pageId }) {
+async function postViaBlotato({ accountId, targetType, mediaUrls, text, pageId, scheduledTime }) {
   if (!accountId) return { skipped: true, reason: 'no accountId env' };
   const target = { targetType };
-  if (mediaType) target.mediaType = mediaType;
   if (pageId) target.pageId = pageId;
   const body = { post: { accountId, content: { text, mediaUrls, platform: targetType }, target } };
+  // scheduledTime MOET top-level naast `post` staan (anders negeert Blotato het en post direct)
+  if (scheduledTime) body.scheduledTime = scheduledTime;
   const res = await fetch('https://backend.blotato.com/v2/posts', {
     method: 'POST',
     headers: { 'blotato-api-key': process.env.BLOTATO_API_KEY, 'Content-Type': 'application/json' },
@@ -63,7 +64,11 @@ export default async function handler(req, res) {
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
   const postId = body.post_id;
   const platforms = Array.isArray(body.platforms) && body.platforms.length ? body.platforms : ['linkedin', 'instagram'];
+  const scheduledTime = body.scheduledTime || undefined; // ISO 8601, leeg = direct publiceren
   if (!postId) return res.status(400).json({ error: 'post_id ontbreekt' });
+  if (scheduledTime && new Date(scheduledTime).getTime() <= Date.now()) {
+    return res.status(400).json({ error: 'Inplan-tijd moet in de toekomst liggen' });
+  }
 
   const admin = createClient(SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 
@@ -87,6 +92,7 @@ export default async function handler(req, res) {
         mediaUrls: [liUrl],
         text: post.caption_linkedin || post.headline || '',
         pageId: process.env.BLOTATO_LINKEDIN_PAGE_ID || undefined,
+        scheduledTime,
       });
     }
     if (platforms.includes('instagram')) {
@@ -96,6 +102,7 @@ export default async function handler(req, res) {
         targetType: 'instagram',
         mediaUrls: [igUrl],
         text: post.caption_instagram || post.headline || '',
+        scheduledTime,
       });
     }
   } catch (e) {
