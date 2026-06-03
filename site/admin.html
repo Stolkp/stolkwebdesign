@@ -384,6 +384,7 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <select class="form-input" id="social-campaign-select" style="max-width:320px;" onchange="onCampaignChange(this.value)"></select>
           <button class="add-btn font-display" style="margin:0;font-size:11px;padding:11px 18px;" onclick="createCampaign()">+ Nieuwe campagne</button>
           <button class="settings-btn font-mono" style="margin:0;" onclick="addPost()">+ Post toevoegen</button>
+          <button class="settings-btn font-mono" style="margin:0;" onclick="addCarousel()">+ Carousel toevoegen</button>
           <button class="settings-btn font-mono" style="margin:0;border-color:rgba(234,37,37,.4);color:rgba(234,37,37,.6);" onclick="deleteCampaign()">Campagne verwijderen</button>
         </div>
 
@@ -1299,6 +1300,61 @@ async function addPost() {
   await loadSocialPosts(); toast('Post toegevoegd');
 }
 
+async function addCarousel() {
+  if (!socialActiveId) { toast('Maak eerst een campagne aan', true); return; }
+  const pos = socialPosts.reduce((m, p) => Math.max(m, p.position || 0), 0) + 1;
+  const { error } = await db.from('stolkwebdesign_social_posts').insert({ campaign_id: socialActiveId, position: pos, kind: 'carousel', headline: 'Nieuwe carousel', media_urls: [] });
+  if (error) { toast('Fout: ' + error.message, true); return; }
+  await loadSocialPosts(); toast('Carousel toegevoegd — voeg slides toe');
+}
+
+// ── Carousel-slides: upload (meerdere), herorden, verwijderen ──
+async function onCarouselSlides(id, input) {
+  const files = Array.from(input.files || []);
+  if (!files.length) return;
+  const post = socialPosts.find(p => p.id === id);
+  const urls = Array.isArray(post?.media_urls) ? post.media_urls.slice() : [];
+  if (urls.length + files.length > 10) { toast('Max 10 slides per carousel.', true); input.value = ''; return; }
+  toast('Slides uploaden…');
+  try {
+    let n = urls.length;
+    for (const file of files) {
+      const compressed = await compressImage(file);
+      const path = `social-carousel/${id}/${Date.now()}-${n}.png`;
+      const { error: upErr } = await db.storage.from(CONTENT_BUCKET).upload(path, compressed, { upsert: true, contentType: compressed.type });
+      if (upErr) throw upErr;
+      urls.push(db.storage.from(CONTENT_BUCKET).getPublicUrl(path).data.publicUrl);
+      n++;
+    }
+    await saveCarouselUrls(id, urls);
+    toast(files.length + ' slide(s) toegevoegd ✓');
+  } catch (e) { toast('Upload mislukt: ' + e.message, true); }
+  input.value = '';
+}
+
+async function saveCarouselUrls(id, urls) {
+  const { error } = await db.from('stolkwebdesign_social_posts').update({ media_urls: urls }).eq('id', id);
+  if (error) { toast('Opslaan mislukt: ' + error.message, true); return; }
+  const post = socialPosts.find(p => p.id === id); if (post) post.media_urls = urls;
+  renderSocialPosts();
+}
+
+function moveSlide(id, idx, dir) {
+  const post = socialPosts.find(p => p.id === id); if (!post) return;
+  const urls = post.media_urls.slice();
+  const j = idx + dir;
+  if (j < 0 || j >= urls.length) return;
+  [urls[idx], urls[j]] = [urls[j], urls[idx]];
+  saveCarouselUrls(id, urls);
+}
+
+function removeSlide(id, idx) {
+  const post = socialPosts.find(p => p.id === id); if (!post) return;
+  const urls = post.media_urls.slice();
+  urls.splice(idx, 1);
+  saveCarouselUrls(id, urls);
+}
+
 async function deletePost(id) {
   if (!confirm('Deze post verwijderen?')) return;
   const { error } = await db.from('stolkwebdesign_social_posts').delete().eq('id', id);
@@ -1369,6 +1425,49 @@ function renderSocialPosts() {
   const origin = location.origin;
   wrap.innerHTML = socialPosts.map(p => {
     const dl = fmt => `${origin}/api/render-social-post?post=${p.id}&fmt=${fmt}&dl=1`;
+    const publishBox = `<div class="publish-box" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(0,0,0,.18)">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Publiceren naar</span>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-li-${p.id}" checked> LinkedIn</label>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-ig-${p.id}" checked> Instagram</label>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px">Plannen (leeg = nu) <input type="datetime-local" id="pp-when-${p.id}" style="font-family:inherit;font-size:12px;padding:5px 7px;border:2px solid var(--black);background:#fff"></label>
+          <button class="content-save-btn" style="background:var(--red);border-color:var(--red);color:#fff" onclick="publishPost('${p.id}', this)">📤 Publiceer / Plan</button>
+        </div>`;
+    const captionsLiIg = `<div class="cms-group-title" style="margin:18px 0 10px;font-size:11px;">Captions per platform</div>
+        <div class="form-group"><label class="form-label font-mono">LinkedIn</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_linkedin">${esc(p.caption_linkedin)}</textarea></div>
+        <div class="form-group"><label class="form-label font-mono">Instagram</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_instagram">${esc(p.caption_instagram)}</textarea></div>`;
+
+    if (p.kind === 'carousel') {
+      const slides = Array.isArray(p.media_urls) ? p.media_urls : [];
+      const strip = slides.length ? slides.map((u, i) => `<div style="width:96px">
+            <img src="${esc(u)}" style="width:96px;height:96px;object-fit:cover;border:2px solid var(--black);display:block">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:3px">
+              <span>${i + 1}</span>
+              <span>
+                <button class="row-btn font-mono" style="padding:1px 5px" onclick="moveSlide('${p.id}',${i},-1)">◀</button>
+                <button class="row-btn font-mono" style="padding:1px 5px" onclick="moveSlide('${p.id}',${i},1)">▶</button>
+                <button class="row-btn danger font-mono" style="padding:1px 5px" onclick="removeSlide('${p.id}',${i})">✕</button>
+              </span>
+            </div>
+          </div>`).join('') : '<div class="social-empty" style="padding:18px">Nog geen slides — klik op “↑ Slides toevoegen” en kies je carousel-slides (op volgorde).</div>';
+      return `<div class="social-post">
+      <div class="social-post-preview" id="prev-${p.id}">
+        ${slides.length ? `<img src="${esc(slides[0])}" style="width:100%;border:2px solid var(--black);display:block">` : socialPreviewHTML(p)}
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px;text-transform:uppercase;letter-spacing:.1em">Carousel · ${slides.length} slide(s)</div>
+      </div>
+      <div class="social-post-fields">
+        <div class="cms-group-title" style="margin:0 0 10px;font-size:11px;">Carousel-slides (2–10, op volgorde)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px">${strip}</div>
+        <input type="file" accept="image/*" multiple id="cs-${p.id}" style="display:none" onchange="onCarouselSlides('${p.id}', this)">
+        <button class="photo-upload-btn" onclick="document.getElementById('cs-${p.id}').click()">↑ Slides toevoegen</button>
+        ${captionsLiIg}
+        <div class="social-actions">
+          <button class="row-btn danger font-mono" onclick="deletePost('${p.id}')">Verwijder carousel</button>
+        </div>
+        ${publishBox}
+      </div>
+    </div>`;
+    }
+
     return `<div class="social-post">
       <div class="social-post-preview" id="prev-${p.id}">${socialPreviewHTML(p)}</div>
       <div class="social-post-fields">
@@ -1388,9 +1487,7 @@ function renderSocialPosts() {
           <button class="photo-upload-btn" onclick="document.getElementById('sbg-${p.id}').click()">↑ Foto kiezen</button>
           ${p.bg_image ? `<button class="photo-upload-btn" onclick="clearSocialBg('${p.id}')">✕ Verwijderen</button>` : ''}
         </div>
-        <div class="cms-group-title" style="margin:18px 0 10px;font-size:11px;">Captions per platform</div>
-        <div class="form-group"><label class="form-label font-mono">LinkedIn</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_linkedin">${esc(p.caption_linkedin)}</textarea></div>
-        <div class="form-group"><label class="form-label font-mono">Instagram</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_instagram">${esc(p.caption_instagram)}</textarea></div>
+        ${captionsLiIg}
         <div class="form-group"><label class="form-label font-mono">Google Bedrijfsprofiel</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_gbp">${esc(p.caption_gbp)}</textarea></div>
         <div class="social-actions">
           <button class="content-save-btn" onclick="saveSocialPost('${p.id}', this)">Opslaan</button>
@@ -1400,13 +1497,7 @@ function renderSocialPosts() {
           <a class="social-dl" href="${dl('story')}" target="_blank" rel="noopener">↧ Story</a>
           <button class="row-btn danger font-mono" onclick="deletePost('${p.id}')">Verwijder post</button>
         </div>
-        <div class="publish-box" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(0,0,0,.18)">
-          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Publiceren naar</span>
-          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-li-${p.id}" checked> LinkedIn</label>
-          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-ig-${p.id}" checked> Instagram</label>
-          <label style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px">Plannen (leeg = nu) <input type="datetime-local" id="pp-when-${p.id}" style="font-family:inherit;font-size:12px;padding:5px 7px;border:2px solid var(--black);background:#fff"></label>
-          <button class="content-save-btn" style="background:var(--red);border-color:var(--red);color:#fff" onclick="publishPost('${p.id}', this)">📤 Publiceer / Plan</button>
-        </div>
+        ${publishBox}
       </div>
     </div>`;
   }).join('');

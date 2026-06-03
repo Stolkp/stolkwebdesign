@@ -75,9 +75,19 @@ export default async function handler(req, res) {
   // ── Post ophalen ──
   const { data: post, error: postErr } = await admin
     .from('stolkwebdesign_social_posts')
-    .select('id, headline, caption_linkedin, caption_instagram')
+    .select('*') // '*' i.p.v. expliciete kolommen: werkt ook vóór de carousel-migratie (kind/media_urls dan undefined → single)
     .eq('id', postId).single();
   if (postErr || !post) return res.status(404).json({ error: 'Post niet gevonden' });
+
+  // Carousel = geordende set vooraf-gerenderde slides; single = on-the-fly render per formaat.
+  const isCarousel = post.kind === 'carousel';
+  let carouselUrls = null;
+  if (isCarousel) {
+    carouselUrls = Array.isArray(post.media_urls) ? post.media_urls.filter(Boolean) : [];
+    if (carouselUrls.length < 2 || carouselUrls.length > 10) {
+      return res.status(400).json({ error: `Een carousel heeft 2 t/m 10 slides nodig (nu ${carouselUrls.length}).` });
+    }
+  }
 
   const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0];
   const origin = `${proto}://${req.headers.host}`;
@@ -85,22 +95,22 @@ export default async function handler(req, res) {
 
   try {
     if (platforms.includes('linkedin')) {
-      const liUrl = await renderAndStore(admin, origin, postId, 'li');
+      const urls = isCarousel ? carouselUrls : [await renderAndStore(admin, origin, postId, 'li')];
       results.linkedin = await postViaBlotato({
         accountId: process.env.BLOTATO_LINKEDIN_ACCOUNT_ID,
         targetType: 'linkedin',
-        mediaUrls: [liUrl],
+        mediaUrls: urls,
         text: post.caption_linkedin || post.headline || '',
         pageId: process.env.BLOTATO_LINKEDIN_PAGE_ID || undefined,
         scheduledTime,
       });
     }
     if (platforms.includes('instagram')) {
-      const igUrl = await renderAndStore(admin, origin, postId, 'ig');
+      const urls = isCarousel ? carouselUrls : [await renderAndStore(admin, origin, postId, 'ig')];
       results.instagram = await postViaBlotato({
         accountId: process.env.BLOTATO_INSTAGRAM_ACCOUNT_ID,
         targetType: 'instagram',
-        mediaUrls: [igUrl],
+        mediaUrls: urls,
         text: post.caption_instagram || post.headline || '',
         scheduledTime,
       });

@@ -81,3 +81,10 @@ transparant + CTA). Draaien: Supabase Dashboard → SQL Editor → plak → Run.
 
 **Daarna:** `/admin` → Campagnes → per post bewerken/goedkeuren → 4 formaten downloaden → posten
 met de bijbehorende caption (staat per platform op de post).
+
+### Direct publiceren / inplannen + carousels
+- **Single posts:** per post knoppen **LinkedIn/Instagram** + datum/tijd (leeg = nu) → **📤 Publiceer / Plan**
+  → publiceert live via Blotato (`api/publish-social-post.js`, beveiligd met je login-sessie).
+- **Carousels:** **"+ Carousel toevoegen"** → upload de gerenderde slide-PNG's (uit `output/`, 2–10, op
+  volgorde met ◀ ▶ / ✕) → zelfde Publiceer/Plan-knoppen. Blotato maakt er een IG- + LinkedIn-carousel van.
+  Vereist eenmalig `migrations/social_carousel_fields.sql` (kolommen `kind` + `media_urls`).
