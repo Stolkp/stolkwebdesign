@@ -44,11 +44,16 @@ research/
 Per-pagina model (uurtarief €75) — gepresenteerd als 3 pakketten op de homepage (`#pakketten`):
 - **Start** €950 — homepage / 1 pagina, incl. volledig ontwerp-systeem
 - **Onderneem** €1.500 — tot 4 pagina's (meest gekozen)
-- **Groei** €2.450 — tot 7 pagina's + CMS-basis
+- **Groei** €2.450 — tot 7 pagina's + Basis CMS + Content
 - Extra pagina buiten pakket: **€200**
 - **Custom / op maat** (eigen systeem, integratie, klantportaal, platform): **Op aanvraag** — donkere band onder de pakketten
 - Webhosting & beveiliging: **Vanaf €25/maand** · Onderhoud & support: **Op aanvraag**
-- Add-on modules los erbovenop (CMS €499, Factuur €199, Social/SEO/Blog €99+)
+
+### Modules (2-lagen, op `/modules`)
+- **Basis CMS** (platform/login, fundering) **€149 eenmalig**, 1× per klant — vereist voor de dashboard-modules. Geen dubbel betalen.
+- **Content** **€99 homepage + €49/extra pagina** (teksten & foto's beheren) — draait op Basis CMS
+- **Factuur** €199 · **Social** €99 +€149/campagne · **Blog** €99 +€89/blog — draaien op Basis CMS
+- **SEO-rapport** €99 + per actiepunt — los te bestellen (eigen client-portal, geen Basis CMS nodig)
 
 > Prijzen tonen via HTML-defaults; CMS-bewerkbaar via `/admin.html` (keys `home.pkg*`, `home.pillar1_price`, `home.metric4_num`) → upsert in Supabase `stolkwebdesign_content`. Per 03-06-2026 stonden er 0 `home`-rijen, dus HTML is leidend tot Peter via admin opslaat.
 

@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Modules — Stolkwebdesign | CMS, Factuur, Social, SEO & Blog</title>
-<meta name="description" content="Vijf modules bovenop je Stolkwebdesign-website: CMS-basis, Factuur-tool, Social Campagnes, SEO Rapport en Blog. Eén login, één factuur, één designtaal. Early-access tarief 2026.">
+<meta name="description" content="Vijf modules op je eigen Basis CMS: Content, Factuur-tool, Social Campagnes, SEO Rapport en Blog. Eén login, één factuur, één designtaal. Early-access tarief 2026.">
 <meta name="keywords" content="website CMS, social media tool, SEO rapport, factuur tool, blog publiceren, Stolkwebdesign modules">
 <meta property="og:title" content="Modules — Stolkwebdesign | Eén platform, vijf modules">
-<meta property="og:description" content="CMS, facturatie, social, SEO en blog. Onder één login, op je eigen domein. Early-access tarief 2026.">
+<meta property="og:description" content="Content, facturatie, social, SEO en blog — op je eigen Basis CMS. Onder één login, op je eigen domein. Early-access tarief 2026.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.stolkwebdesign.nl/modules.html">
 <meta property="og:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
@@ -214,8 +214,14 @@ nav {
 }
 .module-strip-inner {
   max-width: 1400px; margin: 0 auto;
-  display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px;
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px;
 }
+.strip-card.fundering { background: var(--near-black); color: var(--white); }
+.strip-card.fundering .strip-card-name { color: var(--white); }
+.strip-card.fundering .strip-card-price strong { color: var(--white); }
+.strip-card.fundering:hover { box-shadow: 4px 4px 0 0 var(--red); }
+.strip-status.req { color: var(--red); }
+.strip-status.req::before { background: var(--red); }
 .strip-card {
   background: var(--white);
   border: 2px solid var(--black);
@@ -286,6 +292,7 @@ nav {
 }
 .badge.muted { background: var(--black); color: var(--white); }
 .badge.dark-bg { background: var(--white); color: var(--black); }
+.badge.dep { background: transparent; color: var(--red); border: 1px solid var(--red); }
 .module-title {
   font-family: 'Archivo Black', sans-serif;
   font-size: clamp(34px, 4.2vw, 56px);
@@ -677,7 +684,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       Eén platform —<br>vijf <span class="red">modules.</span>
     </h1>
     <p class="hero-sub" data-content-html="modules.hero_sub">
-      Modules die <strong>losse SaaS-abonnementen vervangen</strong>. CMS, facturatie, social-campagnes, SEO en blog — gebouwd boven op je Stolkwebdesign-website, gefactureerd zoals je dat zelf wil. Geen plugin-hel. Geen ticketsysteem.
+      Modules die <strong>losse SaaS-abonnementen vervangen</strong>. Content, facturatie, social-campagnes, SEO en blog — op je eigen Basis CMS, gefactureerd zoals je dat zelf wil. Geen plugin-hel. Geen ticketsysteem.
     </p>
     <div class="hero-ctas">
       <a href="#strip" class="btn-primary">
@@ -694,13 +701,21 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <!-- MODULE STRIP (TOC) -->
 <section class="module-strip" id="strip">
   <div class="module-strip-inner">
-    <a href="#cms" class="strip-card">
+    <a href="#basis" class="strip-card fundering">
+      <div class="strip-card-head">
+        <span class="strip-card-num font-mono">Fundering</span>
+        <span class="strip-status req">Vereist</span>
+      </div>
+      <div class="strip-card-name">Basis CMS</div>
+      <div class="strip-card-price font-mono">vanaf <strong>€149</strong></div>
+    </a>
+    <a href="#content" class="strip-card">
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 01</span>
         <span class="strip-status">Live</span>
       </div>
-      <div class="strip-card-name">CMS-basis</div>
-      <div class="strip-card-price font-mono">vanaf <strong>€499</strong></div>
+      <div class="strip-card-name">Content</div>
+      <div class="strip-card-price font-mono">vanaf <strong>€99</strong></div>
     </a>
     <a href="#factuur" class="strip-card">
       <div class="strip-card-head">
@@ -737,17 +752,70 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   </div>
 </section>
 
-<!-- MODULE 01 — CMS -->
-<section class="module-section" id="cms">
+<!-- FUNDERING — BASIS CMS -->
+<section class="module-section dark" id="basis">
+  <div class="module-inner">
+    <div class="reveal">
+      <div class="module-meta">
+        <span class="module-meta-num">Fundering</span>
+        <span class="badge dark-bg">Vereist voor modules</span>
+      </div>
+      <h2 class="module-title" data-content-html="modules.basis_title">Basis CMS<br><span class="red">— het platform.</span></h2>
+      <p class="module-lead" data-content="modules.basis_lead">
+        Je eigen login en beveiligd dashboard op jouwsite.nl/cms. De fundering waar elke module op draait — je activeert 'm één keer, daarna klik je modules erbij. Geen dubbele basiskosten.
+      </p>
+      <div class="feature-list">
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Je eigen beveiligde login op jouwsite.nl/cms.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén dashboard voor al je modules — geen losse tools of logins.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén keer activeren; elke module klikt erop, zonder de basis opnieuw te betalen.</span></div>
+        <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Geen "powered by", geen subdomein — alles op je eigen domein.</span></div>
+      </div>
+      <div class="module-pricing">
+        <div class="price-main"><span data-content="modules.basis_price">€149</span><span style="font-size:14px;color:rgba(255,255,255,.5);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> eenmalig</span></div>
+        <div class="price-tag" data-content="modules.basis_pricetag">— Eén keer, daarna klik je modules erbij</div>
+      </div>
+      <button class="btn-primary module-cta" data-waitlist data-module="basis">
+        Op de wachtlijst
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+    <div class="module-visual reveal" style="transition-delay:.1s">
+      <div class="visual-frame">
+        <div class="visual-bar">
+          <span>jouwsite.nl / cms</span>
+          <span class="visual-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="visual-body">
+          <div class="cms-field">
+            <div class="cms-field-label">Ingelogd als</div>
+            <div class="cms-field-input">Jouw bedrijf — /cms</div>
+          </div>
+          <div class="cms-field editing">
+            <div class="cms-field-label">Modules</div>
+            <div class="cms-field-input">Content · Factuur · Social · SEO · Blog</div>
+          </div>
+          <div class="cms-field">
+            <div class="cms-field-label">Status</div>
+            <div class="cms-field-input">Basis actief — klik een module erbij</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 01 — CONTENT -->
+<section class="module-section" id="content">
   <div class="module-inner">
     <div class="reveal">
       <div class="module-meta">
         <span class="module-meta-num">Module / 01</span>
         <span class="badge">Early access 2026</span>
+        <span class="badge dep">Draait op Basis CMS</span>
       </div>
-      <h2 class="module-title" data-content-html="modules.cms_title">CMS-basis<br><span class="red">— content & foto's.</span></h2>
-      <p class="module-lead" data-content="modules.cms_lead">
-        Eén login. Pas teksten en foto's aan op elke pagina van je site — zonder technisch inzicht, zonder externe partij, direct live.
+      <h2 class="module-title" data-content-html="modules.content_title">Content<br><span class="red">— teksten & foto's.</span></h2>
+      <p class="module-lead" data-content="modules.content_lead">
+        Pas teksten en foto's aan op elke pagina van je site — zonder technisch inzicht, zonder externe partij, direct live. Schaalt mee met het aantal pagina's dat je zelf wilt beheren.
       </p>
       <div class="feature-list">
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Alle teksten per pagina-locatie bewerkbaar (Hero, Over, Diensten, Contact).</span></div>
@@ -756,10 +824,10 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén factuur, geen losse plugin-abonnementen.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.cms_price">€499</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> eenmalig</span></div>
-        <div class="price-tag" data-content="modules.cms_pricetag">— Activatie + onbeperkt bewerken</div>
+        <div class="price-main"><span data-content="modules.content_price">€99</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> homepage</span></div>
+        <div class="price-tag" data-content="modules.content_pageprice">+ €49 per extra pagina</div>
       </div>
-      <button class="btn-primary module-cta" data-waitlist data-module="cms">
+      <button class="btn-primary module-cta" data-waitlist data-module="content">
         Op de wachtlijst
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
       </button>
@@ -799,6 +867,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="module-meta">
         <span class="module-meta-num">Module / 02</span>
         <span class="badge">Early access 2026</span>
+        <span class="badge dep">Draait op Basis CMS</span>
       </div>
       <h2 class="module-title" data-content-html="modules.factuur_title">Factuur-tool<br><span class="red">— A4, PDF, klaar.</span></h2>
       <p class="module-lead" data-content="modules.factuur_lead">
@@ -862,6 +931,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="module-meta">
         <span class="module-meta-num">Module / 03</span>
         <span class="badge dark-bg">Early access 2026</span>
+        <span class="badge dep">Draait op Basis CMS</span>
       </div>
       <h2 class="module-title" data-content-html="modules.social_title">Social Campagnes<br><span class="red">— vier formaten, één klik.</span></h2>
       <p class="module-lead" data-content="modules.social_lead">
@@ -916,6 +986,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="module-meta">
         <span class="module-meta-num">Module / 04</span>
         <span class="badge">Early access 2026</span>
+        <span class="badge muted">Los te bestellen</span>
       </div>
       <h2 class="module-title" data-content-html="modules.seo_title">SEO Rapport<br><span class="red">+ actiepunten.</span></h2>
       <p class="module-lead" data-content="modules.seo_lead">
@@ -986,6 +1057,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="module-meta">
         <span class="module-meta-num">Module / 05</span>
         <span class="badge muted">Beschikbaar Q3 2026</span>
+        <span class="badge dep">Draait op Basis CMS</span>
       </div>
       <h2 class="module-title" data-content-html="modules.blog_title">Blog —<br><span class="red">long-tail SEO.</span></h2>
       <p class="module-lead" data-content="modules.blog_lead">
@@ -1068,8 +1140,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     </div>
     <div class="faq-list">
       <details class="faq-item">
-        <summary><span data-content="modules.faq1_q">Kan ik losse modules kopen?</span><span class="faq-toggle">+</span></summary>
-        <div class="faq-body" data-content="modules.faq1_a">Ja. Elke module is los te activeren. Je hoeft niet eerst CMS-basis te kopen om bijvoorbeeld het SEO-rapport te bestellen. De modules werken naadloos samen, maar staan ook op zichzelf.</div>
+        <summary><span data-content="modules.faq1_q">Heb ik de Basis CMS altijd nodig?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body" data-content="modules.faq1_a">De Basis CMS (€149) is de fundering: je eigen login en dashboard. Die activeer je één keer. Daarna klik je modules erbij — Content, Factuur, Social, Blog — zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS.</div>
       </details>
       <details class="faq-item">
         <summary><span data-content="modules.faq2_q">Werkt dit ook zonder een Stolkwebdesign-website?</span><span class="faq-toggle">+</span></summary>
@@ -1077,7 +1149,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       </details>
       <details class="faq-item">
         <summary><span data-content="modules.faq3_q">Wanneer kan ik beginnen?</span><span class="faq-toggle">+</span></summary>
-        <div class="faq-body" data-content="modules.faq3_a">CMS-basis, Factuur, Social en SEO zijn vanaf zomer 2026 beschikbaar voor early-access-klanten. Blog volgt in Q3 2026. Wachtlijst-aanmeldingen krijgen voorrang en behouden het early-access tarief, ook na de officiële launch.</div>
+        <div class="faq-body" data-content="modules.faq3_a">Basis CMS, Content, Factuur, Social en SEO zijn vanaf zomer 2026 beschikbaar voor early-access-klanten. Blog volgt in Q3 2026. Wachtlijst-aanmeldingen krijgen voorrang en behouden het early-access tarief, ook na de officiële launch.</div>
       </details>
       <details class="faq-item">
         <summary><span data-content="modules.faq4_q">Wat als ik na een jaar wil stoppen?</span><span class="faq-toggle">+</span></summary>
@@ -1136,7 +1208,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <div>
       <div class="footer-col-label font-mono">Modules</div>
       <ul class="footer-links">
-        <li><a href="modules.html#cms">CMS-basis</a></li>
+        <li><a href="modules.html#basis">Basis CMS</a></li>
+        <li><a href="modules.html#content">Content</a></li>
         <li><a href="modules.html#factuur">Factuur-tool</a></li>
         <li><a href="modules.html#social">Social Campagnes</a></li>
         <li><a href="modules.html#seo">SEO Rapport</a></li>
@@ -1193,7 +1266,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="form-group">
           <label class="form-label">Welke modules interesseren je? *</label>
           <div class="module-checks" id="wl-modules">
-            <label class="module-check"><input type="checkbox" value="cms"> CMS-basis</label>
+            <label class="module-check"><input type="checkbox" value="basis"> Basis CMS</label>
+            <label class="module-check"><input type="checkbox" value="content"> Content</label>
             <label class="module-check"><input type="checkbox" value="factuur"> Factuur</label>
             <label class="module-check"><input type="checkbox" value="social"> Social</label>
             <label class="module-check"><input type="checkbox" value="seo"> SEO</label>

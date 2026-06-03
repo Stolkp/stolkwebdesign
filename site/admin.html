@@ -1027,13 +1027,19 @@ const CONTENT_PAGES = [
     { title: 'Hero', fields: [
       T('modules.hero_eyebrow', 'Labeltekst', 'Modules / 03 — Early access 2026'),
       H('modules.hero_heading', 'Kop', 'Eén platform —<br>vijf <span class="red">modules.</span>'),
-      H('modules.hero_sub', 'Subtekst', 'Modules die <strong>losse SaaS-abonnementen vervangen</strong>. CMS, facturatie, social-campagnes, SEO en blog — gebouwd boven op je Stolkwebdesign-website, gefactureerd zoals je dat zelf wil. Geen plugin-hel. Geen ticketsysteem.'),
+      H('modules.hero_sub', 'Subtekst', 'Modules die <strong>losse SaaS-abonnementen vervangen</strong>. Content, facturatie, social-campagnes, SEO en blog — op je eigen Basis CMS, gefactureerd zoals je dat zelf wil. Geen plugin-hel. Geen ticketsysteem.'),
     ]},
-    { title: 'Module 1 — CMS', fields: [
-      H('modules.cms_title', 'Titel', 'CMS-basis<br><span class="red">— content &amp; foto\'s.</span>'),
-      A('modules.cms_lead', 'Tekst', 'Eén login. Pas teksten en foto\'s aan op elke pagina van je site — zonder technisch inzicht, zonder externe partij, direct live.'),
-      T('modules.cms_price', 'Prijs (getal)', '€499'),
-      T('modules.cms_pricetag', 'Prijs — bijschrift', '— Activatie + onbeperkt bewerken'),
+    { title: 'Fundering — Basis CMS', fields: [
+      H('modules.basis_title', 'Titel', 'Basis CMS<br><span class="red">— het platform.</span>'),
+      A('modules.basis_lead', 'Tekst', 'Je eigen login en beveiligd dashboard op jouwsite.nl/cms. De fundering waar elke module op draait — je activeert \'m één keer, daarna klik je modules erbij. Geen dubbele basiskosten.'),
+      T('modules.basis_price', 'Prijs (getal)', '€149'),
+      T('modules.basis_pricetag', 'Prijs — bijschrift', '— Eén keer, daarna klik je modules erbij'),
+    ]},
+    { title: 'Module 1 — Content', fields: [
+      H('modules.content_title', 'Titel', 'Content<br><span class="red">— teksten & foto\'s.</span>'),
+      A('modules.content_lead', 'Tekst', 'Pas teksten en foto\'s aan op elke pagina van je site — zonder technisch inzicht, zonder externe partij, direct live. Schaalt mee met het aantal pagina\'s dat je zelf wilt beheren.'),
+      T('modules.content_price', 'Prijs (getal)', '€99'),
+      T('modules.content_pageprice', 'Prijs — bijschrift', '+ €49 per extra pagina'),
     ]},
     { title: 'Module 2 — Factuur', fields: [
       H('modules.factuur_title', 'Titel', 'Factuur-tool<br><span class="red">— A4, PDF, klaar.</span>'),
@@ -1072,12 +1078,12 @@ const CONTENT_PAGES = [
     { title: 'Veelgestelde vragen', fields: [
       T('modules.faq_label', 'Sectielabel', 'Veelgestelde vragen / —'),
       H('modules.faq_heading', 'Kop', 'Eerlijke antwoorden,<br>geen <span class="red">marketingpraat.</span>'),
-      T('modules.faq1_q', 'Vraag 1', 'Kan ik losse modules kopen?'),
-      A('modules.faq1_a', 'Antwoord 1', 'Ja. Elke module is los te activeren. Je hoeft niet eerst CMS-basis te kopen om bijvoorbeeld het SEO-rapport te bestellen. De modules werken naadloos samen, maar staan ook op zichzelf.'),
+      T('modules.faq1_q', 'Vraag 1', 'Heb ik de Basis CMS altijd nodig?'),
+      A('modules.faq1_a', 'Antwoord 1', 'De Basis CMS (€149) is de fundering: je eigen login en dashboard. Die activeer je één keer. Daarna klik je modules erbij — Content, Factuur, Social, Blog — zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS.'),
       T('modules.faq2_q', 'Vraag 2', 'Werkt dit ook zonder een Stolkwebdesign-website?'),
       A('modules.faq2_a', 'Antwoord 2', 'Op termijn ja. Op dit moment zijn de modules ontworpen voor websites die door Stolkwebdesign zijn gebouwd, omdat de embed-route en het design-systeem standaard zijn ingebakken. Vanaf Q3 2026 komt er een variant voor bestaande sites — meld je aan op de wachtlijst om als eerste te horen wanneer.'),
       T('modules.faq3_q', 'Vraag 3', 'Wanneer kan ik beginnen?'),
-      A('modules.faq3_a', 'Antwoord 3', 'CMS-basis, Factuur, Social en SEO zijn vanaf zomer 2026 beschikbaar voor early-access-klanten. Blog volgt in Q3 2026. Wachtlijst-aanmeldingen krijgen voorrang en behouden het early-access tarief, ook na de officiële launch.'),
+      A('modules.faq3_a', 'Antwoord 3', 'Basis CMS, Content, Factuur, Social en SEO zijn vanaf zomer 2026 beschikbaar voor early-access-klanten. Blog volgt in Q3 2026. Wachtlijst-aanmeldingen krijgen voorrang en behouden het early-access tarief, ook na de officiële launch.'),
       T('modules.faq4_q', 'Vraag 4', 'Wat als ik na een jaar wil stoppen?'),
       A('modules.faq4_a', 'Antwoord 4', 'Je activatie-fee is eenmalig, geen abonnement. Stoppen kan op elk moment — je betaalt simpelweg geen per-use bedragen meer. Je content en factuur-gegevens kun je altijd exporteren.'),
       T('modules.faq5_q', 'Vraag 5', 'Kan ik mijn eigen domeinnaam gebruiken?'),

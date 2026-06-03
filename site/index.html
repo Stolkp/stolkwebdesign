@@ -356,7 +356,7 @@ nav {
   max-width: 620px;
 }
 .modules-row {
-  display: grid; grid-template-columns: repeat(5, 1fr);
+  display: grid; grid-template-columns: repeat(6, 1fr);
   border: 2px solid var(--black);
   background: var(--white);
   margin-bottom: 36px;
@@ -418,8 +418,7 @@ nav {
   .modules-row { grid-template-columns: 1fr 1fr; }
   .module-mini { border-right: 2px solid var(--black); border-bottom: 2px solid var(--black); }
   .module-mini:nth-child(2n) { border-right: none; }
-  .module-mini:nth-child(5) { border-right: none; grid-column: 1 / -1; }
-  .module-mini:nth-last-child(-n+2):nth-child(even) { border-bottom: none; }
+  .module-mini:nth-last-child(-n+2) { border-bottom: none; }
   .module-mini:last-child { border-bottom: none; }
 }
 
@@ -866,7 +865,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <ul class="pkg-list">
           <li>Alles uit Onderneem</li>
           <li>Tot 7 pagina's op maat</li>
-          <li>CMS-basis inbegrepen</li>
+          <li>Basis CMS + Content inbegrepen</li>
           <li>Voorrang in de planning</li>
         </ul>
         <a class="pkg-cta" href="contact.html">Plan een gesprek</a>
@@ -902,17 +901,25 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="section-label" data-content="home.modules_label">Add-on modules / 02b</div>
       <h2 class="section-heading" data-content-html="home.modules_heading">Niet alleen een website —<br><span class="red">een platform.</span></h2>
       <p class="modules-teaser-lead" data-content="home.modules_lead">
-        Vijf modules die SaaS-stapeling vervangen. CMS, facturatie, social-campagnes, SEO en blog — onder één login, op je eigen domein. Early-access tarief 2026.
+        Een platform met modules. De Basis CMS is de fundering — Content, facturatie, social, SEO en blog klik je erbij, onder één login op je eigen domein. Early-access tarief 2026.
       </p>
     </div>
     <div class="modules-row reveal" style="transition-delay:.1s">
-      <a href="modules.html#cms" class="module-mini">
+      <a href="modules.html#basis" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">Fundering</span>
+          <span class="module-mini-dot">Live</span>
+        </div>
+        <div class="module-mini-name">Basis CMS</div>
+        <div class="module-mini-price">vanaf <strong>€149</strong></div>
+      </a>
+      <a href="modules.html#content" class="module-mini">
         <div class="module-mini-head">
           <span class="module-mini-num">/ 01</span>
           <span class="module-mini-dot">Live</span>
         </div>
-        <div class="module-mini-name">CMS-basis</div>
-        <div class="module-mini-price">vanaf <strong>€499</strong></div>
+        <div class="module-mini-name">Content</div>
+        <div class="module-mini-price">vanaf <strong>€99</strong></div>
       </a>
       <a href="modules.html#factuur" class="module-mini">
         <div class="module-mini-head">
