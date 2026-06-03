@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>SEO Strategy Report — stolkwebdesign.nl</title>
+<script src="/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async () => {
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) window.location.replace('/seo/');
+})();
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root{
+    --black:#0A0A0A; --card:#111; --card2:#0e0e0e; --border:#1f1f1f; --border-h:#333;
+    --white:#fff; --red:#EA2525; --muted:#8a8a8a; --dim:#5a5a5a;
+    --green:#22c55e; --green-bg:rgba(34,197,94,.12); --green-bd:rgba(34,197,94,.3);
+    --yellow:#eab308; --yellow-bg:rgba(234,179,8,.12); --yellow-bd:rgba(234,179,8,.3);
+    --orange:#f97316; --orange-bg:rgba(249,115,22,.12); --orange-bd:rgba(249,115,22,.3);
+    --redb:#EA2525; --red-bg:rgba(234,37,37,.12); --red-bd:rgba(234,37,37,.3);
+  }
+  body{ background:var(--black); color:var(--white); font-family:'Space Grotesk',sans-serif; line-height:1.6; }
+  .font-display{ font-family:'Archivo Black',sans-serif; }
+  .font-mono{ font-family:'JetBrains Mono',monospace; }
+  .container{ max-width:1180px; margin:0 auto; padding:0 24px; }
+  a{ color:var(--red); }
+
+  .header{ padding:56px 0 24px; border-bottom:2px solid var(--border); }
+  .badge-top{ display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.25em; color:var(--muted); border:1px solid var(--border); padding:6px 12px; margin-bottom:20px; }
+  .badge-top .dot{ width:7px; height:7px; background:var(--red); }
+  .header h1{ font-family:'Archivo Black',sans-serif; font-size:clamp(34px,5vw,60px); text-transform:uppercase; letter-spacing:-.03em; line-height:.95; }
+  .header h1 span{ color:var(--red); }
+  .header .sub{ color:var(--muted); font-size:15px; margin-top:14px; font-family:'JetBrains Mono',monospace; letter-spacing:.04em; }
+
+  .score-section{ display:flex; gap:44px; align-items:center; padding:40px; background:var(--card); border:2px solid var(--border); margin:36px 0; box-shadow:12px 12px 0 0 rgba(234,37,37,.15); }
+  .score-circle{ position:relative; width:170px; height:170px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .score-circle svg{ position:absolute; inset:0; transform:rotate(-90deg); width:100%; height:100%; }
+  .score-circle circle{ fill:none; stroke-width:8; }
+  .score-circle .bg-ring{ stroke:#222; }
+  .score-circle .prog{ stroke:var(--red); stroke-dasharray:502; stroke-dashoffset:126; }
+  .score-num{ font-family:'Archivo Black',sans-serif; font-size:52px; line-height:1; }
+  .score-grade{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); letter-spacing:.2em; margin-top:4px; }
+  .score-label{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--dim); text-transform:uppercase; letter-spacing:.2em; }
+  .score-details h2{ font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-.02em; margin-bottom:10px; }
+  .score-details p{ color:var(--muted); font-size:14.5px; margin-bottom:20px; }
+  .subs{ display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+  .sub{ background:var(--card2); border:1px solid var(--border); padding:12px 14px; }
+  .sub-l{ font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.12em; color:var(--dim); margin-bottom:6px; }
+  .sub-v{ font-family:'Archivo Black',sans-serif; font-size:24px; }
+  .sub-bar{ height:4px; background:#222; margin-top:8px; }
+  .sub-bar i{ display:block; height:100%; }
+
+  .tabs{ position:sticky; top:0; z-index:50; background:rgba(10,10,10,.95); border-bottom:2px solid var(--border); backdrop-filter:blur(8px); }
+  .tabs-inner{ max-width:1180px; margin:0 auto; padding:0 24px; display:flex; gap:0; overflow-x:auto; }
+  .tab-btn{ padding:15px 20px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--dim); background:none; border:none; border-bottom:3px solid transparent; cursor:pointer; white-space:nowrap; }
+  .tab-btn:hover{ color:var(--white); }
+  .tab-btn.active{ color:var(--white); border-bottom-color:var(--red); }
+  .tab-content{ display:none; padding:40px 0 90px; }
+  .tab-content.active{ display:block; }
+
+  .section-title{ font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-.02em; margin-bottom:6px; }
+  .section-sub{ color:var(--muted); font-size:14px; margin-bottom:24px; font-family:'JetBrains Mono',monospace; letter-spacing:.03em; }
+
+  .stats{ display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:36px; }
+  .stat{ background:var(--card); border:1px solid var(--border); padding:20px 16px; text-align:center; }
+  .stat-v{ font-family:'Archivo Black',sans-serif; font-size:30px; }
+  .stat-l{ font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-top:4px; }
+
+  .card{ background:var(--card); border:1px solid var(--border); padding:26px; margin-bottom:16px; }
+  .card-title{ font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; letter-spacing:-.01em; margin-bottom:16px; }
+
+  .badge{ display:inline-flex; align-items:center; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; padding:3px 9px; text-transform:uppercase; letter-spacing:.06em; border:1px solid; }
+  .b-crit{ background:var(--red-bg); color:var(--red); border-color:var(--red-bd); }
+  .b-high{ background:var(--orange-bg); color:var(--orange); border-color:var(--orange-bd); }
+  .b-med{ background:var(--yellow-bg); color:var(--yellow); border-color:var(--yellow-bd); }
+  .b-low{ background:var(--green-bg); color:var(--green); border-color:var(--green-bd); }
+  .b-pass{ background:var(--green-bg); color:var(--green); border-color:var(--green-bd); }
+  .b-warn{ background:var(--yellow-bg); color:var(--yellow); border-color:var(--yellow-bd); }
+  .b-fail{ background:var(--red-bg); color:var(--red); border-color:var(--red-bd); }
+
+  .finding{ display:grid; grid-template-columns:auto 1fr auto; gap:14px; padding:16px 0; border-bottom:1px solid var(--border); align-items:start; }
+  .finding:last-child{ border-bottom:none; }
+  .fdot{ width:9px; height:9px; margin-top:7px; }
+  .fdot.pass{ background:var(--green); } .fdot.warn{ background:var(--yellow); } .fdot.fail{ background:var(--red); }
+  .finding h4{ font-size:14.5px; margin-bottom:4px; }
+  .finding p{ font-size:13px; color:var(--muted); }
+  .frec{ margin-top:8px; padding:9px 13px; background:rgba(234,37,37,.06); border-left:3px solid var(--red); font-size:13px; }
+
+  table{ width:100%; border-collapse:collapse; }
+  th{ text-align:left; padding:11px 14px; font-family:'JetBrains Mono',monospace; font-size:9.5px; text-transform:uppercase; letter-spacing:.12em; color:var(--dim); border-bottom:2px solid var(--border); }
+  td{ padding:11px 14px; font-size:13.5px; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:hover td{ background:rgba(255,255,255,.02); }
+  .url{ font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--red); }
+
+  .action{ display:flex; gap:18px; align-items:flex-start; background:var(--card); border:1px solid var(--border); padding:22px; margin-bottom:12px; }
+  .action-n{ font-family:'Archivo Black',sans-serif; font-size:22px; color:var(--red); opacity:.5; width:30px; text-align:center; flex-shrink:0; }
+  .action-t{ font-weight:700; font-size:15px; margin-bottom:5px; }
+  .action-d{ font-size:13.5px; color:var(--muted); }
+  .action-i{ font-size:12.5px; color:var(--green); margin-top:7px; font-family:'JetBrains Mono',monospace; }
+  .check{ display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+  .check:last-child{ border-bottom:none; }
+  .ci{ width:20px; height:20px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; border:1px solid; margin-top:1px; }
+  .ci.pass{ background:var(--green-bg); color:var(--green); border-color:var(--green-bd); }
+  .ci.fail{ background:var(--red-bg); color:var(--red); border-color:var(--red-bd); }
+  .ci.warn{ background:var(--yellow-bg); color:var(--yellow); border-color:var(--yellow-bd); }
+  .check-t{ font-size:13.5px; }
+  .kw{ display:inline-block; font-family:'JetBrains Mono',monospace; font-size:11.5px; padding:3px 9px; border:1px solid var(--border); margin:2px 3px 2px 0; color:var(--muted); }
+  .grp-title{ font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--red); margin:28px 0 12px; }
+
+  @media(max-width:860px){
+    .score-section{ flex-direction:column; text-align:center; }
+    .subs{ grid-template-columns:repeat(2,1fr); }
+    .stats{ grid-template-columns:repeat(2,1fr); }
+    .finding{ grid-template-columns:auto 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="badge-top font-mono"><span class="dot"></span> SEO Strategie Rapport</div>
+    <h1 class="font-display">Stolkwebdesign<span>.nl</span></h1>
+    <div class="sub">Site-brede SEO-audit · 5 pagina's + blog · gegenereerd 3 juni 2026</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="score-section">
+    <div class="score-circle">
+      <svg viewBox="0 0 160 160"><circle class="bg-ring" cx="80" cy="80" r="74"/><circle class="prog" cx="80" cy="80" r="74"/></svg>
+      <div class="score-num font-display">75</div>
+      <div class="score-grade font-mono">GRADE B</div>
+      <div class="score-label font-mono">Algeheel</div>
+    </div>
+    <div class="score-details">
+      <h2 class="font-display">Sterke nieuwe site — één technische blokkade houdt 'm tegen.</h2>
+      <p>De rebuild staat technisch en inhoudelijk goed: schone HTML, unieke titels, sterke teksten en een logische structuur. De grootste rem op je rankings is dat het domein <strong>stolkwebdesign.nl</strong> nog niet aan de live site is gekoppeld — al je canonicals, OG-tags en de sitemap wijzen naar een host die (nog) niet resolvt. Koppel het domein en voeg JSON-LD schema toe, dan tilt dit rapport zichzelf richting de 85+.</p>
+      <div class="subs">
+        <div class="sub"><div class="sub-l">Technisch</div><div class="sub-v" style="color:var(--yellow)">70</div><div class="sub-bar"><i style="width:70%;background:var(--yellow)"></i></div></div>
+        <div class="sub"><div class="sub-l">Content</div><div class="sub-v" style="color:var(--green)">80</div><div class="sub-bar"><i style="width:80%;background:var(--green)"></i></div></div>
+        <div class="sub"><div class="sub-l">Structuur</div><div class="sub-v" style="color:var(--yellow)">78</div><div class="sub-bar"><i style="width:78%;background:var(--yellow)"></i></div></div>
+        <div class="sub"><div class="sub-l">Cross-page</div><div class="sub-v" style="color:var(--green)">85</div><div class="sub-bar"><i style="width:85%;background:var(--green)"></i></div></div>
+        <div class="sub"><div class="sub-l">Social &amp; Schema</div><div class="sub-v" style="color:var(--orange)">62</div><div class="sub-bar"><i style="width:62%;background:var(--orange)"></i></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn active" onclick="sw(event,'samenvatting')">Samenvatting</button>
+    <button class="tab-btn" onclick="sw(event,'paginas')">Pagina's</button>
+    <button class="tab-btn" onclick="sw(event,'sitebreed')">Site-breed</button>
+    <button class="tab-btn" onclick="sw(event,'technisch')">Technisch</button>
+    <button class="tab-btn" onclick="sw(event,'content')">Content &amp; Keywords</button>
+    <button class="tab-btn" onclick="sw(event,'actieplan')">Actieplan</button>
+  </div>
+</div>
+
+<!-- SAMENVATTING -->
+<div id="t-samenvatting" class="tab-content active"><div class="container">
+  <div class="section-title font-display">Samenvatting</div>
+  <div class="section-sub font-mono">Overzicht van de SEO-gezondheid en de belangrijkste prioriteiten</div>
+  <div class="stats">
+    <div class="stat"><div class="stat-v font-display">5</div><div class="stat-l">Pagina's</div></div>
+    <div class="stat"><div class="stat-v font-display" style="color:var(--red)">1</div><div class="stat-l">Kritiek</div></div>
+    <div class="stat"><div class="stat-v font-display" style="color:var(--orange)">2</div><div class="stat-l">Hoog</div></div>
+    <div class="stat"><div class="stat-v font-display" style="color:var(--yellow)">6</div><div class="stat-l">Waarschuwingen</div></div>
+    <div class="stat"><div class="stat-v font-display">20%</div><div class="stat-l">Schema-dekking</div></div>
+    <div class="stat"><div class="stat-v font-display">HTTPS</div><div class="stat-l">+ HSTS ✓</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title font-display">Belangrijkste bevindingen</div>
+    <p style="color:var(--muted); font-size:14.5px; line-height:1.8;">
+      De site draait op <strong>stolkwebdesign.vercel.app</strong>, maar elke canonical-tag, Open-Graph-URL én de sitemap verwijzen naar <strong>www.stolkwebdesign.nl</strong> — een domein dat nog niet is gekoppeld. Hierdoor kan Google de "officiële" URL's niet bereiken en raakt de indexering versnipperd. Verder staat er <strong>alleen op de homepage</strong> gestructureerde data (JSON-LD); Over, Contact, Modules en Portfolio missen schema volledig. Drie meta-descriptions zijn langer dan 160 tekens (worden afgekapt in Google), en de Modules-pagina heeft een afwijkende canonical (<span class="font-mono">/modules.html</span> i.p.v. <span class="font-mono">/modules</span>) plus ontbrekende Twitter-cards. De inhoud zelf is sterk: unieke titels, één H1 per pagina, goede tekstlengtes en nette interne links.
+    </p>
+  </div>
+
+  <div class="section-title font-display" style="font-size:17px; margin-top:30px;">Top 3 prioriteiten</div>
+  <div class="section-sub font-mono">De hoogste impact, nu oppakken</div>
+  <div class="action"><div class="action-n font-display">1</div><div><div class="action-t">Koppel het domein stolkwebdesign.nl aan de live site</div><div class="action-d">Stel de DNS in (A-record 76.76.21.21 + CNAME cname.vercel-dns.com) en voeg het domein toe in Vercel → Settings → Domains. Daarna kloppen canonicals, OG-URL's en sitemap pas met een bereikbare host.</div><div class="action-i">Impact: zonder dit blijft elke andere optimalisatie half werk</div></div><span class="badge b-crit">Kritiek</span></div>
+  <div class="action"><div class="action-n font-display">2</div><div><div class="action-t">Voeg JSON-LD schema toe op alle pagina's</div><div class="action-d">Homepage: Organization + WebSite (met SearchAction). Over: Person (Peter Stolk). Diensten/Modules: Service / Offer. Alle pagina's: BreadcrumbList. Nu staat er enkel iets op de homepage.</div><div class="action-i">Impact: rich results + sterkere entity-herkenning door Google</div></div><span class="badge b-high">Hoog</span></div>
+  <div class="action"><div class="action-n font-display">3</div><div><div class="action-t">Maak portfolio-content statisch leesbaar</div><div class="action-d">De portfolio-kaarten worden client-side uit Supabase geladen — ze staan niet in de initiële HTML, dus Google ziet een vrijwel lege pagina. Render de projecten statisch (build-time) of zet een server-side fallback.</div><div class="action-i">Impact: portfolio gaat meetellen voor "custom webdesign / portfolio" queries</div></div><span class="badge b-high">Hoog</span></div>
+</div></div>
+
+<!-- PAGINA'S -->
+<div id="t-paginas" class="tab-content"><div class="container">
+  <div class="section-title font-display">Pagina-analyse</div>
+  <div class="section-sub font-mono">Per gecrawlde pagina: titel, meta, H1, schema en OG</div>
+  <div class="card" style="padding:0; overflow-x:auto;">
+    <table>
+      <thead><tr><th>Pagina</th><th>Titel (lengte)</th><th>Meta desc</th><th>H1</th><th>Schema</th><th>OG</th><th>Issues</th></tr></thead>
+      <tbody>
+        <tr><td><span class="url">/</span></td><td>Website laten bouwen — Peter Stolk… (54)</td><td><span class="badge b-warn">194 tkns</span></td><td><span class="badge b-pass">1</span></td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">7</span></td><td>2</td></tr>
+        <tr><td><span class="url">/over</span></td><td>Over Peter Stolk — Webdesigner… (40)</td><td><span class="badge b-pass">OK</span></td><td><span class="badge b-pass">1</span></td><td><span class="badge b-fail">Geen</span></td><td><span class="badge b-pass">7</span></td><td>2</td></tr>
+        <tr><td><span class="url">/contact</span></td><td>Contact — Peter Stolk Webdesign… (49)</td><td><span class="badge b-warn">163 tkns</span></td><td><span class="badge b-pass">1</span></td><td><span class="badge b-fail">Geen</span></td><td><span class="badge b-pass">7</span></td><td>2</td></tr>
+        <tr><td><span class="url">/modules</span></td><td>Modules — Stolkwebdesign | CMS… (59)</td><td><span class="badge b-warn">182 tkns</span></td><td><span class="badge b-pass">1</span></td><td><span class="badge b-fail">Geen</span></td><td><span class="badge b-warn">5</span></td><td>3</td></tr>
+        <tr><td><span class="url">/portfolio</span></td><td>Portfolio — Peter Stolk Webdesign… (43)</td><td><span class="badge b-warn">162 tkns</span></td><td><span class="badge b-pass">1</span></td><td><span class="badge b-fail">Geen</span></td><td><span class="badge b-pass">7</span></td><td>2</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title font-display">Terugkerende issues per pagina</div>
+    <div class="finding"><div class="fdot fail"></div><div><h4>Canonical wijst naar niet-gekoppeld domein</h4><p>Alle pagina's: <span class="font-mono">canonical</span> → www.stolkwebdesign.nl (nog niet live).</p><div class="frec">Koppel het domein; dan resolveren de canonicals correct. Tot die tijd indexeert Google de vercel.app-host of niets.</div></div><span class="badge b-high">Hoog</span></div>
+    <div class="finding"><div class="fdot fail"></div><div><h4>Geen JSON-LD op 4 van de 5 pagina's</h4><p>Alleen de homepage heeft gestructureerde data.</p><div class="frec">Voeg Person toe op /over, Service/Offer op /modules, BreadcrumbList overal.</div></div><span class="badge b-high">Hoog</span></div>
+    <div class="finding"><div class="fdot warn"></div><div><h4>Meta-descriptions te lang (3 pagina's)</h4><p>Home 194, Modules 182, Contact 163 tekens — afgekapt in de SERP.</p><div class="frec">Kort in tot 150–160 tekens met de kern-CTA vooraan.</div></div><span class="badge b-med">Middel</span></div>
+    <div class="finding"><div class="fdot warn"></div><div><h4>Modules: afwijkende canonical + geen Twitter-cards</h4><p>Canonical = /modules.html terwijl de rest extensieloos is (sitemap heeft /modules). 0 Twitter-tags, 5 i.p.v. 7 OG-tags.</p><div class="frec">Zet canonical op /modules en voeg twitter:card + de ontbrekende OG-tags toe.</div></div><span class="badge b-med">Middel</span></div>
+  </div>
+</div></div>
+
+<!-- SITE-BREED -->
+<div id="t-sitebreed" class="tab-content"><div class="container">
+  <div class="section-title font-display">Site-brede issues</div>
+  <div class="section-sub font-mono">Wat meerdere pagina's tegelijk raakt</div>
+  <div class="card">
+    <div class="card-title font-display">Domein &amp; canonicalisatie</div>
+    <div class="finding"><div class="fdot fail"></div><div><h4>Domein niet gekoppeld — host-mismatch</h4><p>Live op stolkwebdesign.vercel.app; canonicals/OG/sitemap verwijzen naar www.stolkwebdesign.nl.</p><div class="frec">DNS koppelen + domein in Vercel toevoegen. Daarna 1 keer indexering aanvragen in Search Console.</div></div><span class="badge b-crit">Kritiek</span></div>
+    <div class="finding"><div class="fdot warn"></div><div><h4>Inconsistente URL-vorm (/modules.html vs /modules)</h4><p>Eén canonical met extensie, de rest extensieloos.</p><div class="frec">Kies één vorm (extensieloos) en houd canonical + sitemap + interne links gelijk.</div></div><span class="badge b-med">Middel</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title font-display">Robots.txt &amp; sitemap</div>
+    <div class="finding"><div class="fdot pass"></div><div><h4>robots.txt correct</h4><p>Allow /, Disallow /admin.html (admin terecht afgeschermd), sitemap-referentie aanwezig.</p></div><span class="badge b-pass">Goed</span></div>
+    <div class="finding"><div class="fdot warn"></div><div><h4>Sitemap wijst naar niet-live domein + weinig lastmod</h4><p>6 URL's; alleen /blog/ heeft een lastmod-datum.</p><div class="frec">Update naar het live domein en voeg lastmod toe per pagina zodra het domein gekoppeld is.</div></div><span class="badge b-med">Middel</span></div>
+  </div>
+  <div class="card">
+    <div class="card-title font-display">Beveiligings- &amp; serverheaders</div>
+    <div class="finding"><div class="fdot pass"></div><div><h4>HTTPS + HSTS actief</h4><p>Strict-Transport-Security met preload aanwezig.</p></div><span class="badge b-pass">Goed</span></div>
+    <div class="finding"><div class="fdot warn"></div><div><h4>Ontbrekende headers: CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy</h4><p>Niet kritiek voor ranking, wel goede hygiëne + lichte trust-/veiligheidswinst.</p><div class="frec">Voeg een <span class="font-mono">headers</span>-blok toe in vercel.json met deze 4 headers.</div></div><span class="badge b-low">Laag</span></div>
+  </div>
+</div></div>
+
+<!-- TECHNISCH -->
+<div id="t-technisch" class="tab-content"><div class="container">
+  <div class="section-title font-display">Technische SEO</div>
+  <div class="section-sub font-mono">Implementatie-checklist</div>
+  <div class="card">
+    <div class="check"><div class="ci pass">✓</div><div class="check-t">HTTPS op alle pagina's</div></div>
+    <div class="check"><div class="ci pass">✓</div><div class="check-t">HSTS-header (Strict-Transport-Security, preload)</div></div>
+    <div class="check"><div class="ci pass">✓</div><div class="check-t">Viewport-meta op alle pagina's (mobielvriendelijk)</div></div>
+    <div class="check"><div class="ci pass">✓</div><div class="check-t">robots.txt aanwezig en valide (admin afgeschermd)</div></div>
+    <div class="check"><div class="ci warn">!</div><div class="check-t">sitemap.xml aanwezig — maar verwijst naar niet-gekoppeld domein</div></div>
+    <div class="check"><div class="ci warn">!</div><div class="check-t">Canonical-tags aanwezig — host nog niet bereikbaar</div></div>
+    <div class="check"><div class="ci warn">!</div><div class="check-t">Schema-markup slechts op 20% van de pagina's</div></div>
+    <div class="check"><div class="ci fail">✕</div><div class="check-t">Content-Security-Policy header ontbreekt</div></div>
+    <div class="check"><div class="ci fail">✕</div><div class="check-t">X-Content-Type-Options / X-Frame-Options / Referrer-Policy ontbreken</div></div>
+    <div class="check"><div class="ci warn">!</div><div class="check-t">Afbeeldingen deels PNG/JPG i.p.v. WebP/AVIF (hero, modules-mockups)</div></div>
+    <div class="check"><div class="ci pass">✓</div><div class="check-t">Cookiebot consent + GA4 + Meta Pixel correct geladen</div></div>
+    <div class="check"><div class="ci pass">✓</div><div class="check-t">Eén H1 per pagina, logische heading-hiërarchie</div></div>
+  </div>
+  <div class="grp-title font-mono">Aanbevolen schema per paginatype</div>
+  <div class="card" style="padding:0; overflow-x:auto;">
+    <table>
+      <thead><tr><th>Pagina</th><th>Huidig</th><th>Aanbevolen</th><th>Velden</th></tr></thead>
+      <tbody>
+        <tr><td>Homepage</td><td><span class="badge b-pass">Aanwezig</span></td><td>Organization + WebSite</td><td>name, url, logo, sameAs (LinkedIn/Instagram), potentialAction (SearchAction)</td></tr>
+        <tr><td>/over</td><td><span class="badge b-fail">Geen</span></td><td>Person + LocalBusiness</td><td>name, jobTitle, image, areaServed (Uithoorn/Amsterdam), sameAs, knowsAbout</td></tr>
+        <tr><td>/modules</td><td><span class="badge b-fail">Geen</span></td><td>Service + Offer</td><td>serviceType, provider, offers (price, priceCurrency), areaServed</td></tr>
+        <tr><td>/contact</td><td><span class="badge b-fail">Geen</span></td><td>LocalBusiness + ContactPoint</td><td>telephone, email, address, openingHours, sameAs</td></tr>
+        <tr><td>Alle pagina's</td><td><span class="badge b-fail">Geen</span></td><td>BreadcrumbList</td><td>itemListElement (positie, naam, item-URL)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></div>
+
+<!-- CONTENT -->
+<div id="t-content" class="tab-content"><div class="container">
+  <div class="section-title font-display">Content &amp; Keywords</div>
+  <div class="section-sub font-mono">Keyword-map per pagina + kansen</div>
+  <div class="card" style="padding:0; overflow-x:auto;">
+    <table>
+      <thead><tr><th>Pagina</th><th>Doel-keyword</th><th>In titel</th><th>In H1</th><th>Kannibalisatie</th></tr></thead>
+      <tbody>
+        <tr><td><span class="url">/</span></td><td>website laten bouwen</td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-warn">Deels</span></td><td><span class="badge b-pass">Geen</span></td></tr>
+        <tr><td><span class="url">/over</span></td><td>webdesigner Uithoorn / Peter Stolk</td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Geen</span></td></tr>
+        <tr><td><span class="url">/modules</span></td><td>website CMS / factuur-tool / modules</td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Geen</span></td></tr>
+        <tr><td><span class="url">/contact</span></td><td>contact webdesign Amsterdam</td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Geen</span></td></tr>
+        <tr><td><span class="url">/portfolio</span></td><td>portfolio custom webdesign</td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Ja</span></td><td><span class="badge b-pass">Geen</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <div class="card-title font-display">Kern-keywords (uit je strategie)</div>
+    <div>
+      <span class="kw">website laten bouwen</span><span class="kw">webdesign Amsterdam</span><span class="kw">professionele website laten bouwen</span><span class="kw">WordPress website laten bouwen</span><span class="kw">custom webdesign</span><span class="kw">HTML website</span><span class="kw">website onderhoud</span><span class="kw">webdesigner Uithoorn</span><span class="kw">GSAP animaties</span><span class="kw">handcrafted website</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title font-display">Content-kansen</div>
+    <div class="finding"><div class="fdot warn"></div><div><h4>H1 homepage mist het exacte hoofd-keyword</h4><p>H1 = "Jouw ideale website gebouwd." — sterk merkmatig, maar "website laten bouwen" zit er niet exact in.</p><div class="frec">Overweeg een subkop of intro-zin die "website laten bouwen" letterlijk bevat (staat al in de subtekst — versterk in een H2).</div></div><span class="badge b-med">Middel</span></div>
+    <div class="finding"><div class="fdot pass"></div><div><h4>Blog-pipeline actief = long-tail motor</h4><p>De /blog draait al (Notion → static). Dit is je beste kanaal voor "webdesign Amsterdam", "WordPress vs custom", etc.</p><div class="frec">Bouw een content-cluster: 1 pillar "Website laten bouwen" + 4–6 supporting blogs die ernaar linken.</div></div><span class="badge b-low">Kans</span></div>
+    <div class="finding"><div class="fdot warn"></div><div><h4>Geen reviews/testimonials met Review-schema</h4><p>Eén quote op de homepage, geen gestructureerde reviews.</p><div class="frec">Verzamel 3–5 klantreviews en markeer ze met Review/AggregateRating-schema → sterren in de SERP.</div></div><span class="badge b-med">Middel</span></div>
+  </div>
+</div></div>
+
+<!-- ACTIEPLAN -->
+<div id="t-actieplan" class="tab-content"><div class="container">
+  <div class="section-title font-display">Actieplan</div>
+  <div class="section-sub font-mono">Geprioriteerd op impact en inspanning</div>
+
+  <div class="grp-title font-mono" style="color:var(--green)">Quick wins — &lt; 1 uur per stuk</div>
+  <div class="action"><div class="action-n font-display">1</div><div><div class="action-t">Meta-descriptions inkorten tot ≤160 tekens</div><div class="action-d">Home, Modules en Contact afkappen met de CTA vooraan. Kan direct via de CMS-module (Content-tab) of in de HTML.</div></div><span class="badge b-med">Middel</span></div>
+  <div class="action"><div class="action-n font-display">2</div><div><div class="action-t">Modules-canonical fixen naar /modules</div><div class="action-d">Eén regel in modules.html; gelijktrekken met sitemap en interne links.</div></div><span class="badge b-med">Middel</span></div>
+  <div class="action"><div class="action-n font-display">3</div><div><div class="action-t">Twitter-cards + ontbrekende OG-tags op /modules</div><div class="action-d">Kopieer het OG/twitter-blok van de andere pagina's.</div></div><span class="badge b-low">Laag</span></div>
+
+  <div class="grp-title font-mono" style="color:var(--orange)">Hoge impact — 1–4 uur</div>
+  <div class="action"><div class="action-n font-display">4</div><div><div class="action-t">Domein stolkwebdesign.nl koppelen (DNS + Vercel)</div><div class="action-d">A 76.76.21.21 + CNAME cname.vercel-dns.com; domein toevoegen in Vercel. Daarna canonical/OG/sitemap naar het echte domein.</div><div class="action-i">Grootste enkele ranking-winst</div></div><span class="badge b-crit">Kritiek</span></div>
+  <div class="action"><div class="action-n font-display">5</div><div><div class="action-t">JSON-LD schema toevoegen op alle pagina's</div><div class="action-d">Organization+WebSite (home), Person+LocalBusiness (over), Service+Offer (modules), ContactPoint (contact), BreadcrumbList (overal).</div><div class="action-i">Rich results + entity-herkenning</div></div><span class="badge b-high">Hoog</span></div>
+  <div class="action"><div class="action-n font-display">6</div><div><div class="action-t">Portfolio statisch renderen</div><div class="action-d">Projecten build-time in de HTML zetten (zoals build-blog.js voor de blog) of server-side fallback.</div><div class="action-i">Portfolio gaat meetellen voor zoekmachines</div></div><span class="badge b-high">Hoog</span></div>
+  <div class="action"><div class="action-n font-display">7</div><div><div class="action-t">Security-headers via vercel.json</div><div class="action-d">CSP, X-Content-Type-Options: nosniff, X-Frame-Options, Referrer-Policy toevoegen.</div></div><span class="badge b-low">Laag</span></div>
+
+  <div class="grp-title font-mono" style="color:var(--red)">Strategisch — doorlopend</div>
+  <div class="action"><div class="action-n font-display">8</div><div><div class="action-t">Content-cluster rond "website laten bouwen"</div><div class="action-d">1 pillar-pagina + 4–6 blogs (WordPress vs custom, kosten, GSAP-animaties, laadsnelheid) die ernaar linken. Gebruik de blog-module.</div><div class="action-i">Topical authority + long-tail traffic</div></div><span class="badge b-med">Middel</span></div>
+  <div class="action"><div class="action-n font-display">9</div><div><div class="action-t">Reviews verzamelen + Review-schema</div><div class="action-d">3–5 klantreviews met AggregateRating → sterren in de SERP.</div><div class="action-i">Hogere CTR vanuit Google</div></div><span class="badge b-med">Middel</span></div>
+  <div class="action"><div class="action-n font-display">10</div><div><div class="action-t">Lokale SEO: Google Bedrijfsprofiel (Uithoorn/Amsterdam)</div><div class="action-d">Profiel aanmaken/optimaliseren, NAP consistent met de site, koppelen aan LocalBusiness-schema.</div><div class="action-i">Zichtbaarheid in lokale pack + Maps</div></div><span class="badge b-med">Middel</span></div>
+
+  <div class="card" style="margin-top:24px;">
+    <p class="font-mono" style="font-size:11px; color:var(--dim); line-height:1.8;">
+      ⚠ Dit rapport is gebaseerd op HTML-analyse van de live site (stolkwebdesign.vercel.app), robots.txt, sitemap en response-headers. Het meet geen werkelijke laadsnelheid (Core Web Vitals), backlink-profiel of actuele rankings — gebruik Search Console + PageSpeed Insights als aanvulling. Gegenereerd 3 juni 2026 · Stolkwebdesign SEO-module.
+    </p>
+  </div>
+</div></div>
+
+<script>
+function sw(e, id){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('t-'+id).classList.add('active');
+  e.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
