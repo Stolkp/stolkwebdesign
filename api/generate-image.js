@@ -18,16 +18,17 @@ export default async function handler(req, res) {
   if (!SUPABASE_URL || !process.env.SUPABASE_ANON_KEY || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return res.status(500).json({ error: 'Supabase env ontbreekt' });
   }
-  if (!process.env.OPENROUTER_API_KEY) {
-    return res.status(500).json({ error: "OPENROUTER_API_KEY ontbreekt in de Vercel-env — voeg 'm toe om beeldgeneratie te activeren." });
-  }
 
-  // ── Auth: ingelogde admin ──
+  // ── Auth: ingelogde admin (vóór config-checks, zodat anon callers altijd 401 krijgen) ──
   const token = (req.headers.authorization || '').replace(/^Bearer\s+/i, '');
   if (!token) return res.status(401).json({ error: 'Niet ingelogd (geen token)' });
   const authClient = createClient(SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
   const { data: userData, error: userErr } = await authClient.auth.getUser(token);
   if (userErr || !userData?.user) return res.status(401).json({ error: 'Sessie ongeldig of verlopen' });
+
+  if (!process.env.OPENROUTER_API_KEY) {
+    return res.status(500).json({ error: "OPENROUTER_API_KEY ontbreekt in de Vercel-env — voeg 'm toe om beeldgeneratie te activeren." });
+  }
 
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
   const prompt = (body.prompt || '').trim();
