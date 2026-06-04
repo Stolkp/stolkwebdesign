@@ -25,11 +25,14 @@ export default async function handler(req, res) {
 
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
   const action = body.action;
-  const H = { 'blotato-api-key': process.env.BLOTATO_API_KEY, 'Content-Type': 'application/json' };
+  // Bodyloze requests (GET/DELETE) mogen GEEN Content-Type: application/json hebben,
+  // anders weigert Blotato ze ("cannot be empty when content-type is application/json").
+  const authH = { 'blotato-api-key': process.env.BLOTATO_API_KEY };
+  const jsonH = { ...authH, 'Content-Type': 'application/json' };
 
   try {
     if (action === 'list') {
-      const r = await fetch(`${BLOTATO}/schedules?limit=50`, { headers: H });
+      const r = await fetch(`${BLOTATO}/schedules?limit=50`, { headers: authH });
       const d = await r.json().catch(() => ({}));
       if (!r.ok) return res.status(502).json({ error: d?.message || r.statusText });
       const items = (d.items || []).map(it => ({
@@ -45,7 +48,7 @@ export default async function handler(req, res) {
 
     if (action === 'cancel') {
       if (!body.scheduleId) return res.status(400).json({ error: 'scheduleId ontbreekt' });
-      const r = await fetch(`${BLOTATO}/schedules/${encodeURIComponent(body.scheduleId)}`, { method: 'DELETE', headers: H });
+      const r = await fetch(`${BLOTATO}/schedules/${encodeURIComponent(body.scheduleId)}`, { method: 'DELETE', headers: authH });
       if (!r.ok) { const d = await r.json().catch(() => ({})); return res.status(502).json({ error: d?.message || r.statusText }); }
       return res.status(200).json({ ok: true });
     }
@@ -54,7 +57,7 @@ export default async function handler(req, res) {
       if (!body.scheduleId || !body.scheduledTime) return res.status(400).json({ error: 'scheduleId of scheduledTime ontbreekt' });
       if (new Date(body.scheduledTime).getTime() <= Date.now()) return res.status(400).json({ error: 'Tijd moet in de toekomst liggen' });
       const r = await fetch(`${BLOTATO}/schedules/${encodeURIComponent(body.scheduleId)}`, {
-        method: 'PATCH', headers: H, body: JSON.stringify({ patch: { scheduledTime: body.scheduledTime } }),
+        method: 'PATCH', headers: jsonH, body: JSON.stringify({ patch: { scheduledTime: body.scheduledTime } }),
       });
       if (!r.ok) { const d = await r.json().catch(() => ({})); return res.status(502).json({ error: d?.message || r.statusText }); }
       return res.status(200).json({ ok: true });
