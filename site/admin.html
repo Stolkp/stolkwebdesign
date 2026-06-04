@@ -385,6 +385,7 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <button class="add-btn font-display" style="margin:0;font-size:11px;padding:11px 18px;" onclick="createCampaign()">+ Nieuwe campagne</button>
           <button class="settings-btn font-mono" style="margin:0;" onclick="addPost()">+ Post toevoegen</button>
           <button class="settings-btn font-mono" style="margin:0;" onclick="addCarousel()">+ Carousel toevoegen</button>
+          <button class="settings-btn font-mono" style="margin:0;border-color:var(--red);color:var(--red);" onclick="genCampaign()">✨ Genereer campagne</button>
           <button class="settings-btn font-mono" style="margin:0;border-color:rgba(234,37,37,.4);color:rgba(234,37,37,.6);" onclick="deleteCampaign()">Campagne verwijderen</button>
         </div>
 
@@ -1530,6 +1531,72 @@ async function genImage(postId, dest, btn) {
   }
 }
 
+// ── AI-campagnevoorstel: brief → N posts (copy + captions) in de actieve campagne ──
+async function genCampaign() {
+  if (!socialActiveId) { toast('Kies of maak eerst een campagne.', true); return; }
+  const brief = window.prompt('Waar moet de campagne over gaan? (onderwerp / korte brief)');
+  if (!brief || !brief.trim()) return;
+  const countStr = window.prompt('Hoeveel posts? (1–10)', '5');
+  if (countStr === null) return;
+  const count = Math.max(1, Math.min(10, parseInt(countStr, 10) || 5));
+  toast('Campagne genereren…');
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { toast('Niet ingelogd — log opnieuw in.', true); return; }
+    const res = await fetch('/api/generate-campaign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ mode: 'campaign', brief: brief.trim(), count, campaignId: socialActiveId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) { toast(data.created + ' posts gegenereerd ✓ — pas ze gerust aan'); loadSocialPosts(); }
+    else toast('Mislukt: ' + (data.error || res.status), true);
+  } catch (e) { toast('Mislukt: ' + e.message, true); }
+}
+
+// ── AI-carouselvoorstel: brief → N beeld-prompts → slide-voor-slide genereren (binnen 60s/call) ──
+async function genCarouselProposal(postId, btn) {
+  const brief = window.prompt('Waar moet de carousel over gaan? (onderwerp / korte brief)');
+  if (!brief || !brief.trim()) return;
+  const countStr = window.prompt('Hoeveel slides? (2–10)', '5');
+  if (countStr === null) return;
+  const count = Math.max(2, Math.min(10, parseInt(countStr, 10) || 5));
+  if (!confirm(`${count} slides genereren? Dit kost ~$${(count * 0.22).toFixed(2)} en duurt ~${count * 20}s.`)) return;
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Plan maken…';
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { toast('Niet ingelogd — log opnieuw in.', true); btn.disabled = false; btn.textContent = orig; return; }
+    const res = await fetch('/api/generate-campaign', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ mode: 'carousel-plan', brief: brief.trim(), count, postId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) { toast('Plan mislukt: ' + (data.error || res.status), true); btn.disabled = false; btn.textContent = orig; return; }
+    const prompts = data.prompts || [];
+    let done = 0;
+    for (let i = 0; i < prompts.length; i++) {
+      btn.textContent = `Slide ${i + 1}/${prompts.length}…`;
+      const gr = await fetch('/api/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+        body: JSON.stringify({ prompt: prompts[i], postId, dest: 'slide' }),
+      });
+      const gd = await gr.json().catch(() => ({}));
+      if (gr.ok && gd.ok) {
+        done++;
+        const post = socialPosts.find(x => x.id === postId);
+        if (post) post.media_urls = (Array.isArray(post.media_urls) ? post.media_urls : []).concat(gd.url);
+      } else {
+        toast(`Slide ${i + 1} mislukt: ` + (gd.error || gr.status), true);
+      }
+    }
+    renderSocialPosts();
+    toast(`${done}/${prompts.length} slides gegenereerd ✓ (~$${(done * 0.22).toFixed(2)})`);
+  } catch (e) { toast('Mislukt: ' + e.message, true); }
+}
+
 function renderSocialPosts() {
   const wrap = document.getElementById('social-posts');
   if (!wrap) return;
@@ -1573,6 +1640,7 @@ function renderSocialPosts() {
         <input type="file" accept="image/*" multiple id="cs-${p.id}" style="display:none" onchange="onCarouselSlides('${p.id}', this)">
         <button class="photo-upload-btn" onclick="document.getElementById('cs-${p.id}').click()">↑ Slides toevoegen</button>
         <button class="photo-upload-btn" onclick="genImage('${p.id}','slide', this)">✨ Genereer slide</button>
+        <button class="photo-upload-btn" style="border-color:var(--red);color:var(--red)" onclick="genCarouselProposal('${p.id}', this)">✨ Genereer voorstel (hele carousel)</button>
         ${captionsLiIg}
         <div class="social-actions">
           <button class="row-btn danger font-mono" onclick="deletePost('${p.id}')">Verwijder carousel</button>

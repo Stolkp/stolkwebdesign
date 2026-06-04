@@ -51,7 +51,9 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: MODEL,
         modalities: ['image', 'text'],
-        messages: [{ role: 'user', content: [{ type: 'text', text: prompt }] }],
+        // Expliciete beeld-instructie zodat ook korte/losse prompts een afbeelding opleveren
+        // (zonder nudge geeft het model bij een korte prompt soms tekst terug i.p.v. beeld).
+        messages: [{ role: 'user', content: [{ type: 'text', text: 'Generate a single image. ' + prompt }] }],
       }),
     });
     data = await r.json().catch(() => ({}));
