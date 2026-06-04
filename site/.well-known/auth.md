@@ -1,23 +1,29 @@
-# auth.md — Agent-registratie & contact (Stolkwebdesign)
+# auth.md — Agent registration & contact (Stolkwebdesign)
 
-Dit document vertelt AI-agents hoe ze met deze site mogen omgaan.
+This document describes how AI agents should register, authenticate and identify
+themselves when interacting with this site.
 
-## Authenticatie-houding
-Deze site is **publiek**. Alle inhoud en de discovery-endpoints onder
-`/.well-known/*` zijn **anoniem en read-only**. Er is geen beschermde API en
-**registratie is niet nodig**. We geven geen API-sleutels of OAuth-credentials uit
-voor deze site.
+## Authentication posture
+This site is **public**. All content and the discovery endpoints under
+`/.well-known/*` are **anonymous and read-only**. There is no protected API, so
+**no agent registration, API key or OAuth credential is required** to access
+anything here.
 
-## Hoe een agent zich hoort te identificeren
-Stuur een beschrijvende `User-Agent` (naam van je agent/product en een contact-URL).
-Wees een goede gast: respecteer `robots.txt` en de `Content-Signal`-regels
-(`search=yes, ai-input=yes, ai-train=no`) en houd het aantal verzoeken redelijk.
+## Agent registration
+No registration is needed. Agents may access the public content and discovery
+files directly. We do not issue API keys, client credentials, or OAuth tokens for
+this site, and there is no `register_uri`, because there is no protected resource.
+
+## How an agent should identify itself
+Send a descriptive `User-Agent` containing your agent/product name and a contact
+URL. Respect `robots.txt` and the `Content-Signal` directives
+(`search=yes, ai-input=yes, ai-train=no`) and keep request rates reasonable.
 
 ## Contact
-- E-mail: info@stolkwebdesign.nl
+- Email: info@stolkwebdesign.nl
 - WhatsApp: https://wa.me/31650222228
-- Contactpagina: https://www.stolkwebdesign.nl/contact
+- Contact page: https://www.stolkwebdesign.nl/contact
 
-## Capaciteiten
-Zie de [Agent Skills index](/.well-known/agent-skills/index.json) en de
+## Capabilities
+See the [Agent Skills index](/.well-known/agent-skills/index.json) and the
 [API catalog](/.well-known/api-catalog).
