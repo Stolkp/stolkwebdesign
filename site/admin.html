@@ -388,6 +388,14 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <button class="settings-btn font-mono" style="margin:0;border-color:rgba(234,37,37,.4);color:rgba(234,37,37,.6);" onclick="deleteCampaign()">Campagne verwijderen</button>
         </div>
 
+        <div class="sched-panel" style="margin:18px 0;border:2px solid var(--black);background:#fff;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:2px solid var(--black);">
+            <span class="font-display" style="font-size:13px;text-transform:uppercase;letter-spacing:.04em;">📅 Geplande posts (Blotato)</span>
+            <button class="settings-btn font-mono" style="margin:0;" onclick="loadSchedules()">↻ Vernieuwen</button>
+          </div>
+          <div id="sched-list" style="padding:10px 18px 14px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);">Klik “Vernieuwen” om je ingeplande posts te laden.</div>
+        </div>
+
         <div id="social-posts"></div>
 
         <div style="margin-top:24px; padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
@@ -1415,6 +1423,70 @@ async function publishPost(postId, btn) {
     toast('Mislukt: ' + e.message, true);
   }
   btn.disabled = false; btn.textContent = orig;
+}
+
+// ── Geplande posts (Blotato): lijst / annuleren / verzetten ──
+async function loadSchedules() {
+  const list = document.getElementById('sched-list');
+  if (!list) return;
+  list.innerHTML = 'Laden…';
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { list.innerHTML = 'Niet ingelogd — log opnieuw in.'; return; }
+    const res = await fetch('/api/manage-schedules', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ action: 'list' }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.ok) { list.innerHTML = 'Fout: ' + (data.error || res.status); return; }
+    const items = data.items || [];
+    if (!items.length) { list.innerHTML = 'Geen ingeplande posts.'; return; }
+    list.innerHTML = items.map(it => {
+      const when = it.scheduledAt ? new Date(it.scheduledAt).toLocaleString('nl-NL') : '—';
+      const text = (it.text || '');
+      const snip = text.slice(0, 90) + (text.length > 90 ? '…' : '');
+      return `<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(0,0,0,.1)">
+        <div style="flex:1;min-width:240px;color:var(--black)">
+          <strong>${esc(it.platform)}</strong> · ${esc(when)}${it.mediaCount ? ` · ${it.mediaCount} beeld(en)` : ''}<br>
+          <span style="color:var(--muted)">${esc(snip)}</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input type="datetime-local" id="rs-${it.id}" style="font-family:inherit;font-size:11px;padding:4px 6px;border:2px solid var(--black);background:#fff">
+          <button class="settings-btn font-mono" style="margin:0" onclick="rescheduleSchedule('${it.id}')">Verzetten</button>
+          <button class="row-btn danger font-mono" onclick="cancelSchedule('${it.id}')">Annuleren</button>
+        </div>
+      </div>`;
+    }).join('');
+  } catch (e) { list.innerHTML = 'Mislukt: ' + e.message; }
+}
+
+async function schedAction(payload, okMsg) {
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { toast('Niet ingelogd — log opnieuw in.', true); return; }
+    const res = await fetch('/api/manage-schedules', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) { toast(okMsg); loadSchedules(); }
+    else toast('Mislukt: ' + (data.error || res.status), true);
+  } catch (e) { toast('Mislukt: ' + e.message, true); }
+}
+
+function cancelSchedule(id) {
+  if (!confirm('Deze ingeplande post annuleren?\n\nDit kan niet ongedaan worden gemaakt.')) return;
+  schedAction({ action: 'cancel', scheduleId: id }, 'Geannuleerd ✓');
+}
+
+function rescheduleSchedule(id) {
+  const v = document.getElementById('rs-' + id)?.value;
+  if (!v) { toast('Kies eerst een nieuwe datum/tijd.', true); return; }
+  const d = new Date(v);
+  if (isNaN(d.getTime()) || d.getTime() <= Date.now()) { toast('Kies een tijdstip in de toekomst.', true); return; }
+  schedAction({ action: 'reschedule', scheduleId: id, scheduledTime: d.toISOString() }, 'Verzet ✓');
 }
 
 function renderSocialPosts() {
