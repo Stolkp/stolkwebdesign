@@ -1564,13 +1564,21 @@ async function genCampaign() {
 }
 
 // ── AI-carouselvoorstel: brief → N beeld-prompts → slide-voor-slide genereren (binnen 60s/call) ──
-async function genCarouselProposal(postId, btn) {
-  const brief = window.prompt('Waar moet de carousel over gaan? (onderwerp / korte brief)');
-  if (!brief || !brief.trim()) return;
-  const countStr = window.prompt('Hoeveel slides? (2–10)', '5');
-  if (countStr === null) return;
-  const count = Math.max(2, Math.min(10, parseInt(countStr, 10) || 5));
-  if (!confirm(`${count} slides genereren? Dit kost ~$${(count * 0.22).toFixed(2)} en duurt ~${count * 20}s.`)) return;
+async function genCarouselProposal(postId, btn, preset) {
+  preset = preset || {};
+  let brief = preset.brief;
+  if (!brief) {
+    brief = window.prompt('Waar moet de carousel over gaan? (onderwerp / korte brief)');
+    if (!brief || !brief.trim()) return;
+  }
+  brief = brief.trim();
+  let count = preset.count;
+  if (!count) {
+    const countStr = window.prompt('Hoeveel slides? (2–10)', '5');
+    if (countStr === null) return;
+    count = Math.max(2, Math.min(10, parseInt(countStr, 10) || 5));
+  }
+  if (!preset.skipConfirm && !confirm(`${count} slides genereren? Dit kost ~$${(count * 0.22).toFixed(2)} en duurt ~${count * 20}s.`)) return;
   const orig = btn.textContent;
   btn.disabled = true; btn.textContent = 'Plan maken…';
   try {
@@ -1604,6 +1612,35 @@ async function genCarouselProposal(postId, btn) {
     renderSocialPosts();
     toast(`${done}/${prompts.length} slides gegenereerd ✓ (~$${(done * 0.22).toFixed(2)})`);
   } catch (e) { toast('Mislukt: ' + e.message, true); }
+}
+
+// Maak een carousel van een bestaande single post: nieuwe carousel-post in dezelfde
+// campagne, kop + sub als brief, hergebruikt de AI-carousel-flow. Origineel blijft staan.
+async function makeCarouselFromPost(postId, btn) {
+  const post = socialPosts.find(p => p.id === postId);
+  if (!post) return;
+  const brief = [post.eyebrow, post.headline, post.sub].filter(Boolean).join('. ').replace(/\s+/g, ' ').trim();
+  if (!brief) { toast('Deze post heeft nog geen kop/subtekst om een carousel van te maken', true); return; }
+  const countStr = window.prompt(`Carousel maken van "${post.headline || 'deze post'}".\nHoeveel slides? (2–10)`, '5');
+  if (countStr === null) return;
+  const count = Math.max(2, Math.min(10, parseInt(countStr, 10) || 5));
+  if (!confirm(`${count} slides genereren uit deze post? Dit kost ~$${(count * 0.22).toFixed(2)} en duurt ~${count * 20}s.`)) return;
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Carousel maken…';
+  const pos = socialPosts.reduce((m, p) => Math.max(m, p.position || 0), 0) + 1;
+  const { data: newPost, error } = await db.from('stolkwebdesign_social_posts').insert({
+    campaign_id: post.campaign_id,
+    position: pos,
+    kind: 'carousel',
+    headline: post.headline || 'Carousel',
+    caption_linkedin: post.caption_linkedin || '',
+    caption_instagram: post.caption_instagram || '',
+    media_urls: []
+  }).select().single();
+  if (error || !newPost) { toast('Carousel aanmaken mislukt: ' + (error?.message || ''), true); btn.disabled = false; btn.textContent = orig; return; }
+  socialPosts.push(newPost);
+  await genCarouselProposal(newPost.id, btn, { brief, count, skipConfirm: true });
+  await loadSocialPosts();
 }
 
 function renderSocialPosts() {
@@ -1687,6 +1724,7 @@ function renderSocialPosts() {
           <a class="social-dl" href="${dl('li')}" target="_blank" rel="noopener">↧ LinkedIn</a>
           <a class="social-dl" href="${dl('gbp')}" target="_blank" rel="noopener">↧ Google</a>
           <a class="social-dl" href="${dl('story')}" target="_blank" rel="noopener">↧ Story</a>
+          <button class="photo-upload-btn" style="border-color:var(--red);color:var(--red)" onclick="makeCarouselFromPost('${p.id}', this)">✨ Carousel van deze post</button>
           <button class="row-btn danger font-mono" onclick="deletePost('${p.id}')">Verwijder post</button>
         </div>
         ${publishBox}
