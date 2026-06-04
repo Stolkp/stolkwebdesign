@@ -1,0 +1,30 @@
+# Stolkwebdesign
+
+> Webdesignstudio van Peter Stolk (Uithoorn, regio Amsterdam). Handcrafted,
+> scroll-geanimeerde websites in schone HTML, CSS & GSAP én WordPress — uniek,
+> snel en volledig op maat. Vanaf €950.
+
+## Over
+- [Over Peter Stolk](https://www.stolkwebdesign.nl/over): zelfstandig webdesigner uit Uithoorn met 7+ jaar ervaring; persoonlijk contact, custom designs, geen templates.
+- [Contact & agent-info](https://www.stolkwebdesign.nl/auth.md): hoe je contact opneemt en hoe een agent zich hoort te identificeren.
+
+## Wat Stolkwebdesign doet
+- [Website laten bouwen](https://www.stolkwebdesign.nl/): per-pagina-model in drie pakketten — Start €950 (1 pagina), Onderneem €1.500 (tot 4 pagina's), Groei €2.450 (tot 7 pagina's + Basis CMS). Extra pagina €200. Custom/op maat op aanvraag.
+- [Modules](https://www.stolkwebdesign.nl/modules): add-ons op de Basis CMS (€149 eenmalig) — Content (€99 + €49/pagina), Factuur (€199), Social (€99 + €149/campagne), Blog (€99 + €89/blog), SEO-rapport (€99 + per actiepunt).
+- [Portfolio](https://www.stolkwebdesign.nl/portfolio): selectie van gebouwde projecten.
+- [Blog](https://www.stolkwebdesign.nl/blog/): artikelen over webdesign, performance en het ambacht.
+
+## Diensten & tarieven (overzicht)
+- Uurtarief: €75.
+- Webhosting & beveiliging: vanaf €25/maand.
+- Onderhoud & support: op aanvraag.
+
+## Voor agents
+- [Agent Skills index](https://www.stolkwebdesign.nl/.well-known/agent-skills/index.json): vindbare capaciteiten/diensten.
+- [API catalog](https://www.stolkwebdesign.nl/.well-known/api-catalog): machine-leesbare resource-index.
+- [llms-full.txt](https://www.stolkwebdesign.nl/llms-full.txt): uitgebreidere inhoud in één bestand.
+
+## Contact / afspraak
+- E-mail: info@stolkwebdesign.nl
+- WhatsApp: https://wa.me/31650222228
+- Contactpagina: https://www.stolkwebdesign.nl/contact

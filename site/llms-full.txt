@@ -1,0 +1,49 @@
+# Stolkwebdesign — volledige inhoud voor taalmodellen
+
+> Webdesignstudio van Peter Stolk uit Uithoorn (bedient regio Amsterdam).
+> Handcrafted, scroll-geanimeerde websites in schone HTML, CSS & GSAP én
+> WordPress. Uniek, snel en volledig op maat — geen kant-en-klare templates.
+
+## Wie is Peter Stolk
+Zelfstandig webdesigner met 7+ jaar ervaring. Bouwt websites met de hand: schone
+HTML/CSS/JavaScript met GSAP-scrollanimaties, of WordPress wanneer dat beter past.
+Persoonlijk contact, één aanspreekpunt, designs op maat van het merk. Gevestigd in
+Uithoorn, werkt voor ondernemers in de regio Amsterdam en daarbuiten.
+
+## Aanpak
+Elke site volgt een research- en strategieproces vóór er één regel code wordt
+geschreven: merkanalyse, marktonderzoek, design- en contentbrief, bouw, en een
+kwaliteitscheck. Het resultaat is een snelle, unieke site die opvalt en converteert.
+
+## Website laten bouwen — pakketten (per-pagina-model, uurtarief €75)
+- Start — €950: homepage / 1 pagina, inclusief volledig ontwerpsysteem.
+- Onderneem — €1.500: tot 4 pagina's (meest gekozen).
+- Groei — €2.450: tot 7 pagina's + Basis CMS + content.
+- Extra pagina buiten pakket: €200.
+- Custom / op maat (eigen systeem, integratie, klantportaal, platform): op aanvraag.
+- Webhosting & beveiliging: vanaf €25/maand. Onderhoud & support: op aanvraag.
+
+## Modules (add-ons)
+Draaien op de Basis CMS (€149 eenmalig, 1× per klant — de fundering met login):
+- Content — €99 homepage + €49/extra pagina: teksten en foto's zelf beheren.
+- Factuur — €199: facturen maken, als PDF printen en bewaren.
+- Social — €99 + €149/campagne: social posts en carousels genereren en plannen.
+- Blog — €99 + €89/blog: blogpijplijn vanuit Notion naar de site + social.
+- SEO-rapport — €99 + per actiepunt: SEO-audit in een eigen client-portal (geen Basis CMS nodig).
+
+## Voor wie
+Mkb-ondernemers die zich willen onderscheiden met een premium, snelle website en
+waarde hechten aan persoonlijk contact en maatwerk in plaats van een template.
+
+## Contact
+- E-mail: info@stolkwebdesign.nl
+- WhatsApp: https://wa.me/31650222228
+- Telefoon: +31 6 50 22 22 28
+- Contactpagina: https://www.stolkwebdesign.nl/contact
+- Locatie: Uithoorn, Nederland (regio Amsterdam)
+
+## Hoe een agent zich hoort te identificeren
+Stuur een beschrijvende User-Agent (naam van je agent/product + een contact-URL),
+respecteer robots.txt en de Content-Signal-regels (search=yes, ai-input=yes,
+ai-train=no) en houd het aantal verzoeken redelijk. De site is publiek en
+read-only; er is geen API-sleutel of registratie nodig.

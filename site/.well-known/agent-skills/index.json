@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/index.json",
+  "version": "0.2.0",
+  "provider": { "name": "Stolkwebdesign", "url": "https://www.stolkwebdesign.nl" },
+  "skills": [
+    {
+      "name": "Website laten bouwen",
+      "type": "service",
+      "description": "Handcrafted, scroll-geanimeerde website op maat in HTML/CSS/GSAP of WordPress, in drie pakketten vanaf €950.",
+      "url": "https://www.stolkwebdesign.nl/.well-known/agent-skills/website-laten-bouwen/SKILL.md",
+      "digest": "sha256:b4875f72bcb68156396cb4ede10e2b68d092ac23fb79b6ff247ae59dec965763"
+    },
+    {
+      "name": "Website-modules",
+      "type": "service",
+      "description": "Add-on modules op de Basis CMS — zelf content beheren, facturen maken, social plannen en bloggen.",
+      "url": "https://www.stolkwebdesign.nl/.well-known/agent-skills/modules/SKILL.md",
+      "digest": "sha256:6761228d98b894fbd13f849bfe4d879a7036be0d7fdebe6428154bcdb0dfda18"
+    }
+  ]
+}

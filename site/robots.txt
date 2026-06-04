@@ -1,4 +1,32 @@
+# robots.txt — Stolkwebdesign
+# Crawlen is welkom. De Content-Signal-regels verklaren hoe AI de inhoud mag
+# gebruiken: wel vindbaar en citeerbaar (search + ai-input), maar niet trainen
+# op het werk (ai-train=no).
+
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: GPTBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: OAI-SearchBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: ChatGPT-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: ClaudeBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Claude-User
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: PerplexityBot
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
+User-agent: Google-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=no
+
 Sitemap: https://www.stolkwebdesign.nl/sitemap.xml

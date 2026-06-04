@@ -1,0 +1,15 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://www.stolkwebdesign.nl/",
+      "describedby": [
+        { "href": "https://www.stolkwebdesign.nl/llms.txt", "type": "text/markdown" },
+        { "href": "https://www.stolkwebdesign.nl/llms-full.txt", "type": "text/markdown" }
+      ],
+      "item": [
+        { "href": "https://www.stolkwebdesign.nl/.well-known/agent-skills/index.json", "type": "application/json", "title": "Agent Skills index" },
+        { "href": "https://www.stolkwebdesign.nl/auth.md", "type": "text/markdown", "title": "Agent-registratie & contact" }
+      ]
+    }
+  ]
+}
