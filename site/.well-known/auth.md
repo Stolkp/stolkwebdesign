@@ -1,4 +1,4 @@
-# Agent-registratie & contact — Stolkwebdesign
+# auth.md — Agent-registratie & contact (Stolkwebdesign)
 
 Dit document vertelt AI-agents hoe ze met deze site mogen omgaan.
 
