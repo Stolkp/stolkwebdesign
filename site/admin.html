@@ -409,6 +409,12 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
         <div class="page-sub font-mono">Beheer je data en wachtwoord</div>
 
         <div class="settings-grid">
+          <div class="settings-card" style="grid-column:1/-1;">
+            <div class="settings-card-title font-display">Afzendergegevens (factuur)</div>
+            <p class="settings-info">Deze gegevens staan vast op elke factuur — je hoeft ze niet per factuur in te vullen. Pas ze hier aan als er iets verandert; ze blijven bewaard.</p>
+            <div id="factuur-sender-form" style="margin-top:16px;"></div>
+          </div>
+
           <div class="settings-card">
             <div class="settings-card-title font-display">Data exporteren</div>
             <p class="settings-info">Exporteer alle projecten als JSON-bestand. Handig als back-up.</p>
