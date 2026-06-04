@@ -21,7 +21,7 @@ const FORMATS = {
 
 const THEMES = {
   black: { bg: COLORS.black, text: COLORS.white, accent: COLORS.red, sub: 'rgba(255,255,255,0.7)', brandDot: COLORS.red },
-  red:   { bg: COLORS.red,   text: COLORS.white, accent: COLORS.white, sub: 'rgba(255,255,255,0.88)', brandDot: COLORS.black },
+  red:   { bg: COLORS.red,   text: COLORS.white, accent: COLORS.white, sub: 'rgba(255,255,255,0.88)', brandDot: COLORS.white },
   bone:  { bg: COLORS.bone,  text: COLORS.black, accent: COLORS.red, sub: '#555555', brandDot: COLORS.red },
 };
 
