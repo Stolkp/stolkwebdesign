@@ -2,6 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "npm run build",
   "outputDirectory": "site",
+  "cleanUrls": true,
   "functions": {
     "api/notion-publish.js": { "maxDuration": 60 },
     "api/regenerate-carousel.js": { "maxDuration": 60 },

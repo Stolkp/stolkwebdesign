@@ -261,6 +261,61 @@
     }
   }
 
+  // ── Bewaarde facturen (Supabase-tabel stolkwebdesign_invoices, alleen ingelogd) ──
+  function notify(msg, err) { if (typeof toast === 'function') toast(msg, !!err); else if (err) alert(msg); }
+  function invTotal() {
+    const sub = inv.items.reduce((a, it) => a + (Number(it.prijs) || 0) * (Number(it.aantal) || 0), 0);
+    return Math.round(sub * (1 + (Number(inv.vat) || 0) / 100) * 100) / 100;
+  }
+  async function saveToList() {
+    if (typeof db === 'undefined') { notify('Opslaan niet beschikbaar (geen verbinding)', true); return; }
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { notify('Niet ingelogd — log opnieuw in.', true); return; }
+    const clean = Object.assign({}, inv); delete clean._dbId;
+    const row = { number: inv.number || '', client_name: inv.client.naam || inv.client.bedrijf || '', total: invTotal(), data: clean, updated_at: new Date().toISOString() };
+    let err;
+    if (inv._dbId) {
+      ({ error: err } = await db.from('stolkwebdesign_invoices').update(row).eq('id', inv._dbId));
+    } else {
+      const { data, error } = await db.from('stolkwebdesign_invoices').insert(row).select('id').single();
+      err = error; if (!err && data) { inv._dbId = data.id; save(); }
+    }
+    if (err) { notify('Opslaan mislukt: ' + err.message, true); return; }
+    notify('Factuur opgeslagen ✓'); loadInvoiceList();
+  }
+  async function loadInvoiceList() {
+    const el = document.getElementById('fact-list'); if (!el) return;
+    if (typeof db === 'undefined') { el.textContent = 'Niet beschikbaar.'; return; }
+    el.textContent = 'Laden…';
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { el.textContent = 'Log eerst in om je facturen te zien.'; return; }
+    const { data, error } = await db.from('stolkwebdesign_invoices').select('id,number,client_name,total,updated_at').order('updated_at', { ascending: false });
+    if (error) { el.textContent = 'Fout: ' + error.message; return; }
+    if (!data.length) { el.textContent = 'Nog geen bewaarde facturen.'; return; }
+    el.innerHTML = data.map(r => `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #1a1a1a;">
+      <span style="color:#ddd"><strong>${esc(r.number || '—')}</strong> · ${esc(r.client_name || '—')} · ${euro(r.total)}</span>
+      <span style="display:flex;gap:6px;">
+        <button class="settings-btn font-mono" style="margin:0;padding:5px 10px;" data-fopen="${r.id}">Open</button>
+        <button class="row-btn danger font-mono" data-frm="${r.id}">Verwijder</button>
+      </span></div>`).join('');
+  }
+  async function openInvoice(id) {
+    const { data, error } = await db.from('stolkwebdesign_invoices').select('data').eq('id', id).single();
+    if (error || !data) { notify('Laden mislukt', true); return; }
+    inv = Object.assign(defaultInv(), data.data || {});
+    inv._dbId = id; inv.sender = loadSender();
+    save(); renderForm(); renderPreview();
+    notify('Factuur geladen ✓');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  async function deleteInvoice(id) {
+    if (!confirm('Deze bewaarde factuur verwijderen?')) return;
+    const { error } = await db.from('stolkwebdesign_invoices').delete().eq('id', id);
+    if (error) { notify('Verwijderen mislukt: ' + error.message, true); return; }
+    if (inv._dbId === id) { delete inv._dbId; save(); }
+    notify('Verwijderd ✓'); loadInvoiceList();
+  }
+
   function init() {
     const section = document.getElementById('section-factuur');
     if (!section) return;
@@ -292,8 +347,18 @@
     if (resetBtn) resetBtn.addEventListener('click', () => {
       if (!confirm('Concept wissen en opnieuw beginnen?')) return;
       const keepSender = inv.sender;       // afzendergegevens behouden
-      inv = defaultInv(); inv.sender = keepSender;
+      inv = defaultInv(); inv.sender = keepSender;   // nieuw concept = niet meer gekoppeld aan een bewaarde factuur
       save(); renderForm(); renderPreview();
+    });
+
+    const saveBtn = document.getElementById('fact-save');
+    if (saveBtn) saveBtn.addEventListener('click', saveToList);
+    const refreshBtn = document.getElementById('fact-refresh');
+    if (refreshBtn) refreshBtn.addEventListener('click', loadInvoiceList);
+    const listEl = document.getElementById('fact-list');
+    if (listEl) listEl.addEventListener('click', (e) => {
+      const o = e.target.closest('[data-fopen]'); if (o) { openInvoice(o.getAttribute('data-fopen')); return; }
+      const r = e.target.closest('[data-frm]'); if (r) { deleteInvoice(r.getAttribute('data-frm')); }
     });
   }
 
