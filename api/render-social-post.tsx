@@ -86,7 +86,7 @@ function Frame({ post, fmt }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {post.cta ? <div style={{ fontFamily: 'Archivo Black', fontSize: f.cta, textTransform: 'uppercase', color: th.accent }}>{post.cta + ' →'}</div> : null}
           <div style={{ display: 'flex', alignItems: 'baseline', fontFamily: 'Archivo Black', fontSize: f.brand, letterSpacing: -0.5, textTransform: 'uppercase', color: th.text }}>
-            Stolkwebdesign<span style={{ color: th.brandDot }}>®</span>
+            <span>Stolk</span><span style={{ color: th.brandDot }}>web</span><span>design</span><span style={{ color: th.brandDot }}>®</span>
           </div>
         </div>
         <div style={{ fontFamily: 'Space Grotesk', fontSize: f.brand * 0.8, color: th.sub }}>stolkwebdesign.nl</div>
