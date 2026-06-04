@@ -1,5 +1,5 @@
 // Vercel Function: /api/generate-image
-// Genereert een afbeelding via OpenRouter (GPT Image 2.0), zet 'm in Supabase Storage en
+// Genereert een afbeelding via OpenRouter (Gemini Flash Image), zet 'm in Supabase Storage en
 // koppelt 'm aan een social-post: dest='bg' → achtergrondfoto (single post), dest='slide' →
 // toegevoegd aan media_urls (carousel). Beveiligd met Supabase-JWT (ingelogde admin).
 //
@@ -9,7 +9,10 @@ import { createClient } from '@supabase/supabase-js';
 
 const BUCKET = 'stolkwebdesign-content';
 const OR_ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions';
-const MODEL = 'openai/gpt-5.4-image-2';
+// Snel image-model (~5-10s) zodat het binnen de 60s Vercel-Hobby-limiet blijft.
+// gpt-5.4-image-2 was te traag (>60s → 504 time-out). Gemini Flash Image = sneller én goedkoper,
+// zelfde OpenRouter-response-shape (choices[0].message.images[0].image_url.url).
+const MODEL = 'google/gemini-2.5-flash-image';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });

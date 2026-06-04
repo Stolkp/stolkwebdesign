@@ -1580,7 +1580,7 @@ async function genCarouselProposal(postId, btn, preset) {
     if (countStr === null) return;
     count = Math.max(2, Math.min(10, parseInt(countStr, 10) || 5));
   }
-  if (!preset.skipConfirm && !confirm(`${count} slides genereren? Dit kost ~$${(count * 0.22).toFixed(2)} en duurt ~${count * 20}s.`)) return;
+  if (!preset.skipConfirm && !confirm(`${count} slides genereren? Dit kost ~$${(count * 0.03).toFixed(2)} en duurt ~${count * 10}s.`)) return;
   const orig = btn.textContent;
   btn.disabled = true; btn.textContent = 'Plan maken…';
   try {
@@ -1608,11 +1608,11 @@ async function genCarouselProposal(postId, btn, preset) {
         const post = socialPosts.find(x => x.id === postId);
         if (post) post.media_urls = (Array.isArray(post.media_urls) ? post.media_urls : []).concat(gd.url);
       } else {
-        toast(`Slide ${i + 1} mislukt: ` + (gd.error || gr.status), true);
+        toast(`Slide ${i + 1} mislukt: ` + (gd.error || (gr.status === 504 ? 'duurde te lang (time-out) — probeer opnieuw' : gr.status)), true);
       }
     }
     renderSocialPosts();
-    toast(`${done}/${prompts.length} slides gegenereerd ✓ (~$${(done * 0.22).toFixed(2)})`);
+    toast(`${done}/${prompts.length} slides gegenereerd ✓ (~$${(done * 0.03).toFixed(2)})`);
   } catch (e) { toast('Mislukt: ' + e.message, true); }
 }
 
@@ -1626,7 +1626,7 @@ async function makeCarouselFromPost(postId, btn) {
   const countStr = window.prompt(`Carousel maken van "${post.headline || 'deze post'}".\nHoeveel slides? (2–10)`, '5');
   if (countStr === null) return;
   const count = Math.max(2, Math.min(10, parseInt(countStr, 10) || 5));
-  if (!confirm(`${count} slides genereren uit deze post? Dit kost ~$${(count * 0.22).toFixed(2)} en duurt ~${count * 20}s.`)) return;
+  if (!confirm(`${count} slides genereren uit deze post? Dit kost ~$${(count * 0.03).toFixed(2)} en duurt ~${count * 10}s.`)) return;
   const orig = btn.textContent;
   btn.disabled = true; btn.textContent = 'Carousel maken…';
   const pos = socialPosts.reduce((m, p) => Math.max(m, p.position || 0), 0) + 1;
