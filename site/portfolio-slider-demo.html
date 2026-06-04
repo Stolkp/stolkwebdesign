@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Portfolio Slider — Demo · Stolkwebdesign</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
+html { scroll-behavior: smooth; }
+body { background: var(--black); color: var(--white); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; }
+.font-display { font-family: 'Archivo Black', sans-serif; }
+.font-mono { font-family: 'JetBrains Mono', monospace; }
+
+/* NAV (overgenomen uit portfolio.html) */
+nav { position: fixed; top:0; left:0; right:0; z-index:100; background:var(--black); border-bottom:2px solid var(--black); display:flex; align-items:center; justify-content:space-between; padding:16px 48px; }
+.nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
+.nav-links { display:flex; gap:40px; list-style:none; align-items:center; }
+.nav-links a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:rgba(255,255,255,.5); text-decoration:none; transition:color .2s; }
+.nav-links a:hover, .nav-links a.active { color:var(--white); }
+.nav-cta { font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; background:var(--red); color:var(--white); border:2px solid var(--white); padding:13px 22px; text-decoration:none; transition:background .15s,color .15s; }
+.nav-cta:hover { background:var(--white); color:var(--red); }
+.nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
+.nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); transition:transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
+.nav-hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+.nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.nav-cta-item { display:none; }
+
+/* DEMO-BADGE */
+.demo-badge { position:fixed; top:74px; left:48px; z-index:90; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.18em; color:var(--white); background:var(--red); padding:6px 12px; border:2px solid var(--white); }
+
+/* ── SLIDER ── */
+.slider { position:relative; height:100vh; min-height:600px; background:var(--near-black); overflow:hidden; }
+
+/* achtergrondlagen (crossfade) */
+.bg-layer { position:absolute; inset:0; }
+.slide-bg { position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transform:scale(1.06); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform 6s cubic-bezier(.16,1,.3,1); }
+.slide-bg.active { opacity:1; transform:scale(1); }
+.stage-overlay { position:absolute; inset:0; pointer-events:none; background:linear-gradient(to top, rgba(0,0,0,.82) 0%, rgba(0,0,0,.28) 42%, rgba(0,0,0,.55) 100%); }
+
+/* titelspoor (ghost links/rechts, massief in midden) */
+.title-wrap { position:absolute; top:46%; left:0; right:0; transform:translateY(-50%); overflow:hidden; pointer-events:none; z-index:2; }
+.title-track { display:flex; align-items:center; gap:9vw; transition:transform .8s cubic-bezier(.16,1,.3,1); will-change:transform; }
+.title-item { flex:0 0 auto; font-family:'Archivo Black',sans-serif; font-size:clamp(46px,9.5vw,150px); text-transform:uppercase; letter-spacing:-0.03em; line-height:1; white-space:nowrap; color:transparent; -webkit-text-stroke:1.5px rgba(255,255,255,.42); transition:color .55s ease, -webkit-text-stroke .55s ease; cursor:pointer; pointer-events:auto; }
+.title-item.active { color:var(--white); -webkit-text-stroke:1.5px transparent; }
+
+/* meta + cta onder de actieve titel */
+.slide-meta { position:absolute; left:0; right:0; top:46%; transform:translateY(78px); text-align:center; z-index:3; pointer-events:none; padding:0 24px; }
+.slide-tag { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.28em; text-transform:uppercase; color:var(--red); margin-bottom:10px; min-height:13px; }
+.slide-type { font-size:14px; color:rgba(255,255,255,.6); margin-bottom:22px; min-height:18px; }
+.slide-cta { pointer-events:auto; display:inline-flex; align-items:center; gap:10px; font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.02em; background:var(--red); color:var(--white); border:2px solid var(--white); padding:13px 24px; text-decoration:none; transition:background .15s,color .15s; }
+.slide-cta:hover { background:var(--white); color:var(--red); }
+
+/* bediening onderaan */
+.controls { position:absolute; left:0; right:0; bottom:40px; z-index:4; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding:0 48px; }
+.ctrl-arrows { display:flex; gap:12px; }
+.arrow-btn { width:54px; height:54px; border:2px solid rgba(255,255,255,.3); background:transparent; color:var(--white); font-size:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .18s,border-color .18s,color .18s; }
+.arrow-btn:hover { background:var(--red); border-color:var(--red); color:var(--white); }
+.counter { font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.22em; color:rgba(255,255,255,.7); padding-bottom:18px; white-space:nowrap; }
+.thumb-strip { display:flex; gap:8px; max-width:46vw; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
+.thumb-strip::-webkit-scrollbar { display:none; }
+.thumb { width:96px; height:60px; border:2px solid rgba(255,255,255,.22); background-size:cover; background-position:center; cursor:pointer; opacity:.55; transition:opacity .2s,border-color .2s; flex:0 0 auto; }
+.thumb:hover { opacity:.85; }
+.thumb.active { opacity:1; border-color:var(--red); }
+
+/* loader / lege staat */
+.slider-msg { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.18em; color:rgba(255,255,255,.5); z-index:5; padding:0 24px; }
+
+@media(max-width:900px) {
+  nav { padding:14px 20px; }
+  .nav-cta, .nav-links { display:none; }
+  .nav-hamburger { display:flex; }
+  .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
+  .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
+  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
+  .demo-badge { top:70px; left:20px; }
+  .title-item { -webkit-text-stroke-width:1px; }
+  .slide-meta { transform:translateY(56px); }
+  .controls { flex-wrap:wrap; padding:0 20px; bottom:24px; gap:14px; }
+  .arrow-btn { width:46px; height:46px; font-size:18px; }
+  .counter { padding-bottom:14px; order:-1; width:auto; }
+  .thumb-strip { max-width:100%; order:3; flex:1 1 100%; }
+  .thumb { width:78px; height:50px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .slide-bg, .title-track, .arrow-btn, .thumb { transition:none; }
+  .slide-bg { transform:none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Stolk<span style="color:#EA2525">web</span>design<span style="color:#EA2525">®</span></a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/portfolio" class="active">Portfolio / 01</a></li>
+    <li><a href="/#diensten">Diensten / 02</a></li>
+    <li><a href="/modules">Modules / 03</a></li>
+    <li><a href="/over">Over mij / 05</a></li>
+    <li><a href="/blog/">Blog / 06</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="/contact" class="nav-cta">Plan een gesprek →</a>
+</nav>
+
+<div class="demo-badge">Demo · Portfolio Slider</div>
+
+<section class="slider" id="slider" aria-roledescription="carousel" aria-label="Portfolio projecten">
+  <div class="bg-layer" id="bg-layer"></div>
+  <div class="stage-overlay"></div>
+
+  <div class="title-wrap"><div class="title-track" id="title-track"></div></div>
+
+  <div class="slide-meta">
+    <div class="slide-tag font-mono" id="slide-tag"></div>
+    <div class="slide-type" id="slide-type"></div>
+    <a class="slide-cta font-display" id="slide-cta" href="#">Bekijk project
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-arrows">
+      <button class="arrow-btn" id="btn-prev" aria-label="Vorige">←</button>
+      <button class="arrow-btn" id="btn-next" aria-label="Volgende">→</button>
+    </div>
+    <div class="counter font-mono" id="counter">00 — 00</div>
+    <div class="thumb-strip" id="thumb-strip"></div>
+  </div>
+
+  <div class="slider-msg font-mono" id="slider-msg">Laden…</div>
+</section>
+
+<script>
+  const { createClient } = window.supabase;
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const slider   = document.getElementById('slider');
+  const bgLayer  = document.getElementById('bg-layer');
+  const track    = document.getElementById('title-track');
+  const thumbBox = document.getElementById('thumb-strip');
+  const counter  = document.getElementById('counter');
+  const tagEl    = document.getElementById('slide-tag');
+  const typeEl   = document.getElementById('slide-type');
+  const ctaEl    = document.getElementById('slide-cta');
+  const msgEl    = document.getElementById('slider-msg');
+
+  let projects = [];
+  let current  = 0;
+
+  const pad = n => String(n).padStart(2, '0');
+  const dest = p => 'project.html?p=' + encodeURIComponent(p.slug || p.id);
+  const bgStyle = p => p.img
+    ? `background-image:url('${p.img}')`
+    : `background:${p.bg || 'linear-gradient(145deg,#111,#333)'}`;
+
+  function build() {
+    bgLayer.innerHTML = projects.map((p,i) =>
+      `<div class="slide-bg${i===0?' active':''}" style="${bgStyle(p)}"></div>`).join('');
+    track.innerHTML = projects.map((p,i) =>
+      `<div class="title-item${i===0?' active':''}" data-i="${i}">${p.name||''}</div>`).join('');
+    thumbBox.innerHTML = projects.map((p,i) =>
+      `<div class="thumb${i===0?' active':''}" data-i="${i}" style="${bgStyle(p)}" role="button" aria-label="${(p.name||'')}"></div>`).join('');
+
+    track.querySelectorAll('.title-item').forEach(el =>
+      el.addEventListener('click', () => { const i = +el.dataset.i; i === current ? open() : goTo(i); }));
+    thumbBox.querySelectorAll('.thumb').forEach(el =>
+      el.addEventListener('click', () => goTo(+el.dataset.i)));
+  }
+
+  function centerTitle() {
+    const item = track.children[current];
+    if (!item) return;
+    const stageW = slider.clientWidth;
+    const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+    track.style.transform = `translateX(${Math.round(stageW / 2 - itemCenter)}px)`;
+  }
+
+  function open() { location.href = dest(projects[current]); }
+
+  function goTo(i) {
+    const n = projects.length;
+    current = ((i % n) + n) % n;
+    const p = projects[current];
+
+    bgLayer.children[current] && setActive(bgLayer.children, current);
+    setActive(track.children, current);
+    setActive(thumbBox.children, current);
+
+    tagEl.textContent  = p.tag || '';
+    typeEl.textContent = p.type || '';
+    ctaEl.href = dest(p);
+    counter.textContent = `${pad(current + 1)} — ${pad(n)}`;
+
+    centerTitle();
+    const activeThumb = thumbBox.children[current];
+    activeThumb && activeThumb.scrollIntoView({ behavior:'smooth', inline:'center', block:'nearest' });
+  }
+
+  function setActive(list, idx) {
+    for (let k = 0; k < list.length; k++) list[k].classList.toggle('active', k === idx);
+  }
+
+  // navigatie
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1));
+  window.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  goTo(current - 1);
+    if (e.key === 'ArrowRight') goTo(current + 1);
+  });
+
+  // swipe
+  let touchX = null;
+  slider.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive:true });
+  slider.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+    touchX = null;
+  });
+
+  window.addEventListener('resize', centerTitle);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(centerTitle);
+
+  // hamburger
+  document.getElementById('nav-toggle').addEventListener('click', () => {
+    const links = document.getElementById('nav-links');
+    const isOpen = links.classList.toggle('open');
+    document.getElementById('nav-toggle').classList.toggle('open', isOpen);
+    document.getElementById('nav-toggle').setAttribute('aria-expanded', isOpen);
+  });
+
+  // laden
+  (async () => {
+    const { data, error } = await db.from('projects').select('*').order('sort_order');
+    if (error || !data || !data.length) {
+      msgEl.textContent = error ? 'Portfolio tijdelijk niet beschikbaar.' : 'Nog geen projecten.';
+      return;
+    }
+    projects = data;
+    msgEl.style.display = 'none';
+    build();
+    goTo(0);
+  })();
+</script>
+
+</body>
+</html>
