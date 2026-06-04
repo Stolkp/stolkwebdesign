@@ -1489,6 +1489,41 @@ function rescheduleSchedule(id) {
   schedAction({ action: 'reschedule', scheduleId: id, scheduledTime: d.toISOString() }, 'Verzet ✓');
 }
 
+// ── AI-afbeelding genereren (OpenRouter GPT Image) → bg (single) of slide (carousel) ──
+async function genImage(postId, dest, btn) {
+  const prompt = window.prompt(dest === 'slide'
+    ? 'Beschrijf de slide-afbeelding die je wilt genereren:'
+    : 'Beschrijf de achtergrond-afbeelding die je wilt genereren:');
+  if (!prompt || !prompt.trim()) return;
+  const orig = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Genereren… (±20s)';
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { toast('Niet ingelogd — log opnieuw in.', true); btn.disabled = false; btn.textContent = orig; return; }
+    const res = await fetch('/api/generate-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ prompt: prompt.trim(), postId, dest }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) {
+      const post = socialPosts.find(p => p.id === postId);
+      if (post) {
+        if (dest === 'slide') post.media_urls = (Array.isArray(post.media_urls) ? post.media_urls : []).concat(data.url);
+        else post.bg_image = data.url;
+      }
+      renderSocialPosts();
+      toast('Afbeelding gegenereerd ✓' + (data.cost ? ` (~$${data.cost})` : ''));
+    } else {
+      toast('Mislukt: ' + (data.error || res.status), true);
+      btn.disabled = false; btn.textContent = orig;
+    }
+  } catch (e) {
+    toast('Mislukt: ' + e.message, true);
+    btn.disabled = false; btn.textContent = orig;
+  }
+}
+
 function renderSocialPosts() {
   const wrap = document.getElementById('social-posts');
   if (!wrap) return;
@@ -1531,6 +1566,7 @@ function renderSocialPosts() {
         <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px">${strip}</div>
         <input type="file" accept="image/*" multiple id="cs-${p.id}" style="display:none" onchange="onCarouselSlides('${p.id}', this)">
         <button class="photo-upload-btn" onclick="document.getElementById('cs-${p.id}').click()">↑ Slides toevoegen</button>
+        <button class="photo-upload-btn" onclick="genImage('${p.id}','slide', this)">✨ Genereer slide</button>
         ${captionsLiIg}
         <div class="social-actions">
           <button class="row-btn danger font-mono" onclick="deletePost('${p.id}')">Verwijder carousel</button>
@@ -1557,6 +1593,7 @@ function renderSocialPosts() {
         <div class="form-group"><label class="form-label font-mono">Achtergrondfoto (optioneel)</label><br>
           <input type="file" accept="image/*" id="sbg-${p.id}" style="display:none" onchange="onSocialBg('${p.id}', this)">
           <button class="photo-upload-btn" onclick="document.getElementById('sbg-${p.id}').click()">↑ Foto kiezen</button>
+          <button class="photo-upload-btn" onclick="genImage('${p.id}','bg', this)">✨ Genereer</button>
           ${p.bg_image ? `<button class="photo-upload-btn" onclick="clearSocialBg('${p.id}')">✕ Verwijderen</button>` : ''}
         </div>
         ${captionsLiIg}
