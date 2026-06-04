@@ -10,7 +10,8 @@
     "api/publish-social-post.js": { "maxDuration": 60 },
     "api/manage-schedules.js": { "maxDuration": 30 },
     "api/generate-image.js": { "maxDuration": 60 },
-    "api/generate-campaign.js": { "maxDuration": 30 }
+    "api/generate-campaign.js": { "maxDuration": 30 },
+    "api/compile-carousel.js": { "maxDuration": 60 }
   },
   "crons": [
     { "path": "/api/poll-notion", "schedule": "0 8 * * *" }

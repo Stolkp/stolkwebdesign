@@ -397,6 +397,7 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <button class="settings-btn font-mono" style="margin:0;" onclick="addPost()">+ Post toevoegen</button>
           <button class="settings-btn font-mono" style="margin:0;" onclick="addCarousel()">+ Carousel toevoegen</button>
           <button class="settings-btn font-mono" style="margin:0;border-color:var(--red);color:var(--red);" onclick="genCampaign()">✨ Genereer campagne</button>
+          <button class="settings-btn font-mono" style="margin:0;border-color:var(--red);color:var(--red);" onclick="bundleCampaignCarousel()">🔗 Bundel tot carousel</button>
           <button class="settings-btn font-mono" style="margin:0;border-color:rgba(234,37,37,.4);color:rgba(234,37,37,.6);" onclick="deleteCampaign()">Campagne verwijderen</button>
         </div>
 
@@ -1562,6 +1563,39 @@ async function genCampaign() {
     const data = await res.json().catch(() => ({}));
     if (res.ok && data.ok) { toast(data.created + ' posts gegenereerd ✓ — pas ze gerust aan'); loadSocialPosts(); }
     else toast('Mislukt: ' + (data.error || res.status), true);
+  } catch (e) { toast('Mislukt: ' + e.message, true); }
+}
+
+// Bundelt alle posts van de campagne tot één nieuwe carousel-post (slides + AI-caption).
+// Niet-destructief: bronposten blijven. Daarna checkt + publiceert de gebruiker 'm zelf.
+async function bundleCampaignCarousel() {
+  if (!socialActiveId) { toast('Kies of maak eerst een campagne.', true); return; }
+  if (socialPosts.length < 2) { toast('Deze campagne heeft minstens 2 posts nodig om te bundelen.', true); return; }
+  const slideCount = socialPosts.reduce((n, p) => n + (p.kind === 'carousel' ? (Array.isArray(p.media_urls) ? p.media_urls.length : 0) : 1), 0);
+  const capped = Math.min(slideCount, 10);
+  if (!confirm(`Alle ${socialPosts.length} posts bundelen tot één carousel (~${capped} slides${slideCount > 10 ? ', afgekapt op 10' : ''})?\nDe single-posts worden als slide gerenderd en er komt een AI-caption bij. Duurt ~${capped * 8}s.`)) return;
+  toast('Carousel bundelen…');
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { toast('Niet ingelogd — log opnieuw in.', true); return; }
+    const res = await fetch('/api/compile-carousel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+      body: JSON.stringify({ campaign_id: socialActiveId }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if ((res.ok || res.status === 207) && data.post_id) {
+      toast(`Carousel gebundeld ✓ — ${data.slide_count} slides${data.truncated ? ' (afgekapt op 10)' : ''}${data.errors ? ', enkele slides overgeslagen' : ''}. Check 'm en publiceer naar LinkedIn.`);
+      await loadSocialPosts();
+      const card = document.getElementById('prev-' + data.post_id)?.closest('.social-post');
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        card.style.outline = '3px solid var(--red)'; card.style.outlineOffset = '4px';
+        setTimeout(() => { card.style.outline = ''; }, 2600);
+      }
+    } else {
+      toast('Bundelen mislukt: ' + (data.error || res.status), true);
+    }
   } catch (e) { toast('Mislukt: ' + e.message, true); }
 }
 
