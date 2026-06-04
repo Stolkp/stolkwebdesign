@@ -17,6 +17,9 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://www.stolkwebdesign.nl/assets/og-image.png">
   <link rel="canonical" href="https://www.stolkwebdesign.nl/over">
+  <link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/over">
+  <link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/over">
+  <link rel="alternate" hreflang="x-default" href="https://www.stolkwebdesign.nl/over">
 <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="8a7865ef-27ca-48b5-a7f2-0235848c8787" type="text/javascript" async></script>
 <script type="text/plain" data-cookieconsent="statistics" async src="https://www.googletagmanager.com/gtag/js?id=G-5MT8XNYTF7"></script>
 <script type="text/plain" data-cookieconsent="statistics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
@@ -89,7 +92,12 @@
       display: flex;
       gap: 40px;
       list-style: none;
+      align-items: center;
     }
+    .nav-lang { display:flex; gap:7px; align-items:center; }
+    .nav-lang a.active { color: var(--white); }
+    .nav-lang .sep { color: rgba(255,255,255,.25); }
+    .footer-links-row a.active { color: var(--white); }
 
     .nav-links a {
       font-family: 'JetBrains Mono', monospace;
@@ -440,6 +448,7 @@
       <li><a href="/#aanpak">Aanpak / 04</a></li>
       <li><a href="/over" class="active">Over mij / 05</a></li>
       <li><a href="/blog/">Blog / 06</a></li>
+      <li class="nav-lang"><a href="/over" class="active" aria-current="true">NL</a><span class="sep">/</span><a href="/en/over">EN</a></li>
       <li class="nav-cta-item"><a href="#" class="nav-cta-mobile" data-cal-link="peter-stolk-9dkoig/30min" data-cal-namespace="30min" data-cal-config='{"layout":"month_view"}'>Plan een gesprek →</a></li>
     </ul>
     <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
@@ -547,6 +556,7 @@
       <a href="/portfolio">Portfolio</a>
       <a href="/over">Over mij</a>
       <a href="/contact">Contact</a>
+      <span style="display:inline-flex;gap:7px;align-items:center"><a href="/over" class="active">NL</a><a href="/en/over">EN</a></span>
       <span style="color:rgba(255,255,255,.15)">|</span>
       <a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a>
       <a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a>
