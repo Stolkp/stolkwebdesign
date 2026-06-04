@@ -60,7 +60,8 @@ export default async function handler(req, res) {
     return res.status(502).json({ error: 'Beeldgeneratie mislukt: ' + String(e.message || e) });
   }
 
-  const imgUrl = data?.choices?.[0]?.message?.images?.[0]?.image_url?.url || '';
+  const msg = data?.choices?.[0]?.message || {};
+  const imgUrl = msg?.images?.[0]?.image_url?.url || '';
   let buf;
   try {
     if (imgUrl.startsWith('data:')) {
@@ -69,7 +70,13 @@ export default async function handler(req, res) {
       const ir = await fetch(imgUrl);
       buf = Buffer.from(await ir.arrayBuffer());
     } else {
-      return res.status(502).json({ error: 'Geen beeld terugontvangen van OpenRouter' });
+      // Geen beeld → meestal weigerde het model of gaf het tekst terug. Toon de reden.
+      const why = msg.refusal
+        ? `geweigerd: ${String(msg.refusal).slice(0, 200)}`
+        : (typeof msg.content === 'string' && msg.content.trim()
+            ? `model gaf tekst i.p.v. een beeld: "${msg.content.slice(0, 200)}"`
+            : 'leeg antwoord');
+      return res.status(502).json({ error: `Geen beeld van OpenRouter — ${why}. Tip: beschrijf een afbeelding (bijv. "minimalistische zwart-rode achtergrond, brutalist"), geen vraag.` });
     }
   } catch (e) {
     return res.status(502).json({ error: 'Beeld verwerken mislukt: ' + String(e.message || e) });
