@@ -1,0 +1,98 @@
+/*
+ * Stolkwebdesign — brutalist override voor vanilla-cookieconsent v3
+ * Huisstijl: wit/zwart, accent #EA2525, Archivo Black titels, 0 radius, offset-shadow.
+ * Laden NA cookieconsent.css.
+ */
+#cc-main {
+  --cc-font-family: 'Space Grotesk', system-ui, sans-serif;
+
+  --cc-bg: #ffffff;
+  --cc-primary-color: #0A0A0A;
+  --cc-secondary-color: #444444;
+
+  --cc-btn-primary-bg: #EA2525;
+  --cc-btn-primary-color: #ffffff;
+  --cc-btn-primary-border-color: #EA2525;
+  --cc-btn-primary-hover-bg: #0A0A0A;
+  --cc-btn-primary-hover-color: #ffffff;
+  --cc-btn-primary-hover-border-color: #0A0A0A;
+
+  --cc-btn-secondary-bg: #F5F5F5;
+  --cc-btn-secondary-color: #0A0A0A;
+  --cc-btn-secondary-border-color: #0A0A0A;
+  --cc-btn-secondary-hover-bg: #0A0A0A;
+  --cc-btn-secondary-hover-color: #ffffff;
+  --cc-btn-secondary-hover-border-color: #0A0A0A;
+
+  --cc-separator-border-color: #e2e2e2;
+  --cc-cookie-category-block-bg: #F5F5F5;
+  --cc-cookie-category-block-border: #0A0A0A;
+  --cc-cookie-category-block-bg-hover: #efefef;
+  --cc-cookie-category-block-border-hover: #0A0A0A;
+
+  --cc-toggle-on-bg: #EA2525;
+  --cc-toggle-off-bg: #9a9a9a;
+  --cc-toggle-readonly-bg: #cfcfcf;
+  --cc-toggle-on-knob-bg: #ffffff;
+  --cc-toggle-off-knob-bg: #ffffff;
+
+  /* Brutalist: geen ronde hoeken */
+  --cc-modal-border-radius: 0px;
+  --cc-btn-border-radius: 0px;
+  --cc-modal-transition-duration: .25s;
+
+  --cc-link-color: #EA2525;
+}
+
+/* Harde rand + signature offset-shadow op de modals */
+#cc-main .cm,
+#cc-main .pm {
+  border: 3px solid #0A0A0A !important;
+  box-shadow: 8px 8px 0 #0A0A0A !important;
+  border-radius: 0 !important;
+}
+
+/* Titels in display-font, uppercase */
+#cc-main .cm__title,
+#cc-main .pm__title,
+#cc-main .pm__section-title {
+  font-family: 'Archivo Black', 'Space Grotesk', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+/* Knoppen brutalist: hard, vet, uppercase */
+#cc-main .cm__btn,
+#cc-main .pm__btn {
+  border-radius: 0 !important;
+  border-width: 2px !important;
+  border-style: solid !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: background-color .15s ease, color .15s ease, transform .1s ease;
+}
+#cc-main .cm__btn:hover,
+#cc-main .pm__btn:hover {
+  transform: translate(-1px, -1px);
+}
+
+/* Categorie-blokken in voorkeuren: hoekig */
+#cc-main .pm__section {
+  border-radius: 0 !important;
+}
+
+/* "Alleen noodzakelijk" secundair (bone) i.p.v. rood — rood blijft voorbehouden
+   aan de primaire actie "Alles accepteren" (huisstijl: rood spaarzaam). */
+#cc-main .cm__btn[data-role="necessary"],
+#cc-main .pm__btn[data-role="necessary"] {
+  background: var(--cc-btn-secondary-bg);
+  color: var(--cc-btn-secondary-color);
+  border-color: var(--cc-btn-secondary-border-color);
+}
+#cc-main .cm__btn[data-role="necessary"]:hover,
+#cc-main .pm__btn[data-role="necessary"]:hover {
+  background: var(--cc-btn-secondary-hover-bg);
+  color: var(--cc-btn-secondary-hover-color);
+  border-color: var(--cc-btn-secondary-hover-border-color);
+}
