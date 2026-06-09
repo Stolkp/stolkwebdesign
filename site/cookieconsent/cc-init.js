@@ -1,3 +1,30 @@
+// ── Google Consent Mode v2 — standaard alles geweigerd, vóórdat GA laadt ──
+// cc-init.js is een defer-script en draait dus vóór de (type="text/plain") GA-scripts,
+// die pas ná toestemming worden geactiveerd. Zo staat de default-denied er op tijd.
+window.dataLayer = window.dataLayer || [];
+function gtag() { dataLayer.push(arguments); }
+gtag('consent', 'default', {
+  ad_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied',
+  analytics_storage: 'denied',
+  wait_for_update: 500
+});
+gtag('set', 'url_passthrough', true);
+gtag('set', 'ads_data_redaction', true);
+
+// Vertaalt de geaccepteerde categorieën naar Consent Mode-signalen.
+function swdUpdateConsent() {
+  var analytics = CookieConsent.acceptedCategory('analytics');
+  var ads = CookieConsent.acceptedCategory('ads');
+  gtag('consent', 'update', {
+    analytics_storage:  analytics ? 'granted' : 'denied',
+    ad_storage:         ads ? 'granted' : 'denied',
+    ad_user_data:       ads ? 'granted' : 'denied',
+    ad_personalization: ads ? 'granted' : 'denied'
+  });
+}
+
 /*
  * Stolkwebdesign — cookie consent configuratie
  * Zelf-gehost via vanilla-cookieconsent v3 (MIT, gratis, geen account/kosten).
@@ -10,6 +37,8 @@
  *   ads        → Meta/Facebook Pixel (384832226157615)
  */
 CookieConsent.run({
+  onConsent: swdUpdateConsent,
+  onChange: swdUpdateConsent,
   guiOptions: {
     consentModal: { layout: 'box', position: 'bottom left', equalWeightButtons: true, flipButtons: false },
     preferencesModal: { layout: 'box', position: 'right', equalWeightButtons: true, flipButtons: false }
