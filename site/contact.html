@@ -221,6 +221,7 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     <div class="form-sub font-mono" data-content="contact.form_sub">Ik reageer binnen 1 werkdag</div>
 
     <form id="contact-form" novalidate>
+      <input type="text" id="input-company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;">
       <div class="form-row">
         <div class="form-group">
           <label class="form-label font-mono" for="input-voornaam">Voornaam *</label>
@@ -300,8 +301,8 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
   });
 
-  // ── Contact form → Dashboard /api/lead ──
-  const DASHBOARD_URL = 'http://localhost:3000'; // wijzig naar productie-URL bij deploy
+  // ── Contact form → /api/lead (same-origin Vercel function → Notion) ──
+  const FORM_LOADED_AT = Date.now(); // voor de anti-spam time-trap
 
   document.getElementById('contact-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -311,6 +312,7 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     const email = document.getElementById('input-email').value.trim();
     const dienst = document.getElementById('input-dienst').value;
     const berichtRaw = document.getElementById('input-bericht').value.trim();
+    const company = document.getElementById('input-company').value; // honeypot
     const errorEl = document.getElementById('form-error');
     const btn = document.getElementById('form-btn');
     const btnLabel = document.getElementById('btn-label');
@@ -325,23 +327,32 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     }
 
     const naam = `${voornaam} ${achternaam}`.trim();
-    const bericht = dienst ? `[${dienst}]\n${berichtRaw}` : berichtRaw;
+    const attribution = (typeof getAttribution === 'function') ? getAttribution() : { string: 'direct/onbekend' };
 
     btn.disabled = true;
     btnLabel.textContent = 'Versturen…';
     btnIcon.style.display = 'none';
 
     try {
-      const res = await fetch(`${DASHBOARD_URL}/api/lead`, {
+      const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ naam, email, bericht, prioriteit: 'Gemiddeld' }),
+        body: JSON.stringify({
+          naam, email, dienst, bericht: berichtRaw,
+          bron: attribution.string,
+          company,                         // honeypot (leeg bij echte mensen)
+          elapsed_ms: Date.now() - FORM_LOADED_AT,
+        }),
       });
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         throw new Error(data.error || `Server fout (${res.status})`);
       }
+
+      // Conversie-events (alleen als de tags na cookie-consent geladen zijn)
+      try { if (typeof fbq === 'function') fbq('track', 'Lead'); } catch (e2) {}
+      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'generate_lead', method: 'contact_form' }); } catch (e2) {}
 
       // Succes
       document.getElementById('contact-form').style.display = 'none';
@@ -356,6 +367,9 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     }
   });
 </script>
+
+  <!-- Attributie: vangt advertentie-parameters (UTM/gclid/fbclid) op voor lead-bron -->
+  <script src="utm.js"></script>
 
   <!-- CMS content-loader: overschrijft teksten/links met overrides uit Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

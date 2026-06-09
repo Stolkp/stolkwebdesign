@@ -13,10 +13,13 @@
     "api/generate-campaign.js": { "maxDuration": 30 },
     "api/compile-carousel.js": { "maxDuration": 60 },
     "api/create-signature-request.js": { "maxDuration": 30 },
-    "api/sign-document.js": { "maxDuration": 30 }
+    "api/sign-document.js": { "maxDuration": 30 },
+    "api/sync-ads-metrics.js": { "maxDuration": 30 },
+    "api/lead.js": { "maxDuration": 15 }
   },
   "crons": [
-    { "path": "/api/poll-notion", "schedule": "0 8 * * *" }
+    { "path": "/api/poll-notion", "schedule": "0 8 * * *" },
+    { "path": "/api/sync-ads-metrics", "schedule": "0 7 * * *" }
   ],
   "headers": [
     {

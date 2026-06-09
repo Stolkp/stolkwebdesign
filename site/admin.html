@@ -321,6 +321,10 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s2-5 4-5 1 3 2.5 3S11 4 13 4"/><path d="M2 14h12"/></svg>
           Ondertekenen
         </div>
+        <div class="sidebar-item font-mono" onclick="showSection('ads', this); loadAdsDashboard();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 11l3.5-4 3 2.5L13 4"/><path d="M10 4h3v3"/></svg>
+          Advertenties
+        </div>
         <div class="sidebar-item font-mono" onclick="showSection('settings', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
           Instellingen
@@ -480,6 +484,63 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 
         <div style="margin-top:24px; padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
           ℹ De klant opent de link, bekijkt het document en zet een elektronische handtekening (SES). Handtekening, tijdstip en IP worden vastgelegd als bewijs. Een getekend document is niet meer te wijzigen.
+        </div>
+      </div>
+
+      <!-- ADVERTENTIES -->
+      <div id="section-ads" class="page-section">
+        <div class="page-title font-display">Advertenties</div>
+        <div class="page-sub font-mono">Performance per kanaal · kosten per lead t.o.v. je drempels · acties die je moet doen</div>
+
+        <div class="factuur-toolbar no-print" style="margin-bottom:18px;">
+          <button class="add-btn font-display" style="margin:0;" onclick="syncAds()">↻ Sync nu</button>
+          <span id="ads-sync-status" class="font-mono" style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#666;"></span>
+        </div>
+
+        <!-- KPI-kaarten per kanaal -->
+        <div id="ads-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;"></div>
+
+        <!-- Actielijst -->
+        <div class="fact-saved no-print" style="margin:22px 0 0;border:1px solid #1a1a1a;background:#0e0e0e;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #1a1a1a;">
+            <span class="font-display" style="font-size:12px;text-transform:uppercase;letter-spacing:.04em;">Acties die je moet doen</span>
+            <button class="settings-btn font-mono" style="margin:0;" onclick="loadAdsDashboard()">↻ Vernieuwen</button>
+          </div>
+          <div id="ads-actions" style="padding:10px 16px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#777;">Laden…</div>
+        </div>
+
+        <div class="settings-grid" style="margin-top:22px;">
+          <!-- Drempelwaarden -->
+          <div class="settings-card">
+            <div class="settings-card-title font-display">Drempelwaarden (unit-economics)</div>
+            <p class="settings-info">Bepalen wanneer een kanaal groen of rood kleurt. Stel ze af op jouw cijfers.</p>
+            <div class="form-group" style="margin-top:12px;"><label class="form-label font-mono">Gem. projectwaarde (€)</label><input class="form-input" id="ads-set-apv" type="number" placeholder="1500"></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label font-mono">Max. kosten / lead (€)</label><input class="form-input" id="ads-set-cpl" type="number" placeholder="125"></div>
+              <div class="form-group"><label class="form-label font-mono">Max. kosten / klant (€)</label><input class="form-input" id="ads-set-cpa" type="number" placeholder="400"></div>
+            </div>
+            <div class="form-group"><label class="form-label font-mono">Doel leads / week</label><input class="form-input" id="ads-set-target" type="number" placeholder="5"></div>
+            <button class="settings-btn font-mono" onclick="saveAdsSettings()">Drempels opslaan</button>
+          </div>
+
+          <!-- Handmatige Google-invoer (tot de API-koppeling live is) -->
+          <div class="settings-card">
+            <div class="settings-card-title font-display">Google-cijfers handmatig</div>
+            <p class="settings-info">Tot de Google Ads-koppeling live is: voer hier wekelijks de cijfers in (uit Google Ads).</p>
+            <div class="form-row" style="margin-top:12px;">
+              <div class="form-group"><label class="form-label font-mono">Uitgaven (€)</label><input class="form-input" id="ads-g-spend" type="number"></div>
+              <div class="form-group"><label class="form-label font-mono">Klikken</label><input class="form-input" id="ads-g-clicks" type="number"></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label font-mono">Impressies</label><input class="form-input" id="ads-g-impr" type="number"></div>
+              <div class="form-group"><label class="form-label font-mono">Leads</label><input class="form-input" id="ads-g-leads" type="number"></div>
+            </div>
+            <button class="settings-btn font-mono" onclick="addManualMetric()">Google-cijfers opslaan</button>
+          </div>
+        </div>
+
+        <div style="margin-top:22px; padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
+          ℹ Meta-cijfers worden automatisch opgehaald (dagelijks + via “Sync nu”). Google volgt zodra het developer-token is goedgekeurd — voer Google tot dan handmatig in. Cijfers zijn een rollend 7-daags venster.
         </div>
       </div>
 
@@ -928,6 +989,161 @@ async function loadSignList() {
 function copySignLink(token) {
   const url = location.origin + '/onderteken?token=' + token;
   navigator.clipboard.writeText(url).then(() => toast('Link gekopieerd ✓'), () => toast('Kopiëren mislukt', true));
+}
+
+// ── ADVERTENTIES (Ads-module) ──
+const ADS_TABLE = 'stolkwebdesign_ads_metrics';
+const ADS_SET_TABLE = 'stolkwebdesign_ads_settings';
+const ADS_ACT_TABLE = 'stolkwebdesign_ads_actions';
+const ADS_SEV = {
+  good:     ['●', '#37a04a'],
+  info:     ['●', '#888'],
+  warn:     ['▲', '#d9a400'],
+  critical: ['■', '#ea2525'],
+};
+const ADS_PLATFORM = { meta: 'Meta (FB/IG)', google: 'Google Ads' };
+let adsThresholds = { max_cpl: 125, max_cpa: 400, avg_project_value: 1500, target_leads_week: 5 };
+
+async function loadAdsDashboard() {
+  const cards = document.getElementById('ads-cards');
+  const acts = document.getElementById('ads-actions');
+  if (!cards || !acts) return;
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { cards.innerHTML = ''; acts.textContent = 'Log eerst in.'; return; }
+
+  // Drempelwaarden ophalen + invulvelden vullen
+  const { data: set } = await db.from(ADS_SET_TABLE).select('*').eq('id', true).single();
+  if (set) {
+    adsThresholds = set;
+    const v = (id, val) => { const el = document.getElementById(id); if (el && val != null) el.value = val; };
+    v('ads-set-apv', set.avg_project_value); v('ads-set-cpl', set.max_cpl);
+    v('ads-set-cpa', set.max_cpa); v('ads-set-target', set.target_leads_week);
+  }
+
+  // Laatste cijfers per kanaal (+ vorige snapshot voor trend)
+  const { data: rows, error } = await db.from(ADS_TABLE)
+    .select('*').order('fetched_at', { ascending: false }).limit(60);
+  if (error) { cards.innerHTML = '<div style="color:#777;font-family:JetBrains Mono,monospace;font-size:12px;">Fout: ' + signEsc(error.message) + '</div>'; }
+  else renderAdsCards(rows || []);
+
+  // Actielijst
+  const { data: actions, error: aErr } = await db.from(ADS_ACT_TABLE)
+    .select('*').order('status', { ascending: true }).order('created_at', { ascending: false });
+  if (aErr) { acts.textContent = 'Fout: ' + aErr.message; return; }
+  if (!actions || !actions.length) { acts.textContent = 'Nog geen acties — klik “↻ Sync nu” om cijfers op te halen.'; return; }
+  acts.innerHTML = actions.map(a => {
+    const s = ADS_SEV[a.severity] || ADS_SEV.info;
+    const done = a.status === 'done';
+    return `<div style="display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid #1a1a1a;${done ? 'opacity:.45;' : ''}">
+      <input type="checkbox" ${done ? 'checked' : ''} onchange="toggleAdsAction('${a.id}', this.checked)" style="margin-top:3px;cursor:pointer;">
+      <span style="min-width:0;">
+        <span style="color:${s[1]};">${s[0]}</span>
+        <strong style="color:#ddd;${done ? 'text-decoration:line-through;' : ''}"> ${signEsc(a.title)}</strong>
+        ${a.platform ? `<span style="color:#555;"> · ${signEsc(ADS_PLATFORM[a.platform] || a.platform)}</span>` : ''}
+        ${a.detail ? `<div style="color:#777;margin-top:3px;line-height:1.6;">${signEsc(a.detail)}</div>` : ''}
+      </span></div>`;
+  }).join('');
+}
+
+function renderAdsCards(rows) {
+  const cards = document.getElementById('ads-cards');
+  const latest = {};
+  for (const r of rows) { if (!latest[r.platform]) latest[r.platform] = r; }
+  const maxCpl = Number(adsThresholds.max_cpl) || 125;
+  const euro = (n) => '€' + (Number(n) || 0).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const num = (n) => (Number(n) || 0).toLocaleString('nl-NL');
+
+  const platforms = ['meta', 'google'];
+  cards.innerHTML = platforms.map(p => {
+    const r = latest[p];
+    const title = ADS_PLATFORM[p];
+    if (!r) {
+      return `<div style="border:1px solid #1a1a1a;background:#0e0e0e;padding:16px;">
+        <div class="font-display" style="font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#ddd;">${title}</div>
+        <div class="font-mono" style="font-size:11px;color:#555;margin-top:10px;">Nog geen cijfers.</div></div>`;
+    }
+    const cplOk = r.leads > 0 && r.cost_per_lead <= maxCpl;
+    const cplBad = r.leads > 0 && r.cost_per_lead > maxCpl;
+    const cplColor = cplOk ? '#37a04a' : (cplBad ? '#ea2525' : '#888');
+    const stat = (label, val) => `<div><div class="font-mono" style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#555;">${label}</div><div class="font-display" style="font-size:15px;color:#ddd;margin-top:2px;">${val}</div></div>`;
+    return `<div style="border:1px solid #1a1a1a;background:#0e0e0e;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="font-display" style="font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:#ddd;">${title}</div>
+        <span class="font-mono" style="font-size:9px;color:#444;">${r.source === 'manual' ? 'handmatig' : 'auto'} · 7d</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;">
+        ${stat('Uitgaven', euro(r.spend))}
+        ${stat('Klikken', num(r.clicks))}
+        ${stat('Kosten / klik', euro(r.cpc))}
+        ${stat('Leads', num(r.leads))}
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid #1a1a1a;">
+        <div class="font-mono" style="font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:#555;">Kosten / lead (drempel ${euro(maxCpl)})</div>
+        <div class="font-display" style="font-size:22px;color:${cplColor};margin-top:2px;">${r.leads > 0 ? euro(r.cost_per_lead) : '—'}</div>
+      </div></div>`;
+  }).join('');
+}
+
+async function syncAds() {
+  const status = document.getElementById('ads-sync-status');
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { toast('Niet ingelogd', true); return; }
+  if (status) status.textContent = 'Synchroniseren…';
+  try {
+    const res = await fetch('/api/sync-ads-metrics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+    });
+    const out = await res.json().catch(() => ({}));
+    if (!res.ok || !out.ok) { toast('Sync mislukt: ' + (out.error || res.status), true); if (status) status.textContent = 'Mislukt'; return; }
+    if (status) status.textContent = 'Bijgewerkt ✓';
+    toast('Cijfers opgehaald ✓');
+    loadAdsDashboard();
+  } catch (e) {
+    toast('Netwerkfout: ' + (e.message || e), true);
+    if (status) status.textContent = 'Mislukt';
+  }
+}
+
+async function saveAdsSettings() {
+  const row = {
+    id: true,
+    avg_project_value: parseFloat(document.getElementById('ads-set-apv').value) || 1500,
+    max_cpl: parseFloat(document.getElementById('ads-set-cpl').value) || 125,
+    max_cpa: parseFloat(document.getElementById('ads-set-cpa').value) || 400,
+    target_leads_week: parseInt(document.getElementById('ads-set-target').value, 10) || 5,
+    updated_at: new Date().toISOString(),
+  };
+  const { error } = await db.from(ADS_SET_TABLE).upsert(row, { onConflict: 'id' });
+  if (error) { toast('Opslaan mislukt: ' + error.message, true); return; }
+  adsThresholds = row;
+  toast('Drempels opgeslagen');
+  loadAdsDashboard();
+}
+
+async function addManualMetric() {
+  const spend = parseFloat(document.getElementById('ads-g-spend').value) || 0;
+  const clicks = parseInt(document.getElementById('ads-g-clicks').value, 10) || 0;
+  const impressions = parseInt(document.getElementById('ads-g-impr').value, 10) || 0;
+  const leads = parseInt(document.getElementById('ads-g-leads').value, 10) || 0;
+  if (!spend && !clicks && !leads) { toast('Vul minstens uitgaven of klikken in', true); return; }
+  const row = {
+    platform: 'google', period: 'manual', source: 'manual',
+    spend, clicks, impressions, leads,
+    ctr: impressions ? +((clicks / impressions) * 100).toFixed(2) : 0,
+    cpc: clicks ? +(spend / clicks).toFixed(2) : 0,
+    cost_per_lead: leads ? +(spend / leads).toFixed(2) : 0,
+  };
+  const { error } = await db.from(ADS_TABLE).insert(row);
+  if (error) { toast('Opslaan mislukt: ' + error.message, true); return; }
+  ['ads-g-spend', 'ads-g-clicks', 'ads-g-impr', 'ads-g-leads'].forEach(id => { document.getElementById(id).value = ''; });
+  toast('Google-cijfers opgeslagen');
+  loadAdsDashboard();
+}
+
+async function toggleAdsAction(id, done) {
+  const { error } = await db.from(ADS_ACT_TABLE).update({ status: done ? 'done' : 'open' }).eq('id', id);
+  if (error) toast('Bijwerken mislukt: ' + error.message, true);
 }
 
 async function sendAgreement() {
