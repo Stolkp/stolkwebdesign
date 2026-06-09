@@ -63,18 +63,21 @@ koppel je Ads-account.
 (Beheer → Gebeurtenissen). Importeer 'm daarna in Google Ads (Doelen → Conversies → Importeren → GA4).
 > Het `generate_lead`-event vuurt al automatisch bij een formulier-verzending (dat hebben we ingebouwd).
 
-### Stap 1.3 — cal.com-boeking als conversie
-**Waar:** cal.com → Event Type "30min" → **Advanced** (of Workflows).
-**Wat (kies 1):**
-- **Makkelijkst:** zet een **bedankpagina/redirect** na de boeking naar bv.
-  `stolkwebdesign.nl/bedankt-afspraak`, en zet op die pagina de Google-Ads- + Meta-conversietag.
-- **Netter:** cal.com **webhook** → een kleine functie die de conversie registreert.
-> Zeg welke je wilt, dan bouw ik de bedankpagina + tag erbij.
+### Stap 1.3 — cal.com-boeking als conversie  ✅ pagina gebouwd
+De bedankpagina **`https://www.stolkwebdesign.nl/bedankt-afspraak`** is gebouwd en live. Die vuurt bij
+laden automatisch `book_appointment` (dataLayer) + Meta `Schedule` + `Lead`.
+**Wat jij nog doet:**
+1. **cal.com** → Event Type "30min" → **Advanced** → **"Redirect on booking" / success-URL** → zet op
+   `https://www.stolkwebdesign.nl/bedankt-afspraak`.
+2. **GA4** → markeer **`book_appointment`** als sleutelgebeurtenis → importeer in Google Ads als conversie
+   (apart van `generate_lead` — een boeking is je waardevolste conversie).
+> Liever de directe Google Ads-tag i.p.v. GA4-import? In `site/bedankt-afspraak.html` staat een
+> kant-en-klaar regeltje waar je alleen je `AW-…/label` invult.
 
-### Stap 1.4 — Consent Mode v2 (NL/EU)
-**Waar:** je cookieconsent-config (`site/cookieconsent/`).
-**Wat:** Google Consent Mode v2 inschakelen zodat conversies meetbaar blijven na cookie-toestemming.
-> Dit is code-werk — dat kan ik voor je doen; laat het me weten.
+### Stap 1.4 — Consent Mode v2 (NL/EU)  ✅ gebouwd
+Google Consent Mode v2 staat live in `site/cookieconsent/cc-init.js`: standaard alles geweigerd,
+en bij toestemming worden `analytics_storage` + `ad_storage` + `ad_user_data` + `ad_personalization`
+op `granted` gezet (de v2-signalen die Google Ads in de EU nodig heeft). **Geen actie meer nodig.**
 
 ### Stap 1.5 — Verifiëren
 **Waar:** Google **Tag Assistant** (tagassistant.google.com) + Meta **Events Manager** (Testgebeurtenissen).
@@ -82,11 +85,12 @@ koppel je Ads-account.
 
 ---
 
-## DEEL 2 — Landingspagina (aanbevolen, verhoogt conversie + verlaagt CPC)
+## DEEL 2 — Landingspagina  ✅ gebouwd
 
-**Wat:** een dedicated `/website-laten-maken`-pagina met de gratis-mockup-belofte, message-matched op de
-advertentie. (Interim mag je ook naar de homepage sturen, maar dat converteert minder.)
-> Dit bouw ik voor je — zeg "bouw de landingspagina" en ik pak ad-group A1 op.
+Live op **`https://www.stolkwebdesign.nl/website-laten-maken`** — message-matched, gratis-mockup-belofte,
+kwalificatie-formulier (huidige site/budget/timing) → `/api/lead` met UTM-bron + conversie-events,
+een **"Recent werk"-strip** met 4 voorbeeldprojecten (social proof) en `noindex` (puur ad-bestemming).
+**Geen actie meer nodig** — dit is je Google-bestemmings-URL (zie Deel 3).
 
 ---
 
@@ -96,10 +100,11 @@ advertentie. (Interim mag je ook naar de homepage sturen, maar dat converteert m
 **Wat:** volg het bouwplan in [`google-ads-search-plan.md`](google-ads-search-plan.md):
 1. Kies een **budgetscenario** (krap / aanbevolen €750–1.000 / ruim).
 2. Campagne **Search only**, locatie = aanwezigheid rond Uithoorn/Amstelveen/Amsterdam, taal NL.
-3. Bouw ad-groups **A1–A6** met de keywords + match types uit het plan.
-4. Plak de **negative keywords** (campagne- + ad-group-niveau).
-5. 1 **RSA** per ad-group (koppen/descriptions staan in het plan) + extensies.
-6. Zet **UTM's** op de ad-URL's: `?utm_source=google&utm_medium=cpc&utm_campaign=lokaal-webdesign`.
+3. **Bestemmings-URL = de landingspagina** (niet de homepage):
+   `https://www.stolkwebdesign.nl/website-laten-maken?utm_source=google&utm_medium=cpc&utm_campaign=lokaal-webdesign&utm_term={keyword}`
+4. Bouw ad-groups **A1–A6** met de keywords + match types uit het plan.
+5. Plak de **negative keywords** (campagne- + ad-group-niveau).
+6. 1 **RSA** per ad-group (koppen/descriptions staan in het plan) + extensies.
 7. Start met **Klikken maximaliseren + max-CPC-plafond**.
 **Hoe sturen:** week 1 dagelijks het **zoektermenrapport** → ruis als negative, winnaars als Exact.
 Volg de cijfers in je CMS **Advertenties**-tab tegen je drempel (€125/lead).
@@ -117,4 +122,6 @@ Volg de cijfers in je CMS **Advertenties**-tab tegen je drempel (€125/lead).
 
 ### Snelste route naar "live en meetbaar"
 **0.1 → 0.2 → 0.3 → 0.4 → 1.1 → 1.2 → 1.3 → 1.5**, dan pas **Deel 3**.
+> Al het code-werk is klaar: lead-formulier, landingspagina (Deel 2 ✅), bedankpagina, Consent Mode v2
+> (1.4 ✅), UTM-attributie, beide conversiepagina's en de CMS Ads-tab. Wat rest is puur console + budget.
 Deel 2 (landingspagina) en 1.4 (Consent Mode) kan ik voor je bouwen wanneer je zegt.
