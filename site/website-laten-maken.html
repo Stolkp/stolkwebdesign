@@ -90,6 +90,13 @@ h2.sec { font-family:'Archivo Black',sans-serif; font-size:clamp(28px,4vw,46px);
 .step-num { font-family:'Archivo Black',sans-serif; font-size:40px; color:var(--red); line-height:1; }
 .step h3 { font-family:'Archivo Black',sans-serif; font-size:17px; text-transform:uppercase; margin:14px 0 8px; }
 .step p { font-size:14px; color:#333; line-height:1.65; }
+.work { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+.work-card { border:2px solid var(--black); box-shadow:6px 6px 0 var(--black); background:var(--white); }
+.work-card img { width:100%; aspect-ratio:4/3; object-fit:cover; object-position:center top; display:block; border-bottom:2px solid var(--black); }
+.work-cap { padding:12px 14px; }
+.work-cap b { font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; display:block; letter-spacing:-0.01em; }
+.work-cap span { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+.work-more { display:inline-block; margin-top:26px; font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--black); text-decoration:none; border-bottom:2px solid var(--red); padding-bottom:3px; }
 .why { display:grid; grid-template-columns:repeat(2,1fr); gap:0; border:2px solid var(--black); }
 .why div { padding:24px; border-right:2px solid var(--black); border-bottom:2px solid var(--black); }
 .why div:nth-child(2n) { border-right:0; }
@@ -223,6 +230,19 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     <div class="step"><div class="step-num">02</div><h3>Kort gesprek</h3><p>We bekijken de mockup samen (20 min, online). Past het? Dan krijg je een vaste prijs, geen verrassingen.</p></div>
     <div class="step"><div class="step-num">03</div><h3>Bouwen &amp; live</h3><p>Ik bouw je site in schone, snelle code met scroll-animaties. Jij krijgt een site die klanten oplevert.</p></div>
   </div>
+</div></section>
+
+<!-- RECENT WERK -->
+<section class="block"><div class="wrap">
+  <div class="kicker">Recent werk</div>
+  <h2 class="sec">Een greep uit<br>mijn projecten</h2>
+  <div class="work">
+    <div class="work-card"><img src="/assets/lp/sauberhaus.jpg" width="900" height="675" loading="lazy" alt="Website Sauberhaus"><div class="work-cap"><b>Sauberhaus</b><span>Lifestyle brand</span></div></div>
+    <div class="work-card"><img src="/assets/lp/maestr.jpg" width="900" height="675" loading="lazy" alt="Website Maestr"><div class="work-cap"><b>Maestr</b><span>Music / tech</span></div></div>
+    <div class="work-card"><img src="/assets/lp/nmwecreate.jpg" width="900" height="675" loading="lazy" alt="Website NM We Create"><div class="work-cap"><b>NM We Create</b><span>Creatief bureau</span></div></div>
+    <div class="work-card"><img src="/assets/lp/bestsupport08.jpg" width="900" height="675" loading="lazy" alt="Website Bestsupport08"><div class="work-cap"><b>Bestsupport08</b><span>Juridisch advies</span></div></div>
+  </div>
+  <a href="/portfolio" target="_blank" rel="noopener" class="work-more">Bekijk het volledige portfolio →</a>
 </div></section>
 
 <!-- WAAROM -->
