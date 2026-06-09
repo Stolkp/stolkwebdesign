@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan een gratis gesprek — Stolkwebdesign</title>
+<meta name="robots" content="noindex,follow">
+
+<!-- Cookie consent + Consent Mode v2 (default-denied in cc-init.js, vóór GA) -->
+<link rel="stylesheet" href="/cookieconsent/cookieconsent.css">
+<link rel="stylesheet" href="/cookieconsent/cc-brutalist.css">
+<script defer src="/cookieconsent/cookieconsent.umd.js"></script>
+<script defer src="/cookieconsent/cc-init.js"></script>
+<script type="text/plain" data-category="analytics" async src="https://www.googletagmanager.com/gtag/js?id=G-5MT8XNYTF7"></script>
+<script type="text/plain" data-category="analytics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
+<script type="text/plain" data-category="ads">!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','384832226157615');fbq('track','PageView');</script>
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
+body { background:var(--white); color:var(--black); font-family:'Space Grotesk',sans-serif; }
+.font-display { font-family:'Archivo Black',sans-serif; }
+.wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+nav { background:var(--black); border-bottom:2px solid var(--black); padding:14px 24px; display:flex; justify-content:space-between; align-items:center; }
+.nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
+.nav-logo span { color:var(--red); }
+.nav-cta { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--white); text-decoration:none; border:2px solid rgba(255,255,255,.3); padding:9px 16px; }
+.nav-cta:hover { background:var(--red); border-color:var(--red); }
+.head { background:var(--near-black); color:var(--white); padding:54px 0 46px; border-bottom:2px solid var(--black); }
+.eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--red); margin-bottom:16px; }
+h1 { font-family:'Archivo Black',sans-serif; font-size:clamp(34px,5.5vw,60px); text-transform:uppercase; letter-spacing:-0.04em; line-height:.92; }
+h1 .red { color:var(--red); }
+.lead { font-size:16px; color:rgba(255,255,255,.65); line-height:1.7; margin-top:20px; max-width:560px; }
+.embed-wrap { padding:40px 0 64px; }
+#cal-inline { min-height:640px; border:2px solid var(--black); background:var(--white); }
+footer { background:var(--black); color:var(--white); padding:28px 0; }
+.footer-bar { display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+.footer-bar a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.45); text-decoration:none; }
+.footer-bar a:hover { color:var(--white); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Stolk<span>web</span>design<span>®</span></a>
+  <a href="https://wa.me/31650222228" class="nav-cta" target="_blank" rel="noopener">WhatsApp</a>
+</nav>
+
+<header class="head"><div class="wrap">
+  <div class="eyebrow">Gratis &amp; vrijblijvend · 20 minuten</div>
+  <h1>Plan je <span class="red">gesprek.</span></h1>
+  <p class="lead">Kies hieronder een moment dat jou uitkomt. We bespreken je plan, je website en wat het kost — zonder verplichtingen. Liever appen? Gebruik de knop rechtsboven.</p>
+</div></header>
+
+<section class="embed-wrap"><div class="wrap">
+  <div id="cal-inline"></div>
+</div></section>
+
+<footer><div class="wrap footer-bar">
+  <a href="/">Home</a>
+  <a href="/portfolio">Portfolio</a>
+  <a href="/contact">Contact</a>
+  <a href="/privacybeleid">Privacybeleid</a>
+</div></footer>
+
+<!-- Attributie (UTM/gclid/fbclid) -->
+<script src="/utm.js"></script>
+
+<!-- cal.com inline embed (gratis) -->
+<script type="text/javascript">
+(function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+
+Cal("init", "30min", { origin: "https://cal.com" });
+
+Cal.ns["30min"]("inline", {
+  elementOrSelector: "#cal-inline",
+  config: { layout: "month_view" },
+  calLink: "peter-stolk-9dkoig/30min",
+});
+
+Cal.ns["30min"]("ui", { hideEventTypeDetails: false, layout: "month_view" });
+
+// Conversie: een geboekte afspraak is je waardevolste conversie.
+Cal.ns["30min"]("on", {
+  action: "bookingSuccessful",
+  callback: function () {
+    var attr = (typeof getAttribution === 'function') ? getAttribution().string : 'direct/onbekend';
+    try {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'book_appointment', method: 'calcom_embed', source: attr });
+    } catch (e) {}
+    try { if (typeof fbq === 'function') { fbq('track', 'Schedule'); fbq('track', 'Lead'); } } catch (e) {}
+    // Optioneel directe Google Ads-conversie — vul AW-ID/label in en haal de // weg:
+    // try { if (typeof gtag === 'function') gtag('event', 'conversion', { send_to: 'AW-XXXXXXXXX/XXXXXXXXXXXXXXX' }); } catch (e) {}
+  }
+});
+</script>
+
+</body>
+</html>

@@ -63,16 +63,18 @@ koppel je Ads-account.
 (Beheer → Gebeurtenissen). Importeer 'm daarna in Google Ads (Doelen → Conversies → Importeren → GA4).
 > Het `generate_lead`-event vuurt al automatisch bij een formulier-verzending (dat hebben we ingebouwd).
 
-### Stap 1.3 — cal.com-boeking als conversie  ✅ pagina gebouwd
-De bedankpagina **`https://www.stolkwebdesign.nl/bedankt-afspraak`** is gebouwd en live. Die vuurt bij
-laden automatisch `book_appointment` (dataLayer) + Meta `Schedule` + `Lead`.
+### Stap 1.3 — cal.com-boeking als conversie  ✅ gebouwd (gratis, géén cal.com-upgrade)
+cal.com's "redirect na boeking" zit achter een betaald plan — niet nodig. In plaats daarvan is er een
+eigen boekingspagina met de cal.com-agenda **ingebed**: **`https://www.stolkwebdesign.nl/plan-gesprek`**.
+Die vuurt automatisch de conversie bij een gelukte boeking via het gratis `bookingSuccessful`-event:
+`book_appointment` (dataLayer) + Meta `Schedule` + `Lead`. Alle NL-CTA's ("Plan een gesprek" op home,
+contact, modules) wijzen er al naartoe.
 **Wat jij nog doet:**
-1. **cal.com** → Event Type "30min" → **Advanced** → **"Redirect on booking" / success-URL** → zet op
-   `https://www.stolkwebdesign.nl/bedankt-afspraak`.
-2. **GA4** → markeer **`book_appointment`** als sleutelgebeurtenis → importeer in Google Ads als conversie
-   (apart van `generate_lead` — een boeking is je waardevolste conversie).
-> Liever de directe Google Ads-tag i.p.v. GA4-import? In `site/bedankt-afspraak.html` staat een
-> kant-en-klaar regeltje waar je alleen je `AW-…/label` invult.
+- **GA4** → markeer **`book_appointment`** als sleutelgebeurtenis → importeer in Google Ads als conversie
+  (apart van `generate_lead` — een boeking is je waardevolste conversie).
+> Liever de directe Google Ads-tag i.p.v. GA4-import? In `site/plan-gesprek.html` staat een kant-en-klaar
+> regeltje waar je alleen je `AW-…/label` invult.
+> (`/bedankt-afspraak` bestaat ook nog — alleen nodig als je later tóch cal.com's redirect of een webhook gebruikt.)
 
 ### Stap 1.4 — Consent Mode v2 (NL/EU)  ✅ gebouwd
 Google Consent Mode v2 staat live in `site/cookieconsent/cc-init.js`: standaard alles geweigerd,
