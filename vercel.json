@@ -11,7 +11,9 @@
     "api/manage-schedules.js": { "maxDuration": 30 },
     "api/generate-image.js": { "maxDuration": 60 },
     "api/generate-campaign.js": { "maxDuration": 30 },
-    "api/compile-carousel.js": { "maxDuration": 60 }
+    "api/compile-carousel.js": { "maxDuration": 60 },
+    "api/create-signature-request.js": { "maxDuration": 30 },
+    "api/sign-document.js": { "maxDuration": 30 }
   },
   "crons": [
     { "path": "/api/poll-notion", "schedule": "0 8 * * *" }

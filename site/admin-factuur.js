@@ -11,6 +11,7 @@
 (function () {
   const KEY = 'swd-invoice-draft-v1';   // factuurconcept (wisselt per factuur)
   const SKEY = 'swd-invoice-sender-v1';  // afzendergegevens (vast, blijven bewaard)
+  const SIG_TABLE = 'stolkwebdesign_sign_requests'; // Ondertekenen-module
 
   // Vast bedrijfslogo — STOLK/DESIGN zwart, WEB + ® rood — als vector (geen
   // font-afhankelijkheid, ziet er overal identiek uit). Gelijk aan assets/logo-outline.svg.
@@ -43,6 +44,7 @@
   function defaultInv() {
     return {
       sender: defaultSender(),
+      docType: 'factuur',   // factuur | offerte — bepaalt koppen + ondertekenen-type
       number: autoNumber(), date: todayISO(), due: plusDaysISO(14), order: '',
       client: { naam: '', bedrijf: '', email: '', adres: '', plaats: '' },
       items: [{ id: uid(), titel: '', toelichting: '', aantal: 1, prijs: 0 }],
@@ -162,68 +164,13 @@
     return { sub, vat, total: sub + vat };
   }
 
+  // Render via de gedeelde SignRender-module (zelfde HTML als de publieke ondertekenpagina).
   function renderPreview() {
     const p = document.getElementById('invoice-paper');
     if (!p) return;
-    const s = inv.sender, c = inv.client, t = calc();
-    const vatLabel = Number(inv.vat) === 0 ? 'BTW verlegd / vrijgesteld' : `BTW ${inv.vat}%`;
-    const rows = inv.items.map(it => `
-      <tr>
-        <td class="inv-td">
-          <div class="inv-item-title">${esc(it.titel) || '—'}</div>
-          ${it.toelichting ? `<div class="inv-item-sub">${esc(it.toelichting)}</div>` : ''}
-        </td>
-        <td class="inv-td inv-num">${esc(it.aantal)}</td>
-        <td class="inv-td inv-num">${euro(it.prijs)}</td>
-        <td class="inv-td inv-num">${euro((Number(it.prijs) || 0) * (Number(it.aantal) || 0))}</td>
-      </tr>`).join('');
-
-    const payBox = inv.pay === 'tikkie'
-      ? `<div class="inv-paylabel">Betaal eenvoudig via Tikkie</div><div class="inv-payval">${esc(inv.tikkie) || '—'}</div>`
-      : `<div class="inv-paylabel">Bankoverschrijving</div><div class="inv-payval">${esc(s.iban) || '—'}</div><div class="inv-paysub">t.n.v. ${esc(s.iban_naam) || esc(s.bedrijf)}</div>`;
-
-    p.innerHTML = `
-      <div class="inv-head">
-        <div class="inv-brand">${LOGO_SVG}</div>
-        <div class="inv-title">Factuur</div>
-      </div>
-      <div class="inv-meta-grid">
-        <div>
-          <div class="inv-block-label">Van</div>
-          <div class="inv-block">${esc(s.bedrijf)}${s.contact ? '<br>' + esc(s.contact) : ''}${s.adres ? '<br>' + esc(s.adres) : ''}${s.plaats ? '<br>' + esc(s.plaats) : ''}${s.email ? '<br>' + esc(s.email) : ''}${s.tel ? '<br>' + esc(s.tel) : ''}</div>
-        </div>
-        <div>
-          <div class="inv-block-label">Aan</div>
-          <div class="inv-block">${esc(c.naam) || '—'}${c.bedrijf ? '<br>' + esc(c.bedrijf) : ''}${c.adres ? '<br>' + esc(c.adres) : ''}${c.plaats ? '<br>' + esc(c.plaats) : ''}${c.email ? '<br>' + esc(c.email) : ''}</div>
-        </div>
-        <div>
-          <div class="inv-block-label">Gegevens</div>
-          <div class="inv-block">
-            <div class="inv-kv"><span>Factuurnr.</span><span>${esc(inv.number)}</span></div>
-            ${inv.order ? `<div class="inv-kv"><span>Ordernr.</span><span>${esc(inv.order)}</span></div>` : ''}
-            <div class="inv-kv"><span>Datum</span><span>${dnl(inv.date)}</span></div>
-            <div class="inv-kv"><span>Vervalt</span><span>${dnl(inv.due)}</span></div>
-          </div>
-        </div>
-      </div>
-
-      <table class="inv-table">
-        <thead><tr>
-          <th class="inv-th">Omschrijving</th><th class="inv-th inv-num">Aantal</th><th class="inv-th inv-num">Prijs</th><th class="inv-th inv-num">Totaal</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-        <tfoot>
-          <tr><td class="inv-foot" colspan="3">Subtotaal</td><td class="inv-foot inv-num">${euro(t.sub)}</td></tr>
-          <tr><td class="inv-foot" colspan="3">${vatLabel}</td><td class="inv-foot inv-num">${euro(t.vat)}</td></tr>
-          <tr><td class="inv-total" colspan="3">Totaal</td><td class="inv-total inv-total-val inv-num">${euro(t.total)}</td></tr>
-        </tfoot>
-      </table>
-
-      <div class="inv-paybox">${payBox}</div>
-      ${inv.notes ? `<div class="inv-notes">${nl2br(inv.notes)}</div>` : ''}
-      <div class="inv-footer">
-        ${esc(s.bedrijf)}${s.kvk ? ' · KvK ' + esc(s.kvk) : ''}${s.btw ? ' · BTW ' + esc(s.btw) : ''}${s.iban && inv.pay === 'iban' ? ' · ' + esc(s.iban) : ''}
-      </div>`;
+    if (window.SignRender) {
+      p.innerHTML = window.SignRender.documentHTML(inv, inv.docType || 'factuur');
+    }
   }
 
   // ── Binding ──────────────────────────────────────────────────────────────────
@@ -283,6 +230,17 @@
     if (err) { notify('Opslaan mislukt: ' + err.message, true); return; }
     notify('Factuur opgeslagen ✓'); loadInvoiceList();
   }
+  // Ondertekenstatus → kleine badge (laatste signature-rij per bron-document).
+  const SIG_BADGE = {
+    pending:  ['● In afwachting', '#888'],
+    viewed:   ['● Bekeken',       '#d9a400'],
+    signed:   ['● Getekend',      '#37a04a'],
+    declined: ['● Geweigerd',     '#ea2525'],
+  };
+  function sigBadge(status) {
+    const b = SIG_BADGE[status]; if (!b) return '';
+    return `<span class="font-mono" style="font-size:10px;color:${b[1]};white-space:nowrap;">${b[0]}</span>`;
+  }
   async function loadInvoiceList() {
     const el = document.getElementById('fact-list'); if (!el) return;
     if (typeof db === 'undefined') { el.textContent = 'Niet beschikbaar.'; return; }
@@ -292,12 +250,57 @@
     const { data, error } = await db.from('stolkwebdesign_invoices').select('id,number,client_name,total,updated_at').order('updated_at', { ascending: false });
     if (error) { el.textContent = 'Fout: ' + error.message; return; }
     if (!data.length) { el.textContent = 'Nog geen bewaarde facturen.'; return; }
+    // Nieuwste ondertekenstatus per bron-document (één query, ingelogd → directe select mag).
+    const sigMap = {};
+    const { data: sigs } = await db.from(SIG_TABLE).select('source_id,status,created_at').not('source_id', 'is', null).order('created_at', { ascending: false });
+    (sigs || []).forEach(s => { if (s.source_id && !(s.source_id in sigMap)) sigMap[s.source_id] = s.status; });
     el.innerHTML = data.map(r => `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #1a1a1a;">
-      <span style="color:#ddd"><strong>${esc(r.number || '—')}</strong> · ${esc(r.client_name || '—')} · ${euro(r.total)}</span>
+      <span style="color:#ddd"><strong>${esc(r.number || '—')}</strong> · ${esc(r.client_name || '—')} · ${euro(r.total)} ${sigBadge(sigMap[r.id])}</span>
       <span style="display:flex;gap:6px;">
         <button class="settings-btn font-mono" style="margin:0;padding:5px 10px;" data-fopen="${r.id}">Open</button>
         <button class="row-btn danger font-mono" data-frm="${r.id}">Verwijder</button>
       </span></div>`).join('');
+  }
+
+  // ── Ondertekenen (Verstuur ter ondertekening) ───────────────────────────────────
+  async function sendForSignature() {
+    if (typeof db === 'undefined') { notify('Niet beschikbaar (geen verbinding)', true); return; }
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) { notify('Niet ingelogd — log opnieuw in.', true); return; }
+    // Document moet eerst opgeslagen zijn (bron voor de bevroren snapshot).
+    if (!inv._dbId) { await saveToList(); if (!inv._dbId) return; }
+    const btn = document.getElementById('fact-send');
+    if (btn) { btn.disabled = true; btn.dataset.label = btn.textContent; btn.textContent = 'Bezig…'; }
+    try {
+      const res = await fetch('/api/create-signature-request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token },
+        body: JSON.stringify({ doc_type: inv.docType || 'factuur', source_id: inv._dbId, client_email: inv.client.email || '' }),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || !out.url) { notify('Aanmaken mislukt: ' + (out.error || res.status), true); return; }
+      showSendResult(out.url);
+      notify('Onderteken-link aangemaakt ✓');
+      loadInvoiceList();
+    } catch (e) {
+      notify('Netwerkfout: ' + (e.message || e), true);
+    } finally {
+      if (btn) { btn.disabled = false; btn.textContent = btn.dataset.label || '✍ Verstuur ter ondertekening'; }
+    }
+  }
+  function showSendResult(url) {
+    const box = document.getElementById('fact-send-result');
+    const input = document.getElementById('fact-send-url');
+    if (!box || !input) return;
+    input.value = url;
+    box.style.display = 'block';
+  }
+  function copySendUrl() {
+    const input = document.getElementById('fact-send-url');
+    if (!input || !input.value) return;
+    navigator.clipboard.writeText(input.value).then(() => notify('Gekopieerd ✓'), () => {
+      input.select(); document.execCommand('copy'); notify('Gekopieerd ✓');
+    });
   }
   async function openInvoice(id) {
     const { data, error } = await db.from('stolkwebdesign_invoices').select('data').eq('id', id).single();
@@ -355,6 +358,18 @@
     if (saveBtn) saveBtn.addEventListener('click', saveToList);
     const refreshBtn = document.getElementById('fact-refresh');
     if (refreshBtn) refreshBtn.addEventListener('click', loadInvoiceList);
+
+    // Documenttype-toggle (Factuur / Offerte) — verandert koppen in de preview + het ondertekentype.
+    const docTypeSel = document.getElementById('fact-doctype');
+    if (docTypeSel) {
+      docTypeSel.value = inv.docType || 'factuur';
+      docTypeSel.addEventListener('change', () => { inv.docType = docTypeSel.value; save(); renderPreview(); });
+    }
+    // Verstuur ter ondertekening + kopieer-link.
+    const sendBtn = document.getElementById('fact-send');
+    if (sendBtn) sendBtn.addEventListener('click', sendForSignature);
+    const copyBtn = document.getElementById('fact-send-copy');
+    if (copyBtn) copyBtn.addEventListener('click', copySendUrl);
     const listEl = document.getElementById('fact-list');
     if (listEl) listEl.addEventListener('click', (e) => {
       const o = e.target.closest('[data-fopen]'); if (o) { openInvoice(o.getAttribute('data-fopen')); return; }

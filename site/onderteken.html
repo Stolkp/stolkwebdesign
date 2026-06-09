@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Document ondertekenen — Stolkwebdesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="sign-render.js"></script>
+<style>
+  :root { --red:#EA2525; --black:#0A0A0A; --white:#fff; --bone:#F5F5F5; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#111; color:#eee; font-family:'Space Grotesk',sans-serif; min-height:100vh; padding:32px 16px; }
+  .wrap { max-width:860px; margin:0 auto; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; flex-wrap:wrap; }
+  .top-brand { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; letter-spacing:-0.02em; color:#fff; }
+  .top-brand span { color:var(--red); }
+  .top-tag { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:#777; }
+  .state-msg { background:#0e0e0e; border:1px solid #1a1a1a; padding:40px 28px; text-align:center; }
+  .state-msg h2 { font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; color:#fff; margin-bottom:10px; }
+  .state-msg p { color:#999; font-size:14px; }
+  .state-msg.ok h2 { color:#37a04a; }
+  .doc-wrap { background:#fff; box-shadow:0 0 0 1px #1a1a1a, 16px 16px 0 0 rgba(234,37,37,.18); margin-bottom:28px; overflow:hidden; }
+
+  /* A4-document — identiek aan de admin-preview (.inv-*) */
+  #signdoc { background:#fff; color:#111; padding:34px 30px; font-family:'Space Grotesk',sans-serif; }
+  .inv-head { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #000; padding-bottom:18px; margin-bottom:28px; }
+  .inv-brand { font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-0.02em; }
+  .inv-title { font-family:'Archivo Black',sans-serif; font-size:38px; text-transform:uppercase; letter-spacing:-0.03em; line-height:1; }
+  .inv-meta-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; margin-bottom:30px; }
+  .inv-block-label { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.2em; color:#999; margin-bottom:8px; }
+  .inv-block { font-size:12px; line-height:1.7; color:#222; }
+  .inv-kv { display:flex; justify-content:space-between; gap:10px; }
+  .inv-kv span:first-child { color:#999; }
+  .inv-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
+  .inv-th { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.15em; color:#999; text-align:left; padding:0 8px 8px; border-bottom:2px solid #000; }
+  .inv-td { font-size:12px; padding:11px 8px; border-bottom:1px solid #eee; vertical-align:top; }
+  .inv-item-title { font-weight:700; }
+  .inv-item-sub { font-size:11px; color:#888; margin-top:2px; }
+  .inv-num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .inv-foot { font-size:12px; padding:7px 8px; color:#444; }
+  .inv-total { font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; padding:12px 8px; border-top:2px solid #000; }
+  .inv-total-val { color:var(--red); font-size:18px; }
+  .inv-paybox { background:#F5F5F5; border-left:3px solid var(--red); padding:16px 18px; margin-bottom:18px; }
+  .inv-paylabel { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; letter-spacing:.15em; color:#999; margin-bottom:6px; }
+  .inv-payval { font-size:14px; font-weight:700; font-variant-numeric:tabular-nums; }
+  .inv-paysub { font-size:11px; color:#888; margin-top:2px; }
+  .inv-notes { font-size:12px; color:#444; line-height:1.6; border-top:1px solid #eee; padding-top:14px; margin-bottom:18px; white-space:pre-line; }
+  .inv-footer { font-family:'JetBrains Mono',monospace; font-size:10px; color:#aaa; letter-spacing:.05em; border-top:1px solid #eee; padding-top:12px; }
+
+  /* Handtekenpaneel */
+  .sign-panel { background:#0e0e0e; border:1px solid #1a1a1a; padding:24px; }
+  .sign-panel h3 { font-family:'Archivo Black',sans-serif; font-size:15px; text-transform:uppercase; letter-spacing:-0.01em; color:#fff; margin-bottom:6px; }
+  .sign-panel .sub { font-size:13px; color:#999; margin-bottom:20px; }
+  .field { margin-bottom:16px; }
+  .field label { display:block; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; color:#888; margin-bottom:6px; }
+  .field input[type=text] { width:100%; background:#000; border:1px solid #2a2a2a; color:#fff; padding:12px 14px; font-family:'Space Grotesk',sans-serif; font-size:14px; }
+  .field input[type=text]:focus { outline:none; border-color:var(--red); }
+  .tabs { display:flex; gap:8px; margin-bottom:10px; }
+  .tab-btn { flex:1; background:#000; border:1px solid #2a2a2a; color:#888; padding:10px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; cursor:pointer; }
+  .tab-btn.active { border-color:var(--red); color:#fff; }
+  .pad-wrap { position:relative; background:#fff; border:1px solid #2a2a2a; }
+  #sigpad { display:block; width:100%; height:180px; touch-action:none; cursor:crosshair; }
+  .pad-hint { position:absolute; left:14px; bottom:10px; font-family:'JetBrains Mono',monospace; font-size:10px; color:#bbb; pointer-events:none; }
+  .typed-wrap { display:none; background:#fff; border:1px solid #2a2a2a; padding:22px; text-align:center; }
+  #typedSig { font-family:'Brush Script MT','Segoe Script',cursive; font-size:38px; color:#111; min-height:50px; }
+  .pad-actions { display:flex; justify-content:flex-end; margin-top:8px; }
+  .link-btn { background:none; border:none; color:#888; font-family:'JetBrains Mono',monospace; font-size:11px; text-decoration:underline; cursor:pointer; }
+  .agree { display:flex; gap:10px; align-items:flex-start; margin:18px 0; font-size:13px; color:#ccc; }
+  .agree input { margin-top:3px; }
+  .btn-row { display:flex; gap:12px; flex-wrap:wrap; margin-top:8px; }
+  .btn { font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.02em; padding:14px 22px; border:1px solid; cursor:pointer; }
+  .btn-primary { background:var(--red); border-color:var(--red); color:#fff; }
+  .btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+  .btn-ghost { background:transparent; border-color:#333; color:#aaa; }
+  .legal { font-family:'JetBrains Mono',monospace; font-size:10px; color:#555; line-height:1.7; margin-top:18px; }
+  .err { color:var(--red); font-size:13px; margin-top:10px; min-height:18px; }
+  .loading { text-align:center; color:#777; font-family:'JetBrains Mono',monospace; font-size:12px; padding:60px 0; }
+
+  @media(max-width:560px){ .inv-meta-grid{ grid-template-columns:1fr; gap:14px; } .inv-title{ font-size:30px; } #signdoc{ padding:22px 18px; } }
+
+  @media print {
+    body { background:#fff; padding:0; }
+    .top, .sign-panel, .legal { display:none !important; }
+    .doc-wrap { box-shadow:none; margin:0; }
+    #signdoc { padding:16mm; }
+    @page { size:A4; margin:0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="top-brand">Stolk<span>®</span> Design</div>
+    <div class="top-tag">Beveiligd ondertekenen</div>
+  </div>
+
+  <div id="loading" class="loading">Document laden…</div>
+  <div id="state" class="state-msg" style="display:none;"></div>
+
+  <div id="content" style="display:none;">
+    <div class="doc-wrap"><div id="signdoc"></div></div>
+
+    <div class="sign-panel" id="signPanel">
+      <h3>Onderteken dit document</h3>
+      <p class="sub">Vul je naam in en zet hieronder je handtekening.</p>
+
+      <div class="field">
+        <label for="signerName">Volledige naam</label>
+        <input type="text" id="signerName" autocomplete="name" placeholder="Voor- en achternaam">
+      </div>
+
+      <div class="field">
+        <label>Handtekening</label>
+        <div class="tabs">
+          <button type="button" class="tab-btn active" id="tabDraw">✍ Tekenen</button>
+          <button type="button" class="tab-btn" id="tabType">⌨ Typen</button>
+        </div>
+        <div class="pad-wrap" id="drawWrap">
+          <canvas id="sigpad"></canvas>
+          <div class="pad-hint" id="padHint">Teken hier je handtekening</div>
+        </div>
+        <div class="typed-wrap" id="typeWrap">
+          <div id="typedSig"></div>
+        </div>
+        <div class="pad-actions"><button type="button" class="link-btn" id="clearPad">Wissen</button></div>
+      </div>
+
+      <label class="agree">
+        <input type="checkbox" id="agreeBox">
+        <span>Ik ga akkoord met de inhoud van dit document en onderteken het elektronisch.</span>
+      </label>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="signBtn" disabled>Onderteken</button>
+        <button class="btn btn-ghost" id="declineBtn">Weigeren</button>
+      </div>
+      <div class="err" id="err"></div>
+
+      <div class="legal">
+        Door te ondertekenen leg je een eenvoudige elektronische handtekening (SES) vast. Je naam,
+        handtekening, het tijdstip en je IP-adres worden geregistreerd als bewijs. Het ondertekende
+        document kan daarna niet meer worden gewijzigd.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const token = new URLSearchParams(location.search).get('token');
+  const $ = id => document.getElementById(id);
+
+  function showState(title, msg, ok) {
+    $('loading').style.display = 'none';
+    $('content').style.display = 'none';
+    const s = $('state');
+    s.style.display = 'block';
+    s.className = 'state-msg' + (ok ? ' ok' : '');
+    s.innerHTML = `<h2>${title}</h2><p>${msg}</p>`;
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) +
+      ' om ' + d.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  let row = null;
+
+  async function init() {
+    if (!token) { showState('Ongeldige link', 'Er ontbreekt een ondertekencode in de link.'); return; }
+    const { data, error } = await db.rpc('get_sign_request', { p_token: token });
+    if (error) { showState('Er ging iets mis', 'Probeer het later opnieuw.'); return; }
+    row = Array.isArray(data) ? data[0] : data;
+    if (!row) { showState('Link niet gevonden', 'Deze ondertekenlink bestaat niet (meer).'); return; }
+    if (row.status === 'declined') { showState('Geweigerd', 'Dit document is eerder geweigerd.'); return; }
+    if (row.expires_at && new Date(row.expires_at).getTime() < Date.now()) {
+      showState('Link verlopen', 'Deze ondertekenlink is verlopen. Vraag een nieuwe aan.'); return;
+    }
+
+    // Document renderen (identiek aan de admin-preview).
+    $('loading').style.display = 'none';
+    $('content').style.display = 'block';
+    $('signdoc').innerHTML = window.SignRender.documentHTML(row.document_snapshot, row.doc_type);
+
+    if (row.status === 'signed') {
+      $('signPanel').innerHTML =
+        `<h3 style="color:#37a04a;">✓ Ondertekend</h3>
+         <p class="sub">Getekend door <strong style="color:#fff;">${escapeHtml(row.signed_name || '')}</strong> op ${fmtDate(row.signed_at)}.</p>
+         <button class="btn btn-ghost" onclick="window.print()">↧ Download PDF</button>`;
+      return;
+    }
+    setupPad();
+  }
+
+  function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  // ── Handtekenpad ──
+  let drawn = false, mode = 'draw';
+  function setupPad() {
+    const canvas = $('sigpad');
+    const ctx = canvas.getContext('2d');
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = r.width * dpr; canvas.height = r.height * dpr;
+      ctx.scale(dpr, dpr); ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#111';
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let drawing = false, last = null;
+    const pos = e => { const r = canvas.getBoundingClientRect(); const p = e.touches ? e.touches[0] : e; return { x: p.clientX - r.left, y: p.clientY - r.top }; };
+    function start(e) { e.preventDefault(); drawing = true; last = pos(e); }
+    function move(e) {
+      if (!drawing) return; e.preventDefault();
+      const p = pos(e);
+      ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke();
+      last = p; drawn = true; $('padHint').style.display = 'none'; updateBtn();
+    }
+    function end() { drawing = false; }
+    canvas.addEventListener('pointerdown', start);
+    canvas.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', end);
+
+    $('clearPad').addEventListener('click', () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height); drawn = false; $('padHint').style.display = 'block';
+      $('typedSig').textContent = ''; if (mode === 'type') buildTyped(); updateBtn();
+    });
+
+    // Typen-modus
+    const nameInput = $('signerName');
+    nameInput.addEventListener('input', () => { if (mode === 'type') buildTyped(); updateBtn(); });
+    $('tabDraw').addEventListener('click', () => switchMode('draw'));
+    $('tabType').addEventListener('click', () => switchMode('type'));
+    $('agreeBox').addEventListener('change', updateBtn);
+    $('signBtn').addEventListener('click', doSign);
+    $('declineBtn').addEventListener('click', doDecline);
+  }
+
+  function switchMode(m) {
+    mode = m;
+    $('tabDraw').classList.toggle('active', m === 'draw');
+    $('tabType').classList.toggle('active', m === 'type');
+    $('drawWrap').style.display = m === 'draw' ? 'block' : 'none';
+    $('typeWrap').style.display = m === 'type' ? 'block' : 'none';
+    if (m === 'type') buildTyped();
+    updateBtn();
+  }
+  function buildTyped() { $('typedSig').textContent = ($('signerName').value || '').trim(); }
+
+  function hasSignature() {
+    if (mode === 'draw') return drawn;
+    return ($('signerName').value || '').trim().length > 1;
+  }
+  function updateBtn() {
+    const ok = ($('signerName').value || '').trim().length > 1 && hasSignature() && $('agreeBox').checked;
+    $('signBtn').disabled = !ok;
+  }
+
+  // Bouw de handtekening-data-URL (canvas-tekening of getypte naam → offscreen canvas).
+  function signatureDataURL() {
+    if (mode === 'draw') return $('sigpad').toDataURL('image/png');
+    const name = ($('signerName').value || '').trim();
+    const c = document.createElement('canvas'); c.width = 600; c.height = 160;
+    const x = c.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height);
+    x.fillStyle = '#111'; x.font = '64px "Brush Script MT","Segoe Script",cursive'; x.textBaseline = 'middle';
+    x.fillText(name, 24, 86);
+    return c.toDataURL('image/png');
+  }
+
+  async function doSign() {
+    $('err').textContent = '';
+    const btn = $('signBtn'); btn.disabled = true; btn.textContent = 'Bezig…';
+    try {
+      const res = await fetch('/api/sign-document', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, signed_name: ($('signerName').value || '').trim(), signature_image: signatureDataURL() }),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok) { $('err').textContent = out.error || 'Ondertekenen mislukt'; btn.disabled = false; btn.textContent = 'Onderteken'; return; }
+      $('signPanel').innerHTML =
+        `<h3 style="color:#37a04a;">✓ Bedankt — ondertekend</h3>
+         <p class="sub">Je hebt dit document zojuist elektronisch ondertekend. Een kopie kun je hieronder downloaden.</p>
+         <button class="btn btn-ghost" onclick="window.print()">↧ Download PDF</button>`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } catch (e) {
+      $('err').textContent = 'Netwerkfout — probeer opnieuw.'; btn.disabled = false; btn.textContent = 'Onderteken';
+    }
+  }
+
+  async function doDecline() {
+    if (!confirm('Weet je zeker dat je dit document wilt weigeren?')) return;
+    const reason = prompt('Reden (optioneel):') || '';
+    try {
+      const res = await fetch('/api/sign-document', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, decline: true, decline_reason: reason }),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok) { $('err').textContent = out.error || 'Mislukt'; return; }
+      showState('Geweigerd', 'Je hebt dit document geweigerd. We nemen contact met je op.');
+    } catch (e) { $('err').textContent = 'Netwerkfout — probeer opnieuw.'; }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
