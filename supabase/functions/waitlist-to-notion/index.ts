@@ -11,6 +11,9 @@
 //   supabase secrets set NOTION_API_KEY=<token> NOTION_DATABASE_ID=<klantverzoeken-id>
 
 const NOTION_VERSION = '2022-06-28';
+// Status voor verse leads. Moet exact matchen met een bestaande optie op het
+// Status-veld in Notion (Status-velden maken opties NIET auto-aan via de API).
+const LEAD_STATUS = Deno.env.get('NOTION_LEAD_STATUS') ?? 'Nieuwe lead';
 
 const MODULE_LABELS: Record<string, string> = {
   cms: 'CMS-basis',
@@ -89,32 +92,45 @@ Deno.serve(async (req) => {
   const reqId = `WL-${Date.now()}`;
   const titel = (r.name?.trim() || r.email).slice(0, 200);
 
-  const notionBody = {
-    parent: { database_id: databaseId },
-    properties: {
-      'Naam': { title: [{ text: { content: titel } }] },
-      'Type Verzoek': { select: { name: 'Module wachtlijst' } },
-      'Beschrijving': {
-        rich_text: [{ text: { content: beschrijving.slice(0, 1900) } }],
-      },
-      'Pagina / Sectie': {
-        rich_text: [{ text: { content: 'Stolkwebdesign — /modules' } }],
-      },
-      'Datum Ingediend': { date: { start: datum } },
-      'Verzoek ID': { rich_text: [{ text: { content: reqId } }] },
+  // deno-lint-ignore no-explicit-any
+  const properties: Record<string, any> = {
+    'Naam': { title: [{ text: { content: titel } }] },
+    'Type Verzoek': { select: { name: 'Module wachtlijst' } },
+    'Status': { status: { name: LEAD_STATUS } },
+    'Beschrijving': {
+      rich_text: [{ text: { content: beschrijving.slice(0, 1900) } }],
     },
+    'Pagina / Sectie': {
+      rich_text: [{ text: { content: 'Stolkwebdesign — /modules' } }],
+    },
+    'Datum Ingediend': { date: { start: datum } },
+    'Verzoek ID': { rich_text: [{ text: { content: reqId } }] },
   };
 
-  try {
-    const resp = await fetch('https://api.notion.com/v1/pages', {
+  // deno-lint-ignore no-explicit-any
+  const postNotion = (props: Record<string, any>) =>
+    fetch('https://api.notion.com/v1/pages', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Notion-Version': NOTION_VERSION,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(notionBody),
+      body: JSON.stringify({ parent: { database_id: databaseId }, properties: props }),
     });
+
+  try {
+    let resp = await postNotion(properties);
+
+    // Status-optie bestaat nog niet in Notion → retry zonder Status (lead behouden).
+    if (!resp.ok) {
+      const errBody = await resp.clone().text();
+      if (resp.status === 400 || /status/i.test(errBody)) {
+        console.warn('Status "' + LEAD_STATUS + '" geweigerd — wachtlijst-lead opgeslagen zonder status. Maak de optie aan in Notion.', errBody.slice(0, 200));
+        const { Status: _drop, ...rest } = properties;
+        resp = await postNotion(rest);
+      }
+    }
 
     if (!resp.ok) {
       const errBody = await resp.text();

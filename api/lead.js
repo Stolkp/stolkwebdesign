@@ -11,6 +11,35 @@
 const NOTION_VERSION = '2022-06-28';
 const DEFAULT_DB = '33bf84f0fafd8023a331d065fa066288'; // Klantverzoeken (zelfde als Dashboard)
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// Status voor verse leads. Moet exact matchen met een bestaande optie op het
+// Status-veld in Notion (Status-velden maken opties NIET auto-aan via de API).
+const LEAD_STATUS = process.env.NOTION_LEAD_STATUS || 'Nieuwe lead';
+
+// POST naar Notion mét Status; bij een 400/status-validatiefout retry zonder Status,
+// zodat een lead nooit verloren gaat als de optie nog niet in Notion bestaat.
+async function createNotionLead(apiKey, parent, properties) {
+  const post = (props) =>
+    fetch('https://api.notion.com/v1/pages', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Notion-Version': NOTION_VERSION,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ parent, properties: props }),
+    });
+
+  let resp = await post(properties);
+  if (!resp.ok && properties.Status) {
+    const errText = await resp.clone().text().catch(() => '');
+    if (resp.status === 400 || /status/i.test(errText)) {
+      console.warn('[notion] Status "' + LEAD_STATUS + '" geweigerd — lead opgeslagen zonder status. Maak de optie aan in Notion. Detail:', errText.slice(0, 200));
+      const { Status, ...rest } = properties;
+      resp = await post(rest);
+    }
+  }
+  return resp;
+}
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 4;
@@ -63,29 +92,19 @@ export default async function handler(req, res) {
     `Bron: ${bron || 'direct/onbekend'}\n\n` +
     String(bericht);
 
-  const payload = {
-    parent: { database_id: databaseId },
-    properties: {
-      'Naam':            { title:     [{ text: { content: `Lead: ${(bedrijf || naam)}`.slice(0, 200) } }] },
-      'Verzoek ID':      { rich_text: [{ text: { content: verzoekId } }] },
-      'Bedrijf':         { rich_text: [{ text: { content: (bedrijf || '').slice(0, 200) } }] },
-      'Type Verzoek':    { select:    { name: 'Lead' } },
-      'Beschrijving':    { rich_text: [{ text: { content: beschrijving.slice(0, 1900) } }] },
-      'Pagina / Sectie': { rich_text: [{ text: { content: 'Website contactformulier' } }] },
-      'Datum Ingediend': { date:      { start: today } },
-    },
+  const properties = {
+    'Naam':            { title:     [{ text: { content: `Lead: ${(bedrijf || naam)}`.slice(0, 200) } }] },
+    'Verzoek ID':      { rich_text: [{ text: { content: verzoekId } }] },
+    'Bedrijf':         { rich_text: [{ text: { content: (bedrijf || '').slice(0, 200) } }] },
+    'Type Verzoek':    { select:    { name: 'Lead' } },
+    'Status':          { status:    { name: LEAD_STATUS } },
+    'Beschrijving':    { rich_text: [{ text: { content: beschrijving.slice(0, 1900) } }] },
+    'Pagina / Sectie': { rich_text: [{ text: { content: 'Website contactformulier' } }] },
+    'Datum Ingediend': { date:      { start: today } },
   };
 
   try {
-    const resp = await fetch('https://api.notion.com/v1/pages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Notion-Version': NOTION_VERSION,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    const resp = await createNotionLead(apiKey, { database_id: databaseId }, properties);
     const data = await resp.json();
     if (!resp.ok) {
       console.error('Notion error:', resp.status, data && data.message);
