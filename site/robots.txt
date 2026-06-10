@@ -6,6 +6,9 @@
 User-agent: *
 Allow: /
 Disallow: /admin.html
+Disallow: /api/
+Disallow: /assets/
+Disallow: /seo/
 Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 User-agent: GPTBot

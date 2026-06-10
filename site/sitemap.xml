@@ -1,11 +1,118 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.stolkwebdesign.nl/</loc><priority>1.0</priority></url>
-  <url><loc>https://www.stolkwebdesign.nl/portfolio</loc><priority>0.8</priority></url>
-  <url><loc>https://www.stolkwebdesign.nl/modules</loc><priority>0.9</priority></url>
-  <url><loc>https://www.stolkwebdesign.nl/over</loc><priority>0.7</priority></url>
-  <url><loc>https://www.stolkwebdesign.nl/contact</loc><priority>0.6</priority></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.stolkwebdesign.nl/</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/over</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/over"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/over"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/portfolio</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/portfolio"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/portfolio"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/modules</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/modules"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/modules"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/contact</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/contact"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/website-laten-maken</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/privacybeleid</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/algemene-voorwaarden</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
 <!-- BLOG-START -->
   <url><loc>https://www.stolkwebdesign.nl/blog/</loc><lastmod>2026-05-29</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-  <!-- BLOG-END -->
+<!-- BLOG-END -->
+  <!-- EN pages -->
+  <url>
+    <loc>https://www.stolkwebdesign.nl/en</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/en/over</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/over"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/over"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/en/portfolio</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/portfolio"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/portfolio"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/en/contact</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/contact"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/en/modules</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/modules"/>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/modules"/>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/en/privacy</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://www.stolkwebdesign.nl/en/terms</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
 </urlset>
