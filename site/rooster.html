@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Mijn rooster — Stolkwebdesign</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent:#EA2525; --bg:#0A0A0A; --fg:#fff; --bone:#F5F5F5; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--fg); font-family:'JetBrains Mono',monospace; line-height:1.5; padding:24px 16px 60px; }
+    .wrap { max-width:680px; margin:0 auto; }
+    h1 { font-family:'Archivo Black',sans-serif; font-size:26px; text-transform:uppercase; letter-spacing:-0.02em; }
+    .sub { color:#888; font-size:12px; margin-top:4px; }
+    .card { border:1px solid #1c1c1c; background:#0e0e0e; padding:16px; margin-top:20px; }
+    .card h2 { font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:12px; }
+    .shift { display:flex; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid #181818; border-left:3px solid var(--accent); padding-left:10px; }
+    .shift.confirmed { border-left-color:#22c55e; }
+    .shift .d { font-size:13px; }
+    .shift .t { color:#9a9a9a; font-size:12px; }
+    .shift .n { color:#777; font-size:11px; }
+    .empty { color:#555; font-size:12px; padding:6px 0; }
+    label { display:block; font-size:11px; color:#999; text-transform:uppercase; letter-spacing:.08em; margin:10px 0 4px; }
+    input, select, textarea { width:100%; background:#141414; border:1px solid #2a2a2a; color:#fff; padding:10px; font-family:inherit; font-size:14px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    button { background:var(--accent); color:#fff; border:none; padding:12px 18px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; cursor:pointer; margin-top:14px; }
+    .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#fff; color:#000; padding:12px 20px; font-size:13px; opacity:0; transition:opacity .2s; pointer-events:none; }
+    .toast.show { opacity:1; }
+    .tag { font-size:10px; text-transform:uppercase; color:#888; border:1px solid #333; padding:1px 6px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 id="hello">Mijn rooster</h1>
+    <div class="sub" id="sub">Laden…</div>
+
+    <div class="card">
+      <h2>Mijn diensten</h2>
+      <div id="shifts"><div class="empty">Laden…</div></div>
+    </div>
+
+    <div class="card">
+      <h2>Beschikbaarheid doorgeven</h2>
+      <div class="row">
+        <div><label>Datum</label><input type="date" id="av-date"></div>
+        <div><label>Beschikbaar?</label><select id="av-ok"><option value="1">Ja, beschikbaar</option><option value="0">Nee, niet beschikbaar</option></select></div>
+      </div>
+      <label>Toelichting (optioneel)</label>
+      <input id="av-note" placeholder="bv. pas vanaf 18:00">
+      <button id="av-save">Doorgeven</button>
+    </div>
+
+    <div class="card">
+      <h2>Verlof aanvragen</h2>
+      <div class="row">
+        <div><label>Van</label><input type="date" id="lv-start"></div>
+        <div><label>Tot en met</label><input type="date" id="lv-end"></div>
+      </div>
+      <div class="row">
+        <div><label>Soort</label><select id="lv-type"><option value="vakantie">Vakantie</option><option value="ziek">Ziek</option><option value="anders">Anders</option></select></div>
+        <div><label>Reden (optioneel)</label><input id="lv-reason"></div>
+      </div>
+      <button id="lv-save">Aanvragen</button>
+      <div id="lv-list" style="margin-top:14px;"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="rooster-employee.js"></script>
+</body>
+</html>
