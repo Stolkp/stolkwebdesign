@@ -19,9 +19,10 @@
     .steps span { color:#555; } .steps span.on { color:var(--fg); } .steps span.done { color:var(--accent); }
     .card { border:1px solid #1c1c1c; background:#0e0e0e; padding:18px; margin-bottom:14px; }
     h2 { font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:14px; }
-    .svc { width:100%; text-align:left; display:flex; justify-content:space-between; align-items:center; gap:12px; background:#141414; border:1px solid #262626; border-left:3px solid var(--accent); color:#fff; padding:14px; margin-bottom:10px; cursor:pointer; font-family:inherit; }
+    .svc { width:100%; text-align:left; display:flex; justify-content:space-between; align-items:center; gap:16px; background:#141414; border:1px solid #262626; border-left:3px solid var(--accent); color:#fff; padding:16px; margin-bottom:10px; cursor:pointer; font-family:inherit; }
     .svc:hover { border-color:var(--accent); }
-    .svc .n { font-weight:700; font-size:15px; } .svc .d { font-size:12px; color:var(--muted); margin-top:2px; }
+    .svc > span:first-child { display:flex; flex-direction:column; gap:5px; min-width:0; }
+    .svc .n { font-weight:700; font-size:15px; line-height:1.2; } .svc .d { font-size:12px; color:var(--muted); line-height:1.4; }
     .svc .dur { font-family:'JetBrains Mono',monospace; font-size:12px; color:#bbb; white-space:nowrap; }
     label { display:block; font-family:'JetBrains Mono',monospace; font-size:11px; color:#999; text-transform:uppercase; letter-spacing:.08em; margin:12px 0 5px; }
     input, textarea { width:100%; background:#141414; border:1px solid #2a2a2a; color:#fff; padding:11px; font-family:inherit; font-size:15px; }
