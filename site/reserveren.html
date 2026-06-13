@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Afspraak maken — Stolkwebdesign</title>
+  <meta name="description" content="Maak online een afspraak — kies een dienst en een vrij tijdslot.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent:#EA2525; --bg:#0A0A0A; --fg:#fff; --bone:#F5F5F5; --muted:#8a8a8a; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--fg); font-family:'Space Grotesk',sans-serif; line-height:1.5; padding:32px 16px 80px; }
+    .wrap { max-width:640px; margin:0 auto; }
+    .eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); }
+    h1 { font-family:'Archivo Black',sans-serif; font-size:34px; text-transform:uppercase; letter-spacing:-0.03em; margin:6px 0 4px; line-height:1; }
+    .sub { color:var(--muted); font-size:14px; margin-bottom:28px; }
+    .steps { display:flex; gap:8px; margin-bottom:24px; font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.12em; }
+    .steps span { color:#555; } .steps span.on { color:var(--fg); } .steps span.done { color:var(--accent); }
+    .card { border:1px solid #1c1c1c; background:#0e0e0e; padding:18px; margin-bottom:14px; }
+    h2 { font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:14px; }
+    .svc { width:100%; text-align:left; display:flex; justify-content:space-between; align-items:center; gap:12px; background:#141414; border:1px solid #262626; border-left:3px solid var(--accent); color:#fff; padding:14px; margin-bottom:10px; cursor:pointer; font-family:inherit; }
+    .svc:hover { border-color:var(--accent); }
+    .svc .n { font-weight:700; font-size:15px; } .svc .d { font-size:12px; color:var(--muted); margin-top:2px; }
+    .svc .dur { font-family:'JetBrains Mono',monospace; font-size:12px; color:#bbb; white-space:nowrap; }
+    label { display:block; font-family:'JetBrains Mono',monospace; font-size:11px; color:#999; text-transform:uppercase; letter-spacing:.08em; margin:12px 0 5px; }
+    input, textarea { width:100%; background:#141414; border:1px solid #2a2a2a; color:#fff; padding:11px; font-family:inherit; font-size:15px; }
+    .slots { display:grid; grid-template-columns:repeat(auto-fill,minmax(90px,1fr)); gap:8px; margin-top:6px; }
+    .slot { background:#141414; border:1px solid #2a2a2a; color:#fff; padding:10px 6px; font-family:'JetBrains Mono',monospace; font-size:13px; cursor:pointer; }
+    .slot:hover, .slot.sel { background:var(--accent); border-color:var(--accent); }
+    .muted { color:var(--muted); font-size:13px; }
+    button.primary { background:var(--accent); color:#fff; border:none; padding:14px 22px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; cursor:pointer; margin-top:16px; }
+    button.ghost { background:transparent; border:1px solid #333; color:#ccc; padding:9px 14px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; cursor:pointer; }
+    .hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+    .summary { font-family:'JetBrains Mono',monospace; font-size:13px; color:#ddd; border-left:3px solid var(--accent); padding:8px 12px; background:#141414; margin-bottom:6px; }
+    .ok { border-color:var(--accent); }
+    .big-ok { font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-0.02em; margin-bottom:8px; }
+    .err { color:#ff6b6b; font-size:13px; margin-top:10px; min-height:18px; }
+    .hidden { display:none; }
+    a { color:var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="eyebrow">Afspraak / Reserveren</div>
+    <h1>Maak een afspraak</h1>
+    <div class="sub">Kies een dienst en een vrij moment — je krijgt direct een bevestiging.</div>
+
+    <div class="steps" id="steps">
+      <span class="on" data-s="1">1 · Dienst</span>
+      <span data-s="2">2 · Moment</span>
+      <span data-s="3">3 · Gegevens</span>
+    </div>
+
+    <!-- STAP 1 -->
+    <div class="card" id="step-service">
+      <h2>Kies een dienst</h2>
+      <div id="svc-list"><div class="muted">Laden…</div></div>
+    </div>
+
+    <!-- STAP 2 -->
+    <div class="card hidden" id="step-slot">
+      <h2>Kies een moment</h2>
+      <label>Datum</label>
+      <input type="date" id="date">
+      <div id="slots" class="slots" style="margin-top:14px;"></div>
+      <div class="muted" id="slots-msg" style="margin-top:10px;"></div>
+      <button class="ghost" id="back-1" style="margin-top:16px;">← Andere dienst</button>
+    </div>
+
+    <!-- STAP 3 -->
+    <div class="card hidden" id="step-form">
+      <h2>Je gegevens</h2>
+      <div class="summary" id="summary"></div>
+      <label>Naam *</label><input id="f-name" autocomplete="name">
+      <label>E-mail *</label><input id="f-email" type="email" autocomplete="email">
+      <label>Telefoon</label><input id="f-phone" autocomplete="tel">
+      <label>Opmerking (optioneel)</label><textarea id="f-note" rows="2"></textarea>
+      <div class="hp" aria-hidden="true"><label>Bedrijf</label><input id="f-company" tabindex="-1" autocomplete="off"></div>
+      <div class="err" id="form-err"></div>
+      <button class="primary" id="submit">Afspraak bevestigen</button>
+      <button class="ghost" id="back-2" style="margin-top:10px;">← Ander moment</button>
+    </div>
+
+    <!-- KLAAR -->
+    <div class="card hidden ok" id="done">
+      <div class="big-ok">Afspraak bevestigd ✓</div>
+      <div class="summary" id="done-summary"></div>
+      <p class="muted" id="done-msg" style="margin-top:12px;"></p>
+      <p class="muted" style="margin-top:10px;">Niet meer nodig? <a id="cancel-link" href="#">Annuleer je afspraak</a>.</p>
+    </div>
+
+    <!-- ANNULEREN (via ?annuleren=token) -->
+    <div class="card hidden" id="step-cancel">
+      <h2>Afspraak annuleren</h2>
+      <p class="muted">Vul het e-mailadres van je afspraak in om te annuleren.</p>
+      <label>E-mail</label><input id="c-email" type="email">
+      <div class="err" id="cancel-err"></div>
+      <button class="primary" id="cancel-btn">Afspraak annuleren</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="reserveren.js"></script>
+</body>
+</html>

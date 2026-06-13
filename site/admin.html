@@ -318,6 +318,35 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
   .row-btn, .ros-add { display:none !important; }
   @page { size:A4 landscape; margin:10mm; }
 }
+
+/* RESERVERINGEN */
+.bk-card { border:1px solid #1a1a1a; background:#0e0e0e; margin-bottom:20px; }
+.bk-card-head { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid #1a1a1a; }
+.bk-card-head .font-display { font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+.bk-card > div:not(.bk-card-head) { padding:12px 16px; }
+.bk-cols { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.bk-row, .bk-svc-row, .bk-blk-row { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #161616; }
+.bk-row .bk-when { font-size:12px; color:#eee; }
+.bk-cust { font-size:13px; margin-top:2px; }
+.bk-meta { font-size:11px; color:#777; margin-top:2px; }
+.bk-acts { display:flex; gap:6px; flex-shrink:0; }
+.bk-cancelled { opacity:.5; }
+.bk-inactive { opacity:.5; }
+.bk-empty { font-size:11px; color:#555; padding:8px 0; }
+.bk-sep, .bk-set-grid + * { }
+.bk-sep { font-size:10px; color:#555; text-transform:uppercase; margin:12px 0 4px; }
+.bk-tag { font-family:'JetBrains Mono',monospace; font-size:9px; text-transform:uppercase; color:#888; border:1px solid #333; padding:1px 6px; }
+.bk-ed-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; }
+.bk-ed-acts { display:flex; gap:12px; margin-top:12px; }
+.bk-svc-editor, #bk-svc-editor { border:1px solid var(--red); padding:14px; margin-bottom:12px; }
+.bk-hour-row { display:flex; align-items:center; gap:10px; padding:6px 0; }
+.bk-hour-day { display:flex; align-items:center; gap:6px; min-width:64px; font-size:12px; }
+.bk-hour-row .form-input { width:auto; padding:6px 8px; }
+.bk-blk-add { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+.bk-blk-add .form-input { width:auto; }
+.bk-set-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+@media(max-width:1100px) { .bk-cols { grid-template-columns:1fr; } .bk-set-grid { grid-template-columns:1fr; } }
+@media print { body * { visibility:hidden !important; } #section-reserveringen, #section-reserveringen * { visibility:visible !important; } #section-reserveringen { position:absolute; left:0; top:0; } .row-btn, .add-btn, .settings-btn { display:none !important; } }
 </style>
 </head>
 <body>
@@ -376,6 +405,10 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
         <div class="sidebar-item font-mono" onclick="showSection('rooster', this); loadRooster();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11"/><path d="M2 6h12M5.5 1.5v3M10.5 1.5v3"/></svg>
           Rooster
+        </div>
+        <div class="sidebar-item font-mono" onclick="showSection('reserveringen', this); loadBookings();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>
+          Reserveringen
         </div>
         <div class="sidebar-item font-mono" onclick="showSection('settings', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
@@ -627,6 +660,54 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <div class="ros-card">
             <div class="ros-card-head"><span class="font-display">Verlof-aanvragen</span></div>
             <div id="rooster-leavelist"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESERVERINGEN -->
+      <div id="section-reserveringen" class="page-section">
+        <div class="page-title font-display">Reserveringen</div>
+        <div class="page-sub font-mono">Afspraken die klanten zelf boeken via /reserveren · beheer diensten, openingstijden en blokkades</div>
+
+        <div class="bk-card">
+          <div class="bk-card-head"><span class="font-display">Komende reserveringen</span>
+            <button class="settings-btn font-mono" id="bk-refresh" style="margin:0;">↻ Vernieuwen</button></div>
+          <div id="bk-list"></div>
+        </div>
+
+        <div class="bk-cols">
+          <div class="bk-card">
+            <div class="bk-card-head"><span class="font-display">Diensten</span>
+              <button class="add-btn font-mono" id="bk-add-svc">+ Dienst</button></div>
+            <div id="bk-svc-editor" style="display:none;"></div>
+            <div id="bk-svclist"></div>
+          </div>
+          <div class="bk-card">
+            <div class="bk-card-head"><span class="font-display">Openingstijden</span>
+              <button class="settings-btn font-mono" id="bk-save-hours" style="margin:0;">Opslaan</button></div>
+            <div id="bk-hours"></div>
+          </div>
+        </div>
+
+        <div class="bk-cols">
+          <div class="bk-card">
+            <div class="bk-card-head"><span class="font-display">Geblokkeerde dagen</span></div>
+            <div class="bk-blk-add">
+              <input class="form-input" type="date" id="bk-blk-date">
+              <input class="form-input" id="bk-blk-reason" placeholder="Reden (optioneel)">
+              <button class="add-btn font-mono" id="bk-add-blk">+ Blokkeer</button>
+            </div>
+            <div id="bk-blocked"></div>
+          </div>
+          <div class="bk-card">
+            <div class="bk-card-head"><span class="font-display">Instellingen</span>
+              <button class="settings-btn font-mono" id="bk-save-settings" style="margin:0;">Opslaan</button></div>
+            <div class="bk-set-grid">
+              <div class="form-group"><label class="form-label font-mono">Slot-interval (min)</label><input class="form-input" type="number" id="bk-set-interval"></div>
+              <div class="form-group"><label class="form-label font-mono">Min. vooraf (min)</label><input class="form-input" type="number" id="bk-set-lead"></div>
+              <div class="form-group"><label class="form-label font-mono">Max. dagen vooruit</label><input class="form-input" type="number" id="bk-set-max"></div>
+            </div>
+            <div class="form-group"><label class="form-label font-mono">Bevestigingstekst</label><input class="form-input" id="bk-set-msg" placeholder="Bedankt voor je afspraak…"></div>
           </div>
         </div>
       </div>
@@ -2279,5 +2360,6 @@ initAuth();
 <script src="sign-render.js"></script>
 <script src="admin-factuur.js"></script>
 <script src="admin-rooster.js"></script>
+<script src="admin-bookings.js"></script>
 </body>
 </html>
