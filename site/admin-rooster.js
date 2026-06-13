@@ -33,7 +33,7 @@
   function rememberWeek() { try { localStorage.setItem(WKEY, iso(weekStart)); } catch (e) {} }
 
   async function loadAll() {
-    if (!window.db) return;
+    if (typeof db === 'undefined' || !db) return;
     const from = iso(weekStart), to = iso(addDays(weekStart, 6));
     const [st, sh, av, lv] = await Promise.all([
       db.from(T_STAFF).select('*').order('name'),
