@@ -59,11 +59,16 @@ async function notifyNotion({ service_name, slot_start, name, email, phone, note
   const beschrijving =
     `📅 Afspraak: ${fmtNL(slot_start)}\nDienst: ${service_name}\n\n` +
     `Naam: ${name}\nE-mail: ${email}\nTelefoon: ${phone || '-'}\n` + (note ? `Opmerking: ${note}\n` : '');
+  let isoSlot; try { isoSlot = new Date(slot_start).toISOString(); } catch (e) { isoSlot = null; }
   const props = {
     // Titel toont meteen wie + wanneer (op de kaart-voorkant zichtbaar).
     'Naam': { title: [{ text: { content: `Reservering: ${name} · ${fmtShort(slot_start)}`.slice(0, 200) } }] },
     'Type Verzoek': { select: { name: 'Reservering' } },
     'Status': { status: { name: env('NOTION_LEAD_STATUS') || 'Nieuwe lead' } },
+    // Aparte kolommen zodat alles op het bord zichtbaar is zonder de kaart te openen.
+    'Afspraak': isoSlot ? { date: { start: isoSlot } } : { date: null },
+    'E-mail': { email: email || null },
+    'Telefoon': { phone_number: phone || null },
     'Beschrijving': { rich_text: [{ text: { content: beschrijving.slice(0, 1900) } }] },
     'Pagina / Sectie': { rich_text: [{ text: { content: 'Reserveringen (/reserveren)' } }] },
     'Datum Ingediend': { date: { start: today } },
