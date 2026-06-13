@@ -46,16 +46,22 @@ const fmtNL = (iso) => {
     return new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' }).format(new Date(iso));
   } catch (e) { return iso; }
 };
+const fmtShort = (iso) => {
+  try {
+    return new Intl.DateTimeFormat('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' }).format(new Date(iso));
+  } catch (e) { return iso; }
+};
 
 async function notifyNotion({ service_name, slot_start, name, email, phone, note }) {
   const apiKey = env('NOTION_API_KEY'); if (!apiKey) return;
   const db = env('NOTION_DATABASE_ID') || NOTION_DEFAULT_DB;
   const today = new Date().toISOString().slice(0, 10);
   const beschrijving =
-    `Dienst: ${service_name}\nWanneer: ${fmtNL(slot_start)}\n` +
+    `📅 Afspraak: ${fmtNL(slot_start)}\nDienst: ${service_name}\n\n` +
     `Naam: ${name}\nE-mail: ${email}\nTelefoon: ${phone || '-'}\n` + (note ? `Opmerking: ${note}\n` : '');
   const props = {
-    'Naam': { title: [{ text: { content: `Reservering: ${name}`.slice(0, 200) } }] },
+    // Titel toont meteen wie + wanneer (op de kaart-voorkant zichtbaar).
+    'Naam': { title: [{ text: { content: `Reservering: ${name} · ${fmtShort(slot_start)}`.slice(0, 200) } }] },
     'Type Verzoek': { select: { name: 'Reservering' } },
     'Status': { status: { name: env('NOTION_LEAD_STATUS') || 'Nieuwe lead' } },
     'Beschrijving': { rich_text: [{ text: { content: beschrijving.slice(0, 1900) } }] },
