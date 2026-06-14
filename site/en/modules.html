@@ -643,7 +643,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 
   .hero { padding: 130px 20px 72px; }
   .module-strip { padding: 24px 20px; }
-  .module-strip-inner { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .module-strip-inner { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
+  .strip-card-name { overflow-wrap: break-word; word-break: break-word; }
   .module-section { padding: 72px 20px; }
   .module-inner { grid-template-columns: 1fr; gap: 48px; }
   .module-section.reverse .module-inner > .module-visual { order: 0; }
