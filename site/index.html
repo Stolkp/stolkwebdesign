@@ -95,8 +95,10 @@ body {
 .marquee-container:hover .marquee-track { animation-play-state: paused; }
 .marquee-track {
   display: flex;
+  width: max-content;
   animation: marquee 32s linear infinite;
   white-space: nowrap;
+  will-change: transform;
 }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee-item {
@@ -366,21 +368,20 @@ nav {
   max-width: 620px;
 }
 .modules-row {
-  display: grid; grid-template-columns: repeat(6, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; background: var(--black);
   border: 2px solid var(--black);
-  background: var(--white);
   margin-bottom: 36px;
 }
 .module-mini {
   padding: 28px 22px;
-  border-right: 2px solid var(--black);
+  background: var(--white);
   text-decoration: none;
   color: var(--black);
   display: flex; flex-direction: column; gap: 8px;
   transition: background .15s;
   position: relative;
 }
-.module-mini:last-child { border-right: none; }
 .module-mini:hover { background: var(--bone); }
 .module-mini-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -425,11 +426,7 @@ nav {
 
 @media (max-width: 900px) {
   .modules-teaser { padding: 72px 20px; }
-  .modules-row { grid-template-columns: 1fr 1fr; }
-  .module-mini { border-right: 2px solid var(--black); border-bottom: 2px solid var(--black); }
-  .module-mini:nth-child(2n) { border-right: none; }
-  .module-mini:nth-last-child(-n+2) { border-bottom: none; }
-  .module-mini:last-child { border-bottom: none; }
+  .modules-row { grid-template-columns: 1fr; }
 }
 
 /* PAKKETTEN */
@@ -921,7 +918,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="section-label" data-content="home.modules_label">Add-on modules / 02b</div>
       <h2 class="section-heading" data-content-html="home.modules_heading">Niet alleen een website —<br><span class="red">een platform.</span></h2>
       <p class="modules-teaser-lead" data-content="home.modules_lead">
-        Een platform met modules. De Basis CMS is de fundering — Content, facturatie, social, SEO, blog en ondertekenen klik je erbij, onder één login op je eigen domein. Early-access tarief 2026.
+        Een platform met modules. De Basis CMS is de fundering — Content, facturatie, social, SEO, blog, ondertekenen, personeelsplanning en reserveringen klik je erbij, onder één login op je eigen domein. Early-access tarief 2026.
       </p>
     </div>
     <div class="modules-row reveal" style="transition-delay:.1s">
@@ -972,6 +969,30 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         </div>
         <div class="module-mini-name">Blog</div>
         <div class="module-mini-price">vanaf <strong>€99</strong></div>
+      </a>
+      <a href="/modules#sign" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 06</span>
+          <span class="module-mini-dot">Nieuw</span>
+        </div>
+        <div class="module-mini-name">Ondertekenen</div>
+        <div class="module-mini-price">vanaf <strong>€149</strong></div>
+      </a>
+      <a href="/modules#rooster" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 07</span>
+          <span class="module-mini-dot">Nieuw</span>
+        </div>
+        <div class="module-mini-name">Personeels&shy;planner</div>
+        <div class="module-mini-price">vanaf <strong>€199</strong></div>
+      </a>
+      <a href="/modules#reserveren" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 08</span>
+          <span class="module-mini-dot">Nieuw</span>
+        </div>
+        <div class="module-mini-name">Reserveringen</div>
+        <div class="module-mini-price">vanaf <strong>€249</strong></div>
       </a>
     </div>
     <a href="/modules" class="modules-teaser-cta">

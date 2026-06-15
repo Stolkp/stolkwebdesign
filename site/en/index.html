@@ -97,8 +97,10 @@ body {
 .marquee-container:hover .marquee-track { animation-play-state: paused; }
 .marquee-track {
   display: flex;
+  width: max-content;
   animation: marquee 32s linear infinite;
   white-space: nowrap;
+  will-change: transform;
 }
 @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .marquee-item {
@@ -368,21 +370,20 @@ nav {
   max-width: 620px;
 }
 .modules-row {
-  display: grid; grid-template-columns: repeat(6, 1fr);
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 2px; background: var(--black);
   border: 2px solid var(--black);
-  background: var(--white);
   margin-bottom: 36px;
 }
 .module-mini {
   padding: 28px 22px;
-  border-right: 2px solid var(--black);
+  background: var(--white);
   text-decoration: none;
   color: var(--black);
   display: flex; flex-direction: column; gap: 8px;
   transition: background .15s;
   position: relative;
 }
-.module-mini:last-child { border-right: none; }
 .module-mini:hover { background: var(--bone); }
 .module-mini-head {
   display: flex; align-items: center; justify-content: space-between;
@@ -427,11 +428,7 @@ nav {
 
 @media (max-width: 900px) {
   .modules-teaser { padding: 72px 20px; }
-  .modules-row { grid-template-columns: 1fr 1fr; }
-  .module-mini { border-right: 2px solid var(--black); border-bottom: 2px solid var(--black); }
-  .module-mini:nth-child(2n) { border-right: none; }
-  .module-mini:nth-last-child(-n+2) { border-bottom: none; }
-  .module-mini:last-child { border-bottom: none; }
+  .modules-row { grid-template-columns: 1fr; }
 }
 
 /* PAKKETTEN */
@@ -923,7 +920,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="section-label">Add-on modules / 02b</div>
       <h2 class="section-heading">Not just a website —<br><span class="red">a platform.</span></h2>
       <p class="modules-teaser-lead">
-        A platform with modules. The Base CMS is the foundation — Content, invoicing, social, SEO and blog click on top, under one login on your own domain. Early-access rate 2026.
+        A platform with modules. The Base CMS is the foundation — Content, invoicing, social, SEO, blog, signing, staff scheduling and bookings click on top, under one login on your own domain. Early-access rate 2026.
       </p>
     </div>
     <div class="modules-row reveal" style="transition-delay:.1s">
@@ -974,6 +971,30 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         </div>
         <div class="module-mini-name">Blog</div>
         <div class="module-mini-price">from <strong>€99</strong></div>
+      </a>
+      <a href="/en/modules#sign" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 06</span>
+          <span class="module-mini-dot">New</span>
+        </div>
+        <div class="module-mini-name">Signing</div>
+        <div class="module-mini-price">from <strong>€149</strong></div>
+      </a>
+      <a href="/en/modules#rooster" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 07</span>
+          <span class="module-mini-dot">New</span>
+        </div>
+        <div class="module-mini-name">Staff Scheduler</div>
+        <div class="module-mini-price">from <strong>€199</strong></div>
+      </a>
+      <a href="/en/modules#reserveren" class="module-mini">
+        <div class="module-mini-head">
+          <span class="module-mini-num">/ 08</span>
+          <span class="module-mini-dot">New</span>
+        </div>
+        <div class="module-mini-name">Bookings</div>
+        <div class="module-mini-price">from <strong>€249</strong></div>
       </a>
     </div>
     <a href="/en/modules" class="modules-teaser-cta">
