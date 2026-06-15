@@ -47,18 +47,8 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://www.stolkwebdesign.nl/privacybeleid</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://www.stolkwebdesign.nl/algemene-voorwaarden</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
+<!-- Juridische pagina's (privacybeleid, algemene-voorwaarden, en/privacy, en/terms)
+     staan bewust NIET in de sitemap: ze hebben noindex, opname zou een GSC-conflict geven. -->
 <!-- BLOG-START -->
   <url><loc>https://www.stolkwebdesign.nl/blog/</loc><lastmod>2026-05-29</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <!-- BLOG-END -->
@@ -102,17 +92,5 @@
     <priority>0.7</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://www.stolkwebdesign.nl/en/modules"/>
     <xhtml:link rel="alternate" hreflang="nl" href="https://www.stolkwebdesign.nl/modules"/>
-  </url>
-  <url>
-    <loc>https://www.stolkwebdesign.nl/en/privacy</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  <url>
-    <loc>https://www.stolkwebdesign.nl/en/terms</loc>
-    <lastmod>2026-06-10</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.2</priority>
   </url>
 </urlset>

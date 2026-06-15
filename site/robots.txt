@@ -9,6 +9,12 @@ Disallow: /admin.html
 Disallow: /api/
 Disallow: /assets/
 Disallow: /seo/
+# Token- en parameter-URL's niet crawlen (voorkomt phantom-URL's in GSC)
+# cleanUrls maakt van /project.html → /project, dus beide afdekken
+Disallow: /project
+Disallow: /project.html
+Disallow: /*?token=
+Disallow: /*?annuleren=
 Content-Signal: search=yes, ai-input=yes, ai-train=no
 
 User-agent: GPTBot

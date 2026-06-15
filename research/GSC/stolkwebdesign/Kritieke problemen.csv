@@ -1,0 +1,12 @@
+Reden,Bron,Validatie,Pagina&#39;s
+Geblokkeerd door robots.txt,Website,Niet gestart,65
+Niet gevonden (404),Website,Niet gestart,19
+Serverfout (5xx),Website,Niet gestart,8
+Uitgesloten door tag noindex,Website,Niet gestart,8
+Dubbele pagina zonder door de gebruiker geselecteerde canonieke versie,Website,Niet gestart,5
+Geblokkeerd vanwege verboden toegang (403),Website,Niet gestart,1
+Pagina met omleiding,Website,Niet gestart,1
+Alternatieve pagina met correcte canonieke tag,Website,Niet gestart,1
+Geblokkeerd wegens ongeautoriseerd verzoek (401),Website,Niet gestart,1
+Gecrawld - momenteel niet geïndexeerd,Google-systemen,Niet gestart,27
+Gevonden - momenteel niet geïndexeerd,Google-systemen,N.v.t.,0
