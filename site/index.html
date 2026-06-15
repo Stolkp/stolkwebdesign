@@ -43,6 +43,7 @@
 <script src="config.js"></script>
 <script src="content-loader.js"></script>
 <style>
+/*ovx*/ html, body { overflow-x: hidden; }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -54,7 +55,7 @@
   --muted: #767676;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
 body {
   background: var(--white);
   color: var(--black);
@@ -611,7 +612,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   .port-card:first-child { grid-row: auto; }
   .solution, .process, .social-proof, .final-cta, .portfolio-strip { padding: 72px 20px; }
   .quote-block { padding: 28px; }
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 32px; }
+  .footer-grid > div:first-child { grid-column: 1 / -1; }
+  .footer-logo { overflow-wrap: anywhere; }
   .usp-strip { grid-template-columns: repeat(2, 1fr); }
   .usp-item:nth-child(2) { border-right: none; }
 }
