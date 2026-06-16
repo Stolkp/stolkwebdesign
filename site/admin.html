@@ -904,10 +904,25 @@ async function doLogin() {
   const errEl = document.getElementById('login-error');
   const btn = document.getElementById('login-btn');
   errEl.style.display = 'none';
+  if (!email || !pw) { errEl.textContent = 'Vul e-mail én wachtwoord in'; errEl.style.display = 'block'; return; }
   btn.disabled = true; btn.textContent = 'Bezig...';
-  const { error } = await db.auth.signInWithPassword({ email, password: pw });
-  btn.disabled = false; btn.textContent = 'Inloggen →';
-  if (error) errEl.style.display = 'block';
+  try {
+    // Time-out zodat de knop nooit eindeloos op "Bezig..." blijft hangen bij een trage/hangende aanroep.
+    const { error } = await Promise.race([
+      db.auth.signInWithPassword({ email, password: pw }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('time-out — verbinding te traag')), 15000)),
+    ]);
+    if (error) {
+      errEl.textContent = 'Inloggen mislukt — ' + (error.message || 'controleer je gegevens');
+      errEl.style.display = 'block';
+    }
+    // Bij succes hidet onAuthStateChange → showAdmin() dit scherm automatisch.
+  } catch (e) {
+    errEl.textContent = 'Verbindingsfout — probeer opnieuw (' + (e.message || e) + ')';
+    errEl.style.display = 'block';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Inloggen →';
+  }
 }
 
 async function doLogout() {
