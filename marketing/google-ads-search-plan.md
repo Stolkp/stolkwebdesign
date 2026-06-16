@@ -2,7 +2,7 @@
 
 > Lokale webdesignstudio · start Uithoorn/Amstelveen/Amsterdam → daarna heel NL
 > Doel: koopklare leads (call boeken via cal.com / formulier) · Aanbod: **gratis homepage-mockup**
-> Markt: Nederlands · Prijs: €950–€2.450/project + modules
+> Markt: Nederlands · Prijs: €1.250–€3.500/project + modules
 
 ⚠️ **CPC's zijn schattingen** voor de NL-markt — exacte cijfers komen uit Google Keyword Planner
 zodra het account live is. Gebruik dit als bouwplan, niet als belofte.
@@ -126,7 +126,7 @@ Maak per ad-group één **Responsive Search Ad** met 10–15 koppen en 4 descrip
 (koppen ≤30 tekens, descriptions ≤90). Voorbeeld voor **A1 (Website laten maken, lokaal)**:
 
 **Koppen:** `Website Laten Maken` · `Webdesign uit Amstelveen` · `Gratis Homepage-Mockup` ·
-`Premium Maatwerk Website` · `Vaste Prijs vanaf €950` · `Persoonlijk & Lokaal` ·
+`Premium Maatwerk Website` · `Vaste Prijs vanaf €1.250` · `Persoonlijk & Lokaal` ·
 `Scroll-Animaties op Maat` · `Geen WordPress-Gedoe` · `Plan een Gratis Gesprek` ·
 `Door Peter Zelf Gebouwd`
 **Descriptions:**
@@ -151,7 +151,7 @@ Maak per ad-group één **Responsive Search Ad** met 10–15 koppen en 4 descrip
 ## 7. Budget-scenario's
 
 Aannames: gem. landingspagina-conversie **~5%** (dedicated LP), CPC-mix **~€3,5** lokaal.
-Lead → klant ≈ **1 op 3** (bevestigen). Drempel max kosten/lead = **€125** (uit unit-economics).
+Lead → klant ≈ **1 op 3** (bevestigen). Drempel max kosten/lead = **€175** (uit unit-economics).
 
 | Scenario | Budget/mnd | Klikken/mnd (~) | Leads/mnd (~) | Focus |
 |---|---|---|---|---|
@@ -159,7 +159,7 @@ Lead → klant ≈ **1 op 3** (bevestigen). Drempel max kosten/lead = **€125**
 | **Aanbevolen** | €750–1.000 | 215–285 | 10–14 | A1–A3 + A6 |
 | Ruim | €1.500+ | 430+ | 21+ | Alle ad-groups + start NL-breed |
 
-> Bij €950–2.450/project betaalt **1 klant** de aanbevolen maand al ruim terug. Start krap/aanbevolen,
+> Bij €1.250–3.500/project betaalt **1 klant** de aanbevolen maand al ruim terug. Start krap/aanbevolen,
 > schaal op zodra de kosten/lead onder de drempel blijven (zichtbaar in de CMS Ads-tab).
 
 ---

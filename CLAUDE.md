@@ -42,9 +42,9 @@ research/
 
 ## Diensten + Prijzen
 Per-pagina model (uurtarief €75) — gepresenteerd als 3 pakketten op de homepage (`#pakketten`):
-- **Start** €950 — homepage / 1 pagina, incl. volledig ontwerp-systeem
-- **Onderneem** €1.500 — tot 4 pagina's (meest gekozen)
-- **Groei** €2.450 — tot 7 pagina's + Basis CMS + Content
+- **Start** €1.250 — homepage / 1 pagina, incl. volledig ontwerp-systeem
+- **Onderneem** €2.250 — tot 4 pagina's (meest gekozen)
+- **Groei** €3.500 — tot 7 pagina's + Basis CMS + Content
 - Extra pagina buiten pakket: **€200**
 - **Custom / op maat** (eigen systeem, integratie, klantportaal, platform): **Op aanvraag** — donkere band onder de pakketten
 - Webhosting & beveiliging: **Vanaf €25/maand** · Onderhoud & support: **Op aanvraag**
