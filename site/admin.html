@@ -32,6 +32,9 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 .pw-wrap .login-input { margin-bottom:0; padding-right:50px; }
 .pw-toggle { position:absolute; right:0; top:0; bottom:0; width:46px; display:flex; align-items:center; justify-content:center; background:none; border:none; color:var(--muted); cursor:pointer; padding:0; }
 .pw-toggle:hover { color:var(--white); }
+input[type="date"].blog-date { width:172px; cursor:pointer; }
+input[type="date"].blog-date::-webkit-calendar-picker-indicator { filter:invert(1); opacity:.65; cursor:pointer; }
+input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:1; }
 .login-btn { width:100%; padding:16px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; background:var(--red); color:var(--white); border:none; cursor:pointer; letter-spacing:.04em; transition:background .15s; }
 .login-btn:hover { background:#c91f1f; }
 .login-btn:disabled { opacity:.6; cursor:not-allowed; }
@@ -2407,10 +2410,10 @@ function blogStatus(p) {
   if (!p.published_at) return ['Concept', '#888'];
   return new Date(p.published_at).getTime() > Date.now() ? ['Gepland', '#d9a400'] : ['Live', '#37a04a'];
 }
-function toLocalInput(iso) {
+function toDateInput(iso) {
   if (!iso) return '';
   const d = new Date(iso), pad = (n) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 async function loadBlogList() {
   const wrap = document.getElementById('blog-list');
@@ -2431,7 +2434,7 @@ async function loadBlogList() {
         <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;margin-top:4px;">/blog/${esc(p.slug)} · ${esc(p.topic || '')}</div>
       </div>
       <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${color};white-space:nowrap;">● ${label}</span>
-      <input type="datetime-local" class="form-input" style="width:200px;" id="blogdate-${p.id}" value="${toLocalInput(p.published_at)}">
+      <input type="date" class="form-input blog-date" id="blogdate-${p.id}" value="${toDateInput(p.published_at)}" title="Kies een publicatiedatum" onclick="if(this.showPicker)this.showPicker()">
       <div style="display:flex;gap:6px;white-space:nowrap;">
         <button class="row-btn" onclick="saveBlogDate('${p.id}',this)">Opslaan</button>
         <button class="row-btn" onclick="publishBlogNow('${p.id}',this)">Nu live</button>
@@ -2442,7 +2445,8 @@ async function loadBlogList() {
 }
 async function saveBlogDate(id, btn) {
   const inp = document.getElementById('blogdate-' + id);
-  const val = inp && inp.value ? new Date(inp.value).toISOString() : null;
+  // Datum → publiceren om 08:00 lokale tijd op die dag (sluit aan op de ochtend-rebuild).
+  const val = inp && inp.value ? new Date(inp.value + 'T08:00:00').toISOString() : null;
   btn.disabled = true;
   const { error } = await db.from(BLOG_TABLE).update({ published_at: val }).eq('id', id);
   btn.disabled = false;
