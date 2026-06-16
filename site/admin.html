@@ -28,6 +28,10 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 .login-title { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--muted); margin-bottom:24px; }
 .login-input { width:100%; padding:14px 18px; background:var(--black); color:var(--white); border:2px solid #333; font-family:'Space Grotesk',sans-serif; font-size:16px; margin-bottom:16px; border-radius:0; }
 .login-input:focus { outline:none; border-color:var(--red); }
+.pw-wrap { position:relative; margin-bottom:16px; }
+.pw-wrap .login-input { margin-bottom:0; padding-right:50px; }
+.pw-toggle { position:absolute; right:0; top:0; bottom:0; width:46px; display:flex; align-items:center; justify-content:center; background:none; border:none; color:var(--muted); cursor:pointer; padding:0; }
+.pw-toggle:hover { color:var(--white); }
 .login-btn { width:100%; padding:16px; font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; background:var(--red); color:var(--white); border:none; cursor:pointer; letter-spacing:.04em; transition:background .15s; }
 .login-btn:hover { background:#c91f1f; }
 .login-btn:disabled { opacity:.6; cursor:not-allowed; }
@@ -358,7 +362,13 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
   <div class="login-box">
     <div class="login-title font-mono">Inloggen / beheer</div>
     <input type="email" id="email-input" class="login-input" placeholder="E-mailadres" autocomplete="email">
-    <input type="password" id="pw-input" class="login-input" placeholder="Wachtwoord" autocomplete="current-password">
+    <div class="pw-wrap">
+      <input type="password" id="pw-input" class="login-input" placeholder="Wachtwoord" autocomplete="current-password">
+      <button type="button" class="pw-toggle" id="pw-toggle" aria-label="Wachtwoord tonen" onclick="togglePw()">
+        <svg id="pw-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <svg id="pw-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+      </button>
+    </div>
     <button class="login-btn font-display" id="login-btn" onclick="doLogin()">Inloggen →</button>
     <div class="login-error font-mono" id="login-error">Inloggen mislukt — controleer je gegevens</div>
   </div>
@@ -918,7 +928,17 @@ function showLogin() {
   document.getElementById('pw-input').value = '';
 }
 
+function togglePw() {
+  const i = document.getElementById('pw-input');
+  const show = i.type === 'password';
+  i.type = show ? 'text' : 'password';
+  document.getElementById('pw-toggle').setAttribute('aria-label', show ? 'Wachtwoord verbergen' : 'Wachtwoord tonen');
+  document.getElementById('pw-eye').style.display = show ? 'none' : '';
+  document.getElementById('pw-eye-off').style.display = show ? '' : 'none';
+  i.focus();
+}
 document.getElementById('email-input').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('pw-input').focus(); });
+document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 document.getElementById('pw-input').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
 
 // ── DATA ──
