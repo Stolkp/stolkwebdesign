@@ -13,6 +13,33 @@ export default async function handler(req, res) {
     return res.status(401).json({ error: 'unauthorized' });
   }
 
+  // ── Geplande blogposts: rebuild als er een post sinds de vorige run (≈26u) "due" is geworden ──
+  // De anon-key ziet via RLS alleen posts met published_at <= now(); we filteren op de laatste 26u
+  // zodat een blog met een toekomstige datum automatisch live komt bij de eerstvolgende cron-run.
+  let scheduledRebuild = null;
+  try {
+    const supaUrl = process.env.SUPABASE_URL;
+    const supaKey = process.env.SUPABASE_ANON_KEY;
+    if (supaUrl && supaKey) {
+      const since = new Date(Date.now() - 26 * 3600 * 1000).toISOString();
+      const nowIso = new Date().toISOString();
+      const q = `${supaUrl}/rest/v1/stolkwebdesign_blog_posts?select=slug,published_at` +
+        `&published_at=gte.${encodeURIComponent(since)}&published_at=lte.${encodeURIComponent(nowIso)}`;
+      const r = await fetch(q, { headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` } });
+      const due = await r.json().catch(() => []);
+      if (Array.isArray(due) && due.length && process.env.VERCEL_DEPLOY_HOOK_URL) {
+        await fetch(process.env.VERCEL_DEPLOY_HOOK_URL, { method: 'POST' }).catch((e) =>
+          console.warn('[deploy-hook] scheduled rebuild failed:', e.message)
+        );
+        scheduledRebuild = { triggered: true, due: due.map((d) => d.slug) };
+      } else if (Array.isArray(due) && due.length) {
+        scheduledRebuild = { triggered: false, reason: 'VERCEL_DEPLOY_HOOK_URL ontbreekt', due: due.map((d) => d.slug) };
+      }
+    }
+  } catch (e) {
+    scheduledRebuild = { error: String(e) };
+  }
+
   const NOTION_TOKEN = process.env.NOTION_TOKEN;
   const WEBHOOK_SECRET = process.env.NOTION_WEBHOOK_SECRET;
   const SITE_ORIGIN = process.env.SITE_ORIGIN || `https://${req.headers.host || 'stolkwebdesign.vercel.app'}`;
@@ -47,7 +74,7 @@ export default async function handler(req, res) {
   const pages = queryData.results || [];
 
   if (pages.length === 0) {
-    return res.status(200).json({ found: 0, processed: [] });
+    return res.status(200).json({ found: 0, processed: [], scheduledRebuild });
   }
 
   // 2. Voor elke approved page → call notion-publish (sequentieel om rate-limits te respecteren)
@@ -73,5 +100,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({ found: pages.length, processed });
+  return res.status(200).json({ found: pages.length, processed, scheduledRebuild });
 }

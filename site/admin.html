@@ -395,6 +395,10 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="6" height="6"/><rect x="8.5" y="1.5" width="6" height="6"/><rect x="1.5" y="8.5" width="6" height="6"/><rect x="8.5" y="8.5" width="6" height="6"/></svg>
           Campagnes
         </div>
+        <div class="sidebar-item font-mono" onclick="showSection('blog', this); loadBlogList();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 1.5h7l3 3v10H3z"/><path d="M9.5 1.5v3.5H13"/><path d="M5.5 8h5M5.5 11h3"/></svg>
+          Blog
+        </div>
         <div class="sidebar-item font-mono" onclick="showSection('sign', this); loadSignList();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s2-5 4-5 1 3 2.5 3S11 4 13 4"/><path d="M2 14h12"/></svg>
           Ondertekenen
@@ -527,6 +531,21 @@ body { background:var(--near-black); color:var(--white); font-family:'Space Grot
 
         <div style="margin-top:24px; padding:20px 24px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#444; line-height:1.8;">
           ℹ De preview is een indicatie. De download-knoppen genereren de échte PNG's via <code>/api/render-social-post</code> (werkt op de live site). Captions kopieer je los per platform.
+        </div>
+      </div>
+
+      <!-- BLOG -->
+      <div id="section-blog" class="page-section">
+        <div class="page-title font-display">Blog</div>
+        <div class="page-sub font-mono">Plan wanneer een blog zichtbaar wordt — zet een datum en hij verschijnt vanzelf</div>
+        <div style="display:flex; gap:10px; align-items:center; margin:16px 0;">
+          <button class="settings-btn font-mono" onclick="loadBlogList()">↻ Vernieuwen</button>
+          <button class="settings-btn font-mono" onclick="rebuildNow(this)">⟳ Site nu herbouwen</button>
+        </div>
+        <div class="project-list" id="blog-list"></div>
+        <div style="margin-top:18px; padding:16px 20px; background:#0a0a0a; border:1px solid #1a1a1a; font-family:'JetBrains Mono',monospace; font-size:11px; color:#555; line-height:1.9;">
+          ℹ <b style="color:#888;">Concept</b> = geen datum (onzichtbaar) · <b style="color:#d9a400;">Gepland</b> = datum in de toekomst · <b style="color:#37a04a;">Live</b> = datum verstreken, staat op /blog.<br>
+          Een geplande post komt automatisch live op de ochtend van zijn datum (dagelijkse rebuild). Wil je 'm meteen live? Zet de datum op nu/verleden en klik <b>"Site nu herbouwen"</b>.
         </div>
       </div>
 
@@ -2345,6 +2364,85 @@ async function clearSocialBg(id) {
   p.bg_image = '';
   await db.from('stolkwebdesign_social_posts').update({ bg_image: '' }).eq('id', id);
   renderSocialPosts();
+}
+
+// ── BLOG: geplande publicatie ──
+const BLOG_TABLE = 'stolkwebdesign_blog_posts';
+function blogStatus(p) {
+  if (!p.published_at) return ['Concept', '#888'];
+  return new Date(p.published_at).getTime() > Date.now() ? ['Gepland', '#d9a400'] : ['Live', '#37a04a'];
+}
+function toLocalInput(iso) {
+  if (!iso) return '';
+  const d = new Date(iso), pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+async function loadBlogList() {
+  const wrap = document.getElementById('blog-list');
+  if (!wrap) return;
+  wrap.innerHTML = '<div style="padding:20px;color:#555;font-family:\'JetBrains Mono\',monospace;font-size:11px;">Laden…</div>';
+  const { data, error } = await db.from(BLOG_TABLE)
+    .select('id,slug,title,topic,published_at')
+    .order('published_at', { ascending: false, nullsFirst: false })
+    .order('created_at', { ascending: false });
+  if (error) { toast('Blog laden mislukt: ' + error.message, true); wrap.innerHTML = ''; return; }
+  const posts = data || [];
+  if (!posts.length) { wrap.innerHTML = '<div style="padding:20px;color:#555;font-family:\'JetBrains Mono\',monospace;font-size:11px;">Nog geen blogposts.</div>'; return; }
+  wrap.innerHTML = posts.map((p) => {
+    const [label, color] = blogStatus(p);
+    return `<div class="project-row" style="grid-template-columns:1fr auto auto auto;gap:14px;">
+      <div style="min-width:0;">
+        <div class="project-row-name" style="overflow-wrap:anywhere;">${esc(p.title || p.slug)}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;margin-top:4px;">/blog/${esc(p.slug)} · ${esc(p.topic || '')}</div>
+      </div>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${color};white-space:nowrap;">● ${label}</span>
+      <input type="datetime-local" class="form-input" style="width:200px;" id="blogdate-${p.id}" value="${toLocalInput(p.published_at)}">
+      <div style="display:flex;gap:6px;white-space:nowrap;">
+        <button class="row-btn" onclick="saveBlogDate('${p.id}',this)">Opslaan</button>
+        <button class="row-btn" onclick="publishBlogNow('${p.id}',this)">Nu live</button>
+        <button class="row-btn danger" onclick="unpublishBlog('${p.id}',this)">Concept</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function saveBlogDate(id, btn) {
+  const inp = document.getElementById('blogdate-' + id);
+  const val = inp && inp.value ? new Date(inp.value).toISOString() : null;
+  btn.disabled = true;
+  const { error } = await db.from(BLOG_TABLE).update({ published_at: val }).eq('id', id);
+  btn.disabled = false;
+  if (error) { toast('Opslaan mislukt: ' + error.message, true); return; }
+  toast(val ? 'Datum opgeslagen' : 'Op concept gezet');
+  loadBlogList();
+}
+async function publishBlogNow(id, btn) {
+  if (!confirm('Deze blog nu publiceren? Hij wordt zichtbaar bij de eerstvolgende rebuild.')) return;
+  btn.disabled = true;
+  const { error } = await db.from(BLOG_TABLE).update({ published_at: new Date().toISOString() }).eq('id', id);
+  btn.disabled = false;
+  if (error) { toast('Mislukt: ' + error.message, true); return; }
+  toast('Op live gezet — klik "Site nu herbouwen" voor direct live');
+  loadBlogList();
+}
+async function unpublishBlog(id, btn) {
+  if (!confirm('Terug naar concept? De blog verdwijnt van de site bij de volgende rebuild.')) return;
+  btn.disabled = true;
+  const { error } = await db.from(BLOG_TABLE).update({ published_at: null }).eq('id', id);
+  btn.disabled = false;
+  if (error) { toast('Mislukt: ' + error.message, true); return; }
+  toast('Terug naar concept');
+  loadBlogList();
+}
+async function rebuildNow(btn) {
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Bezig…';
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    const r = await fetch('/api/rebuild', { method: 'POST', headers: { Authorization: 'Bearer ' + session.access_token } });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
+    toast(j.message || 'Rebuild gestart');
+  } catch (e) { toast('Rebuild mislukt: ' + e.message, true); }
+  finally { btn.disabled = false; btn.textContent = orig; }
 }
 
 // ── TOAST ──

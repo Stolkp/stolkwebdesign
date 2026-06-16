@@ -138,10 +138,13 @@ async function fetchPosts() {
     return [];
   }
   const supabase = createClient(url, key);
+  // Alleen posts waarvan de publicatiedatum al verstreken is (geplande/toekomstige datums
+  // blijven onzichtbaar tot hun moment; de RLS-policy dwingt dit ook af voor de anon-key).
   const { data, error } = await supabase
     .from('stolkwebdesign_blog_posts')
     .select('*')
     .not('published_at', 'is', null)
+    .lte('published_at', new Date().toISOString())
     .order('published_at', { ascending: false });
   if (error) {
     console.warn('[build-blog] Supabase fetch failed:', error.message, '— render empty blog.');
