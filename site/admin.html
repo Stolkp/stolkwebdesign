@@ -2275,10 +2275,15 @@ function renderSocialPosts() {
   const origin = location.origin;
   wrap.innerHTML = socialPosts.map(p => {
     const dl = fmt => `${origin}/api/render-social-post?post=${p.id}&fmt=${fmt}&dl=1`;
+    // Vink standaard alleen het platform aan dat in de kop staat ("… — Instagram" / "… — LinkedIn").
+    // Staat er geen platform in de kop, dan beide aan (oud gedrag).
+    const _hl = (p.headline || '').toLowerCase();
+    const _wantLi = _hl.includes('linkedin'), _wantIg = _hl.includes('instagram'), _both = !_wantLi && !_wantIg;
+    const liChk = (_wantLi || _both) ? 'checked' : '', igChk = (_wantIg || _both) ? 'checked' : '';
     const publishBox = `<div class="publish-box" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(0,0,0,.18)">
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Publiceren naar</span>
-          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-li-${p.id}" checked> LinkedIn</label>
-          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-ig-${p.id}" checked> Instagram</label>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-li-${p.id}" ${liChk}> LinkedIn</label>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-ig-${p.id}" ${igChk}> Instagram</label>
           <label style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px">Plannen (leeg = nu) <input type="datetime-local" id="pp-when-${p.id}" style="font-family:inherit;font-size:12px;padding:5px 7px;border:2px solid var(--black);background:#fff"></label>
           <button class="content-save-btn" style="background:var(--red);border-color:var(--red);color:#fff" onclick="publishPost('${p.id}', this)">📤 Publiceer / Plan</button>
         </div>`;
@@ -2363,6 +2368,9 @@ function onSocialInput(e) {
   const id = el.getAttribute('data-spost'), field = el.getAttribute('data-sfield');
   const p = socialPosts.find(x => x.id === id); if (!p) return;
   p[field] = el.value;
+  // Carousel-/beeldposts tonen het vooraf-gerenderde beeld als preview — die niet overschrijven
+  // met de tekst-render (anders "verdwijnt" de afbeelding zodra je een caption typt).
+  if (p.kind === 'carousel') return;
   const prev = document.getElementById('prev-' + id);
   if (prev) prev.innerHTML = socialPreviewHTML(p);
 }

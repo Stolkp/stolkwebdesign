@@ -714,36 +714,22 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   </div>
 </div>
 
-<!-- NET OPGELEVERD (laatste launch — verschijnt alleen als er data is) -->
+<!-- Stijl voor de uitgelichte 'Net opgeleverd'-kaart (bovenaan de werk-sectie; alleen bij data) -->
 <style>
-  #net-opgeleverd { border-top: 2px solid var(--black); display: none; }
-  .latest { max-width: 1400px; margin: 0 auto; padding: 84px 48px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  #net-opgeleverd { display: none; }
+  .latest { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding-bottom: 60px; margin-bottom: 56px; border-bottom: 2px solid var(--black); }
   .latest-media { position: relative; }
   .latest-media img { display: block; width: 100%; border: 2px solid var(--black); box-shadow: 16px 16px 0 0 var(--red); }
   .latest-eyebrow { font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--red); font-size: 13px; display: flex; align-items: center; gap: 11px; margin-bottom: 22px; }
   .latest-eyebrow .ldot { width: 10px; height: 10px; background: var(--red); border-radius: 50%; display: inline-block; animation: lpulse 2s infinite; }
-  .latest-name { font-family: 'Archivo Black', sans-serif; font-size: 64px; line-height: .94; letter-spacing: -.03em; text-transform: uppercase; }
+  .latest-name { font-family: 'Archivo Black', sans-serif; font-size: 60px; line-height: .94; letter-spacing: -.03em; text-transform: uppercase; }
   .latest-tag { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 18px; }
   .latest-desc { font-size: 18px; line-height: 1.5; margin-top: 18px; max-width: 460px; color: #222; }
   .latest-btn { display: inline-flex; align-items: center; gap: 12px; margin-top: 32px; background: var(--black); color: var(--white); font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; padding: 16px 26px; border: 2px solid var(--black); transition: background .2s, border-color .2s; text-decoration: none; }
   .latest-btn:hover { background: var(--red); border-color: var(--red); }
   @keyframes lpulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
-  @media (max-width: 860px) { .latest { grid-template-columns: 1fr; padding: 64px 20px; gap: 32px; } .latest-name { font-size: 44px; } .latest-media { order: -1; } }
+  @media (max-width: 860px) { .latest { grid-template-columns: 1fr; gap: 32px; padding-bottom: 44px; margin-bottom: 40px; } .latest-name { font-size: 42px; } .latest-media { order: -1; } }
 </style>
-<section id="net-opgeleverd">
-  <div class="latest reveal">
-    <div class="latest-media">
-      <a id="latest-media-link" href="#" target="_blank" rel="noopener"><img id="latest-img" src="" alt=""></a>
-    </div>
-    <div class="latest-body">
-      <div class="latest-eyebrow"><span class="ldot"></span> Net opgeleverd</div>
-      <h2 class="latest-name" id="latest-name"></h2>
-      <div class="latest-tag" id="latest-tag"></div>
-      <p class="latest-desc" id="latest-desc"></p>
-      <a class="latest-btn" id="latest-btn" href="#" target="_blank" rel="noopener">Bekijk live <span aria-hidden="true">→</span></a>
-    </div>
-  </div>
-</section>
 
 <!-- PORTFOLIO -->
 <section id="werk">
@@ -751,6 +737,21 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <div class="portfolio-strip-header reveal">
       <div class="section-label" data-content="home.werk_label">Geselecteerd werk / 01</div>
       <h2 class="section-heading" data-content-html="home.werk_heading">Elk project<br>een <span class="red">statement.</span></h2>
+    </div>
+    <!-- Uitgelichte laatste oplevering — verschijnt alleen als er een launch-rij is -->
+    <div id="net-opgeleverd">
+      <div class="latest reveal">
+        <div class="latest-media">
+          <a id="latest-media-link" href="#" target="_blank" rel="noopener"><img id="latest-img" src="" alt=""></a>
+        </div>
+        <div class="latest-body">
+          <div class="latest-eyebrow"><span class="ldot"></span> Net opgeleverd</div>
+          <h2 class="latest-name" id="latest-name"></h2>
+          <div class="latest-tag" id="latest-tag"></div>
+          <p class="latest-desc" id="latest-desc"></p>
+          <a class="latest-btn" id="latest-btn" href="#" target="_blank" rel="noopener">Bekijk live <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
     </div>
     <div class="portfolio-grid" id="werk-grid">
       <div class="port-card reveal">
@@ -1295,7 +1296,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       const { data, error } = await db.from('projects').select('*').order('sort_order');
       if (error || !data || !data.length) return;   // fallback-kaarten behouden
-      const items = data.slice(0, 5);
+      // De laatste oplevering staat al uitgelicht bovenaan deze sectie → niet nogmaals in de grid.
+      const items = data.filter(p => !p.is_latest_launch).slice(0, 5);
       grid.innerHTML = items.map((p, i) => {
         const bgStyle = p.img
           ? `background-image:url('${esc(p.img)}');`
