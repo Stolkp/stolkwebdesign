@@ -14,10 +14,11 @@ import { createClient } from '@supabase/supabase-js';
 
 const BUCKET = 'stolkwebdesign-carousels'; // bestaande publieke bucket
 
-async function postViaBlotato({ accountId, targetType, mediaUrls, text, pageId, scheduledTime }) {
+async function postViaBlotato({ accountId, targetType, mediaUrls, text, pageId, scheduledTime, mediaType }) {
   if (!accountId) return { skipped: true, reason: 'no accountId env' };
   const target = { targetType };
   if (pageId) target.pageId = pageId;
+  if (mediaType) target.mediaType = mediaType;   // Instagram: 'story' voor Stories, 'reel' voor video
   const body = { post: { accountId, content: { text, mediaUrls, platform: targetType }, target } };
   // scheduledTime MOET top-level naast `post` staan (anders negeert Blotato het en post direct)
   if (scheduledTime) body.scheduledTime = scheduledTime;
@@ -91,6 +92,9 @@ export default async function handler(req, res) {
     }
   }
 
+  // Een "… — Instagram Story"-post moet als Story geplaatst worden (anders belandt 'ie in de feed).
+  const isStory = /\bstory\b/i.test(post.headline || '');
+
   const proto = (req.headers['x-forwarded-proto'] || 'https').split(',')[0];
   const origin = `${proto}://${req.headers.host}`;
   const results = {};
@@ -115,6 +119,7 @@ export default async function handler(req, res) {
         mediaUrls: urls,
         text: post.caption_instagram || post.headline || '',
         scheduledTime,
+        mediaType: isStory ? 'story' : undefined,
       });
     }
   } catch (e) {
@@ -122,5 +127,16 @@ export default async function handler(req, res) {
   }
 
   const anyError = Object.values(results).some(r => r && r.error);
+
+  // Bij succes: leg de publicatie-status vast (voor de status-badge + dubbel-publiceren-waarschuwing).
+  if (!anyError) {
+    const sentTo = Object.entries(results).filter(([, r]) => r && r.ok).map(([k]) => k).join(', ');
+    await admin.from('stolkwebdesign_social_posts').update({
+      published_at: new Date().toISOString(),
+      scheduled_for: scheduledTime || null,
+      publish_target: sentTo || platforms.join(', '),
+    }).eq('id', postId);
+  }
+
   return res.status(anyError ? 207 : 200).json({ ok: !anyError, results });
 }

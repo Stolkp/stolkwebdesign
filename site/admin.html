@@ -2006,7 +2006,16 @@ async function publishPost(postId, btn) {
 
   const chLabel = platforms.map(p => p === 'linkedin' ? 'LinkedIn' : 'Instagram').join(' + ');
   const action = scheduledTime ? ('INPLANNEN voor ' + new Date(scheduledTime).toLocaleString('nl-NL')) : 'NU LIVE zetten';
-  if (!confirm('Post ' + action + ' op ' + chLabel + '?')) return;
+  // Waarschuw als deze post al verstuurd is (voorkomt onbedoeld dubbel publiceren).
+  const post = socialPosts.find(x => x.id === postId);
+  let warn = '';
+  if (post && post.published_at) {
+    const st = post.scheduled_for
+      ? ('ingepland voor ' + new Date(post.scheduled_for).toLocaleString('nl-NL'))
+      : ('al gepubliceerd op ' + new Date(post.published_at).toLocaleString('nl-NL'));
+    warn = '⚠️ Deze post is ' + st + (post.publish_target ? ' (' + post.publish_target + ')' : '') + '.\nNogmaals versturen = een DUBBELE post.\n\n';
+  }
+  if (!confirm(warn + 'Post ' + action + ' op ' + chLabel + '?')) return;
 
   const orig = btn.textContent;
   btn.disabled = true; btn.textContent = scheduledTime ? 'Inplannen…' : 'Publiceren…';
@@ -2021,6 +2030,8 @@ async function publishPost(postId, btn) {
     const data = await res.json().catch(() => ({}));
     if (res.ok && data.ok) {
       toast((scheduledTime ? 'Ingepland ✓ — ' : 'Gepubliceerd ✓ — ') + chLabel);
+      await loadSocialPosts();   // ververs de status-badge
+      return;
     } else {
       const li = data.results?.linkedin?.error ? ('LinkedIn: ' + data.results.linkedin.error) : '';
       const ig = data.results?.instagram?.error ? ('Instagram: ' + data.results.instagram.error) : '';
@@ -2280,12 +2291,21 @@ function renderSocialPosts() {
     const _hl = (p.headline || '').toLowerCase();
     const _wantLi = _hl.includes('linkedin'), _wantIg = _hl.includes('instagram'), _both = !_wantLi && !_wantIg;
     const liChk = (_wantLi || _both) ? 'checked' : '', igChk = (_wantIg || _both) ? 'checked' : '';
+    // Status-badge + knoplabel als de post al verstuurd/ingepland is.
+    let statusLine = '', pubBtnLabel = '📤 Publiceer / Plan';
+    if (p.published_at) {
+      const when = new Date(p.scheduled_for || p.published_at).toLocaleString('nl-NL', { dateStyle: 'medium', timeStyle: 'short' });
+      const verb = p.scheduled_for ? '🕓 Ingepland voor' : '✓ Gepubliceerd op';
+      statusLine = `<div style="flex-basis:100%;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#1a7f37;text-transform:uppercase;letter-spacing:.06em">${verb} ${when}${p.publish_target ? ' · ' + esc(p.publish_target) : ''}</div>`;
+      pubBtnLabel = '📤 Opnieuw publiceren';
+    }
     const publishBox = `<div class="publish-box" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(0,0,0,.18)">
+          ${statusLine}
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Publiceren naar</span>
           <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-li-${p.id}" ${liChk}> LinkedIn</label>
           <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-ig-${p.id}" ${igChk}> Instagram</label>
           <label style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px">Plannen (leeg = nu) <input type="datetime-local" id="pp-when-${p.id}" style="font-family:inherit;font-size:12px;padding:5px 7px;border:2px solid var(--black);background:#fff"></label>
-          <button class="content-save-btn" style="background:var(--red);border-color:var(--red);color:#fff" onclick="publishPost('${p.id}', this)">📤 Publiceer / Plan</button>
+          <button class="content-save-btn" style="background:var(--red);border-color:var(--red);color:#fff" onclick="publishPost('${p.id}', this)">${pubBtnLabel}</button>
         </div>`;
     const captionsLiIg = `<div class="cms-group-title" style="margin:18px 0 10px;font-size:11px;">Captions per platform</div>
         <div class="form-group"><label class="form-label font-mono">LinkedIn</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_linkedin">${esc(p.caption_linkedin)}</textarea></div>
