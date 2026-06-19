@@ -2302,7 +2302,8 @@ function renderSocialPosts() {
       return `<div class="social-post">
       <div class="social-post-preview" id="prev-${p.id}">
         ${slides.length ? `<img src="${esc(slides[0])}" style="width:100%;border:2px solid var(--black);display:block">` : socialPreviewHTML(p)}
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:8px;text-transform:uppercase;letter-spacing:.1em">Carousel · ${slides.length} slide(s)</div>
+        <div style="font-family:'Archivo Black',sans-serif;font-size:13px;margin-top:10px;letter-spacing:-.01em">${esc(p.headline) || 'Carousel'}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.1em">${slides.length} beeld(en)</div>
       </div>
       <div class="social-post-fields">
         <div class="cms-group-title" style="margin:0 0 10px;font-size:11px;">Carousel-slides (2–10, op volgorde)</div>

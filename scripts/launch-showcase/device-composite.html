@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<title>Launch Showcase — device-composiet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --black:#0A0A0A; --white:#fff; --red:#EA2525; --bone:#F5F5F5; --muted:#8a8a8a; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#222;display:flex;flex-direction:column;align-items:center;gap:48px;padding:48px;font-family:'Space Grotesk',sans-serif;}
+
+  /* ---- frame base ---- */
+  .frame{
+    position:relative;overflow:hidden;background:var(--black);color:var(--white);
+    display:flex;flex-direction:column;
+  }
+  .frame::after{
+    content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;mix-blend-mode:overlay;z-index:1;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* rode accentbalk linksboven als signature */
+  .frame::before{ content:"";position:absolute;top:0;left:0;width:42%;height:8px;background:var(--red);z-index:3; }
+  .frame[data-theme="bone"]{ background:var(--bone);color:var(--black); }
+
+  /* ---- top bar ---- */
+  .top{display:flex;justify-content:space-between;align-items:center;z-index:4;}
+  .brand{font-family:'Archivo Black',sans-serif;letter-spacing:-.02em;}
+  .kicker{font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.22em;text-transform:uppercase;display:flex;align-items:center;gap:10px;}
+  .dot{width:11px;height:11px;background:var(--red);border-radius:50%;display:inline-block;}
+
+  /* ---- device stage ---- */
+  .stage{position:relative;display:flex;align-items:center;justify-content:center;z-index:4;}
+  .laptop{background:var(--white);border:2px solid var(--black);box-shadow:14px 14px 0 0 var(--red);}
+  .frame[data-theme="bone"] .laptop{border-color:var(--black);}
+  .laptop .bar{background:#0A0A0A;display:flex;align-items:center;gap:7px;}
+  .laptop .bar i{border-radius:50%;background:#555;display:block;}
+  .laptop .bar .addr{margin-left:14px;font-family:'JetBrains Mono',monospace;color:#9a9a9a;letter-spacing:.04em;white-space:nowrap;overflow:hidden;}
+  .laptop .shot{display:block;width:100%;object-fit:cover;object-position:top center;background:#eee;}
+
+  .phone{position:absolute;background:var(--black);border:2px solid var(--black);box-shadow:11px 11px 0 0 var(--red);}
+  .frame[data-theme="bone"] .phone{background:#0A0A0A;}
+  .phone .pnotch{height:18px;background:#0A0A0A;display:flex;align-items:center;justify-content:center;}
+  .phone .pnotch i{width:34px;height:5px;background:#444;display:block;}
+  .phone .pshot{display:block;width:100%;object-fit:cover;object-position:top center;background:#eee;}
+
+  /* ---- foot ---- */
+  .foot{z-index:4;}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--red);}
+  .pname{font-family:'Archivo Black',sans-serif;text-transform:uppercase;letter-spacing:-.03em;line-height:.92;}
+  .sub{font-family:'Space Grotesk',sans-serif;color:#cfcfcf;}
+  .frame[data-theme="bone"] .sub{color:#444;}
+  .url{font-family:'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:lowercase;display:inline-flex;align-items:center;gap:10px;}
+  .url::before{content:"→";color:var(--red);font-family:'Archivo Black',sans-serif;}
+
+  /* ============ INSTAGRAM 1080×1080 ============ */
+  #ig{width:1080px;height:1080px;padding:64px;justify-content:space-between;}
+  #ig .brand{font-size:26px;}
+  #ig .kicker{font-size:14px;}
+  #ig .stage{height:540px;margin:8px 0;}
+  #ig .laptop{width:760px;}
+  #ig .laptop .bar{height:34px;padding:0 14px;}
+  #ig .laptop .bar i{width:10px;height:10px;}
+  #ig .laptop .bar .addr{font-size:13px;}
+  #ig .laptop .shot{height:430px;}
+  #ig .phone{width:168px;right:24px;bottom:-26px;}
+  #ig .phone .pshot{height:316px;}
+  #ig .eyebrow{font-size:18px;}
+  #ig .pname{font-size:84px;margin:14px 0 16px;}
+  #ig .sub{font-size:24px;max-width:760px;line-height:1.3;}
+  #ig .url{font-size:22px;margin-top:18px;}
+
+  /* ============ LINKEDIN 1200×627 (horizontaal) ============ */
+  #li{width:1200px;height:627px;padding:52px 56px;flex-direction:row;align-items:center;gap:48px;}
+  #li .left{flex:1;display:flex;flex-direction:column;justify-content:center;z-index:4;}
+  #li .right{position:relative;width:560px;flex-shrink:0;}
+  #li .brand{font-size:20px;margin-bottom:auto;}
+  #li .eyebrow{font-size:15px;margin-bottom:14px;}
+  #li .pname{font-size:62px;}
+  #li .sub{font-size:19px;max-width:480px;line-height:1.3;margin-top:16px;}
+  #li .url{font-size:17px;margin-top:22px;}
+  #li .laptop{width:560px;}
+  #li .laptop .bar{height:30px;padding:0 12px;}
+  #li .laptop .bar i{width:9px;height:9px;}
+  #li .laptop .bar .addr{font-size:12px;}
+  #li .laptop .shot{height:300px;}
+  #li .phone{width:128px;right:-8px;bottom:-30px;}
+  #li .phone .pshot{height:242px;}
+
+  /* ============ STORY 1080×1920 (verticaal) ============ */
+  #story{width:1080px;height:1920px;padding:96px 72px;justify-content:space-between;}
+  #story .brand{font-size:30px;}
+  #story .kicker{font-size:17px;}
+  #story .stage{height:920px;margin:24px 0;}
+  #story .laptop{width:880px;}
+  #story .laptop .bar{height:40px;padding:0 18px;}
+  #story .laptop .bar i{width:12px;height:12px;}
+  #story .laptop .bar .addr{font-size:16px;}
+  #story .laptop .shot{height:520px;}
+  #story .phone{width:248px;right:18px;bottom:-44px;}
+  #story .phone .pshot{height:474px;}
+  #story .eyebrow{font-size:24px;}
+  #story .pname{font-size:130px;margin:24px 0 22px;}
+  #story .sub{font-size:34px;max-width:900px;line-height:1.28;}
+  #story .url{font-size:30px;margin-top:30px;}
+</style>
+</head>
+<body>
+
+  <!-- ===== INSTAGRAM 1080×1080 ===== -->
+  <div class="frame" id="ig" data-theme="black">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="kicker"><span class="dot"></span> <span class="kicker-txt">Net opgeleverd</span></div>
+    </div>
+    <div class="stage">
+      <div class="laptop"><div class="bar"><i></i><i></i><i></i><span class="addr"></span></div><img class="shot" alt=""></div>
+      <div class="phone"><div class="pnotch"><i></i></div><img class="pshot" alt=""></div>
+    </div>
+    <div class="foot">
+      <div class="eyebrow">Nieuw project live</div>
+      <div class="pname">Projectnaam</div>
+      <div class="sub">Tagline van het project komt hier.</div>
+      <div class="url">website.nl</div>
+    </div>
+  </div>
+
+  <!-- ===== LINKEDIN 1200×627 ===== -->
+  <div class="frame" id="li" data-theme="black">
+    <div class="left">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="eyebrow">Net opgeleverd</div>
+      <div class="pname">Projectnaam</div>
+      <div class="sub">Tagline van het project komt hier.</div>
+      <div class="url">website.nl</div>
+    </div>
+    <div class="right">
+      <div class="laptop"><div class="bar"><i></i><i></i><i></i><span class="addr"></span></div><img class="shot" alt=""></div>
+      <div class="phone"><div class="pnotch"><i></i></div><img class="pshot" alt=""></div>
+    </div>
+  </div>
+
+  <!-- ===== STORY 1080×1920 ===== -->
+  <div class="frame" id="story" data-theme="black">
+    <div class="top">
+      <div class="brand">STOLKWEBDESIGN®</div>
+      <div class="kicker"><span class="dot"></span> <span class="kicker-txt">Net opgeleverd</span></div>
+    </div>
+    <div class="stage">
+      <div class="laptop"><div class="bar"><i></i><i></i><i></i><span class="addr"></span></div><img class="shot" alt=""></div>
+      <div class="phone"><div class="pnotch"><i></i></div><img class="pshot" alt=""></div>
+    </div>
+    <div class="foot">
+      <div class="eyebrow">Nieuw project live</div>
+      <div class="pname">Projectnaam</div>
+      <div class="sub">Tagline van het project komt hier.</div>
+      <div class="url">website.nl</div>
+    </div>
+  </div>
+
+</body>
+</html>

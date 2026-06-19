@@ -80,12 +80,14 @@ export default async function handler(req, res) {
   if (postErr || !post) return res.status(404).json({ error: 'Post niet gevonden' });
 
   // Carousel = geordende set vooraf-gerenderde slides; single = on-the-fly render per formaat.
+  // 1 beeld = gewone single-image post; 2-10 = echte carousel. Beide gebruiken de
+  // vooraf-gerenderde media_urls (zo wordt onze ingebakken mockup gepubliceerd i.p.v. de og-render).
   const isCarousel = post.kind === 'carousel';
   let carouselUrls = null;
   if (isCarousel) {
     carouselUrls = Array.isArray(post.media_urls) ? post.media_urls.filter(Boolean) : [];
-    if (carouselUrls.length < 2 || carouselUrls.length > 10) {
-      return res.status(400).json({ error: `Een carousel heeft 2 t/m 10 slides nodig (nu ${carouselUrls.length}).` });
+    if (carouselUrls.length < 1 || carouselUrls.length > 10) {
+      return res.status(400).json({ error: `Een carousel-/beeldpost heeft 1 t/m 10 beelden nodig (nu ${carouselUrls.length}).` });
     }
   }
 

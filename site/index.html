@@ -714,6 +714,37 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   </div>
 </div>
 
+<!-- NET OPGELEVERD (laatste launch — verschijnt alleen als er data is) -->
+<style>
+  #net-opgeleverd { border-top: 2px solid var(--black); display: none; }
+  .latest { max-width: 1400px; margin: 0 auto; padding: 84px 48px; display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+  .latest-media { position: relative; }
+  .latest-media img { display: block; width: 100%; border: 2px solid var(--black); box-shadow: 16px 16px 0 0 var(--red); }
+  .latest-eyebrow { font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--red); font-size: 13px; display: flex; align-items: center; gap: 11px; margin-bottom: 22px; }
+  .latest-eyebrow .ldot { width: 10px; height: 10px; background: var(--red); border-radius: 50%; display: inline-block; animation: lpulse 2s infinite; }
+  .latest-name { font-family: 'Archivo Black', sans-serif; font-size: 64px; line-height: .94; letter-spacing: -.03em; text-transform: uppercase; }
+  .latest-tag { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 18px; }
+  .latest-desc { font-size: 18px; line-height: 1.5; margin-top: 18px; max-width: 460px; color: #222; }
+  .latest-btn { display: inline-flex; align-items: center; gap: 12px; margin-top: 32px; background: var(--black); color: var(--white); font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; padding: 16px 26px; border: 2px solid var(--black); transition: background .2s, border-color .2s; text-decoration: none; }
+  .latest-btn:hover { background: var(--red); border-color: var(--red); }
+  @keyframes lpulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+  @media (max-width: 860px) { .latest { grid-template-columns: 1fr; padding: 64px 20px; gap: 32px; } .latest-name { font-size: 44px; } .latest-media { order: -1; } }
+</style>
+<section id="net-opgeleverd">
+  <div class="latest reveal">
+    <div class="latest-media">
+      <a id="latest-media-link" href="#" target="_blank" rel="noopener"><img id="latest-img" src="" alt=""></a>
+    </div>
+    <div class="latest-body">
+      <div class="latest-eyebrow"><span class="ldot"></span> Net opgeleverd</div>
+      <h2 class="latest-name" id="latest-name"></h2>
+      <div class="latest-tag" id="latest-tag"></div>
+      <p class="latest-desc" id="latest-desc"></p>
+      <a class="latest-btn" id="latest-btn" href="#" target="_blank" rel="noopener">Bekijk live <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+
 <!-- PORTFOLIO -->
 <section id="werk">
   <div class="portfolio-strip">
@@ -1288,6 +1319,42 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       });
       grid.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     } catch (e) { /* fallback-kaarten behouden */ }
+  })();
+
+  // Net opgeleverd — toon de laatste launch (is_latest_launch) als highlight.
+  // Enhancement: de sectie staat default verborgen en verschijnt alleen bij data.
+  (async function loadLatestLaunch() {
+    const sec = document.getElementById('net-opgeleverd');
+    if (!sec || typeof window.supabase === 'undefined' || typeof SUPABASE_URL === 'undefined') return;
+    try {
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      // 1) expliciete vlag; 2) fallback: nieuwste op created_at; 3) fallback: hoogste sort_order
+      let p = null;
+      let r = await db.from('projects').select('*').eq('is_latest_launch', true).limit(1).maybeSingle();
+      p = r.data;
+      if (!p) { r = await db.from('projects').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle(); p = r.data; }
+      if (!p) { r = await db.from('projects').select('*').order('sort_order', { ascending: false }).limit(1).maybeSingle(); p = r.data; }
+      if (!p || !p.img) return;   // zonder beeld geen highlight
+
+      const dest = p.url || ('project.html?p=' + encodeURIComponent(p.slug || p.id));
+      const img = document.getElementById('latest-img');
+      img.src = p.img; img.alt = p.name || 'Net opgeleverd';
+      document.getElementById('latest-media-link').href = dest;
+      document.getElementById('latest-name').textContent = p.name || '';
+      document.getElementById('latest-tag').textContent = [p.tag, p.type].filter(Boolean).join(' · ');
+      document.getElementById('latest-desc').textContent = p.description || '';
+      const btn = document.getElementById('latest-btn');
+      btn.href = dest;
+      if (!p.url) btn.querySelector('span') && (btn.childNodes[0].nodeValue = 'Bekijk project ');
+
+      sec.style.display = 'block';
+      // Forceer de reveal (de sectie wordt dynamisch getoond, dus niet afhankelijk
+      // van scroll-timing van de observer): laat 'm na een frame infaden.
+      sec.querySelectorAll('.reveal').forEach(el => {
+        observer.observe(el);
+        requestAnimationFrame(() => el.classList.add('visible'));
+      });
+    } catch (e) { /* verborgen laten */ }
   })();
 </script>
 
