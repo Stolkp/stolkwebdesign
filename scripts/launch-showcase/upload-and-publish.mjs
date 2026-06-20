@@ -16,6 +16,9 @@ import { createRequire } from 'node:module';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 import { readFile, access } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+const execFileP = promisify(execFile);
 
 const SUPABASE_URL = 'https://lkcfwndigzhzcjnhxcmb.supabase.co';
 const BUCKET = 'stolkwebdesign-content';
@@ -73,21 +76,36 @@ function slugify(s) {
 const cleanUrl = URLv.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 // ---- 1. upload ----
-async function up(localFile, destPath) {
+async function up(localFile, destPath, contentType = 'image/png') {
   await access(localFile);
   const buf = await readFile(localFile);
-  const { error } = await db.storage.from(BUCKET).upload(destPath, buf, { contentType: 'image/png', upsert: true });
+  const { error } = await db.storage.from(BUCKET).upload(destPath, buf, { contentType, upsert: true });
   if (error) throw new Error(`upload ${destPath}: ${error.message}`);
   const { data } = db.storage.from(BUCKET).getPublicUrl(destPath);
-  console.log('✓ upload', destPath);
+  console.log('✓ upload', destPath, `(${(buf.length / 1024).toFixed(0)} KB)`);
   return data.publicUrl;
+}
+
+// Portfolio-kaart als WebP (~90% kleiner, zelfde zichtbare kwaliteit). Social-post-media blijven
+// PNG (veiliger voor Blotato/Instagram). Faalt cwebp, dan val terug op de PNG-kaart.
+async function toWebp(pngPath, q = 90) {
+  const webpPath = pngPath.replace(/\.png$/i, '.webp');
+  try {
+    await execFileP('cwebp', ['-quiet', '-q', String(q), pngPath, '-o', webpPath]);
+    await access(webpPath);
+    return webpPath;
+  } catch { return null; }
 }
 
 const ig    = await up(join(DIR, `${SLUG}-ig-1080x1080.png`),  `launch-showcase/${SLUG}/${SLUG}-ig-1080x1080.png`);
 const li    = await up(join(DIR, `${SLUG}-li-1200x627.png`),   `launch-showcase/${SLUG}/${SLUG}-li-1200x627.png`);
 const story = await up(join(DIR, `${SLUG}-story-1080x1920.png`),`launch-showcase/${SLUG}/${SLUG}-story-1080x1920.png`);
-// portfolio-kaart = de IG-composiet (vierkant oogt het beste in de grid)
-const card  = await up(join(DIR, `${SLUG}-ig-1080x1080.png`),  `projects/${SLUG}-card.png`);
+// portfolio-kaart = de IG-composiet (vierkant oogt het beste in de grid), als WebP
+const cardWebp = await toWebp(join(DIR, `${SLUG}-ig-1080x1080.png`), 90);
+const card = cardWebp
+  ? await up(cardWebp, `projects/${SLUG}-card.webp`, 'image/webp')
+  : await up(join(DIR, `${SLUG}-ig-1080x1080.png`), `projects/${SLUG}-card.png`);
+if (cardWebp) await db.storage.from(BUCKET).remove([`projects/${SLUG}-card.png`]).catch(() => {});
 
 // ---- 2. portfolio-rij (idempotent op slug — re-run = update, geen dubbel) ----
 const projSlug = slugify(NAME);

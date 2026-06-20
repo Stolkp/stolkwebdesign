@@ -10,6 +10,22 @@ import { createRequire } from 'node:module';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { join, dirname } from 'node:path';
 import { readFile, access } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+const execFileP = promisify(execFile);
+
+// Converteer een PNG naar WebP met cwebp (homebrew). Portfolio-kaarten worden ~90% kleiner met
+// dezelfde zichtbare kwaliteit. Faalt cwebp of ontbreekt het, dan val terug op de PNG.
+async function toWebp(pngPath, q = 90) {
+  const webpPath = pngPath.replace(/\.png$/i, '.webp');
+  try {
+    await execFileP('cwebp', ['-quiet', '-q', String(q), pngPath, '-o', webpPath]);
+    await access(webpPath);
+    return webpPath;
+  } catch {
+    return null; // cwebp niet beschikbaar → caller gebruikt de PNG
+  }
+}
 
 const SUPABASE_URL = 'https://lkcfwndigzhzcjnhxcmb.supabase.co';
 const BUCKET = 'stolkwebdesign-content';
@@ -51,14 +67,22 @@ async function loadSupabase() {
 const { createClient } = await loadSupabase();
 const db = createClient(SUPABASE_URL, KEY, { auth: { persistSession: false } });
 
-const localCard = join(DIR, `${SLUG}-ig-1080x1080.png`);
-await access(localCard);
+const localPng = join(DIR, `${SLUG}-ig-1080x1080.png`);
+await access(localPng);
+// Kaart als WebP (~90% kleiner, zelfde zichtbare kwaliteit); val terug op PNG als cwebp ontbreekt.
+const localWebp = await toWebp(localPng, 90);
+const localCard = localWebp || localPng;
+const ext = localWebp ? 'webp' : 'png';
+const contentType = localWebp ? 'image/webp' : 'image/png';
 const buf = await readFile(localCard);
-const dest = `projects/${SLUG}-card.png`;
-const { error: upErr } = await db.storage.from(BUCKET).upload(dest, buf, { contentType: 'image/png', upsert: true });
+const dest = `projects/${SLUG}-card.${ext}`;
+const { error: upErr } = await db.storage.from(BUCKET).upload(dest, buf, { contentType, upsert: true });
 if (upErr) throw new Error('upload: ' + upErr.message);
 const { data: pub } = db.storage.from(BUCKET).getPublicUrl(dest);
 const imgUrl = pub.publicUrl;
+console.log(`✓ upload ${dest} (${(buf.length/1024).toFixed(0)} KB)`);
+// Oude PNG-kaart opruimen als we nu WebP gebruiken.
+if (localWebp) await db.storage.from(BUCKET).remove([`projects/${SLUG}-card.png`]).catch(() => {});
 
 const { data, error } = await db.from('projects').update({ img: imgUrl }).eq('slug', SLUG).select('id,name,slug,img');
 if (error) throw new Error('projects update: ' + error.message);
