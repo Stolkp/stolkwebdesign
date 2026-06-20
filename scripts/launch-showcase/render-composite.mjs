@@ -37,6 +37,10 @@ const NAME  = arg('--name', SLUG);
 const SUB   = arg('--sub', '');
 const URLv  = (arg('--url', '') || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
 const THEME = arg('--theme', 'black');
+// Optioneel: overschrijf de standaardlabels. Default = launch-stijl ("Net opgeleverd" / "Nieuw project live").
+// Voor bestaande portfolio-projecten geef je bv. --kicker "Portfolio" --eyebrow "2023" mee.
+const KICKER  = arg('--kicker', null);   // badge rechtsboven
+const EYEBROW = arg('--eyebrow', null);  // rode label boven de projectnaam
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DIR = arg('--dir', join(__dirname, '..', '..', 'marketing', 'launch-socials', SLUG));
@@ -61,18 +65,20 @@ const page = await browser.newPage({ viewport: { width: 1400, height: 2200 }, de
 await page.goto(TPL, { waitUntil: 'networkidle' });
 
 // Vul alle frames: tekst, screenshots, thema. (geen string-replace op het template-bestand)
-await page.evaluate(({ name, sub, url, theme, desktopUrl, mobileUrl }) => {
+await page.evaluate(({ name, sub, url, theme, kicker, eyebrow, desktopUrl, mobileUrl }) => {
   document.querySelectorAll('.frame').forEach((fr) => {
     fr.dataset.theme = theme;
     const set = (sel, txt) => { const el = fr.querySelector(sel); if (el) el.textContent = txt; };
     set('.pname', name);
     set('.sub', sub);
     set('.url', url);
+    if (kicker)  set('.kicker-txt', kicker);   // optioneel: badge rechtsboven (LinkedIn heeft geen .kicker-txt)
+    if (eyebrow) set('.eyebrow', eyebrow);      // optioneel: rode label boven de naam
     const addr = fr.querySelector('.laptop .addr'); if (addr) addr.textContent = url;
     const shot = fr.querySelector('.laptop .shot'); if (shot) shot.src = desktopUrl;
     const pshot = fr.querySelector('.phone .pshot'); if (pshot) pshot.src = mobileUrl;
   });
-}, { name: NAME, sub: SUB, url: URLv, theme: THEME, desktopUrl, mobileUrl });
+}, { name: NAME, sub: SUB, url: URLv, theme: THEME, kicker: KICKER, eyebrow: EYEBROW, desktopUrl, mobileUrl });
 
 await page.evaluate(() => document.fonts.ready);
 // wacht tot beide afbeeldingen in elk frame echt geladen zijn

@@ -742,14 +742,14 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <div id="net-opgeleverd">
       <div class="latest reveal">
         <div class="latest-media">
-          <a id="latest-media-link" href="#" target="_blank" rel="noopener"><img id="latest-img" src="" alt=""></a>
+          <a id="latest-media-link" href="#"><img id="latest-img" src="" alt=""></a>
         </div>
         <div class="latest-body">
           <div class="latest-eyebrow"><span class="ldot"></span> Net opgeleverd</div>
           <h2 class="latest-name" id="latest-name"></h2>
           <div class="latest-tag" id="latest-tag"></div>
           <p class="latest-desc" id="latest-desc"></p>
-          <a class="latest-btn" id="latest-btn" href="#" target="_blank" rel="noopener">Bekijk live <span aria-hidden="true">→</span></a>
+          <a class="latest-btn" id="latest-btn" href="#">Bekijk project <span aria-hidden="true">→</span></a>
         </div>
       </div>
     </div>
@@ -1338,16 +1338,16 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       if (!p) { r = await db.from('projects').select('*').order('sort_order', { ascending: false }).limit(1).maybeSingle(); p = r.data; }
       if (!p || !p.img) return;   // zonder beeld geen highlight
 
-      const dest = p.url || ('project.html?p=' + encodeURIComponent(p.slug || p.id));
+      // Net zoals de grid-kaarten: klik opent de portfolio-detailpagina (niet de live site).
+      // De live-link staat op die detailpagina zelf.
+      const dest = 'project.html?p=' + encodeURIComponent(p.slug || p.id);
       const img = document.getElementById('latest-img');
       img.src = p.img; img.alt = p.name || 'Net opgeleverd';
       document.getElementById('latest-media-link').href = dest;
       document.getElementById('latest-name').textContent = p.name || '';
       document.getElementById('latest-tag').textContent = [p.tag, p.type].filter(Boolean).join(' · ');
       document.getElementById('latest-desc').textContent = p.description || '';
-      const btn = document.getElementById('latest-btn');
-      btn.href = dest;
-      if (!p.url) btn.querySelector('span') && (btn.childNodes[0].nodeValue = 'Bekijk project ');
+      document.getElementById('latest-btn').href = dest;
 
       sec.style.display = 'block';
       // Forceer de reveal (de sectie wordt dynamisch getoond, dus niet afhankelijk

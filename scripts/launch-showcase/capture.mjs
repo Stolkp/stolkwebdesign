@@ -49,12 +49,32 @@ await mkdir(OUT, { recursive: true });
 const browser = await chromium.launch();
 const mobile = devices['iPhone 13'];
 
+// Probeer een cookie-banner weg te klikken zodat hij niet in de mockup belandt.
+async function dismissCookies(page) {
+  const accept = /^(accepteer|accepteren|alle cookies accepteren|accepteer alle|akkoord|ik ga akkoord|accept all|accept|allow all|got it|ok)\b/i;
+  try {
+    const btn = page.getByRole('button', { name: accept }).first();
+    if (await btn.count() && await btn.isVisible().catch(() => false)) {
+      await btn.click({ timeout: 1500 }); await page.waitForTimeout(500); return true;
+    }
+  } catch {}
+  try {
+    const el = page.locator('button, a, [role=button]')
+      .filter({ hasText: /accepteer|accepteren|akkoord|accept all|allow all/i }).first();
+    if (await el.count() && await el.isVisible().catch(() => false)) {
+      await el.click({ timeout: 1500 }); await page.waitForTimeout(500); return true;
+    }
+  } catch {}
+  return false;
+}
+
 async function shoot(ctxOpts, url, out) {
   const ctx = await browser.newContext(ctxOpts);
   const page = await ctx.newPage();
   await page.goto(url, { waitUntil: 'networkidle', timeout: 45000 }).catch(() => {});
   await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
   await page.waitForTimeout(800); // fonts + (lazy) hero-images settelen
+  await dismissCookies(page);     // cookie-banner weg vóór de screenshot
   // fullPage:false → boven-de-vouw; dat oogt het mooist in een device-frame.
   await page.screenshot({ path: out, fullPage: false });
   await ctx.close();
