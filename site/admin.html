@@ -428,6 +428,10 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>
           Reserveringen
         </div>
+        <div class="sidebar-item font-mono" onclick="showSection('designsystem', this); loadBrandKit();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/><circle cx="5" cy="11" r="2.5"/><circle cx="11" cy="11" r="2.5"/></svg>
+          Design System
+        </div>
         <div class="sidebar-item font-mono" onclick="showSection('settings', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
           Instellingen
@@ -743,6 +747,14 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
             <div class="form-group"><label class="form-label font-mono">Bevestigingstekst</label><input class="form-input" id="bk-set-msg" placeholder="Bedankt voor je afspraak…"></div>
           </div>
         </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <!-- DESIGN SYSTEM / BRAND KIT -->
+      <div id="section-designsystem" class="page-section">
+        <div class="page-title font-display">Design System</div>
+        <div class="page-sub font-mono">Je huisstijl in één overzicht — kleuren, fonts, logo. Download je merkbestanden.</div>
+        <div id="brandkit-body"></div>
       </div>
 
       <!-- SETTINGS -->
@@ -2528,5 +2540,6 @@ initAuth();
 <script src="admin-factuur.js"></script>
 <script src="admin-rooster.js"></script>
 <script src="admin-bookings.js"></script>
+<script src="admin-brandkit.js"></script>
 </body>
 </html>

@@ -34,6 +34,9 @@ research/
 
 **Regels:** Geen border-radius. Geen zachte gradients. Geen glassmorphism. Rood = max 10% van viewport. Brutalist offset-shadow als signature-effect.
 
+> **Bron-document:** `design.md` (projectroot) — volledig design-systeem in 8 onderwerpen (single source of truth voor mens + AI). Gegenereerd via skill `cms-brandkit`.
+> **Brand Kit-tab (admin):** `site/admin-brandkit.js` + tab `#section-designsystem` in `admin.html` toont het design-systeem (kleurstalen + hex, font-specimens, logo op wit/donker, stijlregel-chips) en laat downloaden: logo SVG/PNG (kleur/zwart/wit), site-foto's, brand-guide.md, brand-tokens.css/.json, kleuren.txt. Klant **read-only**, **superuser** (`info@stolkwebdesign.nl` / `info@stolksupport.nl`) bewerkt. Tabel `stolkwebdesign_design_system` (`migrations/design_system_init.sql`, RLS public read / superuser write; geseed met de tokens hierboven).
+
 ## Portfolio Projecten (echte projecten)
 - **Sauberhaus** — Lifestyle brand
 - **Maestr** — Music / tech, WordPress
