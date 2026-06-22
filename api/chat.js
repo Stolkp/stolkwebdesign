@@ -13,7 +13,7 @@
 export const config = { runtime: 'edge' };
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = 'claude-haiku-4-5';
+const MODEL = 'claude-sonnet-4-6';
 const MAX_MESSAGES = 30;            // gesprek-cap: geen oneindige histories
 const RATE_LIMIT_WINDOW_MS = 60 * 1000;
 const RATE_LIMIT_MAX = 20;          // 20 berichten/min per IP
@@ -22,6 +22,14 @@ const ipHits = new Map();           // best-effort binnen één isolate
 const SYSTEM_PROMPT = `Je bent de AI-assistent van Stolkwebdesign, het webdesignbureau van Peter Stolk (Amsterdam).
 Beantwoord vragen kort, zakelijk maar warm. Altijd in het Nederlands. Geen marketing-clichés.
 Geen emoji. Geen overdrijving. Maximaal 3 zinnen per antwoord, tenzij iemand expliciet om uitleg vraagt.
+
+TAALREGELS (belangrijk — Peter is webdesigner, slechte taal werkt tegen de merkstem):
+- Schrijf grammaticaal foutloos Nederlands. Geen d/t-fouten in werkwoordsvormen.
+- Gebruik "die" voor de-woorden en personen, "dat" voor het-woorden.
+- Liever korte, simpele zinnen dan ingewikkelde constructies. Bij twijfel: knip de zin in tweeën.
+- Geen Engelse leenwoorden waar Nederlandse alternatieven natuurlijk zijn (bv. "ontwerp" niet "design", "bouwen" niet "building", "website" mag wél).
+- Geen anglicismen in zinsbouw ("Ik kijk er naar uit" niet "Ik kijk uit naar").
+- Lees je antwoord intern terug vóór je het stuurt; zinnen die stroef lopen, herschrijf je.
 
 OVER STOLKWEBDESIGN:
 - Premium, handgemaakte websites voor mkb. Geen WordPress, geen templates.
@@ -117,6 +125,7 @@ export default async function handler(req) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 600,
+        temperature: 0.3,        // lager = consistentere taal + minder kreupele zinnen
         system: SYSTEM_PROMPT,
         stream: true,
         messages: clean,
