@@ -1,0 +1,26 @@
+{
+  "generated_for": "stolkwebdesign.nl",
+  "method": "gratis-aanpak — firecrawl_search top-8 NL/BE concurrent-analyse (geen Semrush)",
+  "clusters": [
+    {
+      "primary": "wat kost een website laten maken",
+      "secondary": [
+        "website laten maken prijs",
+        "kosten website laten maken",
+        "wat kost een website laten maken in 2026",
+        "wat bepaalt de prijs van een website"
+      ],
+      "intent": "informational",
+      "page_type": "blog",
+      "volume_hint": "high",
+      "difficulty_hint": "mid",
+      "competitors_top": [
+        { "url": "https://www.madebyanouk.nl/blog/wat-kost-een-website-laten-maken", "words": 2618 },
+        { "url": "https://straffesites.com/blog/wat-kost-een-website-laten-maken", "words": 2204 },
+        { "url": "https://www.vhbp.nl/website-laten-maken-prijs/", "words": 2422 }
+      ],
+      "structure_avg": "~2300 woorden; openen met 'kort antwoord' (answer-first), prijstabel per websitetype, prijs-factoren (pagina's, sjabloon vs maatwerk, content, techniek), terugkerende kosten (hosting/onderhoud/domein), verborgen kosten in offertes, wanneer maatwerk loont, FAQ",
+      "notes": "Sterke money-adjacent informational keyword. Stolkwebdesign-hoek = eerlijke prijsopbouw + bewijs > belofte; onderscheid t.o.v. concurrenten = 'geen template, één vakman' + echte pakketprijzen (€1.250/€2.250/€3.500)."
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "brand": "Stolkwebdesign",
+  "domain": "https://www.stolkwebdesign.nl",
+  "outDir": "service-matrix-demo",
+  "templatePath": "_service-template.html",
+  "maxPages": 50,
+  "services": [
+    {
+      "slug": "website-laten-maken",
+      "name": "Website laten maken",
+      "intro": "Een website laten maken in {city}? Peter Stolk bouwt handcrafted, scroll-geanimeerde websites voor ondernemers in {city} en omgeving — schoon, snel en volledig op maat.",
+      "price_from": "vanaf €1.250"
+    },
+    {
+      "slug": "webshop-laten-maken",
+      "name": "Webshop laten maken",
+      "intro": "Een webshop laten maken in {city}? Een verkopende, snelle webshop op maat — geen log standaardthema, maar een winkel die past bij jouw merk in {city}.",
+      "price_from": "vanaf €2.500"
+    }
+  ],
+  "cities": [
+    { "slug": "amstelveen", "name": "Amstelveen", "context": "Van Westwijk tot het Stadshart: ondernemers in Amstelveen vinden Stolkwebdesign op tien minuten afstand in Uithoorn.",
+      "local": "Amstelveen is een ondernemersstad met een internationaal randje — van het Stadshart en de zaken rond de Amsterdamseweg tot de praktijken en winkels in Westwijk en Bovenkerk. Die diversiteit vraagt om een website die zich onderscheidt, niet om het zoveelste standaardthema. Omdat Stolkwebdesign in het naastgelegen Uithoorn zit, is een kennismaking in Amstelveen zo geregeld — vaak sneller ter plaatse dan een bureau uit het centrum van Amsterdam." },
+    { "slug": "uithoorn", "name": "Uithoorn", "context": "Stolkwebdesign zit zelf in Uithoorn — korte lijnen, persoonlijk contact, een gesprek op locatie zo geregeld.",
+      "local": "Uithoorn is de thuisbasis van Stolkwebdesign. Van de ondernemers aan de Amstel en op bedrijventerrein Uithoorn tot de zzp'ers in Thamerdal en De Legmeer: je werkt met een webdesigner uit je eigen dorp, niet met een callcenter ergens anders. Even langskomen of koffie doen kan letterlijk om de hoek." },
+    { "slug": "aalsmeer", "name": "Aalsmeer", "context": "Van de bloemenveiling tot de zzp'er aan huis: ondernemers in Aalsmeer krijgen een site die past bij hun vak.",
+      "local": "Aalsmeer leeft van ondernemerschap — van de wereldberoemde bloemenveiling en de handel rond Greenpark tot de vele zzp'ers en familiebedrijven rond de Zijdstraat. Een website die je vakmanschap laat zien doet hier meer dan een algemeen visitekaartje. Stolkwebdesign zit op een paar minuten rijden in Uithoorn, dus de lijnen blijven kort." },
+    { "slug": "mijdrecht", "name": "Mijdrecht", "context": "Ondernemers in Mijdrecht en De Ronde Venen werken met een vakman om de hoek, niet met een ver bureau.",
+      "local": "Mijdrecht is het kloppend hart van De Ronde Venen, met een sterk lokaal ondernemersklimaat rond het winkelhart en bedrijventerrein Mijdrecht. Bedrijven hier hechten aan persoonlijk contact en betrouwbaarheid — precies wat één vaste vakman biedt in plaats van een wisselend team. Vanuit Uithoorn ben je er in een kwartier." },
+    { "slug": "amsterdam", "name": "Amsterdam", "context": "Van Zuid tot Noord: een onderscheidende website die opvalt in een drukke Amsterdamse markt.",
+      "local": "In Amsterdam is de concurrentie online moordend — van de creatieve bureaus in Noord tot de zakelijke dienstverleners op de Zuidas. Opvallen lukt niet met een standaardthema dat duizend anderen ook draaien. Een handcrafted website met eigen animaties en scherpe laadtijden geeft je de voorsprong die je in zo'n drukke markt nodig hebt." }
+  ],
+  "faq": [
+    { "q": "Wat kost {service} in {city}?", "a": "Een website vanaf €1.250, een webshop vanaf €2.500 — altijd een vaste prijs vooraf, afgestemd op het aantal pagina's en de functies die je nodig hebt." },
+    { "q": "Werkt Stolkwebdesign ook op locatie in {city}?", "a": "Ja. Stolkwebdesign zit in Uithoorn, vlak bij {city}. Een kennismaking kan op locatie of online — wat jij prettig vindt." },
+    { "q": "Hoe lang duurt {service} in {city}?", "a": "Een onepager kan binnen één tot twee weken live. Grotere projecten duren langer, afhankelijk van het aantal pagina's en de content." }
+  ]
+}
