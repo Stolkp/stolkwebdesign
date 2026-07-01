@@ -82,7 +82,10 @@ async function shoot(ctxOpts, url, out) {
 }
 
 await shoot({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 }, URL, join(OUT, `${SLUG}-desktop.png`));
-await shoot({ ...mobile }, URL, join(OUT, `${SLUG}-mobile.png`));
+// Forceer een echte telefoon-hoogte (390×844). Zo is de mobiele screenshot altijd hóger dan het
+// telefoon-frame in de composiet, en snijdt object-fit:cover alleen wat van de ONDERKANT af — nooit
+// van de zijkanten (anders wordt de eerste letter van de links-uitgelijnde hero-kop afgesneden).
+await shoot({ ...mobile, viewport: { width: 390, height: 844 } }, URL, join(OUT, `${SLUG}-mobile.png`));
 
 await browser.close();
 console.log(`\nKlaar — screenshots in ${OUT}`);

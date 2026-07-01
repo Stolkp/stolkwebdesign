@@ -85,6 +85,21 @@ await page.evaluate(() => document.fonts.ready);
 await page.evaluate(() => Promise.all(
   [...document.images].map((img) => img.complete ? null : new Promise((r) => { img.onload = img.onerror = r; }))
 ));
+
+// Auto-fit: krimp lange projectnamen zodat ze nooit buiten het frame vallen (frame heeft overflow:hidden).
+// Bv. "BESTSUPPORT08" is te breed voor de story-kop op 130px → werd afgesneden tot "BESTSUPPORT".
+await page.evaluate(() => {
+  document.querySelectorAll('.frame .pname').forEach((el) => {
+    el.style.whiteSpace = 'nowrap';
+    const max = el.parentElement.clientWidth;              // beschikbare breedte binnen de padding
+    let size = parseFloat(getComputedStyle(el).fontSize);
+    while (el.scrollWidth > max && size > 10) {            // stap terug tot het past
+      size -= 2;
+      el.style.fontSize = size + 'px';
+    }
+  });
+});
+
 await page.waitForTimeout(400);
 
 for (const job of JOBS) {
