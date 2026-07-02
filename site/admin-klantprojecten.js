@@ -37,7 +37,15 @@
 
   let rows = [];
   let view = 'grid';   // 'grid' | 'pipeline' | 'focus'
-  let focusIdx = 0;
+  let focusList = [];  // huidige (gefilterde) lijst waar de focus-view doorheen bladert
+  let focusPos = 0;
+  let filterStatus = 'all';
+  let search = '';
+
+  const matchTxt = r => { if (!search.trim()) return true; const q = search.toLowerCase(); return [r.name, r.category, (r.tags || []).join(' '), r.notes, r.next_step].some(v => String(v || '').toLowerCase().includes(q)); };
+  const matchStatus = r => filterStatus === 'all' || r.status === filterStatus;
+  const visibleRows = () => rows.filter(r => matchStatus(r) && matchTxt(r));   // rooster (status + zoek)
+  const searchedRows = () => rows.filter(matchTxt);                            // pijplijn (alleen zoek; kolommen = status)
 
   function nextStepHTML(r, cls) {
     if (!r.next_step && !r.next_step_date) return '';
@@ -87,6 +95,15 @@
     .cp-nextstep{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.03em;color:#9a9a9a;border-top:1px solid #1a1a1a;padding-top:9px;line-height:1.5}
     .cp-nextstep.overdue{color:#ea2525}
     .cp-sum-value{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:-.01em;color:#37a04a;white-space:nowrap}
+    /* filter + zoek */
+    .cp-filters{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+    .cp-search{flex:0 1 300px;min-width:180px;padding:9px 14px;background:#0a0a0a;color:#fff;border:1px solid #2a2a2a;border-radius:0;font-family:'Space Grotesk',sans-serif;font-size:13px}
+    .cp-search:focus{outline:none;border-color:var(--red)}
+    .cp-fchips{display:flex;gap:6px;flex-wrap:wrap}
+    .cp-fchip{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#888;background:transparent;border:1px solid #2a2a2a;padding:6px 10px;cursor:pointer;transition:all .12s}
+    .cp-fchip:hover{border-color:#555;color:#ddd}
+    .cp-fchip.active{color:#fff;border-color:#555;background:#181818}
+    .cp-fchip i{width:8px;height:8px;display:inline-block}
     /* pijplijn / kanban */
     .cp-pipeline{display:flex;gap:12px;overflow-x:auto;padding-bottom:14px;margin-bottom:24px}
     .cp-col{flex:0 0 260px;background:#0b0b0b;border:1px solid #1a1a1a;display:flex;flex-direction:column;min-height:120px}
@@ -144,8 +161,8 @@
     const { data, error } = await db.from(T).select('*').order('sort_order').order('id');
     if (error) { note('Laden mislukt: ' + error.message, true); return; }
     rows = data || [];
-    if (focusIdx >= rows.length) focusIdx = Math.max(0, rows.length - 1);
     renderSummary();
+    renderFilters();
     render();
   }
 
@@ -169,6 +186,26 @@
        ${openValue ? `<div class="cp-sum-value">${eur(openValue)} in de pijplijn</div>` : ''}`;
   }
 
+  function renderFilters() {
+    const el = document.getElementById('cp-filters'); if (!el) return;
+    if (!rows.length) { el.innerHTML = ''; return; }
+    const chip = (val, label, col) =>
+      `<button class="cp-fchip${filterStatus === val ? ' active' : ''}" data-filter="${val}">${col ? `<i style="background:${col}"></i>` : ''}${esc(label)}</button>`;
+    el.innerHTML =
+      `<input class="cp-search" id="cp-search" type="search" placeholder="Zoek op naam, branche, tag…" value="${esc(search)}">
+       <div class="cp-fchips">
+         ${chip('all', 'Alle', '')}
+         ${ORDER.map(k => chip(k, STATUSES[k][0], STATUSES[k][1])).join('')}
+       </div>`;
+  }
+
+  function applyFilter() {
+    document.querySelectorAll('#cp-filters .cp-fchip').forEach(b => b.classList.toggle('active', b.dataset.filter === filterStatus));
+    if (view === 'grid') renderGrid();
+    else if (view === 'pipeline') renderPipeline();
+    else render();
+  }
+
   function render() {
     const grid = document.getElementById('cp-grid');
     const focus = document.getElementById('cp-focus');
@@ -184,8 +221,10 @@
   function renderGrid() {
     const grid = document.getElementById('cp-grid');
     if (!rows.length) { grid.innerHTML = '<div class="cp-empty">Nog geen projecten. Klik “+ Project”.</div>'; return; }
-    grid.innerHTML = rows.map((r, i) => `
-      <div class="cp-card" data-open="${i}">
+    const list = visibleRows();
+    if (!list.length) { grid.innerHTML = '<div class="cp-empty">Geen projecten voor deze filter of zoekterm.</div>'; return; }
+    grid.innerHTML = list.map(r => `
+      <div class="cp-card" data-open="${r.id}">
         <div class="cp-card-top">
           <div>
             <div class="cp-card-name">${esc(r.name)}</div>
@@ -206,11 +245,11 @@
   function renderPipeline() {
     const el = document.getElementById('cp-pipeline'); if (!el) return;
     if (!rows.length) { el.innerHTML = '<div class="cp-empty" style="flex:1">Nog geen projecten. Klik “+ Project”.</div>'; return; }
+    const rowsF = searchedRows();
     el.innerHTML = ORDER.map(k => {
-      const col = rows.filter(r => r.status === k);
+      const col = rowsF.filter(r => r.status === k);
       const cards = col.map(r => {
-        const i = rows.indexOf(r);
-        return `<div class="cp-mini" draggable="true" data-drag="${r.id}" data-open="${i}">
+        return `<div class="cp-mini" draggable="true" data-drag="${r.id}" data-open="${r.id}">
           <div class="cp-mini-name">${esc(r.name)}</div>
           <div class="cp-mini-cat">${esc(r.category || '—')}${r.deal_value ? ` · <span class="cp-value">${eur(r.deal_value)}</span>` : ''}</div>
           ${nextStepHTML(r)}
@@ -239,11 +278,12 @@
 
   function renderFocus() {
     const el = document.getElementById('cp-focus');
-    if (!rows.length) { el.innerHTML = '<div class="cp-empty">Nog geen projecten. Klik “+ Project”.</div>'; return; }
-    if (focusIdx < 0) focusIdx = 0; if (focusIdx >= rows.length) focusIdx = rows.length - 1;
-    const r = rows[focusIdx];
-    const posSeg = rows.map((x, i) =>
-      `<span style="width:${100 / rows.length}%;background:${i === focusIdx ? 'var(--red)' : STATUSES[x.status][1] + '66'}"></span>`).join('');
+    if (!focusList.length) focusList = visibleRows().length ? visibleRows() : rows;
+    if (!focusList.length) { el.innerHTML = '<div class="cp-empty">Nog geen projecten. Klik “+ Project”.</div>'; return; }
+    if (focusPos < 0) focusPos = 0; if (focusPos >= focusList.length) focusPos = focusList.length - 1;
+    const r = focusList[focusPos];
+    const posSeg = focusList.map((x, i) =>
+      `<span style="width:${100 / focusList.length}%;background:${i === focusPos ? 'var(--red)' : STATUSES[x.status][1] + '66'}"></span>`).join('');
     const sbtns = ORDER.map((k, i) => `
       <button class="cp-sbtn${r.status === k ? ' active' : ''}" data-status="${k}"
         style="border-left-color:${STATUSES[k][1]}">
@@ -251,7 +291,7 @@
       </button>`).join('');
     el.innerHTML = `
       <div class="cp-focus-bar">
-        <div class="cp-focus-pos">Project ${focusIdx + 1} / ${rows.length}</div>
+        <div class="cp-focus-pos">Project ${focusPos + 1} / ${focusList.length}</div>
         <div class="cp-segbar">${posSeg}</div>
       </div>
       <div class="cp-panel">
@@ -298,11 +338,17 @@
     note(`${r.name} → ${STATUSES[status][0]}`);
   }
 
-  function openFocus(idx) { focusIdx = idx; view = 'focus'; render(); }
+  function openFocus(id) {
+    const list = view === 'pipeline' ? searchedRows() : visibleRows();
+    focusList = list.length ? list : rows;
+    const p = focusList.findIndex(r => r.id == id);
+    focusPos = p < 0 ? 0 : p;
+    view = 'focus'; render();
+  }
 
   function step(delta) {
-    if (!rows.length) return;
-    focusIdx = (focusIdx + delta + rows.length) % rows.length;
+    if (!focusList.length) return;
+    focusPos = (focusPos + delta + focusList.length) % focusList.length;
     renderFocus();
   }
 
@@ -403,12 +449,20 @@
 
     document.getElementById('cp-add')?.addEventListener('click', () => openModal(null));
     document.getElementById('cp-refresh')?.addEventListener('click', load);
-    sec.querySelectorAll('.cp-vt').forEach(b => b.addEventListener('click', () => { view = b.dataset.view; render(); }));
+    sec.querySelectorAll('.cp-vt').forEach(b => b.addEventListener('click', () => {
+      view = b.dataset.view;
+      if (view === 'focus') { const l = visibleRows(); focusList = l.length ? l : rows; focusPos = 0; }
+      render();
+    }));
+
+    // zoekveld (delegatie zodat het na renderFilters blijft werken)
+    sec.addEventListener('input', e => { if (e.target.id === 'cp-search') { search = e.target.value; applyFilter(); } });
 
     // klik-delegatie binnen de sectie
     sec.addEventListener('click', e => {
-      const open = e.target.closest('[data-open]'); if (open) return openFocus(+open.dataset.open);
-      const sb = e.target.closest('[data-status]'); if (sb) return setStatus(rows[focusIdx].id, sb.dataset.status);
+      const fc = e.target.closest('[data-filter]'); if (fc) { filterStatus = fc.dataset.filter; return applyFilter(); }
+      const open = e.target.closest('[data-open]'); if (open) return openFocus(open.dataset.open);
+      const sb = e.target.closest('[data-status]'); if (sb) return setStatus(focusList[focusPos].id, sb.dataset.status);
       const nav = e.target.closest('[data-nav]');
       if (nav) { const d = nav.dataset.nav; if (d === 'back') { view = 'grid'; return render(); } return step(d === 'next' ? 1 : -1); }
       const ed = e.target.closest('[data-edit]'); if (ed) return openModal(ed.dataset.edit);
@@ -456,7 +510,7 @@
       if (e.key === 'Escape') { e.preventDefault(); view = 'grid'; render(); }
       else if (e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); step(1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
-      else if (/^[1-8]$/.test(e.key)) { e.preventDefault(); const st = ORDER[+e.key - 1]; if (st && rows[focusIdx]) setStatus(rows[focusIdx].id, st); }
+      else if (/^[1-8]$/.test(e.key)) { e.preventDefault(); const st = ORDER[+e.key - 1]; if (st && focusList[focusPos]) setStatus(focusList[focusPos].id, st); }
     });
   }
 
