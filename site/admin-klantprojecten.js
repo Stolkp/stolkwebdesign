@@ -24,13 +24,27 @@
   };
   const ORDER = Object.keys(STATUSES);
 
+  // Statussen die als "open pijplijn" tellen voor het waarde-totaal.
+  const PIPELINE = ['voorgesteld', 'in_gesprek', 'akkoord', 'in_uitvoering'];
+
   const note = (m, e) => (typeof toast === 'function' ? toast(m, e) : (e ? alert(m) : void 0));
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const nowISO = () => new Date().toISOString();
+  const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+  const fmtDate = s => { if (!s) return ''; const [y, m, d] = String(s).split('-'); return d ? `${d}-${m}` : s; };
+  const eur = n => (n ? '€' + Number(n).toLocaleString('nl-NL') : '');
+  const isOverdue = r => r.next_step_date && new Date(r.next_step_date) < today() && !['live', 'afgerond', 'afgewezen'].includes(r.status);
 
   let rows = [];
-  let view = 'grid';   // 'grid' | 'focus'
+  let view = 'grid';   // 'grid' | 'pipeline' | 'focus'
   let focusIdx = 0;
+
+  function nextStepHTML(r, cls) {
+    if (!r.next_step && !r.next_step_date) return '';
+    const od = isOverdue(r);
+    const date = r.next_step_date ? ` · ${fmtDate(r.next_step_date)}${od ? ' — te laat' : ''}` : '';
+    return `<div class="${cls || 'cp-nextstep'}${od ? ' overdue' : ''}">▸ ${esc(r.next_step || 'Opvolgen')}${date}</div>`;
+  }
 
   const badge = st => {
     const [label, col] = STATUSES[st] || [st, '#666'];
@@ -69,6 +83,25 @@
     .cp-progress{height:6px;background:#000;border:1px solid #222;overflow:hidden}
     .cp-progress span{display:block;height:100%;background:var(--red)}
     .cp-card-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#666}
+    .cp-value{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#37a04a}
+    .cp-nextstep{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.03em;color:#9a9a9a;border-top:1px solid #1a1a1a;padding-top:9px;line-height:1.5}
+    .cp-nextstep.overdue{color:#ea2525}
+    .cp-sum-value{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:-.01em;color:#37a04a;white-space:nowrap}
+    /* pijplijn / kanban */
+    .cp-pipeline{display:flex;gap:12px;overflow-x:auto;padding-bottom:14px;margin-bottom:24px}
+    .cp-col{flex:0 0 260px;background:#0b0b0b;border:1px solid #1a1a1a;display:flex;flex-direction:column;min-height:120px}
+    .cp-col-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid #1a1a1a;border-top:3px solid}
+    .cp-col-title{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#ddd}
+    .cp-col-count{font-family:'JetBrains Mono',monospace;font-size:10px;color:#666}
+    .cp-col-body{flex:1;padding:10px;display:flex;flex-direction:column;gap:9px}
+    .cp-col.over{outline:2px dashed var(--red);outline-offset:-2px}
+    .cp-col-empty{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#3a3a3a;text-align:center;padding:14px 0}
+    .cp-mini{background:#141414;border:1px solid #222;padding:12px;cursor:grab;display:flex;flex-direction:column;gap:7px}
+    .cp-mini:hover{border-color:#444}
+    .cp-mini.dragging{opacity:.4}
+    .cp-mini-name{font-family:'Archivo Black',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:-.01em;line-height:1.15}
+    .cp-mini-cat{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#777}
+    .cp-mini .cp-nextstep{border-top:none;padding-top:0}
     /* focus */
     .cp-focus{margin-bottom:24px}
     .cp-focus-bar{display:flex;align-items:center;gap:14px;margin-bottom:16px}
@@ -128,18 +161,23 @@
       `<span style="width:${counts[k] / total * 100}%;background:${STATUSES[k][1]}"></span>`).join('');
     const legend = ORDER.filter(k => counts[k]).map(k =>
       `<span class="cp-leg"><i style="background:${STATUSES[k][1]}"></i>${esc(STATUSES[k][0])} ${counts[k]}</span>`).join('');
+    const openValue = rows.filter(r => PIPELINE.includes(r.status)).reduce((s, r) => s + (Number(r.deal_value) || 0), 0);
     el.innerHTML =
       `<div class="cp-sum-count"><b>${total}</b> projecten · ${live} live · ${bezig} in uitvoering · ${pipeline} in de pijplijn</div>
        <div class="cp-segbar">${seg}</div>
-       <div class="cp-sum-legend">${legend}</div>`;
+       <div class="cp-sum-legend">${legend}</div>
+       ${openValue ? `<div class="cp-sum-value">${eur(openValue)} in de pijplijn</div>` : ''}`;
   }
 
   function render() {
     const grid = document.getElementById('cp-grid');
     const focus = document.getElementById('cp-focus');
+    const pipe = document.getElementById('cp-pipeline');
     if (!grid || !focus) return;
-    if (view === 'grid') { focus.style.display = 'none'; grid.style.display = 'grid'; renderGrid(); }
-    else { grid.style.display = 'none'; focus.style.display = 'block'; renderFocus(); }
+    grid.style.display = 'none'; focus.style.display = 'none'; if (pipe) pipe.style.display = 'none';
+    if (view === 'grid') { grid.style.display = 'grid'; renderGrid(); }
+    else if (view === 'pipeline' && pipe) { pipe.style.display = 'flex'; renderPipeline(); }
+    else { focus.style.display = 'block'; renderFocus(); }
     document.querySelectorAll('.cp-vt').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   }
 
@@ -159,9 +197,33 @@
         ${bar(r.pages_built, r.pages_total)}
         <div class="cp-card-meta">
           <span>${r.pages_built || 0}/${r.pages_total || 1} pagina's</span>
-          <span>${r.live_url ? '↗ demo' : ''}</span>
+          <span>${r.deal_value ? `<span class="cp-value">${eur(r.deal_value)}</span>` : ''}${r.live_url ? ' ↗ demo' : ''}</span>
         </div>
+        ${nextStepHTML(r)}
       </div>`).join('');
+  }
+
+  function renderPipeline() {
+    const el = document.getElementById('cp-pipeline'); if (!el) return;
+    if (!rows.length) { el.innerHTML = '<div class="cp-empty" style="flex:1">Nog geen projecten. Klik “+ Project”.</div>'; return; }
+    el.innerHTML = ORDER.map(k => {
+      const col = rows.filter(r => r.status === k);
+      const cards = col.map(r => {
+        const i = rows.indexOf(r);
+        return `<div class="cp-mini" draggable="true" data-drag="${r.id}" data-open="${i}">
+          <div class="cp-mini-name">${esc(r.name)}</div>
+          <div class="cp-mini-cat">${esc(r.category || '—')}${r.deal_value ? ` · <span class="cp-value">${eur(r.deal_value)}</span>` : ''}</div>
+          ${nextStepHTML(r)}
+        </div>`;
+      }).join('') || '<div class="cp-col-empty">Sleep hierheen</div>';
+      return `<div class="cp-col" data-col="${k}">
+        <div class="cp-col-head" style="border-top-color:${STATUSES[k][1]}">
+          <span class="cp-col-title">${esc(STATUSES[k][0])}</span>
+          <span class="cp-col-count">${col.length}</span>
+        </div>
+        <div class="cp-col-body">${cards}</div>
+      </div>`;
+    }).join('');
   }
 
   function actionLinks(r) {
@@ -207,7 +269,9 @@
         <div class="cp-panel-prog">
           <span class="lbl">${r.pages_built || 0}/${r.pages_total || 1} pagina's</span>
           ${bar(r.pages_built, r.pages_total)}
+          ${r.deal_value ? `<span class="cp-value" style="font-size:12px">${eur(r.deal_value)}</span>` : ''}
         </div>
+        ${(r.next_step || r.next_step_date) ? nextStepHTML(r, 'cp-nextstep') : ''}
         ${r.notes ? `<div class="cp-panel-notes">${esc(r.notes)}</div>` : ''}
         <div class="cp-status-label">Zet de status (klik of toets 1–8)</div>
         <div class="cp-statusgrid">${sbtns}</div>
@@ -225,9 +289,10 @@
   // ── mutations ──
   async function setStatus(id, status) {
     const r = rows.find(x => x.id == id); if (!r) return;
+    if (r.status === status) return;
     r.status = status;
-    if (view === 'focus') renderFocus(); else renderGrid();
     renderSummary();
+    render();
     const { error } = await db.from(T).update({ status, updated_at: nowISO() }).eq('id', id);
     if (error) return note('Opslaan mislukt: ' + error.message, true);
     note(`${r.name} → ${STATUSES[status][0]}`);
@@ -277,6 +342,11 @@
         <div class="form-group"><label class="form-label font-mono">Repo-URL</label><input class="form-input" id="cpm-repo" value="${esc(r.repo_url || '')}"></div>
         <div class="form-group"><label class="form-label font-mono">Voorstel-URL</label><input class="form-input" id="cpm-proposal" value="${esc(r.proposal_url || '')}"></div>
       </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label font-mono">Waarde (€)</label><input class="form-input" type="number" id="cpm-value" value="${r.deal_value || 0}" placeholder="1995"></div>
+        <div class="form-group"><label class="form-label font-mono">Opvolgdatum</label><input class="form-input blog-date" type="date" id="cpm-date" value="${esc(r.next_step_date || '')}"></div>
+      </div>
+      <div class="form-group"><label class="form-label font-mono">Volgende stap</label><input class="form-input" id="cpm-next" value="${esc(r.next_step || '')}" placeholder="Follow-up mail sturen"></div>
       <div class="form-group"><label class="form-label font-mono">Notities</label><textarea class="form-textarea" id="cpm-notes" rows="4">${esc(r.notes || '')}</textarea></div>
       <div class="form-actions">
         <button class="btn-save font-display" data-save="${id || ''}">${id ? 'Opslaan' : 'Toevoegen'}</button>
@@ -302,6 +372,9 @@
       proposal_url: g('cpm-proposal').value.trim(),
       pages_built: parseInt(g('cpm-built').value, 10) || 0,
       pages_total: parseInt(g('cpm-total').value, 10) || 1,
+      deal_value: parseFloat(g('cpm-value').value) || 0,
+      next_step: g('cpm-next').value.trim(),
+      next_step_date: g('cpm-date').value || null,
       notes: g('cpm-notes').value,
       updated_at: nowISO(),
     };
@@ -340,6 +413,30 @@
       if (nav) { const d = nav.dataset.nav; if (d === 'back') { view = 'grid'; return render(); } return step(d === 'next' ? 1 : -1); }
       const ed = e.target.closest('[data-edit]'); if (ed) return openModal(ed.dataset.edit);
       const dl = e.target.closest('[data-del]'); if (dl) return del(dl.dataset.del);
+    });
+
+    // drag & drop tussen pijplijn-kolommen
+    let dragId = null;
+    sec.addEventListener('dragstart', e => {
+      const m = e.target.closest('[data-drag]'); if (!m) return;
+      dragId = m.dataset.drag; m.classList.add('dragging');
+      try { e.dataTransfer.setData('text/plain', dragId); e.dataTransfer.effectAllowed = 'move'; } catch (_) {}
+    });
+    sec.addEventListener('dragend', e => {
+      e.target.closest('[data-drag]')?.classList.remove('dragging');
+      sec.querySelectorAll('.cp-col.over').forEach(c => c.classList.remove('over'));
+    });
+    sec.addEventListener('dragover', e => {
+      const col = e.target.closest('.cp-col'); if (!col) return;
+      e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+      if (!col.classList.contains('over')) { sec.querySelectorAll('.cp-col.over').forEach(c => c.classList.remove('over')); col.classList.add('over'); }
+    });
+    sec.addEventListener('drop', e => {
+      const col = e.target.closest('.cp-col'); if (!col) return;
+      e.preventDefault();
+      const id = dragId || e.dataTransfer.getData('text/plain');
+      col.classList.remove('over'); dragId = null;
+      if (id) setStatus(id, col.dataset.col);
     });
 
     // modal-delegatie
