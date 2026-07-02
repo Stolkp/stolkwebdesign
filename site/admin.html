@@ -412,6 +412,10 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 1.5h7l3 3v10H3z"/><path d="M9.5 1.5v3.5H13"/><path d="M5.5 8h5M5.5 11h3"/></svg>
           Blog
         </div>
+        <div class="sidebar-item font-mono" onclick="showSection('klantprojecten', this); loadClientProjects();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="6" height="6"/><rect x="8.5" y="1.5" width="6" height="6"/><rect x="1.5" y="8.5" width="6" height="6"/><rect x="8.5" y="8.5" width="6" height="6"/></svg>
+          Projecten
+        </div>
         <div class="sidebar-item font-mono" onclick="showSection('sign', this); loadSignList();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s2-5 4-5 1 3 2.5 3S11 4 13 4"/><path d="M2 14h12"/></svg>
           Ondertekenen
@@ -564,6 +568,24 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
           ℹ <b style="color:#888;">Concept</b> = geen datum (onzichtbaar) · <b style="color:#d9a400;">Gepland</b> = datum in de toekomst · <b style="color:#37a04a;">Live</b> = datum verstreken, staat op /blog.<br>
           Een geplande post komt automatisch live op de ochtend van zijn datum (dagelijkse rebuild). Wil je 'm meteen live? Zet de datum op nu/verleden en klik <b>"Site nu herbouwen"</b>.
         </div>
+      </div>
+
+      <!-- KLANTPROJECTEN -->
+      <div id="section-klantprojecten" class="page-section">
+        <div class="page-title font-display">Projecten</div>
+        <div class="page-sub font-mono">Je klantprojecten — pijplijn-status · voortgang · snelkoppelingen</div>
+        <div class="cp-toolbar no-print">
+          <button class="add-btn font-display" style="margin:0;" id="cp-add">+ Project</button>
+          <button class="settings-btn font-mono" style="margin:0;" id="cp-refresh">↻ Vernieuwen</button>
+          <div class="cp-viewtoggle">
+            <button class="cp-vt font-mono active" data-view="grid">▦ Rooster</button>
+            <button class="cp-vt font-mono" data-view="focus">◳ Focus</button>
+          </div>
+        </div>
+        <div id="cp-summary" class="cp-summary"></div>
+        <div id="cp-grid" class="cp-grid"></div>
+        <div id="cp-focus" class="cp-focus" style="display:none;"></div>
+        <div id="cp-modal" class="modal-overlay"><div class="modal"></div></div>
       </div>
 
       <!-- ONDERTEKENEN -->
@@ -2541,5 +2563,6 @@ initAuth();
 <script src="admin-rooster.js"></script>
 <script src="admin-bookings.js"></script>
 <script src="admin-brandkit.js"></script>
+<script src="admin-klantprojecten.js"></script>
 </body>
 </html>
