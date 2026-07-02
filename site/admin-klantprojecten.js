@@ -10,6 +10,16 @@
  */
 (function () {
   const T = 'stolkwebdesign_client_projects';
+  const EV = 'stolkwebdesign_client_project_events';
+
+  // Opvolg-event-types (icoon + label + kleur). 'status' wordt apart afgehandeld (statuskleur).
+  const EVENT_TYPES = {
+    mail:     ['📧', 'Mail',        '#4a7de0'],
+    call:     ['📞', 'Gebeld',      '#37a04a'],
+    proposal: ['📄', 'Voorstel',    '#d9a400'],
+    reminder: ['⏰', 'Herinnering', '#ea2525'],
+    note:     ['📝', 'Notitie',     '#8a8a8a'],
+  };
 
   // Pijplijn-statussen (label + kleur). Volgorde = de 8 knoppen in het statusgrid.
   const STATUSES = {
@@ -30,12 +40,15 @@
   const note = (m, e) => (typeof toast === 'function' ? toast(m, e) : (e ? alert(m) : void 0));
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const nowISO = () => new Date().toISOString();
+  const todayISO = () => new Date().toISOString().slice(0, 10);
   const today = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
   const fmtDate = s => { if (!s) return ''; const [y, m, d] = String(s).split('-'); return d ? `${d}-${m}` : s; };
+  const fmtFull = s => { if (!s) return ''; const [y, m, d] = String(s).slice(0, 10).split('-'); return d ? `${d}-${m}-${y}` : s; };
   const eur = n => (n ? '€' + Number(n).toLocaleString('nl-NL') : '');
   const isOverdue = r => r.next_step_date && new Date(r.next_step_date) < today() && !['live', 'afgerond', 'afgewezen'].includes(r.status);
 
   let rows = [];
+  let events = [];     // opvolg-events (newest first)
   let view = 'grid';   // 'grid' | 'pipeline' | 'focus'
   let focusList = [];  // huidige (gefilterde) lijst waar de focus-view doorheen bladert
   let focusPos = 0;
@@ -52,6 +65,55 @@
     const od = isOverdue(r);
     const date = r.next_step_date ? ` · ${fmtDate(r.next_step_date)}${od ? ' — te laat' : ''}` : '';
     return `<div class="${cls || 'cp-nextstep'}${od ? ' overdue' : ''}">▸ ${esc(r.next_step || 'Opvolgen')}${date}</div>`;
+  }
+
+  const eventsFor = id => events.filter(e => e.project_id == id);
+
+  // De doorlopen statussen in chronologische volgorde (voor de flow-balk).
+  function statusPath(id, current) {
+    const chron = eventsFor(id).filter(e => e.type === 'status').slice().reverse(); // oudste eerst
+    let path = chron.map(e => e.to_status).filter(Boolean);
+    path = path.filter((s, i) => i === 0 || s !== path[i - 1]);   // opeenvolgende duplicaten weg
+    return path.length ? path : [current];
+  }
+
+  // Compacte flow-balk: gekleurde stippen van de doorlopen stappen, laatste = huidige.
+  function flowHTML(r) {
+    const path = statusPath(r.id, r.status);
+    const dots = path.map((s, i) => {
+      const last = i === path.length - 1;
+      return `<span class="cp-flow-dot${last ? ' now' : ''}" style="--c:${STATUSES[s] ? STATUSES[s][1] : '#666'}" title="${STATUSES[s] ? STATUSES[s][0] : s}"></span>`;
+    }).join('<span class="cp-flow-line"></span>');
+    return `<div class="cp-flow" title="Verloop">${dots}</div>`;
+  }
+
+  function eventMeta(e) {
+    if (e.type === 'status') {
+      const to = STATUSES[e.to_status] || [e.to_status, '#666'];
+      const from = e.from_status && STATUSES[e.from_status] ? STATUSES[e.from_status][0] + ' → ' : '';
+      return ['◆', from + to[0], to[1]];
+    }
+    return EVENT_TYPES[e.type] || ['•', e.type, '#8a8a8a'];
+  }
+
+  // Volledige verticale tijdlijn (nieuwste boven).
+  function timelineHTML(id) {
+    const evs = eventsFor(id);
+    if (!evs.length) return '<div class="cp-tl-empty font-mono">Nog geen opvolging vastgelegd.</div>';
+    return `<div class="cp-timeline">${evs.map(e => {
+      const [icon, label, color] = eventMeta(e);
+      return `<div class="cp-tl-row">
+        <span class="cp-tl-dot" style="background:${color}"></span>
+        <div class="cp-tl-body">
+          <div class="cp-tl-head">
+            <span class="cp-tl-label">${icon} ${esc(label)}</span>
+            <span class="cp-tl-date">${fmtFull(e.event_date)}</span>
+            <button class="cp-tl-del" data-del-event="${e.id}" title="Verwijderen">✕</button>
+          </div>
+          ${e.note && e.note !== 'Aangemaakt' ? `<div class="cp-tl-note">${esc(e.note)}</div>` : (e.note === 'Aangemaakt' ? `<div class="cp-tl-note" style="color:#555">Aangemaakt</div>` : '')}
+        </div>
+      </div>`;
+    }).join('')}</div>`;
   }
 
   const badge = st => {
@@ -94,6 +156,25 @@
     .cp-value{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#37a04a}
     .cp-nextstep{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.03em;color:#9a9a9a;border-top:1px solid #1a1a1a;padding-top:9px;line-height:1.5}
     .cp-nextstep.overdue{color:#ea2525}
+    /* flow-balk (verloop) */
+    .cp-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+    .cp-flow-dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:0 0 auto;opacity:.85}
+    .cp-flow-dot.now{width:12px;height:12px;box-shadow:0 0 0 2px #0e0e0e,0 0 0 3px var(--c);opacity:1}
+    .cp-flow-line{width:16px;height:2px;background:#2a2a2a;flex:0 0 auto}
+    /* tijdlijn (opvolgflow) */
+    .cp-tl-headrow{display:flex;justify-content:space-between;align-items:center;margin:26px 0 12px}
+    .cp-tl-headrow .cp-status-label{margin:0}
+    .cp-timeline{display:flex;flex-direction:column}
+    .cp-tl-row{display:grid;grid-template-columns:14px 1fr;gap:12px;position:relative;padding-bottom:16px}
+    .cp-tl-row:not(:last-child)::before{content:'';position:absolute;left:6px;top:14px;bottom:0;width:1px;background:#242424}
+    .cp-tl-dot{width:11px;height:11px;border-radius:50%;margin-top:3px;z-index:1;box-shadow:0 0 0 2px #111}
+    .cp-tl-head{display:flex;align-items:center;gap:10px}
+    .cp-tl-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#e6e6e6}
+    .cp-tl-date{font-family:'JetBrains Mono',monospace;font-size:10px;color:#666;margin-left:auto}
+    .cp-tl-del{background:none;border:none;color:#3a3a3a;cursor:pointer;font-size:11px;padding:0 2px;line-height:1}
+    .cp-tl-del:hover{color:var(--red)}
+    .cp-tl-note{font-size:12px;color:#aaa;line-height:1.5;margin-top:3px}
+    .cp-tl-empty{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#555;padding:8px 0}
     .cp-sum-value{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:-.01em;color:#37a04a;white-space:nowrap}
     /* filter + zoek */
     .cp-filters{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
@@ -158,9 +239,13 @@
   // ── data ──
   async function load() {
     if (typeof db === 'undefined' || !db) return;
-    const { data, error } = await db.from(T).select('*').order('sort_order').order('id');
-    if (error) { note('Laden mislukt: ' + error.message, true); return; }
-    rows = data || [];
+    const [pr, ev] = await Promise.all([
+      db.from(T).select('*').order('sort_order').order('id'),
+      db.from(EV).select('*').order('event_date', { ascending: false }).order('id', { ascending: false }),
+    ]);
+    if (pr.error) { note('Laden mislukt: ' + pr.error.message, true); return; }
+    rows = pr.data || [];
+    events = ev.error ? [] : (ev.data || []);
     renderSummary();
     renderFilters();
     render();
@@ -238,6 +323,7 @@
           <span>${r.pages_built || 0}/${r.pages_total || 1} pagina's</span>
           <span>${r.deal_value ? `<span class="cp-value">${eur(r.deal_value)}</span>` : ''}${r.live_url ? ' ↗ demo' : ''}</span>
         </div>
+        ${flowHTML(r)}
         ${nextStepHTML(r)}
       </div>`).join('');
   }
@@ -315,6 +401,11 @@
         ${r.notes ? `<div class="cp-panel-notes">${esc(r.notes)}</div>` : ''}
         <div class="cp-status-label">Zet de status (klik of toets 1–8)</div>
         <div class="cp-statusgrid">${sbtns}</div>
+        <div class="cp-tl-headrow">
+          <div class="cp-status-label">Opvolging — zo is het gelopen</div>
+          <button class="row-btn font-mono" data-add-event="${r.id}">+ opvolging</button>
+        </div>
+        ${timelineHTML(r.id)}
         <div class="cp-focus-nav">
           <button class="row-btn font-mono cp-back" data-nav="back">‹ Overzicht</button>
           <button class="cp-next" data-nav="next">Volgende ›</button>
@@ -330,11 +421,17 @@
   async function setStatus(id, status) {
     const r = rows.find(x => x.id == id); if (!r) return;
     if (r.status === status) return;
+    const from = r.status;
     r.status = status;
     renderSummary();
     render();
     const { error } = await db.from(T).update({ status, updated_at: nowISO() }).eq('id', id);
-    if (error) return note('Opslaan mislukt: ' + error.message, true);
+    if (error) { r.status = from; render(); return note('Opslaan mislukt: ' + error.message, true); }
+    // Laag A: statuswijziging automatisch in de tijdlijn vastleggen
+    const { data, error: e2 } = await db.from(EV)
+      .insert([{ project_id: id, type: 'status', from_status: from, to_status: status, event_date: todayISO() }])
+      .select().single();
+    if (!e2 && data) { events.unshift(data); if (view === 'focus') renderFocus(); else if (view === 'grid') renderGrid(); }
     note(`${r.name} → ${STATUSES[status][0]}`);
   }
 
@@ -443,6 +540,51 @@
     note('Project verwijderd.');
   }
 
+  // ── opvolg-event (Laag B) ──
+  function openEventModal(projectId) {
+    const box = document.getElementById('cp-modal'); if (!box) return;
+    const opt = Object.keys(EVENT_TYPES).map(k => `<option value="${k}">${EVENT_TYPES[k][0]} ${esc(EVENT_TYPES[k][1])}</option>`).join('');
+    box.querySelector('.modal').innerHTML = `
+      <button class="modal-close font-mono" data-close>Sluiten ✕</button>
+      <div class="modal-title font-display">Opvolging toevoegen</div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label font-mono">Type</label><select class="form-input" id="cpe-type">${opt}</select></div>
+        <div class="form-group"><label class="form-label font-mono">Datum</label><input class="form-input blog-date" type="date" id="cpe-date" value="${todayISO()}"></div>
+      </div>
+      <div class="form-group"><label class="form-label font-mono">Notitie</label><textarea class="form-textarea" id="cpe-note" rows="3" placeholder="bv. Voorstel gemaild, wacht op reactie"></textarea></div>
+      <div class="form-actions">
+        <button class="btn-save font-display" data-save-event="${projectId}">Toevoegen</button>
+        <button class="btn-cancel font-mono" data-close>Annuleren</button>
+      </div>`;
+    box.classList.add('open');
+    box.querySelector('#cpe-note').focus();
+  }
+
+  async function saveEvent(projectId) {
+    const g = q => document.getElementById(q);
+    const row = {
+      project_id: Number(projectId),
+      type: g('cpe-type').value,
+      event_date: g('cpe-date').value || todayISO(),
+      note: g('cpe-note').value.trim() || null,
+    };
+    const { data, error } = await db.from(EV).insert([row]).select().single();
+    if (error) return note('Opslaan mislukt: ' + error.message, true);
+    events.unshift(data);
+    events.sort((a, b) => (b.event_date < a.event_date ? -1 : b.event_date > a.event_date ? 1 : (b.id - a.id)));
+    closeModal();
+    if (view === 'focus') renderFocus(); else if (view === 'grid') renderGrid();
+    note('Opvolging toegevoegd.');
+  }
+
+  async function delEvent(id) {
+    if (!confirm('Deze opvolg-regel verwijderen?')) return;
+    const { error } = await db.from(EV).delete().eq('id', id);
+    if (error) return note('Verwijderen mislukt: ' + error.message, true);
+    events = events.filter(e => e.id != id);
+    if (view === 'focus') renderFocus(); else if (view === 'grid') renderGrid();
+  }
+
   // ── wiring ──
   function wire() {
     const sec = document.getElementById('section-klantprojecten'); if (!sec || sec.__wired) return; sec.__wired = true;
@@ -463,6 +605,8 @@
       const fc = e.target.closest('[data-filter]'); if (fc) { filterStatus = fc.dataset.filter; return applyFilter(); }
       const open = e.target.closest('[data-open]'); if (open) return openFocus(open.dataset.open);
       const sb = e.target.closest('[data-status]'); if (sb) return setStatus(focusList[focusPos].id, sb.dataset.status);
+      const ae = e.target.closest('[data-add-event]'); if (ae) return openEventModal(ae.dataset.addEvent);
+      const de = e.target.closest('[data-del-event]'); if (de) return delEvent(de.dataset.delEvent);
       const nav = e.target.closest('[data-nav]');
       if (nav) { const d = nav.dataset.nav; if (d === 'back') { view = 'grid'; return render(); } return step(d === 'next' ? 1 : -1); }
       const ed = e.target.closest('[data-edit]'); if (ed) return openModal(ed.dataset.edit);
@@ -498,6 +642,7 @@
     modal?.addEventListener('click', e => {
       if (e.target === modal) return closeModal();
       if (e.target.closest('[data-close]')) return closeModal();
+      const se = e.target.closest('[data-save-event]'); if (se) return saveEvent(se.dataset.saveEvent);
       const sv = e.target.closest('[data-save]'); if (sv) return save(sv.dataset.save || null);
     });
 
