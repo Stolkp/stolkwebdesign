@@ -94,6 +94,8 @@
     .cp-focus-nav{display:flex;align-items:center;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid #1a1a1a;flex-wrap:wrap}
     .cp-next{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.04em;background:var(--red);color:#fff;border:none;padding:14px 26px;cursor:pointer}
     .cp-next:hover{background:#c91f1f}
+    .cp-back{border-color:#3a3a3a;color:#e6e6e6}
+    .cp-back:hover{border-color:var(--red);color:#fff}
     .cp-hint{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#555;margin-left:auto}
     .cp-empty{padding:40px 24px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.1em;background:#0a0a0a;border:1px solid #1a1a1a}
     @media(max-width:900px){.cp-statusgrid{grid-template-columns:repeat(2,1fr)}.cp-panel{padding:22px}.cp-panel-name{font-size:24px}.cp-hint{display:none}}
@@ -210,11 +212,12 @@
         <div class="cp-status-label">Zet de status (klik of toets 1–8)</div>
         <div class="cp-statusgrid">${sbtns}</div>
         <div class="cp-focus-nav">
+          <button class="row-btn font-mono cp-back" data-nav="back">‹ Overzicht</button>
           <button class="cp-next" data-nav="next">Volgende ›</button>
           <button class="row-btn font-mono" data-nav="prev">‹ Vorige</button>
           <button class="row-btn font-mono" data-edit="${r.id}">Bewerken</button>
           <button class="row-btn danger font-mono" data-del="${r.id}">Verwijderen</button>
-          <span class="cp-hint">Enter/→ volgende · ← vorige · 1–8 status</span>
+          <span class="cp-hint">Esc terug · Enter/→ volgende · ← vorige · 1–8 status</span>
         </div>
       </div>`;
   }
@@ -333,7 +336,8 @@
     sec.addEventListener('click', e => {
       const open = e.target.closest('[data-open]'); if (open) return openFocus(+open.dataset.open);
       const sb = e.target.closest('[data-status]'); if (sb) return setStatus(rows[focusIdx].id, sb.dataset.status);
-      const nav = e.target.closest('[data-nav]'); if (nav) return step(nav.dataset.nav === 'next' ? 1 : -1);
+      const nav = e.target.closest('[data-nav]');
+      if (nav) { const d = nav.dataset.nav; if (d === 'back') { view = 'grid'; return render(); } return step(d === 'next' ? 1 : -1); }
       const ed = e.target.closest('[data-edit]'); if (ed) return openModal(ed.dataset.edit);
       const dl = e.target.closest('[data-del]'); if (dl) return del(dl.dataset.del);
     });
@@ -352,7 +356,8 @@
       if (modal?.classList.contains('open')) return;
       const tag = (e.target.tagName || '').toLowerCase();
       if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-      if (e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+      if (e.key === 'Escape') { e.preventDefault(); view = 'grid'; render(); }
+      else if (e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); step(1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
       else if (/^[1-8]$/.test(e.key)) { e.preventDefault(); const st = ORDER[+e.key - 1]; if (st && rows[focusIdx]) setStatus(rows[focusIdx].id, st); }
     });
