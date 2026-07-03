@@ -552,8 +552,89 @@
         <li>Recht op bezwaar tegen verwerking</li>
         <li>Recht op dataportabiliteit</li>
       </ul>
-      <p>Je kunt een verzoek indienen via <a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a>. Wij
-        reageren binnen 4 weken.</p>
+      <p>Dien je verzoek in via het formulier hieronder. Wij sturen je eerst een bevestigingsmail om je identiteit te verifiëren, en reageren daarna binnen <strong>30 dagen</strong>.</p>
+
+      <!-- GDPR-aanvraagformulier -->
+      <div id="gdpr-form-wrap" style="margin:28px 0 0;padding:28px;background:#0e0e0e;border:2px solid #1a1a1a;">
+        <div id="gdpr-msg-verified" style="display:none;padding:16px;background:#0a1a0a;border:1px solid #22c55e;color:#22c55e;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">
+          Verzoek bevestigd. We verwerken het binnen 30 dagen.
+        </div>
+        <div id="gdpr-msg-sent" style="display:none;padding:16px;background:#0a0a1a;border:1px solid #555;color:#bbb;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;text-transform:uppercase;">
+          Verzoek ontvangen. Check je inbox voor de bevestigingsmail.
+        </div>
+        <div id="gdpr-msg-error" style="display:none;padding:12px 16px;background:#1a0a0a;border:1px solid #ea2525;color:#ea2525;font-family:'JetBrains Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:.05em;"></div>
+        <form id="gdpr-form" autocomplete="off">
+          <input type="text" name="company" style="display:none;" tabindex="-1" autocomplete="off"><!-- honeypot -->
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:#888;margin-bottom:6px;">Verzoektype</label>
+            <select id="gdpr-type" name="request_type" style="width:100%;padding:12px 14px;background:#000;color:#fff;border:2px solid #333;font-family:'Space Grotesk',sans-serif;font-size:14px;border-radius:0;appearance:none;" required>
+              <option value="" disabled selected>Kies een verzoektype</option>
+              <option value="access">Inzage — welke gegevens hebben jullie van mij?</option>
+              <option value="rectify">Rectificatie — ik wil gegevens laten corrigeren</option>
+              <option value="delete">Verwijdering — verwijder mijn gegevens</option>
+              <option value="portability">Dataportabiliteit — stuur mij mijn gegevens</option>
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+            <div>
+              <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:#888;margin-bottom:6px;">Naam (optioneel)</label>
+              <input id="gdpr-name" name="name" type="text" placeholder="Jan de Vries" style="width:100%;padding:12px 14px;background:#000;color:#fff;border:2px solid #333;font-family:'Space Grotesk',sans-serif;font-size:14px;border-radius:0;">
+            </div>
+            <div>
+              <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:#888;margin-bottom:6px;">E-mailadres</label>
+              <input id="gdpr-email" name="email" type="email" placeholder="jan@voorbeeld.nl" style="width:100%;padding:12px 14px;background:#000;color:#fff;border:2px solid #333;font-family:'Space Grotesk',sans-serif;font-size:14px;border-radius:0;" required>
+            </div>
+          </div>
+          <div style="margin-bottom:20px;">
+            <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:#888;margin-bottom:6px;">Toelichting (optioneel)</label>
+            <textarea id="gdpr-desc" name="description" rows="3" placeholder="Eventuele aanvullende informatie over je verzoek..." style="width:100%;padding:12px 14px;background:#000;color:#fff;border:2px solid #333;font-family:'Space Grotesk',sans-serif;font-size:14px;border-radius:0;resize:vertical;"></textarea>
+          </div>
+          <button type="submit" id="gdpr-submit" style="padding:14px 32px;background:#EA2525;color:#fff;border:none;font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">
+            Verzoek indienen
+          </button>
+        </form>
+      </div>
+
+      <script>
+      (function(){
+        const startTime = Date.now();
+        // Toon bericht als teruggeleid vanuit verificatielink
+        const params = new URLSearchParams(location.search);
+        if (params.get('gdpr') === 'verified') {
+          document.getElementById('gdpr-msg-verified').style.display = 'block';
+          document.getElementById('gdpr-form').style.display = 'none';
+        }
+
+        document.getElementById('gdpr-form').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const btn = document.getElementById('gdpr-submit');
+          const errEl = document.getElementById('gdpr-msg-error');
+          errEl.style.display = 'none';
+          btn.disabled = true; btn.textContent = 'Bezig…';
+          try {
+            const body = {
+              request_type: document.getElementById('gdpr-type').value,
+              email: document.getElementById('gdpr-email').value.trim(),
+              name: document.getElementById('gdpr-name').value.trim() || undefined,
+              description: document.getElementById('gdpr-desc').value.trim() || undefined,
+              company: document.querySelector('[name="company"]').value,
+              elapsed_ms: Date.now() - startTime,
+            };
+            const r = await fetch('/api/gdpr-request', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+            });
+            const data = await r.json();
+            if (!r.ok) throw new Error(data.error || 'Er ging iets mis.');
+            document.getElementById('gdpr-form').style.display = 'none';
+            document.getElementById('gdpr-msg-sent').style.display = 'block';
+          } catch(err) {
+            errEl.textContent = err.message || 'Er ging iets mis. Probeer het opnieuw.';
+            errEl.style.display = 'block';
+            btn.disabled = false; btn.textContent = 'Verzoek indienen';
+          }
+        });
+      })();
+      </script>
 
       <h2>09 — Klacht indienen</h2>
       <p>Ben je niet tevreden over hoe wij met jouw gegevens omgaan? Dan heb je het recht een klacht in te dienen bij de
