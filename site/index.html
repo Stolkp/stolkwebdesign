@@ -653,10 +653,10 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <a href="/contact" class="nav-cta">Plan een gesprek →</a>
 </nav>
 
-<main id="main-content">
+<main id="main-content" data-page="home">
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" data-block-id="hero">
   <img class="hero-still" src="assets/stolkwebdesign-hero.png" alt="" aria-hidden="true">
   <video class="hero-video" autoplay muted playsinline preload="auto">
     <source src="assets/hero-header-video.mp4" type="video/mp4" media="(min-width: 901px)">
@@ -689,7 +689,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- USP STRIP -->
-<div class="usp-strip">
+<div class="usp-strip" data-block-id="usp-strip">
   <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_1">Persoonlijk contact</span></div>
   <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_2">Custom design — geen templates</span></div>
   <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_3">Responsief op alle devices</span></div>
@@ -732,7 +732,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </style>
 
 <!-- PORTFOLIO -->
-<section id="werk">
+<section id="werk" data-block-id="portfolio">
   <div class="portfolio-strip">
     <div class="portfolio-strip-header reveal">
       <div class="section-label" data-content="home.werk_label">Geselecteerd werk / 01</div>
@@ -799,7 +799,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- PROBLEEM -->
-<section style="border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); background: var(--bone);">
+<section data-block-id="probleem" style="border-top: 2px solid var(--black); border-bottom: 2px solid var(--black); background: var(--bone);">
   <div class="problem">
     <div class="reveal">
       <div class="section-label" data-content="home.problem_label">Het probleem / —</div>
@@ -828,7 +828,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- DIENSTEN -->
-<section class="solution" id="diensten">
+<section class="solution" id="diensten" data-block-id="diensten">
   <div class="noise" style="opacity:.05"></div>
   <div class="solution-inner">
     <div class="solution-header reveal">
@@ -859,7 +859,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- PAKKETTEN -->
-<section class="packages" id="pakketten">
+<section class="packages" id="pakketten" data-block-id="pakketten">
   <div class="packages-inner">
     <div class="packages-header reveal">
       <div class="section-label" style="color:var(--red)" data-content="home.pakketten_label">Pakketten / 02a</div>
@@ -944,7 +944,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- MODULES TEASER -->
-<section class="modules-teaser" id="modules-teaser">
+<section class="modules-teaser" id="modules-teaser" data-block-id="modules">
   <div class="modules-teaser-inner">
     <div class="modules-teaser-header reveal">
       <div class="section-label" data-content="home.modules_label">Add-on modules / 02b</div>
@@ -1051,7 +1051,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </div>
 
 <!-- AANPAK -->
-<section style="border-bottom: 2px solid var(--black);" id="aanpak">
+<section id="aanpak" data-block-id="aanpak" style="border-bottom: 2px solid var(--black);">
   <div class="process">
     <div class="reveal">
       <div class="section-label" data-content="home.aanpak_label">De aanpak / 03</div>
@@ -1095,7 +1095,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- SOCIAL PROOF -->
-<section class="social-proof">
+<section class="social-proof" data-block-id="social-proof">
   <div class="social-inner">
     <div class="reveal">
       <div class="section-label" data-content="home.proof_label">Wat klanten zeggen / —</div>
@@ -1131,7 +1131,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- OVER PETER -->
-<section id="peter" style="border-top: 2px solid var(--black);">
+<section id="peter" data-block-id="over" style="border-top: 2px solid var(--black);">
   <div class="about">
     <div class="about-image reveal">
       <img src="assets/peter stolk.png" data-content-src="fotos.peter" alt="Peter Stolk — webdesigner Uithoorn" loading="lazy"
@@ -1159,7 +1159,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- FINAL CTA -->
-<section class="final-cta" id="contact">
+<section class="final-cta" id="contact" data-block-id="cta">
   <div class="noise"></div>
   <div class="final-cta-inner">
     <div class="final-cta-label font-mono" data-content="home.finalcta_label">/ Vertel Peter meer over je wensen</div>

@@ -45,6 +45,52 @@
         if (res && !res.error && Array.isArray(res.data) && res.data.length) apply(res.data);
       }).catch(function () { /* fallback-HTML behouden */ });
     } catch (e) { /* fallback-HTML behouden */ }
+    applyBlockLayout();
+  }
+
+  function applyBlockLayout() {
+    if (typeof window.supabase === 'undefined' || typeof SUPABASE_URL === 'undefined') return;
+    try {
+      var db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      // Detect page from data-page attribute or URL
+      var pageEl = document.querySelector('[data-page]');
+      var page = pageEl ? pageEl.getAttribute('data-page') : 'home';
+      db.from('stolkwebdesign_blocks')
+        .select('id,order_index,visible')
+        .eq('page', page)
+        .order('order_index')
+        .then(function (res) {
+          if (!res || res.error || !Array.isArray(res.data) || !res.data.length) return;
+          var main = document.querySelector('main') || document.body;
+          var blocks = Array.from(main.querySelectorAll('[data-block-id]'));
+          if (!blocks.length) return;
+
+          // Build lookup from DB
+          var orderMap = {}, visMap = {};
+          res.data.forEach(function (r) { orderMap[r.id] = r.order_index; visMap[r.id] = r.visible; });
+
+          // Apply visibility first
+          blocks.forEach(function (el) {
+            var id = el.dataset.blockId;
+            if (id in visMap) el.style.display = visMap[id] ? '' : 'none';
+          });
+
+          // Sort visible blocks by order_index and reorder in DOM
+          var visible = blocks.filter(function (el) { return visMap[el.dataset.blockId] !== false; });
+          visible.sort(function (a, b) {
+            return (orderMap[a.dataset.blockId] || 0) - (orderMap[b.dataset.blockId] || 0);
+          });
+
+          // Find the first block's position as DOM anchor
+          var anchor = blocks.reduce(function (first, el) {
+            return (first.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) ? first : el;
+          });
+          main.insertBefore(visible[0], anchor);
+          for (var i = 1; i < visible.length; i++) {
+            visible[i - 1].parentNode.insertBefore(visible[i], visible[i - 1].nextSibling);
+          }
+        }).catch(function () { /* fallback: hardcoded HTML-volgorde */ });
+    } catch (e) { /* fallback */ }
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
