@@ -7,11 +7,27 @@
 // advertentie 'ie kwam. Anti-spam: honeypot + time-trap + in-memory rate-limit per IP.
 //
 // Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (al aanwezig voor de andere functions).
+//      TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (optioneel — voor een seintje bij elke lead).
 
 import { createClient } from '@supabase/supabase-js';
 
 const TABLE = 'stolkwebdesign_client_projects';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Stuurt een Telegram-seintje bij een nieuwe lead. Optioneel + fire-and-forget:
+// zonder token/chat, of bij een fout, gebeurt er niets en blijft de lead gewoon opgeslagen.
+async function notifyTelegram(text) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chat = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chat) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chat, text, disable_web_page_preview: true }),
+    });
+  } catch (e) { /* een seintje mag de lead nooit breken */ }
+}
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 4;
@@ -85,6 +101,20 @@ export default async function handler(req, res) {
       console.error('Supabase lead insert error:', error.message);
       return res.status(502).json({ error: 'Kon de lead niet opslaan. Probeer WhatsApp of e-mail.' });
     }
+
+    // Seintje via Telegram (optioneel, blokkeert de respons niet bij een fout)
+    await notifyTelegram(
+      `🎯 Nieuwe lead (Stolkwebdesign)\n\n` +
+      `👤 ${naam}${bedrijf ? ' · ' + bedrijf : ''}\n` +
+      `✉️ ${email}\n` +
+      `📞 ${telefoon || '-'}\n` +
+      `🧩 ${dienst || '-'}\n` +
+      `🔗 Bron: ${bron || 'direct/onbekend'}\n` +
+      (site ? `🌐 Site: ${site}\n` : '') +
+      `\n📝 ${String(bericht).slice(0, 400)}\n\n` +
+      `→ In je CMS: https://www.stolkwebdesign.nl/admin`
+    );
+
     return res.status(200).json({ ok: true, id: data?.id });
   } catch (err) {
     console.error('Lead insert exception:', err);
