@@ -102,12 +102,9 @@ h2.sec { font-family:'Archivo Black',sans-serif; font-size:clamp(28px,4vw,46px);
 .step-num { font-family:'Archivo Black',sans-serif; font-size:40px; color:var(--red); line-height:1; }
 .step h3 { font-family:'Archivo Black',sans-serif; font-size:17px; text-transform:uppercase; margin:14px 0 8px; }
 .step p { font-size:14px; color:#333; line-height:1.65; }
-.work { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
-.work-card { border:2px solid var(--black); box-shadow:6px 6px 0 var(--black); background:var(--white); }
-.work-card img { width:100%; aspect-ratio:4/3; object-fit:cover; object-position:center top; display:block; border-bottom:2px solid var(--black); }
-.work-cap { padding:12px 14px; }
-.work-cap b { font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; display:block; letter-spacing:-0.01em; }
-.work-cap span { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; }
+.work { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+.work-card { border:2px solid var(--black); box-shadow:6px 6px 0 var(--black); background:var(--near-black); line-height:0; align-self:start; }
+.work-card img { width:100%; height:auto; display:block; }
 .work-more { display:inline-block; margin-top:26px; font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--black); text-decoration:none; border-bottom:2px solid var(--red); padding-bottom:3px; }
 .why { display:grid; grid-template-columns:repeat(2,1fr); gap:0; border:2px solid var(--black); }
 .why div { padding:24px; border-right:2px solid var(--black); border-bottom:2px solid var(--black); }
@@ -137,6 +134,9 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   .why { grid-template-columns:1fr; }
   .why div { border-right:0; }
   .form-row { grid-template-columns:1fr; }
+}
+@media(max-width:560px){
+  .work { grid-template-columns:1fr; }
 }
 @media(prefers-reduced-motion:reduce){ html { scroll-behavior:auto; } }
 </style>
@@ -179,40 +179,6 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
         </div>
         <div class="form-group"><label class="form-label" for="lp-bedrijf">Bedrijfsnaam</label><input class="form-input" id="lp-bedrijf" autocomplete="organization"></div>
         <div class="form-group"><label class="form-label" for="lp-site">Heb je al een website? (plak de link)</label><input class="form-input" id="lp-site" placeholder="bijv. www.mijnbedrijf.nl"></div>
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="lp-dienst">Wat heb je nodig?</label>
-            <select class="form-select" id="lp-dienst">
-              <option value="">Selecteer…</option>
-              <option>Nieuwe website laten bouwen</option>
-              <option>WordPress website</option>
-              <option>Bestaande site verbeteren</option>
-              <option>Webshop</option>
-              <option>Anders</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="lp-budget">Budget-indicatie</label>
-            <select class="form-select" id="lp-budget">
-              <option value="">Selecteer…</option>
-              <option>Tot €1.500</option>
-              <option>€1.500 – €3.500</option>
-              <option>€3.500+</option>
-              <option>Weet ik nog niet</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-label" for="lp-timing">Wanneer wil je live?</label>
-          <select class="form-select" id="lp-timing">
-            <option value="">Selecteer…</option>
-            <option>Zo snel mogelijk</option>
-            <option>Binnen 1–3 maanden</option>
-            <option>Over 3+ maanden</option>
-            <option>Ik oriënteer me nog</option>
-          </select>
-        </div>
-        <div class="form-group"><label class="form-label" for="lp-bericht">Iets dat ik moet weten?</label><textarea class="form-textarea" id="lp-bericht" placeholder="Vertel kort wat je voor ogen hebt."></textarea></div>
         <div class="form-error font-mono" id="lp-error"></div>
         <button type="submit" class="form-submit" id="lp-btn"><span id="lp-btn-label">Vraag mijn gratis mockup aan</span></button>
         <p class="form-mini">Geen spam. Geen verplichtingen. Door te verzenden ga je akkoord met het <a href="/privacybeleid" style="color:var(--muted);text-decoration:underline;">privacybeleid</a>.</p>
@@ -289,10 +255,10 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="kicker">Recent werk</div>
   <h2 class="sec">Een greep uit<br>mijn projecten</h2>
   <div class="work">
-    <div class="work-card"><img src="/assets/lp/sauberhaus.jpg" width="900" height="675" loading="lazy" alt="Website Sauberhaus"><div class="work-cap"><b>Sauberhaus</b><span>Lifestyle brand</span></div></div>
-    <div class="work-card"><img src="/assets/lp/maestr.jpg" width="900" height="675" loading="lazy" alt="Website Maestr"><div class="work-cap"><b>Maestr</b><span>Music / tech</span></div></div>
-    <div class="work-card"><img src="/assets/lp/nmwecreate.jpg" width="900" height="675" loading="lazy" alt="Website NM We Create"><div class="work-cap"><b>NM We Create</b><span>Creatief bureau</span></div></div>
-    <div class="work-card"><img src="/assets/lp/bestsupport08.jpg" width="900" height="675" loading="lazy" alt="Website Bestsupport08"><div class="work-cap"><b>Bestsupport08</b><span>Juridisch advies</span></div></div>
+    <div class="work-card"><img src="/assets/lp/sauberhaus-card.webp" width="800" height="800" loading="lazy" alt="Website Sauberhaus door Stolkwebdesign"></div>
+    <div class="work-card"><img src="/assets/lp/maestr-card.webp" width="800" height="800" loading="lazy" alt="Website Maestr door Stolkwebdesign"></div>
+    <div class="work-card"><img src="/assets/lp/nm-we-create-card.webp" width="800" height="800" loading="lazy" alt="Website NM We Create door Stolkwebdesign"></div>
+    <div class="work-card"><img src="/assets/lp/bestsupport08-card.webp" width="800" height="800" loading="lazy" alt="Website Bestsupport08 door Stolkwebdesign"></div>
   </div>
   <a href="/portfolio" target="_blank" rel="noopener" class="work-more">Bekijk het volledige portfolio →</a>
 </div></section>
@@ -346,7 +312,6 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     const val = (id) => (document.getElementById(id).value || '').trim();
     const voornaam = val('lp-voornaam'), achternaam = val('lp-achternaam'), email = val('lp-email');
     const tel = val('lp-tel'), bedrijf = val('lp-bedrijf'), site = val('lp-site');
-    const dienst = val('lp-dienst'), budget = val('lp-budget'), timing = val('lp-timing'), bericht = val('lp-bericht');
     const company = document.getElementById('lp-company').value; // honeypot
     const errorEl = document.getElementById('lp-error');
     const btn = document.getElementById('lp-btn'), btnLabel = document.getElementById('lp-btn-label');
@@ -356,13 +321,10 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 
     const naam = `${voornaam} ${achternaam}`.trim();
     const attribution = (typeof getAttribution === 'function') ? getAttribution() : { string: 'direct/onbekend' };
-    // Kwalificatie-antwoorden bundelen in het bericht (de Notion-DB heeft geen losse velden)
+    // Stap 1 is bewust kaal: alleen de lead vangen. De rest volgt in stap 2 + het gesprek.
     const samengesteld =
-      `— Aanvraag via landingspagina (gratis mockup) —\n` +
-      (site ? `Huidige site: ${site}\n` : '') +
-      (budget ? `Budget: ${budget}\n` : '') +
-      (timing ? `Timing: ${timing}\n` : '') +
-      (bericht ? `\n${bericht}` : '');
+      `Aanvraag via landingspagina (gratis mockup)` +
+      (site ? `\nHuidige site: ${site}` : '');
 
     btn.disabled = true; btnLabel.textContent = 'Versturen…';
     try {
@@ -370,7 +332,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          naam, email, telefoon: tel, bedrijf, dienst,
+          naam, email, telefoon: tel, bedrijf,
           site,
           bericht: samengesteld,
           bron: attribution.string,
