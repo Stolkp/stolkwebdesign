@@ -54,6 +54,48 @@ export default async function handler(req, res) {
   const { naam, email, telefoon, bedrijf, dienst, bericht, bron, site, elapsed_ms, company } = body;
   const ip = getIp(req);
 
+  // ── Stap 2 (mockup-intake): 4 optionele antwoorden aan een BESTAANDE lead-kaart hangen ──
+  // De landingspagina roept dit aan nadat de lead al is aangemaakt (met de teruggegeven id).
+  // Geen honeypot/time-trap (de lead bestaat al); wel dezelfde IP-rate-limit.
+  if (body.mode === 'details') {
+    if (isRateLimited(ip)) return res.status(429).json({ error: 'Te veel aanvragen — probeer het zo nog eens.' });
+
+    const id = Number(body.id);
+    if (!id) return res.status(400).json({ error: 'Ontbrekende lead-id.' });
+
+    const SUPABASE_URL = process.env.SUPABASE_URL;
+    const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!SUPABASE_URL || !SERVICE_KEY) return res.status(500).json({ error: 'Server niet geconfigureerd (Supabase env ontbreekt)' });
+    const db = createClient(SUPABASE_URL, SERVICE_KEY);
+
+    const clip = (v, n) => String(v || '').trim().slice(0, n);
+    const referenties = clip(body.referenties, 900);
+    const uitstraling = clip(body.uitstraling, 200);
+    const doel = clip(body.doel, 120);
+    const usp = clip(body.usp, 900);
+    if (!referenties && !uitstraling && !doel && !usp) return res.status(200).json({ ok: true }); // niets ingevuld
+
+    const blok =
+      `\n\nMOCKUP-INTAKE (STAP 2)\n` +
+      (referenties ? `Referenties: ${referenties}\n` : '') +
+      (uitstraling ? `Uitstraling: ${uitstraling}\n` : '') +
+      (doel ? `Hoofddoel: ${doel}\n` : '') +
+      (usp ? `Sterkste punt: ${usp}\n` : '');
+
+    try {
+      const { data: existing, error: readErr } = await db.from(TABLE).select('notes').eq('id', id).single();
+      if (readErr || !existing) return res.status(404).json({ error: 'Lead niet gevonden.' });
+      const merged = (String(existing.notes || '') + blok).slice(0, 8000);
+      // status-guard: alleen verse leads (blast-radius klein bij geraden id's)
+      const { error: updErr } = await db.from(TABLE).update({ notes: merged }).eq('id', id).eq('status', 'nieuwe_lead');
+      if (updErr) { console.error('Lead details update error:', updErr.message); return res.status(502).json({ error: 'Kon de details niet opslaan.' }); }
+      return res.status(200).json({ ok: true });
+    } catch (err) {
+      console.error('Lead details exception:', err);
+      return res.status(500).json({ error: 'Er ging iets mis.' });
+    }
+  }
+
   // Honeypot: bots vullen het verborgen 'company'-veld → stil 200 (geen hint dat het een trap is).
   if (company && String(company).trim() !== '') return res.status(200).json({ ok: true });
 

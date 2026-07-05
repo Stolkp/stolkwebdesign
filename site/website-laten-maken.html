@@ -76,6 +76,17 @@ nav { position:sticky; top:0; z-index:100; background:var(--black); border-botto
 .form-success p { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); line-height:1.8; }
 .honey { position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
 
+/* STAP 2 — mockup-intake (verschijnt ná de aanvraag) */
+.form-step2 { display:none; }
+.step2-head { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; letter-spacing:-0.02em; line-height:1.05; }
+.step2-sub { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:8px 0 20px; line-height:1.5; }
+.chips { display:flex; flex-wrap:wrap; gap:8px; }
+.chip { font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.02em; padding:9px 12px; background:var(--white); color:var(--black); border:2px solid var(--black); border-radius:0; cursor:pointer; user-select:none; transition:background .12s,color .12s,border-color .12s; }
+.chip:hover { border-color:var(--red); }
+.chip.selected { background:var(--red); color:var(--white); border-color:var(--red); }
+.step2-skip { display:block; width:100%; margin-top:12px; padding:8px; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); background:none; border:0; cursor:pointer; text-decoration:underline; }
+.step2-skip:hover { color:var(--black); }
+
 /* TRUST STRIP */
 .trust { background:var(--black); color:var(--white); padding:18px 0; }
 .trust .wrap { display:flex; flex-wrap:wrap; gap:14px 36px; align-items:center; justify-content:center; }
@@ -206,6 +217,46 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
         <button type="submit" class="form-submit" id="lp-btn"><span id="lp-btn-label">Vraag mijn gratis mockup aan</span></button>
         <p class="form-mini">Geen spam. Geen verplichtingen. Door te verzenden ga je akkoord met het <a href="/privacybeleid" style="color:var(--muted);text-decoration:underline;">privacybeleid</a>.</p>
       </form>
+
+      <!-- STAP 2 — mockup-intake (verschijnt ná een succesvolle aanvraag; alles optioneel) -->
+      <div class="form-step2" id="lp-step2">
+        <div class="step2-head">Top, ik ben ermee bezig.<br>Nog 4 korte vragen?</div>
+        <div class="step2-sub">Optioneel, maar hoe scherper je antwoord, hoe beter je mockup wordt.</div>
+        <div class="form-group">
+          <label class="form-label" for="s2-ref">Welke websites vind je mooi? Plak 1-3 links, en wat vind je daar mooi aan?</label>
+          <textarea class="form-textarea" id="s2-ref" placeholder="bijv. www.voorbeeld.nl, veel wit en rustige typografie"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Welke uitstraling past bij jullie? (kies er max 2)</label>
+          <div class="chips" id="s2-chips">
+            <span class="chip" data-v="Strak &amp; minimalistisch">Strak &amp; minimalistisch</span>
+            <span class="chip" data-v="Premium &amp; luxe">Premium &amp; luxe</span>
+            <span class="chip" data-v="Stoer &amp; industrieel">Stoer &amp; industrieel</span>
+            <span class="chip" data-v="Warm &amp; persoonlijk">Warm &amp; persoonlijk</span>
+            <span class="chip" data-v="Speels &amp; kleurrijk">Speels &amp; kleurrijk</span>
+            <span class="chip" data-v="Zakelijk &amp; betrouwbaar">Zakelijk &amp; betrouwbaar</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s2-doel">Wat moet een bezoeker vooral doen?</label>
+          <select class="form-select" id="s2-doel">
+            <option value="">Selecteer…</option>
+            <option>Bellen of appen</option>
+            <option>Offerte aanvragen</option>
+            <option>Afspraak boeken</option>
+            <option>Online kopen</option>
+            <option>Contact opnemen</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="s2-usp">Wat maakt jullie beter dan de concurrent?</label>
+          <textarea class="form-textarea" id="s2-usp" placeholder="In 1 of 2 zinnen."></textarea>
+        </div>
+        <div class="form-error font-mono" id="s2-error"></div>
+        <button type="button" class="form-submit" id="s2-btn"><span id="s2-btn-label">Versturen &amp; klaar</span></button>
+        <button type="button" class="step2-skip" id="s2-skip">Sla over, ik hoor het wel in het gesprek</button>
+      </div>
+
       <div class="form-success" id="lp-success">
         <div class="ic">✓</div>
         <h3>Aanvraag ontvangen.</h3>
@@ -327,17 +378,66 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
           elapsed_ms: Date.now() - LP_LOADED_AT,
         }),
       });
-      if (!res.ok) { const d = await res.json().catch(() => ({})); throw new Error(d.error || `Server fout (${res.status})`); }
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { throw new Error(d.error || `Server fout (${res.status})`); }
       try { if (typeof fbq === 'function') fbq('track', 'Lead'); } catch (e2) {}
       try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'generate_lead', method: 'landing_mockup' }); } catch (e2) {}
+      window.__leadId = d.id || null;
       document.getElementById('lp-form').style.display = 'none';
-      document.getElementById('lp-success').style.display = 'block';
+      // De kaart-kop ("Vraag je gratis mockup aan") hoort bij stap 1 — weg zodra we verder zijn.
+      document.querySelectorAll('#aanvraag > .formcard-title, #aanvraag > .formcard-sub').forEach((el) => { el.style.display = 'none'; });
+      // Lead is binnen. Heb ik een id? Toon stap 2 (mockup-intake). Anders meteen bedankt.
+      if (window.__leadId) { document.getElementById('lp-step2').style.display = 'block'; }
+      else { document.getElementById('lp-success').style.display = 'block'; }
     } catch (err) {
       errorEl.textContent = err.message || 'Er ging iets mis. Probeer het opnieuw of stuur een WhatsApp.';
       errorEl.style.display = 'block';
       btn.disabled = false; btnLabel.textContent = 'Vraag mijn gratis mockup aan';
     }
   });
+
+  // ── STAP 2: mockup-intake (optioneel) — hangt de antwoorden aan dezelfde lead ──
+  (function () {
+    const chipsWrap = document.getElementById('s2-chips');
+    const s2err = document.getElementById('s2-error');
+    const selected = () => [...chipsWrap.querySelectorAll('.chip.selected')].map((c) => c.dataset.v);
+
+    chipsWrap.addEventListener('click', (e) => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      if (!chip.classList.contains('selected') && selected().length >= 2) {
+        s2err.textContent = 'Kies er maximaal 2.'; s2err.style.display = 'block'; return;
+      }
+      s2err.style.display = 'none';
+      chip.classList.toggle('selected');
+    });
+
+    function finish() {
+      document.getElementById('lp-step2').style.display = 'none';
+      document.getElementById('lp-success').style.display = 'block';
+    }
+    document.getElementById('s2-skip').addEventListener('click', finish);
+
+    const s2btn = document.getElementById('s2-btn'), s2lbl = document.getElementById('s2-btn-label');
+    s2btn.addEventListener('click', async () => {
+      const referenties = (document.getElementById('s2-ref').value || '').trim();
+      const uitstraling = selected().join(', ');
+      const doel = (document.getElementById('s2-doel').value || '').trim();
+      const usp = (document.getElementById('s2-usp').value || '').trim();
+      // Niets ingevuld of geen id → gewoon afronden, de lead is al binnen.
+      if (!window.__leadId || (!referenties && !uitstraling && !doel && !usp)) { finish(); return; }
+      s2btn.disabled = true; s2lbl.textContent = 'Versturen…';
+      try {
+        await fetch('/api/lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'details', id: window.__leadId, referenties, uitstraling, doel, usp }),
+        });
+        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'lead_details' }); } catch (e2) {}
+      } catch (e2) { /* lead is al binnen; toon alsnog het bedankscherm */ }
+      finish();
+    });
+  })();
 </script>
 
 </body>
