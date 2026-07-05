@@ -232,7 +232,7 @@ INSERT op `stolkwebdesign_module_waitlist` triggert een Supabase Database Webhoo
 ## Advertentie-funnel + leads (betaald adverteren, 07-2026)
 Volledige lead-funnel voor Meta/Google-advertenties. Plan + stappenplan in `marketing/`:
 `google-ads-search-plan.md` (Search-campagne) · `SETUP-ads-stappenplan.md` (Fase 0-3 + env/console-stappen) · unit-economics (drempel €175/lead).
-- **Landingspagina** `site/website-laten-maken.html` (`/website-laten-maken`, noindex) — gratis-mockup-haak + kwalificatie-formulier + 2-staps mockup-intake → `/api/lead`. `site/utm.js` vangt UTM/gclid/fbclid (bron-attributie).
+- **Landingspagina** `site/website-laten-maken.html` (`/website-laten-maken`, noindex) — gratis-mockup-haak + **kort lead-formulier** (stap 1 bewust kaal: naam/mail/tel/bedrijf/huidige-site) + **2-staps mockup-intake** (stap 2 ná de lead: 4 optionele vragen — referenties/uitstraling-chips/hoofddoel/USP — via `mode:'details'` aan de lead-kaart) → `/api/lead`. Recent-werk toont de gebrande device-composite portfolio-kaarten (`assets/lp/*-card.webp`). `site/utm.js` vangt UTM/gclid/fbclid (bron-attributie).
 - **Boeking:** `site/plan-gesprek.html` (cal.com inline-embed, `bookingSuccessful` → conversie) + `site/bedankt-afspraak.html`. NL-CTA's "Plan een gesprek" (home/contact/modules) wijzen naar `/plan-gesprek`.
 - **Meten:** Consent Mode v2 in `cookieconsent/cc-init.js` (default-denied + update op consent, ad_user_data/ad_personalization). Conversie-events `generate_lead` (formulier) + `book_appointment` (boeking) + Meta `Lead`/`Schedule`.
 - **CMS Advertenties-tab** (`admin.html` #section-ads): `api/sync-ads-metrics.js` (Meta-insights, cron `0 7 * * *`) → `stolkwebdesign_ads_metrics/_settings/_actions` (`migrations/ads_init.sql`) + actielijst. Drempel `max_cpl` €175.
@@ -265,3 +265,4 @@ Volledige lead-funnel voor Meta/Google-advertenties. Plan + stappenplan in `mark
 - `docs/logs/2026-06-22/01-…` exit-intent chatbot
 - `docs/logs/2026-06-25/03-…` seo-content-engine + cms-seo-content (3-lagen SEO-propositie op /modules)
 - `docs/logs/2026-07-03/01-…` Block Layout Editor: admin-layout.js + blocks_init.sql + applyBlockLayout() in content-loader.js + Layout-tab in admin.html
+- `docs/logs/2026-07-05/03-…` Landingspagina: 2-staps mockup-intake (`mode:'details'` in lead.js) + kaler stap-1-formulier + premium device-composite portfolio-kaarten
