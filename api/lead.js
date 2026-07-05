@@ -1,45 +1,17 @@
 // Vercel Function: /api/lead
-// Vangt leads van het contactformulier (en straks de advertentie-landingspagina) op en schrijft ze
-// naar de Notion "Klantverzoeken"-database — dezelfde DB die het CRM-dashboard leest. Vervangt de
-// oude, kapotte POST naar http://localhost:3000/api/lead.
+// Vangt leads van het contactformulier + de advertentie-landingspagina op en schrijft ze naar de
+// eigen CMS-pijplijn (Supabase-tabel stolkwebdesign_client_projects) met status 'nieuwe_lead' —
+// dan verschijnen ze meteen als kaart op de Projecten-pagina in /admin, naast de Advertenties-tab.
 //
-// Bevat de attributie-bron (UTM / gclid / fbclid) zodat je in Notion ziet uit welke advertentie de
-// lead komt. Anti-spam: honeypot + time-trap + in-memory rate-limit per IP (patroon van Stolksupport).
+// De attributie-bron (UTM / gclid / fbclid) komt mee in de notities, zodat je per lead ziet uit welke
+// advertentie 'ie kwam. Anti-spam: honeypot + time-trap + in-memory rate-limit per IP.
 //
-// Env: NOTION_API_KEY (verplicht), NOTION_DATABASE_ID (default = Klantverzoeken-DB)
+// Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (al aanwezig voor de andere functions).
 
-const NOTION_VERSION = '2022-06-28';
-const DEFAULT_DB = '33bf84f0fafd8023a331d065fa066288'; // Klantverzoeken (zelfde als Dashboard)
+import { createClient } from '@supabase/supabase-js';
+
+const TABLE = 'stolkwebdesign_client_projects';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// Status voor verse leads. Moet exact matchen met een bestaande optie op het
-// Status-veld in Notion (Status-velden maken opties NIET auto-aan via de API).
-const LEAD_STATUS = process.env.NOTION_LEAD_STATUS || 'Nieuwe lead';
-
-// POST naar Notion mét Status; bij een 400/status-validatiefout retry zonder Status,
-// zodat een lead nooit verloren gaat als de optie nog niet in Notion bestaat.
-async function createNotionLead(apiKey, parent, properties) {
-  const post = (props) =>
-    fetch('https://api.notion.com/v1/pages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Notion-Version': NOTION_VERSION,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ parent, properties: props }),
-    });
-
-  let resp = await post(properties);
-  if (!resp.ok && properties.Status) {
-    const errText = await resp.clone().text().catch(() => '');
-    if (resp.status === 400 || /status/i.test(errText)) {
-      console.warn('[notion] Status "' + LEAD_STATUS + '" geweigerd — lead opgeslagen zonder status. Maak de optie aan in Notion. Detail:', errText.slice(0, 200));
-      const { Status, ...rest } = properties;
-      resp = await post(rest);
-    }
-  }
-  return resp;
-}
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 4;
@@ -63,7 +35,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
-  const { naam, email, telefoon, bedrijf, dienst, bericht, bron, elapsed_ms, company } = body;
+  const { naam, email, telefoon, bedrijf, dienst, bericht, bron, site, elapsed_ms, company } = body;
   const ip = getIp(req);
 
   // Honeypot: bots vullen het verborgen 'company'-veld → stil 200 (geen hint dat het een trap is).
@@ -78,41 +50,44 @@ export default async function handler(req, res) {
   if (!naam || !email || !bericht) return res.status(400).json({ error: 'Vul naam, e-mail en bericht in.' });
   if (!EMAIL_REGEX.test(email)) return res.status(400).json({ error: 'Ongeldig e-mailadres.' });
 
-  const apiKey = process.env.NOTION_API_KEY;
-  const databaseId = process.env.NOTION_DATABASE_ID || DEFAULT_DB;
-  if (!apiKey) return res.status(500).json({ error: 'Server niet geconfigureerd (NOTION_API_KEY ontbreekt)' });
+  const SUPABASE_URL = process.env.SUPABASE_URL;
+  const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!SUPABASE_URL || !SERVICE_KEY) {
+    return res.status(500).json({ error: 'Server niet geconfigureerd (Supabase env ontbreekt)' });
+  }
+  const db = createClient(SUPABASE_URL, SERVICE_KEY);
 
   const today = new Date().toISOString().slice(0, 10);
-  const verzoekId = 'LEAD-' + Date.now().toString().slice(-6);
-  const beschrijving =
-    `Naam: ${naam}\n` +
+  const notes =
     `E-mail: ${email}\n` +
     `Telefoon: ${telefoon || '-'}\n` +
     (dienst ? `Dienst: ${dienst}\n` : '') +
-    `Bron: ${bron || 'direct/onbekend'}\n\n` +
-    String(bericht);
+    `Bron: ${bron || 'direct/onbekend'}\n` +
+    (site ? `Huidige site: ${site}\n` : '') +
+    `\n${String(bericht)}`;
 
-  const properties = {
-    'Naam':            { title:     [{ text: { content: `Lead: ${(bedrijf || naam)}`.slice(0, 200) } }] },
-    'Verzoek ID':      { rich_text: [{ text: { content: verzoekId } }] },
-    'Bedrijf':         { rich_text: [{ text: { content: (bedrijf || '').slice(0, 200) } }] },
-    'Type Verzoek':    { select:    { name: 'Lead' } },
-    'Status':          { status:    { name: LEAD_STATUS } },
-    'Beschrijving':    { rich_text: [{ text: { content: beschrijving.slice(0, 1900) } }] },
-    'Pagina / Sectie': { rich_text: [{ text: { content: 'Website contactformulier' } }] },
-    'Datum Ingediend': { date:      { start: today } },
+  const row = {
+    name: (bedrijf ? `${bedrijf} (${naam})` : naam).slice(0, 200),
+    category: (dienst || 'Lead').slice(0, 80),
+    status: 'nieuwe_lead',
+    tags: ['lead'],
+    contact_email: email.slice(0, 200),
+    contact_phone: (telefoon || '').slice(0, 60) || null,
+    live_url: (site || '').slice(0, 400) || null,
+    notes: notes.slice(0, 4000),
+    next_step: 'Mockup maken + terugbellen',
+    next_step_date: today,
   };
 
   try {
-    const resp = await createNotionLead(apiKey, { database_id: databaseId }, properties);
-    const data = await resp.json();
-    if (!resp.ok) {
-      console.error('Notion error:', resp.status, data && data.message);
+    const { data, error } = await db.from(TABLE).insert(row).select('id').single();
+    if (error) {
+      console.error('Supabase lead insert error:', error.message);
       return res.status(502).json({ error: 'Kon de lead niet opslaan. Probeer WhatsApp of e-mail.' });
     }
-    return res.status(200).json({ ok: true, id: verzoekId });
+    return res.status(200).json({ ok: true, id: data?.id });
   } catch (err) {
-    console.error('Notion exception:', err);
+    console.error('Lead insert exception:', err);
     return res.status(500).json({ error: 'Er ging iets mis. Probeer het opnieuw.' });
   }
 }

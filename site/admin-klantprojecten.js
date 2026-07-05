@@ -23,6 +23,7 @@
 
   // Pijplijn-statussen (label + kleur). Volgorde = de 8 knoppen in het statusgrid.
   const STATUSES = {
+    nieuwe_lead:   ['Nieuwe lead',   '#ff6a00'],
     voorgesteld:   ['Voorgesteld',   '#8a8a8a'],
     in_gesprek:    ['In gesprek',    '#d9a400'],
     akkoord:       ['Akkoord',       '#37a04a'],
@@ -35,7 +36,7 @@
   const ORDER = Object.keys(STATUSES);
 
   // Statussen die als "open pijplijn" tellen voor het waarde-totaal.
-  const PIPELINE = ['voorgesteld', 'in_gesprek', 'akkoord', 'in_uitvoering'];
+  const PIPELINE = ['nieuwe_lead', 'voorgesteld', 'in_gesprek', 'akkoord', 'in_uitvoering'];
 
   const note = (m, e) => (typeof toast === 'function' ? toast(m, e) : (e ? alert(m) : void 0));
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
