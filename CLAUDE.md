@@ -77,7 +77,9 @@ Projecten/Stolkwebdesign/
 | `create-signature-request.js` | serverless, JWT | Ondertekenen: bevriest factuur/offerte (uit stolkwebdesign_invoices) of inline overeenkomst als snapshot, genereert token, geeft `/onderteken?token=…` terug; optioneel Resend-mail (RESEND_API_KEY, nu uit → kopieer-link) |
 | `sign-document.js` | serverless, PUBLIEK | Legt handtekening + server-side IP/UA vast op de sign_requests-rij (token; service-role intern). Validatie 409 al-getekend / 410 verlopen / ≤500KB data-URL |
 | `chat.js` | **Edge**, streaming | Chatbot-backend: Anthropic claude-haiku-4-5 met vaste systeemprompt (echte pakket-prijzen + modules + werkwijze + leadcapture-signaal `<<LEAD:{name,email}>>`). Anti-misbruik: IP-rate-limit + max 30 berichten/gesprek + 4KB-cap per bericht. Edge zodat hij niet meetelt voor de 12-serverless-functielimiet |
-| `chat-lead.js` | **Edge** | Lead-capture: insert in stolkwebdesign_chat_leads (service-role) + Notion-melding naar Klantverzoeken (zelfde DB als /api/lead). Honeypot (`company`-veld) + IP-rate-limit (4/uur) |
+| `chat-lead.js` | **Edge** | Lead-capture chatbot: insert in stolkwebdesign_chat_leads (service-role) + Notion-melding naar Klantverzoeken. Honeypot (`company`-veld) + IP-rate-limit (4/uur) |
+| `lead.js` | serverless | **Lead-opvang** (contactform + advertentie-landingspagina + 2-staps mockup-intake): schrijft naar Supabase `stolkwebdesign_client_projects` (status `nieuwe_lead`) + **Telegram-seintje**. Anti-spam honeypot/time-trap/rate-limit. **Vervangt de oude Notion-route** (zie Advertentie-funnel) |
+| `sync-ads-metrics.js` | serverless + cron | CMS Advertenties-tab: haalt Meta-insights op (Graph API) → `stolkwebdesign_ads_metrics` + genereert actielijst t.o.v. drempels. Cron `0 7 * * *`. Google later (dev-token) |
 | `create-booking.js` | **Edge** | Reserveringen: anonieme klant-write (service-role + honeypot/rate-limit + Notion + optioneel Resend). Edge wegens 12-functielimiet |
 | `generate-seo-article.js` | serverless, JWT | SEO-content module (cms-seo-content): genereert draft-artikel via Anthropic → blog_posts-rij met published_at NULL |
 | `gdpr-request.js` | **Edge** | GDPR aanvraag opslaan + verificatiemail via Resend (honeypot + time-trap + IP-ratelimit) |
@@ -105,6 +107,7 @@ Projecten/Stolkwebdesign/
 | (rooster) | Personeelsplanner: tabellen stolkwebdesign_roster_* + RPC's get_staff_roster/submit_availability/request_leave |
 | `gdpr_init.sql` | GDPR/AVG: tabellen gdpr_requests/data_export/deleted_records + RPC gdpr_verify_token (SECURITY DEFINER, anon-veilig) — **nog niet gedraaid** |
 | `blocks_init.sql` | Block Layout: tabel stolkwebdesign_blocks (id/page/label/order_index/visible/locked) + RLS (public read, auth write) + seed 11 home-blokken. Live gedraaid 03-07-2026 |
+| `ads_init.sql` | Advertenties-tab: tabellen stolkwebdesign_ads_metrics/_settings/_actions (auth-only, géén public read — performance-data). Live 04-07-2026 |
 
 ## Design System
 | Element        | Waarde                        |
@@ -226,8 +229,18 @@ INSERT op `stolkwebdesign_module_waitlist` triggert een Supabase Database Webhoo
 - **Primair:** Calendly link (nog invullen)
 - **Secundair:** WhatsApp (nog invullen: +31 6 __ __ __ __)
 
+## Advertentie-funnel + leads (betaald adverteren, 07-2026)
+Volledige lead-funnel voor Meta/Google-advertenties. Plan + stappenplan in `marketing/`:
+`google-ads-search-plan.md` (Search-campagne) · `SETUP-ads-stappenplan.md` (Fase 0-3 + env/console-stappen) · unit-economics (drempel €175/lead).
+- **Landingspagina** `site/website-laten-maken.html` (`/website-laten-maken`, noindex) — gratis-mockup-haak + kwalificatie-formulier + 2-staps mockup-intake → `/api/lead`. `site/utm.js` vangt UTM/gclid/fbclid (bron-attributie).
+- **Boeking:** `site/plan-gesprek.html` (cal.com inline-embed, `bookingSuccessful` → conversie) + `site/bedankt-afspraak.html`. NL-CTA's "Plan een gesprek" (home/contact/modules) wijzen naar `/plan-gesprek`.
+- **Meten:** Consent Mode v2 in `cookieconsent/cc-init.js` (default-denied + update op consent, ad_user_data/ad_personalization). Conversie-events `generate_lead` (formulier) + `book_appointment` (boeking) + Meta `Lead`/`Schedule`.
+- **CMS Advertenties-tab** (`admin.html` #section-ads): `api/sync-ads-metrics.js` (Meta-insights, cron `0 7 * * *`) → `stolkwebdesign_ads_metrics/_settings/_actions` (`migrations/ads_init.sql`) + actielijst. Drempel `max_cpl` €175.
+- **Leads → eigen CMS** (NIET meer Notion): `api/lead.js` → `stolkwebdesign_client_projects` status `nieuwe_lead` (Kanban-kolom vooraan, tab **Projecten** via `site/admin-klantprojecten.js`) + **Telegram-seintje** (env `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID`, hergebruikt de Meta Ads-bot 8646952091 → chat 7677255940).
+- **Meta-campagne LIVE** (account `act_2864094210541845`, €5/dag, optimaliseert op Lead-pixel `384832226157615`): opgezet via `Skills/Meta Ads/launch_stolkwebdesign.py` (preset `mockup` → landingspagina). Eigen brutalist-ads (`Skills/Meta Ads/ad-designs/`, HTML→PNG). FB-omslag `marketing/fb-cover-stolkwebdesign.png`. Zie `docs/logs/2026-07-05/01-…` + `02-…`.
+
 ## Gerelateerd buiten deze map
-- Meta Ads launch-campagne Stolkwebdesign klaar in `Skills/Meta Ads/` (`launch_stolkwebdesign.py`, staat PAUSED).
+- **Meta Ads-campagne Stolkwebdesign staat LIVE** (zie Advertentie-funnel hierboven); code + API-fixes in `Skills/Meta Ads/` (map gitignored i.v.m. `.env`).
 - Agent-Loops content-missie (Skills/Agent-Loops) schrijft concept-posts in `stolkwebdesign_social_posts`.
 - Herbruikbare module-skills (`cms-*`) in `~/.claude/skills/` zijn gedestilleerd uit deze site.
 
