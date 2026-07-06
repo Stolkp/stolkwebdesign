@@ -108,6 +108,11 @@ Projecten/Stolkwebdesign/
 | `gdpr_init.sql` | GDPR/AVG: tabellen gdpr_requests/data_export/deleted_records + RPC gdpr_verify_token (SECURITY DEFINER, anon-veilig) — **nog niet gedraaid** |
 | `blocks_init.sql` | Block Layout: tabel stolkwebdesign_blocks (id/page/label/order_index/visible/locked) + RLS (public read, auth write) + seed 11 home-blokken. Live gedraaid 03-07-2026 |
 | `ads_init.sql` | Advertenties-tab: tabellen stolkwebdesign_ads_metrics/_settings/_actions (auth-only, géén public read — performance-data). Live 04-07-2026 |
+| `automations_init.sql` | Automations-motor: hoofdtabel stolkwebdesign_automations (graph-JSON, status draft/active/paused, trigger_type) + tabellen stolkwebdesign_automation_{contacts,tags,contact_tags,deals,runs,run_log,email_templates,email_events,suppression,settings} — alle RLS authenticated-only |
+| `automations_triggers.sql` | Instroom via Postgres-triggers + brug-functies op stolkwebdesign_client_projects (status 'nieuwe_lead') en stolkwebdesign_chat_leads → upsert contact + enroll. Brug-functies slikken fouten bewust (lead-intake mag nooit breken) |
+| `automations_claim.sql` | Atomaire claim-RPC stolkwebdesign_automation_claim_runs (FOR UPDATE SKIP LOCKED) waar automation-tick runs uit trekt |
+| `automations_cron.sql` | pg_cron-job swd-automation-tick (elke 5 min, via pg_net → automation-tick). **In git staat een placeholder** `<AUTOMATION_SECRET>` i.p.v. het echte secret; de live cron is met het echte secret geladen via `execute_sql`, dus dit bestand alleen is niet genoeg om de cron te reproduceren |
+| `automations_dogfood_flow.sql` | Seed van de actieve dogfood-flow "Nieuwe lead opvolging" (zie Automations hieronder) + de 2 e-mailtemplates |
 
 ## Design System
 | Element        | Waarde                        |
@@ -191,6 +196,42 @@ Volledig AVG-compliance systeem: aanvraagformulier in `site/privacybeleid.html` 
 
 **Fiscale uitzondering:** `sign_requests.document_snapshot` (bevroren facturen) wordt bij verwijdering niet gewist maar geanonimiseerd (signed_name/image/client_email genulld). Bewaarplicht 7 jaar.
 
+## Automations (cms-automations Fase 1, 06-07)
+
+Marketing-automation motor in ActiveCampaign-stijl: **alleen de motor, geen UI** (Fase 2). Flows zijn graph-JSON (nodes/edges) opgeslagen in `stolkwebdesign_automations` (kolommen `status` draft/active/paused, `trigger_type` form/tag/deal_stage/datetime, `re_entry`). Referentie-implementatie voor de latere `cms-automations`-skill.
+
+**Tabellen** (prefix `stolkwebdesign_automation_`): `contacts`, `tags`, `contact_tags`, `deals`, `runs`, `run_log`, `email_templates`, `email_events`, `suppression`, `settings` + hoofdtabel `stolkwebdesign_automations`. Alle RLS authenticated-only; edge functions schrijven via service-role.
+
+**Instroom:** Postgres-triggers, geen polling. Bruggen op bestaande tabellen: `stolkwebdesign_client_projects` (status `nieuwe_lead`, kolommen `name`/`contact_email`) en `stolkwebdesign_chat_leads` (`name`/`email`) → upsert contact → enroll in de bijpassende flow. Brug-functies slikken fouten bewust (lead-intake mag nooit breken door een automation-bug; fouten komen alleen als Postgres warning naar boven).
+
+**Motor:** edge function `automation-tick` (v4), aangeroepen door pg_cron-job **`swd-automation-tick` elke 5 minuten** (via `pg_net`). Trekt werk via de atomaire claim-RPC `stolkwebdesign_automation_claim_runs` (`FOR UPDATE SKIP LOCKED`). Respecteert max-mails-per-tick uit `stolkwebdesign_automation_settings`, checkt `suppression` vóór elke send, zet een `List-Unsubscribe`-header en laat `{{unsubscribe_url}}` ongemoeid door de template-render (regressietest hierop in `engine_test.ts`).
+
+**Overige edge functions:**
+- `automation-track` — open-pixel + klik-redirect, HMAC-signed URL's, bot-filter
+- `automation-unsub` — één-klik uitschrijven (zet suppression, stopt lopende runs)
+- `automation-resend-webhook` — Resend bounce/complaint → suppression; svix-verificatie actief zodra `RESEND_WEBHOOK_SECRET` gezet is, replay-window 5 min
+
+**Motor-kern:** `supabase/functions/_shared/engine.ts` + `sign.ts`, pure Deno-modules zonder Supabase-afhankelijkheid. 15 tests: `deno test supabase/functions/_shared/engine_test.ts`.
+
+**Secrets** (edge-secrets via `npx supabase secrets set`): `AUTOMATION_SECRET`, `RESEND_API_KEY`. `AUTOMATION_SECRET` staat ook lokaal in de monorepo-root `.env` (gitignored). **Valkuil:** `migrations/automations_cron.sql` in git bevat bewust de placeholder `<AUTOMATION_SECRET>` in plaats van het echte secret — de live cron-job is met het echte secret geladen via `execute_sql`, dus dit bestand alleen volstaat niet om de cron te reproduceren.
+
+**Deploy-quirk:** `deploy_edge_function` (Supabase MCP) met gedeelde bestanden vereist dat de bestandsnaam letterlijk `../_shared/sign.ts` is, anders resolven de relatieve imports niet.
+
+**Flow aan/uit zetten:**
+```sql
+update stolkwebdesign_automations set status = 'active' where id = '...';   -- aanzetten
+update stolkwebdesign_automations set status = 'paused' where id = '...';  -- pauzeren
+```
+
+**Actieve dogfood-flow:** "Nieuwe lead opvolging" (`id 11111111-1111-1111-1111-111111111100`) — form-trigger → welkomstmail → wacht 2 dagen → geklikt op de mail? → ja: seintje naar owner (info@stolksupport.nl) / nee: reminder-mail → goal. Templates `welkom-nieuwe-lead` + `reminder-nieuwe-lead` (bron: `emails/automation-welkom.html` + `emails/automation-reminder.html`).
+
+**Openstaand (Fase 1 nog niet volledig live):**
+- [ ] Resend-domein `stolkwebdesign.nl` toevoegen + DNS verifiëren, daarna `resend_from_email` in `stolkwebdesign_automation_settings` updaten (staat nu op `onboarding@resend.dev`)
+- [ ] Resend-webhook registreren in het Resend-dashboard (`email.bounced` + `email.complained` → URL van `automation-resend-webhook`) + `RESEND_WEBHOOK_SECRET` als edge-secret zetten
+- [ ] Visuele inbox-check door Peter (welkomstmail + reminder, desktop + mobiele mailclient)
+
+Fase 2 (UI, Drawflow-editor, drag-and-drop flows) staat bewust buiten dit plan.
+
 ## Ondertekenen-module (09-06, skill `cms-sign`)
 Factuur/offerte/overeenkomst ter SES-ondertekening: admin Factuur/Offerte-toggle + "Verstuur ter ondertekening" + Ondertekenen-tab (statuslijst + overeenkomst-composer); publieke `/onderteken?token=…` (handtekenpad) → tabel `stolkwebdesign_sign_requests` + RPC `get_sign_request` + functions `create-signature-request` (JWT) / `sign-document` (public, server-side IP). Live geverifieerd. Bezorging = **kopieer-link** (Resend-mail uit; aanzetten = `RESEND_API_KEY` + afzenderdomein). Module-kaart /06 op `/modules`. **Bijvangst:** `stolkwebdesign_invoices`-tabel ontbrak nog in dit Supabase-project → alsnog aangemaakt (factuur-opslag faalde anders stil). Zie `docs/logs/2026-06-09/02-…`.
 
@@ -245,6 +286,7 @@ Volledige lead-funnel voor Meta/Google-advertenties. Plan + stappenplan in `mark
 - Herbruikbare module-skills (`cms-*`) in `~/.claude/skills/` zijn gedestilleerd uit deze site.
 
 ## Openstaand
+- [ ] **Automations Fase 1 afronden:** Resend-domein + DNS, Resend-webhook registreren + `RESEND_WEBHOOK_SECRET`, visuele inbox-check (zie Automations hierboven)
 - [ ] **GDPR-module activeren:** SQL-migratie `gdpr_init.sql` draaien + Vercel env (`ADMIN_EMAIL`, `SITE_URL`) + deploy
 - [ ] Custom domain stolkwebdesign.nl: DNS naar Vercel
 - [ ] Nieuwe Vercel deploy-hook aanmaken + `VERCEL_DEPLOY_HOOK_URL` env zetten
