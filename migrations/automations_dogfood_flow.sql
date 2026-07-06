@@ -1,4 +1,4 @@
--- Dogfood-flow: "Nieuwe lead opvolging" — templates + actieve automation.
+-- Dogfood-flow: "Nieuwe lead opvolging", templates + actieve automation.
 -- Volgt echte leads uit stolkwebdesign_client_projects (bridge-trigger uit automations_triggers.sql).
 
 insert into stolkwebdesign_automation_email_templates (id, naam, onderwerp, html) values

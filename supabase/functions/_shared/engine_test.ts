@@ -115,6 +115,16 @@ Deno.test("rewriteEmailHtml: links herschreven, pixel en unsub toegevoegd", () =
   assert(!out.includes('href="https://stolkwebdesign.nl/contact.html"'));
 });
 
+Deno.test("renderTemplate: unsubscribe_url pass-through laat de token intact voor rewriteEmailHtml", () => {
+  // Contract met de tick: de data-dict geeft unsubscribe_url als "{{unsubscribe_url}}" mee,
+  // zodat de token de render overleeft en rewriteEmailHtml 'm in de gestylede footer-anchor
+  // vervangt. Zonder pass-through collabeert de token naar "" (dode link + dubbele footer).
+  assertEquals(
+    renderTemplate("a {{unsubscribe_url}} b", { unsubscribe_url: "{{unsubscribe_url}}" }),
+    "a {{unsubscribe_url}} b",
+  );
+});
+
 Deno.test("rewriteEmailHtml: mailto blijft staan, unsub-footer toegevoegd als placeholder mist", () => {
   const html = `<html><body><a href="mailto:x@y.z">mail</a></body></html>`;
   const out = rewriteEmailHtml(html, { trackUrl: (t) => t, pixelUrl: "p", unsubUrl: "https://x.co/unsub" });

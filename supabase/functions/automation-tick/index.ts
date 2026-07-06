@@ -50,10 +50,14 @@ async function sendEmail(run: Run, node: string, cfg: Record<string, unknown>, c
   const unsubUrl = `${FUNCTIONS_BASE}/automation-unsub?${unsubQs.toString()}`;
 
   // Links pre-signen kan niet in een sync replace: verzamel eerst alle hrefs, bouw dan een map.
-  const targets = [...renderTemplate(tpl.html, data).matchAll(/href="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
+  // Pass-through voor {{unsubscribe_url}}: renderTemplate vervangt de token door zichzelf,
+  // zodat rewriteEmailHtml 'm daarna met de echte URL invult (anders collabeert hij naar ""
+  // en plakt rewriteEmailHtml een tweede kale footer onder de mail).
+  const rendered = renderTemplate(tpl.html, { ...data, unsubscribe_url: "{{unsubscribe_url}}" });
+  const targets = [...rendered.matchAll(/href="(https?:\/\/[^"]+)"/g)].map((m) => m[1]);
   const urlMap = new Map<string, string>();
   for (const t of targets) urlMap.set(t, await trackedUrl(run.id, node, "click", t));
-  const html = rewriteEmailHtml(renderTemplate(tpl.html, data), {
+  const html = rewriteEmailHtml(rendered, {
     trackUrl: (t) => urlMap.get(t) ?? t,
     pixelUrl: await trackedUrl(run.id, node, "open"),
     unsubUrl,
