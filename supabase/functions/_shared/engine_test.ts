@@ -77,6 +77,18 @@ Deno.test("validateGraph: multi-path convergentie waarbij ELKE cyclus een wait b
   assertEquals(validateGraph(g).errors, []);
 });
 
+Deno.test("validateGraph: wait vóór de cycle telt niet — cycle zelf zonder wait is error", () => {
+  // n1 → n2 (wait) → n3 → n4 → n3
+  // De wait bij n2 zit vóór de cycle; de cycle n3→n4→n3 zelf bevat geen wait en is dus een error.
+  const g: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "wait", config: { days: 1 }, next: "n3" },
+    n3: { type: "add_tag", config: { tag: "x" }, next: "n4" },
+    n4: { type: "add_tag", config: { tag: "y" }, next: "n3" },
+  } };
+  assert(validateGraph(g).errors.some((e) => e.includes("cycle")));
+});
+
 Deno.test("nextNodeId: condition volgt branch, rest volgt next", () => {
   assertEquals(nextNodeId(okGraph.nodes.n4, "yes"), "n5");
   assertEquals(nextNodeId(okGraph.nodes.n4, "no"), "n6");

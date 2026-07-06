@@ -44,30 +44,37 @@ export function validateGraph(graph: Graph): { errors: string[]; warnings: strin
       errors.push(`wait ${id} mist duur (days/hours/minutes/until)`);
   }
 
-  // cycles zonder wait: DFS over edges; een pad terug naar een voorouder zonder wait ertussen is een error.
-  // `done` is state-aware (per node, per wait-status-op-pad) omdat "veilig al bezocht" afhangt van of er
-  // onderweg een wait passeerde: bij multi-path convergentie kan dezelfde node zowel via een pad mét wait
-  // als via een pad zonder wait bereikt worden, en dat laatste pad moet apart onderzocht blijven op cycles.
-  const visiting = new Set<string>();
-  const done = new Set<string>(); // key: `${id}:${waitState}`
-  const reached = new Set<string>(); // key: id — voor de onbereikbaarheids-check hieronder
-  function dfs(id: string, waitsOnPath: number) {
-    if (!nodes[id]) return;
-    if (visiting.has(id)) { if (waitsOnPath === 0) errors.push(`cycle zonder wait via node ${id}`); return; }
-    const waitState = waitsOnPath > 0 ? 1 : 0;
-    const key = `${id}:${waitState}`;
-    if (done.has(key)) return;
+  // bereikbaarheid op de VOLLEDIGE graph (voor de onbereikbaarheids-warning hieronder)
+  const reached = new Set<string>();
+  function markReached(id: string) {
+    if (!nodes[id] || reached.has(id)) return;
     reached.add(id);
-    visiting.add(id);
     const n = nodes[id];
-    const w = waitsOnPath + (n.type === "wait" ? 1 : 0);
     for (const ref of n.type === "condition" ? [n.yes, n.no] : [n.next]) {
-      if (ref) dfs(ref, w);
+      if (ref) markReached(ref);
+    }
+  }
+  if (entry) markReached(graph.entry);
+
+  // cycles zonder wait: een cycle mist een wait precies dan als hij volledig binnen de
+  // wait-vrije subgraph ligt (alle wait-nodes en hun edges weggelaten). Dus: plain
+  // DFS-cycle-detectie op die subgraph; elke back-edge daar is een "cycle zonder wait".
+  // Een wait vóór de cycle (sinds entry) maskeert zo niets: het gaat om waits óp het cyclepad.
+  const visiting = new Set<string>();
+  const done = new Set<string>();
+  function dfsNoWait(id: string) {
+    const n = nodes[id];
+    if (!n || n.type === "wait") return; // wait-nodes horen niet bij de subgraph
+    if (visiting.has(id)) { errors.push(`cycle zonder wait via node ${id}`); return; }
+    if (done.has(id)) return;
+    visiting.add(id);
+    for (const ref of n.type === "condition" ? [n.yes, n.no] : [n.next]) {
+      if (ref) dfsNoWait(ref);
     }
     visiting.delete(id);
-    done.add(key);
+    done.add(id);
   }
-  if (entry) dfs(graph.entry, 0);
+  for (const id of reached) dfsNoWait(id);
 
   // onbereikbare nodes → warning
   for (const id of Object.keys(nodes)) {
