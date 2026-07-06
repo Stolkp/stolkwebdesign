@@ -10,12 +10,17 @@ export async function hmacHex(secret: string, msg: string): Promise<string> {
   return Array.from(new Uint8Array(sig)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-export async function verifyHmac(secret: string, msg: string, sig: string): Promise<boolean> {
-  const expected = await hmacHex(secret, msg);
-  if (expected.length !== sig.length) return false;
+// Constante-tijd stringvergelijking (XOR-accumulate) — voorkomt timing-lekken.
+export function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
   let res = 0;
-  for (let i = 0; i < expected.length; i++) {
-    res |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
+  for (let i = 0; i < a.length; i++) {
+    res |= a.charCodeAt(i) ^ b.charCodeAt(i);
   }
   return res === 0;
+}
+
+export async function verifyHmac(secret: string, msg: string, sig: string): Promise<boolean> {
+  const expected = await hmacHex(secret, msg);
+  return timingSafeEqual(expected, sig);
 }

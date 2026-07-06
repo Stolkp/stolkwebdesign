@@ -2,7 +2,7 @@
 // Claimt due runs atomair en voert graph-nodes uit tot een wait/goal/stop.
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import { type Graph, type GraphNode, nextNodeId, renderTemplate, rewriteEmailHtml, waitMs } from "../_shared/engine.ts";
-import { hmacHex } from "../_shared/sign.ts";
+import { hmacHex, timingSafeEqual } from "../_shared/sign.ts";
 
 const P = "stolkwebdesign_automation"; // tabel-prefix (verkoopversie: parametriseerbaar)
 const MAX_STEPS_PER_RUN = 20;
@@ -110,7 +110,7 @@ async function ensureTag(naam: string): Promise<string> {
   return nieuw.id;
 }
 
-// Voert één run uit tot wait/goal/einde-tick. Retourneert aantal verstuurde mails.
+// Voert één run uit tot wait/goal/einde-tick. Verstuurde mails tellen af van mailBudget.left.
 async function processRun(run: Run, settings: Record<string, unknown>, mailBudget: { left: number }): Promise<void> {
   const { data: automation } = await db.from("stolkwebdesign_automations")
     .select("graph, status").eq("id", run.automation_id).single();
@@ -135,6 +135,7 @@ async function processRun(run: Run, settings: Record<string, unknown>, mailBudge
           nodeId = nextNodeId(node); break;
         case "send_email": {
           if (mailBudget.left <= 0) { // rate-limit: volgende tick verder
+            await log(run.id, nodeId, "mail_budget_op", {});
             await db.from(`${P}_runs`).update({ status: "active", current_node: nodeId, wait_until: new Date().toISOString() }).eq("id", run.id);
             return;
           }
@@ -168,7 +169,7 @@ async function processRun(run: Run, settings: Record<string, unknown>, mailBudge
           nodeId = nextNodeId(node); break;
         }
         case "notify_owner": {
-          await fetch("https://api.resend.com/emails", {
+          const res = await fetch("https://api.resend.com/emails", {
             method: "POST",
             headers: { Authorization: `Bearer ${RESEND_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -178,7 +179,9 @@ async function processRun(run: Run, settings: Record<string, unknown>, mailBudge
               html: `<p>${renderTemplate(String(node.config?.message ?? "Actie in flow"), { naam: contact.naam ?? "", email: contact.email })}</p><p>Contact: ${contact.naam ?? ""} &lt;${contact.email}&gt;</p>`,
             }),
           });
-          await log(run.id, nodeId, "notify_owner", {});
+          const body = await res.json();
+          if (!res.ok) throw new Error(`Resend ${res.status}: ${JSON.stringify(body)}`);
+          await log(run.id, nodeId, "notify_owner", { resend_id: body.id ?? null });
           nodeId = nextNodeId(node); break;
         }
         case "set_deal_stage": {
@@ -209,13 +212,23 @@ async function processRun(run: Run, settings: Record<string, unknown>, mailBudge
   }
 }
 
-// datetime-triggers: automations waarvan het moment is aangebroken → contacten enrollen
+// datetime-triggers: automations waarvan het moment is aangebroken → contacten enrollen.
+// Idempotent bij overlappende ticks: claim-first via een conditionele update op
+// last_triggered_at (alleen de tick die de claim wint mag enrollen).
 async function fireDatetimeTriggers(): Promise<void> {
   const { data: due } = await db.from("stolkwebdesign_automations")
-    .select("id, trigger_config").eq("status", "active").eq("trigger_type", "datetime").is("last_triggered_at", null);
+    .select("id, trigger_config, graph, re_entry").eq("status", "active").eq("trigger_type", "datetime").is("last_triggered_at", null);
   for (const a of due ?? []) {
     const at = new Date(String(a.trigger_config?.at ?? ""));
     if (isNaN(at.getTime()) || at.getTime() > Date.now()) continue;
+
+    // Claim-first: alleen als deze update daadwerkelijk de nog-niet-getriggerde rij raakt, gaan we door.
+    const { data: claimed, error: claimErr } = await db.from("stolkwebdesign_automations")
+      .update({ last_triggered_at: new Date().toISOString() })
+      .eq("id", a.id).is("last_triggered_at", null).select("id");
+    if (claimErr || !claimed || claimed.length === 0) continue; // andere tick won de claim
+
+    const entry = (a.graph as Graph).entry;
     let q = db.from(`${P}_contacts`).select("id");
     if (a.trigger_config?.tag) {
       const { data: tag } = await db.from(`${P}_tags`).select("id").eq("naam", String(a.trigger_config.tag)).maybeSingle();
@@ -225,22 +238,24 @@ async function fireDatetimeTriggers(): Promise<void> {
       q = db.from(`${P}_contacts`).select("id").in("id", ids);
     }
     const { data: contacts } = await q;
-    for (const c of contacts ?? []) {
-      await db.from(`${P}_runs`).insert({
-        automation_id: a.id, contact_id: c.id,
-        current_node: "", // entry wordt hieronder gezet
-      }).select().maybeSingle();
+
+    // re_entry=false: contacten die al een run hebben in deze automation overslaan
+    const skip = new Set<string>();
+    if (!a.re_entry) {
+      const { data: existing } = await db.from(`${P}_runs`).select("contact_id").eq("automation_id", a.id);
+      for (const r of existing ?? []) skip.add(r.contact_id);
     }
-    // entry-node goedzetten in één update (insert hierboven kende de graph niet)
-    const { data: auto } = await db.from("stolkwebdesign_automations").select("graph").eq("id", a.id).single();
-    await db.from(`${P}_runs`).update({ current_node: (auto!.graph as Graph).entry }).eq("automation_id", a.id).eq("current_node", "");
-    await db.from("stolkwebdesign_automations").update({ last_triggered_at: new Date().toISOString() }).eq("id", a.id);
+    for (const c of contacts ?? []) {
+      if (skip.has(c.id)) continue;
+      const { error } = await db.from(`${P}_runs`).insert({ automation_id: a.id, contact_id: c.id, current_node: entry });
+      if (error && error.code !== "23505") console.error("datetime-enroll", a.id, c.id, error);
+    }
   }
 }
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") return new Response("method not allowed", { status: 405 });
-  if (req.headers.get("x-automation-secret") !== SECRET) return new Response("forbidden", { status: 403 });
+  if (!timingSafeEqual(req.headers.get("x-automation-secret") ?? "", SECRET)) return new Response("forbidden", { status: 403 });
 
   const { data: settings } = await db.from(`${P}_settings`).select("*").eq("id", 1).single();
   await fireDatetimeTriggers();
