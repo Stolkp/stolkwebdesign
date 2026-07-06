@@ -82,12 +82,16 @@ create trigger swd_automation_on_deal
 create or replace function stolkwebdesign_automation_bridge_lead()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  if coalesce(new.status,'') = 'nieuwe_lead' and new.contact_email is not null
-     and new.contact_email ~ '^[^\s@]+@[^\s@]+\.[^\s@]+$' then
-    insert into stolkwebdesign_automation_contacts (email, naam, bron)
-    values (lower(new.contact_email), new.name, 'contactformulier')
-    on conflict (lower(email)) do nothing;
-  end if;
+  begin
+    if coalesce(new.status,'') = 'nieuwe_lead' and new.contact_email is not null
+       and new.contact_email ~ '^[^\s@]+@[^\s@]+\.[^\s@]+$' then
+      insert into stolkwebdesign_automation_contacts (email, naam, bron)
+      values (lower(new.contact_email), new.name, 'contactformulier')
+      on conflict (lower(email)) do nothing;
+    end if;
+  exception when others then
+    raise warning 'automation bridge_lead faalde: %', sqlerrm;
+  end;
   return new;
 end $$;
 drop trigger if exists swd_automation_bridge_lead on stolkwebdesign_client_projects;
@@ -100,11 +104,15 @@ create trigger swd_automation_bridge_lead
 create or replace function stolkwebdesign_automation_bridge_chat()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
-  if new.email is not null and new.email ~ '^[^\s@]+@[^\s@]+\.[^\s@]+$' then
-    insert into stolkwebdesign_automation_contacts (email, naam, bron)
-    values (lower(new.email), new.name, 'chat')
-    on conflict (lower(email)) do nothing;
-  end if;
+  begin
+    if new.email is not null and new.email ~ '^[^\s@]+@[^\s@]+\.[^\s@]+$' then
+      insert into stolkwebdesign_automation_contacts (email, naam, bron)
+      values (lower(new.email), new.name, 'chat')
+      on conflict (lower(email)) do nothing;
+    end if;
+  exception when others then
+    raise warning 'automation bridge_chat faalde: %', sqlerrm;
+  end;
   return new;
 end $$;
 drop trigger if exists swd_automation_bridge_chat on stolkwebdesign_chat_leads;
