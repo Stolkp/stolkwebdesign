@@ -64,9 +64,14 @@ async function fetchMeta() {
   const cpc = parseFloat(d.cpc || (clicks ? spend / clicks : 0));
   const leads = Math.round(sumLeads(d.actions));
   const cost_per_lead = leads ? +(spend / leads).toFixed(2) : 0;
+  // Landingspagina-weergaven (échte bezoekers) — voor de "0 leads"-drempel, niet in de tabel opgeslagen.
+  const lpv = Math.round((d.actions || [])
+    .filter((a) => a.action_type === 'landing_page_view')
+    .reduce((t, a) => t + (parseFloat(a.value) || 0), 0));
 
   return {
     configured: true,
+    lpv,
     metrics: {
       platform: 'meta', period: '7d', date_from: since, date_to: until,
       spend, impressions, clicks, ctr: +ctr.toFixed(2), cpc: +cpc.toFixed(2),
@@ -79,6 +84,10 @@ async function fetchMeta() {
 function buildActions({ meta, googleConfigured, settings }) {
   const out = [];
   const maxCpl = Number(settings.max_cpl) || 125;
+  // Pas een "0 leads"-waarschuwing tonen bij betekenisvol verkeer; daaronder is 0 leads normaal.
+  const LEAD_WARN_MIN_SPEND = 20;   // vanaf dit bedrag zonder lead → waarschuwing
+  const LEAD_WARN_MIN_LPV = 20;     // of vanaf dit aantal landingspagina-weergaven
+  const lpv = Number(meta.lpv) || 0;
 
   if (!meta.configured) {
     out.push({ platform: 'meta', severity: 'critical', origin: 'auto',
@@ -89,10 +98,14 @@ function buildActions({ meta, googleConfigured, settings }) {
       title: 'Meta-API gaf een fout', detail: meta.error });
   } else if (meta.metrics) {
     const m = meta.metrics;
-    if (m.spend > 0 && m.leads === 0) {
+    if (m.leads === 0 && (m.spend >= LEAD_WARN_MIN_SPEND || lpv >= LEAD_WARN_MIN_LPV)) {
       out.push({ platform: 'meta', severity: 'warn', origin: 'auto',
         title: `Uitgaven (€${m.spend.toFixed(2)}) maar 0 leads`,
-        detail: 'Controleer of het Meta Pixel Lead-event vuurt op formulier/boeking (conversie-tracking). Zonder leads kun je niet optimaliseren.' });
+        detail: `Bij ${lpv} landingspagina-weergaven en €${m.spend.toFixed(2)} spend zou je al leads verwachten. Controleer of het Meta Pixel Lead-event vuurt (conversie-tracking) én of de landingspagina goed converteert.` });
+    } else if (m.leads === 0 && m.spend > 0) {
+      out.push({ platform: 'meta', severity: 'info', origin: 'auto',
+        title: `Nog te weinig verkeer voor leads (€${m.spend.toFixed(2)})`,
+        detail: `Pas ${lpv} landingspagina-weergaven. Reken op de eerste lead rond 20–40 bezoekers. Geef 't tijd of verhoog het budget.` });
     } else if (m.leads > 0 && m.cost_per_lead > maxCpl) {
       out.push({ platform: 'meta', severity: 'warn', origin: 'auto',
         title: `CPL €${m.cost_per_lead.toFixed(2)} boven drempel €${maxCpl}`,
