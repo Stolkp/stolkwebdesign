@@ -44,13 +44,20 @@ export function validateGraph(graph: Graph): { errors: string[]; warnings: strin
       errors.push(`wait ${id} mist duur (days/hours/minutes/until)`);
   }
 
-  // cycles zonder wait: DFS over edges; een pad terug naar een voorouder zonder wait ertussen is een error
+  // cycles zonder wait: DFS over edges; een pad terug naar een voorouder zonder wait ertussen is een error.
+  // `done` is state-aware (per node, per wait-status-op-pad) omdat "veilig al bezocht" afhangt van of er
+  // onderweg een wait passeerde: bij multi-path convergentie kan dezelfde node zowel via een pad mét wait
+  // als via een pad zonder wait bereikt worden, en dat laatste pad moet apart onderzocht blijven op cycles.
   const visiting = new Set<string>();
-  const done = new Set<string>();
+  const done = new Set<string>(); // key: `${id}:${waitState}`
+  const reached = new Set<string>(); // key: id — voor de onbereikbaarheids-check hieronder
   function dfs(id: string, waitsOnPath: number) {
     if (!nodes[id]) return;
     if (visiting.has(id)) { if (waitsOnPath === 0) errors.push(`cycle zonder wait via node ${id}`); return; }
-    if (done.has(id)) return;
+    const waitState = waitsOnPath > 0 ? 1 : 0;
+    const key = `${id}:${waitState}`;
+    if (done.has(key)) return;
+    reached.add(id);
     visiting.add(id);
     const n = nodes[id];
     const w = waitsOnPath + (n.type === "wait" ? 1 : 0);
@@ -58,13 +65,13 @@ export function validateGraph(graph: Graph): { errors: string[]; warnings: strin
       if (ref) dfs(ref, w);
     }
     visiting.delete(id);
-    done.add(id);
+    done.add(key);
   }
   if (entry) dfs(graph.entry, 0);
 
   // onbereikbare nodes → warning
   for (const id of Object.keys(nodes)) {
-    if (!done.has(id) && id !== graph.entry) warnings.push(`node ${id} is onbereikbaar vanaf entry`);
+    if (!reached.has(id) && id !== graph.entry) warnings.push(`node ${id} is onbereikbaar vanaf entry`);
   }
   return { errors, warnings };
 }

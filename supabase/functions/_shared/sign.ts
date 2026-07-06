@@ -11,5 +11,11 @@ export async function hmacHex(secret: string, msg: string): Promise<string> {
 }
 
 export async function verifyHmac(secret: string, msg: string, sig: string): Promise<boolean> {
-  return (await hmacHex(secret, msg)) === sig;
+  const expected = await hmacHex(secret, msg);
+  if (expected.length !== sig.length) return false;
+  let res = 0;
+  for (let i = 0; i < expected.length; i++) {
+    res |= expected.charCodeAt(i) ^ sig.charCodeAt(i);
+  }
+  return res === 0;
 }

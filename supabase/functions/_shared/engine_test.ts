@@ -50,6 +50,33 @@ Deno.test("validateGraph: cycle zonder wait is error, met wait niet", () => {
   assertEquals(validateGraph(met).errors, []);
 });
 
+Deno.test("validateGraph: cycle zonder wait bij multi-path convergentie wordt gedetecteerd", () => {
+  // n2 (condition) --yes--> n3 (wait) --next--> n5
+  //                --no--> n4 (add_tag) --next--> n5
+  // n5 --next--> n2
+  // Cycle n2->n4->n5->n2 heeft GEEN wait, ook al passeert n2->n3->n5->n2 wel een wait.
+  const g: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "x" }, yes: "n3", no: "n4" },
+    n3: { type: "wait", config: { days: 1 }, next: "n5" },
+    n4: { type: "add_tag", config: { tag: "x" }, next: "n5" },
+    n5: { type: "add_tag", config: { tag: "y" }, next: "n2" },
+  } };
+  assert(validateGraph(g).errors.some((e) => e.includes("cycle")));
+});
+
+Deno.test("validateGraph: multi-path convergentie waarbij ELKE cyclus een wait bevat is veilig", () => {
+  // Zelfde vorm, maar nu is n4 ook een wait: beide cycles (via n3 en via n4) bevatten een wait.
+  const g: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "x" }, yes: "n3", no: "n4" },
+    n3: { type: "wait", config: { days: 1 }, next: "n5" },
+    n4: { type: "wait", config: { days: 1 }, next: "n5" },
+    n5: { type: "add_tag", config: { tag: "y" }, next: "n2" },
+  } };
+  assertEquals(validateGraph(g).errors, []);
+});
+
 Deno.test("nextNodeId: condition volgt branch, rest volgt next", () => {
   assertEquals(nextNodeId(okGraph.nodes.n4, "yes"), "n5");
   assertEquals(nextNodeId(okGraph.nodes.n4, "no"), "n6");
