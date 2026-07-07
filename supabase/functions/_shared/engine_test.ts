@@ -39,6 +39,38 @@ Deno.test("validateGraph: verwijzing naar onbekende node is error", () => {
   assert(validateGraph(g).errors.some((e) => e.includes("spook")));
 });
 
+Deno.test("validateGraph: condition met dangling of_node is error, niet-mail of_node is warning", () => {
+  // of_node wijst naar een node die niet (meer) bestaat → error
+  const dangling: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "email_clicked", of_node: "weg" }, yes: "n3", no: "n3" },
+    n3: { type: "goal" } } };
+  assert(validateGraph(dangling).errors.some((e) => e === 'condition n2 verwijst naar onbekende mail-node "weg"'));
+
+  // of_node ontbreekt bij een email_opened/email_clicked-check → ook error
+  const ontbreekt: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "email_opened" }, yes: "n3", no: "n3" },
+    n3: { type: "goal" } } };
+  assert(validateGraph(ontbreekt).errors.some((e) => e.includes("onbekende mail-node")));
+
+  // of_node bestaat maar is geen send_email → warning, geen error
+  const nietMail: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "email_clicked", of_node: "n3" }, yes: "n3", no: "n3" },
+    n3: { type: "goal" } } };
+  const res = validateGraph(nietMail);
+  assertEquals(res.errors, []);
+  assert(res.warnings.some((w) => w.includes('of_node "n3"')));
+
+  // has_tag-condition zonder of_node blijft gewoon geldig (check geldt alleen voor mail-checks)
+  const hasTag: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "has_tag", tag: "x" }, yes: "n3", no: "n3" },
+    n3: { type: "goal" } } };
+  assertEquals(validateGraph(hasTag).errors, []);
+});
+
 Deno.test("validateGraph: cycle zonder wait is error, met wait niet", () => {
   const zonder: Graph = { entry: "n1", nodes: {
     n1: { type: "trigger_form", next: "n2" },

@@ -40,6 +40,19 @@
         if (ref && !nodes[ref]) errors.push("node " + id + ' verwijst naar onbekende node "' + ref + '"');
       });
       if (n.type === "condition" && (!n.yes || !n.no)) errors.push("condition " + id + " mist een yes- of no-tak");
+      if (n.type === "condition") {
+        // mail-checks verwijzen via config.of_node naar een send_email-node; na een
+        // node-delete mag die referentie niet stil blijven bungelen
+        var check = n.config && n.config.check;
+        if (check === "email_opened" || check === "email_clicked") {
+          var ofNode = n.config && n.config.of_node;
+          if (!ofNode || !nodes[String(ofNode)]) {
+            errors.push("condition " + id + ' verwijst naar onbekende mail-node "' + (ofNode === undefined || ofNode === null ? "" : ofNode) + '"');
+          } else if (nodes[String(ofNode)].type !== "send_email") {
+            warnings.push("condition " + id + ': of_node "' + ofNode + '" is geen send_email-node');
+          }
+        }
+      }
       if (n.type === "send_email" && !(n.config && n.config.template_id)) errors.push("send_email " + id + " mist template_id");
       if (
         n.type === "wait" &&

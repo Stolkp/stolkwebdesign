@@ -430,6 +430,55 @@ test("drawflowToGraph: onbekend node-type is error en node wordt overgeslagen", 
   assert.equal(graph.nodes.n2, undefined, "onbekende node hoort niet in de graph");
 });
 
+// Important: dangling of_node na node-delete moet een error geven (SYNC met engine_test.ts).
+test("validateGraph: condition met dangling of_node is error, niet-mail of_node is warning (engine_test.ts sync)", () => {
+  // of_node wijst naar een node die niet (meer) bestaat → error
+  const dangling = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "trigger_form", next: "n2" },
+      n2: { type: "condition", config: { check: "email_clicked", of_node: "weg" }, yes: "n3", no: "n3" },
+      n3: { type: "goal" },
+    },
+  };
+  assert.ok(SWDGraph.validateGraph(dangling).errors.some((e) => e === 'condition n2 verwijst naar onbekende mail-node "weg"'));
+
+  // of_node ontbreekt bij een email_opened/email_clicked-check → ook error
+  const ontbreekt = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "trigger_form", next: "n2" },
+      n2: { type: "condition", config: { check: "email_opened" }, yes: "n3", no: "n3" },
+      n3: { type: "goal" },
+    },
+  };
+  assert.ok(SWDGraph.validateGraph(ontbreekt).errors.some((e) => e.includes("onbekende mail-node")));
+
+  // of_node bestaat maar is geen send_email → warning, geen error
+  const nietMail = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "trigger_form", next: "n2" },
+      n2: { type: "condition", config: { check: "email_clicked", of_node: "n3" }, yes: "n3", no: "n3" },
+      n3: { type: "goal" },
+    },
+  };
+  const res = SWDGraph.validateGraph(nietMail);
+  assert.deepEqual(res.errors, []);
+  assert.ok(res.warnings.some((w) => w.includes('of_node "n3"')));
+
+  // has_tag-condition zonder of_node blijft gewoon geldig (check geldt alleen voor mail-checks)
+  const hasTag = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "trigger_form", next: "n2" },
+      n2: { type: "condition", config: { check: "has_tag", tag: "x" }, yes: "n3", no: "n3" },
+      n3: { type: "goal" },
+    },
+  };
+  assert.deepEqual(SWDGraph.validateGraph(hasTag).errors, []);
+});
+
 // Minor: nul triggers is een validateGraph-error.
 test("validateGraph: nul triggers is error", () => {
   const g = {

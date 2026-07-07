@@ -241,11 +241,9 @@
       (groups[def.group] = groups[def.group] || []).push(type);
     });
     const chip = type => `<div class="auto-chip" draggable="true" data-node-type="${esc(type)}">${esc(SWDGraph.NODE_DEFS[type].label)}</div>`;
+    // Geen Trigger-groep in het palet: de trigger bestaat altijd al als vaste node op het
+    // canvas (droppen zou toch geblokkeerd worden). Config via de topbar / node zelf.
     return `
-      <div class="auto-palette-group">
-        <div class="auto-palette-heading">Trigger</div>
-        ${(groups.trigger || []).map(chip).join('')}
-      </div>
       <div class="auto-palette-group">
         <div class="auto-palette-heading">Acties</div>
         ${(groups.actie || []).map(chip).join('')}
@@ -449,8 +447,9 @@
     const { error } = await db.from(T.automations).update(payload).eq('id', a.id);
     if (error) { note('Opslaan mislukt: ' + error.message, true); return; }
     a.naam = naam; a.graph = payload.graph; a.drawflow = payload.drawflow; a.updated_at = payload.updated_at;
-    const nameEl = document.querySelector('.auto-card-name[data-id="' + a.id + '"]');
-    if (nameEl) nameEl.textContent = naam;
+    // Overzicht refetcht bij tab-wissel (loadOverzicht); hier alleen de lokale lijst in sync houden
+    const inList = (state.automations || []).find(x => String(x.id) === String(a.id));
+    if (inList) { inList.naam = naam; inList.updated_at = payload.updated_at; }
     if (errors.length) {
       renderMessages(errors, v.warnings, null);
       note(`"${naam}" opgeslagen als concept — nog ${errors.length} fout${errors.length === 1 ? '' : 'en'} open`, true);
