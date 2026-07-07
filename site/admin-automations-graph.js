@@ -259,6 +259,32 @@
   };
 
   // ---------------------------------------------------------------------------
+  // Node-referenties in config (nu alleen condition.of_node, herkenbaar aan
+  // configFields met options === 'mailNodes') verwijzen naar een node-id en
+  // moeten bij elke id-hernummering mee-remappen. CANONIEKE VORM: in zowel de
+  // graph als de drawflow-export staat zo'n referentie als "n" + <drawflow-id>,
+  // dus de uiteindelijke graph-id-vorm die drawflowToGraph oplevert.
+  // ---------------------------------------------------------------------------
+  function remapConfigNodeRefs(type, config, mapId) {
+    var def = NODE_DEFS[type];
+    if (!def || !config) return config;
+    var refFields = def.configFields.filter(function (f) {
+      return f.options === "mailNodes";
+    });
+    if (!refFields.length) return config;
+    var out = config;
+    refFields.forEach(function (f) {
+      if (out[f.key] === undefined || out[f.key] === null || out[f.key] === "") return;
+      var mapped = mapId(out[f.key]);
+      if (mapped !== out[f.key]) {
+        if (out === config) out = Object.assign({}, config); // niet muteren
+        out[f.key] = mapped;
+      }
+    });
+    return out;
+  }
+
+  // ---------------------------------------------------------------------------
   // drawflowToGraph — Drawflow-export -> genormaliseerde graph
   // ---------------------------------------------------------------------------
   function drawflowToGraph(dfExport) {
@@ -274,18 +300,29 @@
       var graphId = "n" + dfNode.id;
       var type = dfNode.name;
       var def = NODE_DEFS[type];
+      if (!def) {
+        errors.push('onbekend node-type "' + type + '" (node ' + graphId + ")");
+        return; // node overslaan
+      }
       var config = (dfNode.data && dfNode.data.config) || {};
+      // spiegel-remap: accepteer een rauwe drawflow-id ("3") of de canonieke
+      // vorm ("n3") en normaliseer naar "n" + drawflow-id (zie comment boven)
+      config = remapConfigNodeRefs(type, config, function (v) {
+        var s = String(v);
+        return /^\d+$/.test(s) ? "n" + s : s;
+      });
 
       var node = { type: type, config: config };
       nodes[graphId] = node;
 
-      if (def && def.group === "trigger") entry = graphId;
+      if (def.group === "trigger") entry = graphId;
     });
 
     Object.keys(data).forEach(function (rawId) {
       var dfNode = data[rawId];
       var graphId = "n" + dfNode.id;
       var node = nodes[graphId];
+      if (!node) return; // onbekend type, hierboven al als error gemeld
       var type = dfNode.name;
       var def = NODE_DEFS[type];
       var expectedOutputs = def ? def.outputs : 1;
@@ -430,10 +467,17 @@
         outputs.output_1 = { connections: n.next && idMap[n.next] ? [{ node: String(idMap[n.next]), output: "input_1" }] : [] };
       }
 
+      // node-referenties in config (of_node) mee-hernummeren naar de canonieke
+      // vorm "n" + nieuwe-drawflow-id (zie comment bij remapConfigNodeRefs);
+      // remapConfigNodeRefs kloont bij wijziging, dus de input-graph muteert niet
+      var config = remapConfigNodeRefs(n.type, n.config || {}, function (ref) {
+        return idMap[ref] ? "n" + idMap[ref] : ref;
+      });
+
       data[String(dfId)] = {
         id: dfId,
         name: n.type,
-        data: { config: n.config || {} },
+        data: { config: config },
         class: n.type,
         html: "",
         typenode: false,

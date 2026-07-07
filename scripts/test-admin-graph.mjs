@@ -39,6 +39,8 @@ const dogfoodGraph = {
 
 // Canonieke serialisatie vanaf entry: structuur + types + configs, GEEN raw id's
 // (drawflow-round-trip hernummert id's, dus vergelijk op vorm i.p.v. identiteit).
+// Volgt óók config.of_node (node-referentie in config), zodat de round-trip-assert
+// de of_node-remap bij id-hernummering echt verifieert.
 function canonicalize(graph) {
   const seen = new Map();
   let counter = 0;
@@ -52,7 +54,12 @@ function canonicalize(graph) {
     const cid = assignCanonicalId(id);
     if (alreadyVisited) return cid;
     const n = graph.nodes[id];
-    const out = { cid, type: n.type, config: n.config ?? {} };
+    const config = { ...(n.config ?? {}) };
+    // of_node is een node-id: canonicaliseer de referentie mee
+    if (n.type === "condition" && config.of_node && graph.nodes[config.of_node]) {
+      config.of_node = assignCanonicalId(config.of_node);
+    }
+    const out = { cid, type: n.type, config };
     if (n.type === "condition") {
       out.yes = walk(n.yes);
       out.no = walk(n.no);
@@ -363,4 +370,88 @@ test("NODE_DEFS: configFields exact per brief", () => {
   ]);
   assert.deepEqual(defs.set_deal_stage.configFields, [{ key: "fase", label: "Fase", type: "text", required: true }]);
   assert.deepEqual(defs.goal.configFields, [{ key: "name", label: "Naam van het doel", type: "text" }]);
+});
+
+// ---------------------------------------------------------------------------
+// 6. Review-fixes (regressietests)
+// ---------------------------------------------------------------------------
+
+// Critical: config.of_node moet mee-hernummerd worden bij de round-trip.
+// Entry heet hier bewust "n5" en de condition verwijst met of_node naar "n1",
+// zodat de drawflow-hernummering (BFS: n5→1, n1→2, n9→3, ...) de letterlijke
+// id-strings verschuift en een niet-geremapte of_node zichtbaar breekt.
+test("round-trip: config.of_node wordt ge-remapt bij id-hernummering", () => {
+  const g = {
+    entry: "n5",
+    nodes: {
+      n5: { type: "trigger_form", next: "n1" },
+      n1: { type: "send_email", config: { template_id: "t1" }, next: "n9" },
+      n9: { type: "condition", config: { check: "email_clicked", of_node: "n1" }, yes: "n2", no: "n3" },
+      n2: { type: "goal", config: { name: "a" } },
+      n3: { type: "goal", config: { name: "b" } },
+    },
+  };
+  const dfExport = SWDGraph.graphToDrawflow(g);
+  const { graph: rt, errors } = SWDGraph.drawflowToGraph(dfExport);
+  assert.deepEqual(errors, []);
+  // structureel gelijk, inclusief de of_node-referentie (canonicalize volgt of_node)
+  assertCanonicallyEqual(rt, g);
+  // en expliciet: de of_node van de condition wijst naar de send_email-node in de nieuwe graph
+  const cond = Object.values(rt.nodes).find((n) => n.type === "condition");
+  const mailId = Object.keys(rt.nodes).find((id) => rt.nodes[id].type === "send_email");
+  assert.equal(cond.config.of_node, mailId);
+  // het origineel is niet gemuteerd
+  assert.equal(g.nodes.n9.config.of_node, "n1");
+});
+
+// Important: onbekend node-type mag niet stil geaccepteerd worden.
+test("drawflowToGraph: onbekend node-type is error en node wordt overgeslagen", () => {
+  const dfExport = {
+    drawflow: {
+      Home: {
+        data: {
+          1: baseDrawflowNode({
+            id: 1,
+            name: "trigger_form",
+            outputs: { output_1: { connections: [{ node: "2", output: "input_1" }] } },
+          }),
+          2: baseDrawflowNode({
+            id: 2,
+            name: "frobnicate",
+            inputs: { input_1: { connections: [{ node: "1", input: "output_1" }] } },
+            outputs: {},
+          }),
+        },
+      },
+    },
+  };
+  const { graph, errors } = SWDGraph.drawflowToGraph(dfExport);
+  assert.ok(errors.some((e) => e.includes('onbekend node-type "frobnicate"')));
+  assert.equal(graph.nodes.n2, undefined, "onbekende node hoort niet in de graph");
+});
+
+// Minor: nul triggers is een validateGraph-error.
+test("validateGraph: nul triggers is error", () => {
+  const g = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "add_tag", config: { tag: "x" }, next: "n2" },
+      n2: { type: "goal" },
+    },
+  };
+  const res = SWDGraph.validateGraph(g);
+  assert.ok(res.errors.some((e) => e.includes("precies één trigger vereist, gevonden: 0")));
+});
+
+// Minor: concrete layout-assert op de dogfood-graph.
+test("graphToDrawflow: BFS-layout — laag 0 index 0 op (40,60), laag 1 op x 360", () => {
+  const dfExport = SWDGraph.graphToDrawflow(dogfoodGraph);
+  const data = dfExport.drawflow.Home.data;
+  const nodes = Object.values(data);
+  const trigger = nodes.find((n) => n.name === "trigger_form");
+  assert.equal(trigger.pos_x, 40);
+  assert.equal(trigger.pos_y, 60);
+  // de eerste send_email zit één laag verder: x = 40 + 1*320 = 360
+  const firstMail = nodes.find((n) => n.name === "send_email");
+  assert.equal(firstMail.pos_x, 360);
 });
