@@ -204,7 +204,7 @@ Marketing-automation motor in ActiveCampaign-stijl: **alleen de motor, geen UI**
 
 **Instroom:** Postgres-triggers, geen polling. Bruggen op bestaande tabellen: `stolkwebdesign_client_projects` (status `nieuwe_lead`, kolommen `name`/`contact_email`) en `stolkwebdesign_chat_leads` (`name`/`email`) → upsert contact → enroll in de bijpassende flow. Brug-functies slikken fouten bewust (lead-intake mag nooit breken door een automation-bug; fouten komen alleen als Postgres warning naar boven).
 
-**Motor:** edge function `automation-tick` (v4), aangeroepen door pg_cron-job **`swd-automation-tick` elke 5 minuten** (via `pg_net`). Trekt werk via de atomaire claim-RPC `stolkwebdesign_automation_claim_runs` (`FOR UPDATE SKIP LOCKED`). Respecteert max-mails-per-tick uit `stolkwebdesign_automation_settings`, checkt `suppression` vóór elke send, zet een `List-Unsubscribe`-header en laat `{{unsubscribe_url}}` ongemoeid door de template-render (regressietest hierop in `engine_test.ts`).
+**Motor:** edge function `automation-tick` (v4), aangeroepen door pg_cron-job **`swd-automation-tick` elke 5 minuten** (via `pg_net`). Trekt werk via de atomaire claim-RPC `stolkwebdesign_automation_claim_runs` (`FOR UPDATE SKIP LOCKED`). Respecteert max-mails-per-tick uit `stolkwebdesign_automation_settings`, checkt `suppression` vóór elke send, zet een `List-Unsubscribe`-header en laat `{{unsubscribe_url}}` ongemoeid door de template-render (regressietest hierop in `engine_test.ts`). **Watchdog:** de claim-RPC herclaimt ook runs die vastlopen in status `processing` (tick gekilled mid-run), zodra ze ouder zijn dan 15 minuten.
 
 **Overige edge functions:**
 - `automation-track`: open-pixel + klik-redirect, HMAC-signed URL's, bot-filter
