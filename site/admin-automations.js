@@ -1306,7 +1306,7 @@
       const { data, error } = await db.functions.invoke('automation-testmail', { body: { template_id: t.id } });
       if (error) { note('Testmail versturen mislukt: ' + error.message, true); return; }
       if (data && data.error) { note('Testmail versturen mislukt: ' + data.error, true); return; }
-      note('Testmail verstuurd — check ' + (data && data.resend_id ? 'de inbox' : ''));
+      note('Testmail verstuurd, check de inbox');
     } catch (e) {
       note('Testmail versturen mislukt: ' + (e && e.message ? e.message : e), true);
     } finally {
