@@ -17,8 +17,11 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Stuurt een Telegram-seintje bij een nieuwe lead. Optioneel + fire-and-forget:
 // zonder token/chat, of bij een fout, gebeurt er niets en blijft de lead gewoon opgeslagen.
 async function notifyTelegram(text) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chat = process.env.TELEGRAM_CHAT_ID;
+  // Leads gaan naar de aparte Leads-bot (geld-signaal mag niet ondersneeuwen in de
+  // monitoring-ruis). Valt terug op de generieke bot zolang de LEADS-vars nog niet gezet zijn,
+  // zodat een lead-seintje nooit breekt.
+  const token = process.env.TELEGRAM_BOT_TOKEN_LEADS || process.env.TELEGRAM_BOT_TOKEN;
+  const chat = process.env.TELEGRAM_CHAT_ID_LEADS || process.env.TELEGRAM_CHAT_ID;
   if (!token || !chat) return;
   try {
     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
