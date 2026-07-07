@@ -11,6 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/drawflow/drawflow.min.css">
 <style>
 /*ovx*/ html, body { overflow-x: hidden; }
 *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -371,6 +372,12 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 .layout-loading, .layout-error, .layout-empty { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; padding:20px 0; }
 .layout-error { color:var(--red); }
 .sortable-ghost { opacity:.4; background:#1a1a1a; }
+
+/* ── AUTOMATIONS ── */
+.auto-subtab { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.1em; padding:8px 14px; border:2px solid var(--near-black); background:var(--white); cursor:pointer; }
+.auto-subtab.active { background:var(--near-black); color:var(--white); }
+.auto-panel { display:none; }
+.auto-panel.active { display:block; }
 </style>
 </head>
 <body>
@@ -427,6 +434,10 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
         <div class="sidebar-item font-mono" onclick="showSection('social', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="6" height="6"/><rect x="8.5" y="1.5" width="6" height="6"/><rect x="1.5" y="8.5" width="6" height="6"/><rect x="8.5" y="8.5" width="6" height="6"/></svg>
           Campagnes
+        </div>
+        <div class="sidebar-item font-mono" onclick="showSection('automations', this); if (window.SWDAutomations) window.SWDAutomations.init();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="3" cy="3" r="1.8"/><circle cx="13" cy="8" r="1.8"/><circle cx="3" cy="13" r="1.8"/><path d="M4.6 3.6L11.4 7.4M4.6 12.4L11.4 8.6"/></svg>
+          Automations
         </div>
         <div class="sidebar-item font-mono" onclick="showSection('blog', this); loadBlogList();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 1.5h7l3 3v10H3z"/><path d="M9.5 1.5v3.5H13"/><path d="M5.5 8h5M5.5 11h3"/></svg>
@@ -844,6 +855,26 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
         <div class="page-title font-display">Design System</div>
         <div class="page-sub font-mono">Je huisstijl in één overzicht — kleuren, fonts, logo. Download je merkbestanden.</div>
         <div id="brandkit-body"></div>
+      </div>
+
+      <!-- AUTOMATIONS -->
+      <div id="section-automations" class="page-section">
+        <div class="page-title font-display">Automations</div>
+        <div class="page-sub font-mono">Flows bouwen · contacten volgen · mails beheren</div>
+
+        <div class="auto-subnav no-print" style="display:flex;gap:8px;flex-wrap:wrap;margin:16px 0;">
+          <button class="auto-subtab active" data-panel="overzicht">Overzicht</button>
+          <button class="auto-subtab" data-panel="builder">Builder</button>
+          <button class="auto-subtab" data-panel="contacten">Contacten</button>
+          <button class="auto-subtab" data-panel="templates">Templates</button>
+          <button class="auto-subtab" data-panel="log">Log</button>
+        </div>
+
+        <div id="auto-panel-overzicht" class="auto-panel active"></div>
+        <div id="auto-panel-builder" class="auto-panel"></div>
+        <div id="auto-panel-contacten" class="auto-panel"></div>
+        <div id="auto-panel-templates" class="auto-panel"></div>
+        <div id="auto-panel-log" class="auto-panel"></div>
       </div>
 
       <!-- SETTINGS -->
@@ -2737,5 +2768,8 @@ initAuth();
 <script src="admin-klantprojecten.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script src="admin-layout.js"></script>
+<script src="vendor/drawflow/drawflow.min.js"></script>
+<script src="admin-automations-graph.js"></script>
+<script src="admin-automations.js"></script>
 </body>
 </html>
