@@ -22,9 +22,20 @@ Deno.serve(async (req) => {
   const { data: contact } = await db.from(`${P}_contacts`).select("id, email").eq("id", c).maybeSingle();
   if (!contact) return page("Al verwerkt", "Dit adres staat niet (meer) in onze lijst.");
 
-  await db.from(`${P}_suppression`).upsert({ email: contact.email.toLowerCase(), reden: "unsub" });
-  await db.from(`${P}_runs`).update({ status: "stopped", updated_at: new Date().toISOString() })
+  const { error: suppressError } = await db.from(`${P}_suppression`)
+    .upsert({ email: contact.email.toLowerCase(), reden: "unsub" });
+  if (suppressError) {
+    console.error("automation-unsub: suppression upsert failed", suppressError);
+    return page("Niet gelukt", "Het uitschrijven kon niet worden verwerkt. Probeer het later opnieuw of mail ons rechtstreeks, dan regelen wij het direct.");
+  }
+
+  const { error: runsError } = await db.from(`${P}_runs`)
+    .update({ status: "stopped", updated_at: new Date().toISOString() })
     .eq("contact_id", contact.id).in("status", ["active", "processing"]);
-  await db.from(`${P}_email_events`).insert({ contact_id: contact.id, type: "unsub" });
+  if (runsError) console.error("automation-unsub: runs update failed", runsError);
+
+  const { error: eventError } = await db.from(`${P}_email_events`).insert({ contact_id: contact.id, type: "unsub" });
+  if (eventError) console.error("automation-unsub: email_events insert failed", eventError);
+
   return page("Uitgeschreven", "Je ontvangt geen automatische mails meer van ons. Dit had je met één klik geregeld.");
 });
