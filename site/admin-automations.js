@@ -36,8 +36,14 @@
   const state = {
     automations: [], runs: [], currentAutomationId: null,
     builder: { editor: null, automation: null, selectedNodeId: null, triggerNodeId: null, templatesCache: null, templatesById: null },
+    contacts: {
+      list: [], tagsById: {}, allTags: [], contactTagsByContact: {}, suppressedEmails: new Set(),
+      filter: '', view: 'list', detailId: null,
+      automationsById: {}, runs: [], logByRun: {}, eventsByRun: {},
+    },
   };
   const B = state.builder; // korte alias, alleen builder-code hieronder
+  const Ct = state.contacts; // korte alias, alleen contacten-code hieronder
 
   const fmtDateTime = s => { if (!s) return '–'; try { return new Date(s).toLocaleString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (_) { return String(s); } };
 
@@ -681,6 +687,337 @@
     renderMobileList();
   }
 
+  // ── Contacten (Task 5) ──
+  const CHECK_LABELS = {
+    email_opened: 'Mail geopend?',
+    email_clicked: 'Op link geklikt?',
+    has_tag: 'Heeft tag?',
+    deal_stage: 'Deal-fase?',
+  };
+  const RUN_STATUS_META = {
+    active: ['Actief', '#37a04a'],
+    processing: ['Bezig', '#d9a400'],
+    done: ['Afgerond', '#37a04a'],
+    stopped: ['Gestopt', '#8a8a8a'],
+    error: ['Fout', '#c0392b'],
+  };
+  const EVENT_LABELS = { sent: 'Verstuurd', open: 'Geopend', click: 'Geklikt', unsub: 'Uitgeschreven', bounce: 'Bounced', complaint: 'Klacht' };
+  const RED_EVENT_TYPES = new Set(['bounce', 'complaint']);
+
+  function injectContactenStyles() {
+    if (document.getElementById('auto-ct-styles')) return;
+    const css = `
+    .ct-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+    .ct-search{flex:1;min-width:200px;max-width:360px}
+    .ct-list{display:flex;flex-direction:column;gap:10px}
+    .ct-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 16px;background:#111;border:1px solid #1a1a1a;cursor:pointer;transition:border-color .15s}
+    .ct-row:hover{border-color:#333}
+    .ct-row-main{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .ct-row-name{font-family:'Archivo Black',sans-serif;font-size:14px;text-transform:uppercase;letter-spacing:-.01em;word-break:break-word}
+    .ct-row-email{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);word-break:break-all}
+    .ct-row-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap;flex-shrink:0}
+    .ct-tags{display:flex;gap:6px;flex-wrap:wrap;max-width:260px}
+    .ct-tag-chip{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border:1px solid #333;color:var(--muted);white-space:nowrap}
+    .ct-bron{font-family:'JetBrains Mono',monospace;font-size:10px;color:#666;white-space:nowrap}
+    .ct-badge-suppressed{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;padding:3px 8px;border:1px solid #555;color:#999;background:#1a1a1a;white-space:nowrap}
+    @media (max-width:560px){
+      .ct-row{flex-direction:column;align-items:flex-start}
+      .ct-row-meta{width:100%;justify-content:space-between}
+    }
+    .ct-detail-top{display:flex;align-items:center;gap:14px;margin-bottom:20px;flex-wrap:wrap}
+    .ct-detail-card{background:#111;border:1px solid #1a1a1a;padding:20px;margin-bottom:20px}
+    .ct-detail-name{font-family:'Archivo Black',sans-serif;font-size:20px;text-transform:uppercase;margin-bottom:6px;word-break:break-word;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .ct-detail-fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-top:14px}
+    .ct-field-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:3px}
+    .ct-field-val{font-family:'JetBrains Mono',monospace;font-size:12px;word-break:break-word}
+    .ct-tag-manage{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .ct-tag-chip-x{display:inline-flex;align-items:center;gap:6px}
+    .ct-tag-remove{cursor:pointer;color:#666;font-family:'JetBrains Mono',monospace;font-size:11px}
+    .ct-tag-remove:hover{color:var(--red)}
+    .ct-tag-add-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+    .ct-tag-add-row input{max-width:220px}
+    .ct-tag-hint{font-family:'JetBrains Mono',monospace;font-size:10px;color:#666;margin-top:8px}
+    .ct-run{background:#111;border:1px solid #1a1a1a;padding:16px;margin-bottom:14px}
+    .ct-run-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+    .ct-run-name{font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase}
+    .ct-run-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#666}
+    .ct-timeline{display:flex;flex-direction:column;gap:6px;border-top:1px solid #1a1a1a;padding-top:10px}
+    .ct-tl-item{display:flex;justify-content:space-between;gap:12px;font-family:'JetBrains Mono',monospace;font-size:11px;padding:4px 0}
+    .ct-tl-label{color:var(--muted)}
+    .ct-tl-label.ct-tl-error{color:#c0392b}
+    .ct-tl-time{color:#555;white-space:nowrap;flex-shrink:0}
+    @media (max-width:480px){
+      .ct-tl-item{flex-direction:column;gap:2px}
+      .ct-detail-fields{grid-template-columns:1fr}
+      .ct-run-top{flex-direction:column;align-items:flex-start}
+    }
+    `;
+    const s = document.createElement('style');
+    s.id = 'auto-ct-styles'; s.textContent = css;
+    document.head.appendChild(s);
+  }
+
+  function isSuppressed(email) { return Ct.suppressedEmails.has(String(email || '').toLowerCase()); }
+  function contactTagIds(contactId) { return Ct.contactTagsByContact[contactId] || []; }
+  function contactTagNames(contactId) { return contactTagIds(contactId).map(tid => Ct.tagsById[tid]).filter(Boolean); }
+
+  function contactRowHTML(c) {
+    const tags = contactTagNames(c.id);
+    const suppressed = isSuppressed(c.email);
+    return `<div class="ct-row" data-open="${esc(c.id)}">
+      <div class="ct-row-main">
+        <div class="ct-row-name">${esc(c.naam || c.email)}</div>
+        <div class="ct-row-email">${esc(c.email)}</div>
+      </div>
+      <div class="ct-row-meta">
+        ${tags.length ? `<div class="ct-tags">${tags.map(t => `<span class="ct-tag-chip">${esc(t)}</span>`).join('')}</div>` : ''}
+        ${c.bron ? `<span class="ct-bron">${esc(c.bron)}</span>` : ''}
+        ${suppressed ? '<span class="ct-badge-suppressed">Uitgeschreven</span>' : ''}
+        <span class="ct-bron">${fmtDateTime(c.created_at)}</span>
+      </div>
+    </div>`;
+  }
+
+  function filteredContacts() {
+    const q = (Ct.filter || '').trim().toLowerCase();
+    if (!q) return Ct.list;
+    return Ct.list.filter(c => (c.naam || '').toLowerCase().includes(q) || (c.email || '').toLowerCase().includes(q));
+  }
+
+  function renderContactRows() {
+    const el = document.getElementById('ct-list');
+    if (!el) return;
+    const list = filteredContacts();
+    el.innerHTML = list.length ? list.map(contactRowHTML).join('')
+      : `<div class="auto-empty">${Ct.list.length ? 'Geen contacten gevonden.' : 'Nog geen contacten.'}</div>`;
+  }
+
+  function renderContactenListView(panel) {
+    panel.innerHTML = `
+      <div class="ct-toolbar">
+        <input class="form-input ct-search" id="ct-search" placeholder="Zoek op naam of e-mail…" value="${esc(Ct.filter)}">
+        <button class="row-btn font-mono" id="ct-refresh-btn" type="button">↻ Vernieuwen</button>
+      </div>
+      <div class="ct-list" id="ct-list"></div>
+    `;
+    renderContactRows();
+  }
+
+  function logEntryLabel(entry) {
+    const r = entry.resultaat || {};
+    switch (entry.actie) {
+      case 'send_email': return { text: `Mail verstuurd${r.template ? ' — ' + r.template : ''}`, err: false };
+      case 'send_email_geblokkeerd': return { text: `Mail geblokkeerd (${r.reden || 'suppression'})`, err: true };
+      case 'wait': return { text: `Wacht tot ${fmtDateTime(r.tot)}`, err: false };
+      case 'condition': return { text: `Voorwaarde: ${CHECK_LABELS[r.check] || r.check || ''} → ${r.uitkomst ? 'ja' : 'nee'}`, err: false };
+      case 'add_tag': return { text: `Tag toegevoegd: ${r.tag || ''}`, err: false };
+      case 'remove_tag': return { text: `Tag verwijderd: ${r.tag || ''}`, err: false };
+      case 'notify_owner': return { text: 'Seintje naar eigenaar', err: false };
+      case 'set_deal_stage': return { text: `Deal-fase gewijzigd naar ${r.fase || ''}`, err: false };
+      case 'goal': return { text: `Doel bereikt${r.name ? ' — ' + r.name : ''}`, err: false };
+      case 'mail_budget_op': return { text: 'Mail-limiet bereikt, verder volgende cyclus', err: false };
+      case 'gestopt': return { text: `Gestopt${r.reden ? ' — ' + r.reden : ''}`, err: true };
+      case 'error': return { text: `Fout${(r.fout || r.reden) ? ' — ' + (r.fout || r.reden) : ''}`, err: true };
+      default: return { text: entry.actie, err: false };
+    }
+  }
+
+  function runTimelineHTML(run) {
+    const logs = (Ct.logByRun[run.id] || []).map(l => Object.assign({ kind: 'log' }, l));
+    const events = (Ct.eventsByRun[run.id] || []).map(e => Object.assign({ kind: 'event' }, e));
+    const merged = logs.concat(events).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    if (!merged.length) return '<div class="ct-tl-item"><span class="ct-tl-label">Nog geen stappen gelogd.</span></div>';
+    return merged.map(item => {
+      if (item.kind === 'log') {
+        const { text, err } = logEntryLabel(item);
+        return `<div class="ct-tl-item"><span class="ct-tl-label${err ? ' ct-tl-error' : ''}">${esc(text)}</span><span class="ct-tl-time">${fmtDateTime(item.created_at)}</span></div>`;
+      }
+      const label = EVENT_LABELS[item.type] || item.type;
+      const err = RED_EVENT_TYPES.has(item.type);
+      const urlPart = item.type === 'click' && item.url ? ' — ' + item.url : '';
+      return `<div class="ct-tl-item"><span class="ct-tl-label${err ? ' ct-tl-error' : ''}">${esc(label + urlPart)}</span><span class="ct-tl-time">${fmtDateTime(item.created_at)}</span></div>`;
+    }).join('');
+  }
+
+  function runCardHTML(run) {
+    const meta = RUN_STATUS_META[run.status] || [run.status, '#666'];
+    const naam = Ct.automationsById[run.automation_id] || run.automation_id;
+    return `<div class="ct-run">
+      <div class="ct-run-top">
+        <div class="ct-run-name">${esc(naam)}</div>
+        <span class="auto-badge" style="color:${meta[1]};border-color:${meta[1]}55;background:${meta[1]}1a;">${esc(meta[0])}</span>
+        <span class="ct-run-meta">Gestart ${fmtDateTime(run.created_at)}</span>
+      </div>
+      <div class="ct-timeline">${runTimelineHTML(run)}</div>
+    </div>`;
+  }
+
+  function contactTagsManageHTML(contact) {
+    const ids = contactTagIds(contact.id);
+    const chips = ids.map(tid => `<span class="ct-tag-chip-x"><span class="ct-tag-chip">${esc(Ct.tagsById[tid] || tid)}</span><span class="ct-tag-remove" data-remove-tag="${esc(tid)}" title="Tag verwijderen">✕</span></span>`).join('');
+    return `
+      <div class="ct-tag-manage">${chips || '<span class="ct-field-val" style="color:#555;">Nog geen tags</span>'}</div>
+      <div class="ct-tag-add-row">
+        <input class="form-input" id="ct-tag-input" list="ct-tag-datalist" placeholder="Tag toevoegen…">
+        <datalist id="ct-tag-datalist">${Ct.allTags.map(t => `<option value="${esc(t.naam)}">`).join('')}</datalist>
+        <button class="row-btn font-mono" id="ct-tag-add-btn" type="button">+ Tag</button>
+      </div>
+      <div class="ct-tag-hint">Een tag kan een flow starten (tag-trigger).</div>
+    `;
+  }
+
+  function renderContactDetailPanel(panel) {
+    panel = panel || document.getElementById('auto-panel-contacten');
+    if (!panel) return;
+    const contact = Ct.list.find(c => String(c.id) === String(Ct.detailId));
+    if (!contact) { Ct.view = 'list'; renderContactenListView(panel); return; }
+    const suppressed = isSuppressed(contact.email);
+    const velden = (contact.velden && typeof contact.velden === 'object') ? contact.velden : {};
+    const veldenHtml = Object.keys(velden).length
+      ? Object.entries(velden).map(([k, v]) => `<div><div class="ct-field-lbl">${esc(k)}</div><div class="ct-field-val">${esc(v)}</div></div>`).join('')
+      : '';
+    panel.innerHTML = `
+      <div class="ct-detail-top">
+        <button class="row-btn font-mono" id="ct-back-btn" type="button">← Terug naar lijst</button>
+      </div>
+      <div class="ct-detail-card">
+        <div class="ct-detail-name">${esc(contact.naam || contact.email)}${suppressed ? ' <span class="ct-badge-suppressed">Uitgeschreven</span>' : ''}</div>
+        <div class="ct-detail-fields">
+          <div><div class="ct-field-lbl">E-mail</div><div class="ct-field-val">${esc(contact.email)}</div></div>
+          <div><div class="ct-field-lbl">Bron</div><div class="ct-field-val">${esc(contact.bron || '–')}</div></div>
+          <div><div class="ct-field-lbl">Toestemming sinds</div><div class="ct-field-val">${fmtDateTime(contact.consent_at)}</div></div>
+          <div><div class="ct-field-lbl">Aangemaakt</div><div class="ct-field-val">${fmtDateTime(contact.created_at)}</div></div>
+          ${veldenHtml}
+        </div>
+        ${contactTagsManageHTML(contact)}
+      </div>
+      <div class="ct-timeline-wrap">
+        ${Ct.runs.length ? Ct.runs.map(runCardHTML).join('') : '<div class="auto-empty">Nog niet in een flow ingestroomd.</div>'}
+      </div>
+    `;
+  }
+
+  function renderContactenPanel(panel) {
+    panel = panel || document.getElementById('auto-panel-contacten');
+    if (!panel) return;
+    if (Ct.view === 'detail' && Ct.detailId) return renderContactDetailPanel(panel);
+    renderContactenListView(panel);
+  }
+
+  async function loadContacten() {
+    injectContactenStyles();
+    const panel = document.getElementById('auto-panel-contacten');
+    if (!panel) return;
+    wireContactenPanelOnce(panel);
+    if (typeof db === 'undefined' || !db) return;
+    Ct.view = 'list';
+    Ct.detailId = null;
+    panel.innerHTML = '<div class="auto-empty">Laden…</div>';
+    const [contactsRes, ctagRes, tagsRes, suppRes] = await Promise.all([
+      db.from(T.contacts).select('id,email,naam,bron,velden,consent_at,created_at').order('created_at', { ascending: false }),
+      db.from(T.contactTags).select('contact_id,tag_id'),
+      db.from(T.tags).select('id,naam').order('naam'),
+      db.from(T.suppression).select('email'),
+    ]);
+    if (contactsRes.error) {
+      note('Laden mislukt: ' + contactsRes.error.message, true);
+      panel.innerHTML = '<div class="auto-empty">Laden mislukt.</div>';
+      return;
+    }
+    Ct.list = contactsRes.data || [];
+    Ct.allTags = tagsRes.error ? [] : (tagsRes.data || []);
+    Ct.tagsById = {};
+    Ct.allTags.forEach(t => { Ct.tagsById[t.id] = t.naam; });
+    Ct.contactTagsByContact = {};
+    (ctagRes.error ? [] : (ctagRes.data || [])).forEach(row => {
+      (Ct.contactTagsByContact[row.contact_id] = Ct.contactTagsByContact[row.contact_id] || []).push(row.tag_id);
+    });
+    Ct.suppressedEmails = new Set((suppRes.error ? [] : (suppRes.data || [])).map(r => String(r.email).toLowerCase()));
+    renderContactenPanel(panel);
+  }
+
+  async function openContactDetail(id) {
+    Ct.view = 'detail';
+    Ct.detailId = id;
+    const panel = document.getElementById('auto-panel-contacten');
+    if (!panel) return;
+    panel.innerHTML = '<div class="auto-empty">Laden…</div>';
+    const [runsRes, autoRes] = await Promise.all([
+      db.from(T.runs).select('id,automation_id,status,wait_until,created_at').eq('contact_id', id).order('created_at', { ascending: false }),
+      db.from(T.automations).select('id,naam'),
+    ]);
+    Ct.runs = runsRes.error ? [] : (runsRes.data || []);
+    Ct.automationsById = {};
+    (autoRes.error ? [] : (autoRes.data || [])).forEach(a => { Ct.automationsById[a.id] = a.naam; });
+    const runIds = Ct.runs.map(r => r.id);
+    Ct.logByRun = {}; Ct.eventsByRun = {};
+    if (runIds.length) {
+      const [logRes, evRes] = await Promise.all([
+        db.from(T.runLog).select('id,run_id,node,actie,resultaat,created_at').in('run_id', runIds).order('created_at', { ascending: true }),
+        db.from(T.events).select('id,run_id,node,type,url,created_at').in('run_id', runIds).order('created_at', { ascending: true }),
+      ]);
+      (logRes.error ? [] : (logRes.data || [])).forEach(l => { (Ct.logByRun[l.run_id] = Ct.logByRun[l.run_id] || []).push(l); });
+      (evRes.error ? [] : (evRes.data || [])).forEach(e => { (Ct.eventsByRun[e.run_id] = Ct.eventsByRun[e.run_id] || []).push(e); });
+    }
+    renderContactDetailPanel(panel);
+  }
+
+  async function addTagToContact(contactId, naam) {
+    naam = (naam || '').trim();
+    if (!contactId || !naam) return;
+    let tag = Ct.allTags.find(t => t.naam.toLowerCase() === naam.toLowerCase());
+    if (!tag) {
+      const { data, error } = await db.from(T.tags).insert({ naam }).select().single();
+      if (error) { note('Tag aanmaken mislukt: ' + error.message, true); return; }
+      tag = data;
+      Ct.allTags.push(tag);
+      Ct.tagsById[tag.id] = tag.naam;
+    }
+    const { error: linkErr } = await db.from(T.contactTags).upsert({ contact_id: contactId, tag_id: tag.id });
+    if (linkErr) { note('Tag koppelen mislukt: ' + linkErr.message, true); return; }
+    const ids = Ct.contactTagsByContact[contactId] || (Ct.contactTagsByContact[contactId] = []);
+    if (!ids.includes(tag.id)) ids.push(tag.id);
+    note(`Tag "${tag.naam}" toegevoegd`);
+    renderContactDetailPanel();
+  }
+
+  async function removeTagFromContact(contactId, tagId) {
+    if (!contactId || !tagId) return;
+    const { error } = await db.from(T.contactTags).delete().eq('contact_id', contactId).eq('tag_id', tagId);
+    if (error) { note('Tag verwijderen mislukt: ' + error.message, true); return; }
+    Ct.contactTagsByContact[contactId] = (Ct.contactTagsByContact[contactId] || []).filter(id => id !== tagId);
+    note('Tag verwijderd');
+    renderContactDetailPanel();
+  }
+
+  function onAddTagClick() {
+    const input = document.getElementById('ct-tag-input');
+    if (!input) return;
+    const val = input.value;
+    input.value = '';
+    addTagToContact(Ct.detailId, val);
+  }
+
+  function wireContactenPanelOnce(panel) {
+    if (panel.__autoContactenWired) return;
+    panel.__autoContactenWired = true;
+    panel.addEventListener('input', e => {
+      if (e.target.id === 'ct-search') { Ct.filter = e.target.value; renderContactRows(); }
+    });
+    panel.addEventListener('keydown', e => {
+      if (e.target.id === 'ct-tag-input' && e.key === 'Enter') { e.preventDefault(); onAddTagClick(); }
+    });
+    panel.addEventListener('click', e => {
+      if (e.target.id === 'ct-refresh-btn') return loadContacten();
+      if (e.target.id === 'ct-back-btn') { Ct.view = 'list'; return renderContactenPanel(panel); }
+      if (e.target.id === 'ct-tag-add-btn') return onAddTagClick();
+      const rm = e.target.closest('[data-remove-tag]');
+      if (rm) return removeTagFromContact(Ct.detailId, rm.getAttribute('data-remove-tag'));
+      const row = e.target.closest('[data-open]');
+      if (row) return openContactDetail(row.getAttribute('data-open'));
+    });
+  }
+
   function wireOverzicht() {
     const sec = document.getElementById('section-automations');
     if (!sec || sec.__autoOverzichtWired) return;
@@ -713,5 +1050,5 @@
     showPanel('overzicht');
   }
 
-  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, loadBuilder, state };
+  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, loadBuilder, loadContacten, state };
 })();
