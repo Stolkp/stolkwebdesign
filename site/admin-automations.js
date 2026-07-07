@@ -42,10 +42,12 @@
       automationsById: {}, runs: [], logByRun: {}, eventsByRun: {}, contactEvents: [],
     },
     templates: { list: [], view: 'list', editing: null, previewMode: 'desktop' },
+    log: { entries: [], automations: [], filterAutomation: '', onlyErrors: false, search: '', expandedId: null },
   };
   const B = state.builder; // korte alias, alleen builder-code hieronder
   const Ct = state.contacts; // korte alias, alleen contacten-code hieronder
   const Tpl = state.templates; // korte alias, alleen templates-code hieronder
+  const Lg = state.log; // korte alias, alleen log-code hieronder
 
   const fmtDateTime = s => { if (!s) return '–'; try { return new Date(s).toLocaleString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (_) { return String(s); } };
 
@@ -1353,6 +1355,184 @@
     });
   }
 
+  // ── Log (Task 7) ──
+  function injectLogStyles() {
+    if (document.getElementById('auto-log-styles')) return;
+    const css = `
+    .log-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    .log-filter-select{max-width:220px}
+    .log-checkbox-label{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);white-space:nowrap}
+    .log-search{flex:1;min-width:180px;max-width:260px}
+    .log-count{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:14px}
+    .log-count-error{color:#c0392b}
+    .log-table{display:flex;flex-direction:column;overflow-x:auto}
+    .log-header{display:grid;grid-template-columns:120px 140px 180px 120px 170px 1fr;gap:10px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:#666;border-bottom:1px solid #1a1a1a;min-width:820px}
+    .log-row{display:grid;grid-template-columns:120px 140px 180px 120px 170px 1fr;gap:10px;padding:10px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;border-bottom:1px solid #1a1a1a;cursor:pointer;min-width:820px}
+    .log-row:hover{background:#111}
+    .log-row-error{border-left:3px solid #c0392b;background:#1a0d0d}
+    .log-row-open{background:#111}
+    .log-cell{word-break:break-word;min-width:0}
+    .log-cell-error{color:#c0392b}
+    .log-detail{background:#0a0a0a;border-bottom:1px solid #1a1a1a;padding:14px 16px;min-width:820px}
+    .log-detail pre{font-family:'JetBrains Mono',monospace;font-size:11px;color:#ccc;white-space:pre-wrap;word-break:break-word;margin:0;max-height:340px;overflow-y:auto}
+    @media (max-width:560px){
+      .log-toolbar{flex-direction:column;align-items:stretch}
+      .log-filter-select,.log-search{max-width:none}
+      .log-header{display:none}
+      .log-row{grid-template-columns:1fr;min-width:0;gap:4px;padding:12px}
+      .log-cell{display:flex;justify-content:space-between;gap:10px;font-size:11px}
+      .log-cell::before{content:attr(data-label);color:#666;font-size:9px;text-transform:uppercase;letter-spacing:.06em;flex-shrink:0}
+      .log-detail{padding:12px;min-width:0}
+    }
+    `;
+    const s = document.createElement('style');
+    s.id = 'auto-log-styles'; s.textContent = css;
+    document.head.appendChild(s);
+  }
+
+  function logEntryIsError(entry) {
+    return logEntryLabel(entry).err || entry.run_status === 'error';
+  }
+
+  function filteredLogEntries() {
+    let list = Lg.entries;
+    if (Lg.filterAutomation) list = list.filter(e => String(e.automation_id) === String(Lg.filterAutomation));
+    if (Lg.onlyErrors) list = list.filter(logEntryIsError);
+    const q = (Lg.search || '').trim().toLowerCase();
+    if (q) list = list.filter(e => (e.contact_email || '').toLowerCase().includes(q));
+    return list;
+  }
+
+  function logRowHTML(e) {
+    const label = logEntryLabel(e);
+    const isErr = label.err || e.run_status === 'error';
+    const resultaat = e.resultaat || {};
+    const compact = JSON.stringify(resultaat);
+    const compactShort = compact.length > 80 ? compact.slice(0, 77) + '…' : compact;
+    const expanded = String(Lg.expandedId) === String(e.id);
+    const row = `<div class="log-row${isErr ? ' log-row-error' : ''}${expanded ? ' log-row-open' : ''}" data-log-row="${esc(e.id)}">
+      <div class="log-cell" data-label="Tijd">${fmtDateTime(e.created_at)}</div>
+      <div class="log-cell" data-label="Flow">${esc(e.automation_naam)}</div>
+      <div class="log-cell" data-label="Contact">${esc(e.contact_email)}</div>
+      <div class="log-cell" data-label="Node">${esc(e.node || '–')}</div>
+      <div class="log-cell${isErr ? ' log-cell-error' : ''}" data-label="Actie">${esc(label.text)}</div>
+      <div class="log-cell" data-label="Resultaat">${esc(compactShort)}</div>
+    </div>`;
+    const detail = expanded ? `<div class="log-detail"><pre>${esc(JSON.stringify(resultaat, null, 2))}</pre></div>` : '';
+    return row + detail;
+  }
+
+  function automationFilterOptionsHTML() {
+    const opts = Lg.automations.map(a => `<option value="${esc(a.id)}"${String(Lg.filterAutomation) === String(a.id) ? ' selected' : ''}>${esc(a.naam)}</option>`).join('');
+    return `<option value="">Alle flows</option>${opts}`;
+  }
+
+  function renderLogBody() {
+    const countEl = document.getElementById('log-count');
+    const tableEl = document.getElementById('log-table');
+    if (!countEl || !tableEl) return;
+    const totalErrors = Lg.entries.filter(logEntryIsError).length;
+    countEl.className = 'log-count' + (totalErrors ? ' log-count-error' : '');
+    countEl.textContent = `${totalErrors} fout${totalErrors === 1 ? '' : 'en'} in de laatste ${Lg.entries.length} regels`;
+    const list = filteredLogEntries();
+    tableEl.innerHTML = `
+      <div class="log-header">
+        <div class="log-cell">Tijd</div><div class="log-cell">Flow</div><div class="log-cell">Contact</div><div class="log-cell">Node</div><div class="log-cell">Actie</div><div class="log-cell">Resultaat</div>
+      </div>
+      ${list.length ? list.map(logRowHTML).join('') : `<div class="auto-empty">${Lg.entries.length ? 'Geen regels gevonden met deze filters.' : 'Nog geen log-regels.'}</div>`}
+    `;
+  }
+
+  function renderLog(panel) {
+    panel = panel || document.getElementById('auto-panel-log');
+    if (!panel) return;
+    panel.innerHTML = `
+      <div class="log-toolbar">
+        <select class="form-input log-filter-select" id="log-filter-automation">${automationFilterOptionsHTML()}</select>
+        <label class="log-checkbox-label"><input type="checkbox" id="log-filter-errors"${Lg.onlyErrors ? ' checked' : ''}> Alleen fouten</label>
+        <input class="form-input log-search" id="log-search" placeholder="Zoek op e-mail…" value="${esc(Lg.search)}">
+        <button class="row-btn font-mono" id="log-refresh-btn" type="button">↻ Vernieuwen</button>
+      </div>
+      <div class="log-count" id="log-count"></div>
+      <div class="log-table" id="log-table"></div>
+    `;
+    renderLogBody();
+  }
+
+  async function loadLog() {
+    injectLogStyles();
+    const panel = document.getElementById('auto-panel-log');
+    if (!panel) return;
+    wireLogPanelOnce(panel);
+    if (typeof db === 'undefined' || !db) return;
+    panel.innerHTML = '<div class="auto-empty">Laden…</div>';
+    const [logRes, autoRes] = await Promise.all([
+      db.from(T.runLog).select('id,run_id,node,actie,resultaat,created_at').order('created_at', { ascending: false }).limit(200),
+      db.from(T.automations).select('id,naam').order('naam'),
+    ]);
+    if (logRes.error) {
+      note('Laden mislukt: ' + logRes.error.message, true);
+      panel.innerHTML = '<div class="auto-empty">Laden mislukt.</div>';
+      return;
+    }
+    const partial = [];
+    if (autoRes.error) partial.push(autoRes.error.message);
+    Lg.automations = autoRes.error ? [] : (autoRes.data || []);
+    const automationsById = {};
+    Lg.automations.forEach(a => { automationsById[a.id] = a.naam; });
+
+    const rows = logRes.data || [];
+    const runIds = Array.from(new Set(rows.map(r => r.run_id).filter(id => id != null).map(String)));
+    let runsById = {};
+    if (runIds.length) {
+      const runsRes = await db.from(T.runs).select('id,automation_id,contact_id,status').in('id', runIds);
+      if (runsRes.error) partial.push(runsRes.error.message);
+      (runsRes.error ? [] : (runsRes.data || [])).forEach(r => { runsById[r.id] = r; });
+    }
+    const contactIds = Array.from(new Set(Object.values(runsById).map(r => r.contact_id).filter(id => id != null).map(String)));
+    let emailsById = {};
+    if (contactIds.length) {
+      const ctRes = await db.from(T.contacts).select('id,email').in('id', contactIds);
+      if (ctRes.error) partial.push(ctRes.error.message);
+      (ctRes.error ? [] : (ctRes.data || [])).forEach(c => { emailsById[c.id] = c.email; });
+    }
+    if (partial.length) note('Niet alles kon geladen worden: ' + partial[0], true);
+
+    Lg.entries = rows.map(r => {
+      const run = runsById[r.run_id] || null;
+      return {
+        id: r.id, run_id: r.run_id, node: r.node, actie: r.actie, resultaat: r.resultaat, created_at: r.created_at,
+        automation_id: run ? run.automation_id : null,
+        automation_naam: run ? (automationsById[run.automation_id] || run.automation_id) : '–',
+        contact_id: run ? run.contact_id : null,
+        contact_email: run && run.contact_id != null ? (emailsById[run.contact_id] || run.contact_id) : '–',
+        run_status: run ? run.status : null,
+      };
+    });
+    renderLog(panel);
+  }
+
+  function wireLogPanelOnce(panel) {
+    if (panel.__autoLogWired) return;
+    panel.__autoLogWired = true;
+    panel.addEventListener('change', e => {
+      if (e.target.id === 'log-filter-automation') { Lg.filterAutomation = e.target.value; renderLogBody(); }
+      if (e.target.id === 'log-filter-errors') { Lg.onlyErrors = e.target.checked; renderLogBody(); }
+    });
+    panel.addEventListener('input', e => {
+      if (e.target.id === 'log-search') { Lg.search = e.target.value; renderLogBody(); }
+    });
+    panel.addEventListener('click', e => {
+      if (e.target.id === 'log-refresh-btn') return loadLog();
+      const row = e.target.closest('[data-log-row]');
+      if (row) {
+        const id = row.getAttribute('data-log-row');
+        Lg.expandedId = (String(Lg.expandedId) === String(id)) ? null : id;
+        renderLogBody();
+      }
+    });
+  }
+
   function wireOverzicht() {
     const sec = document.getElementById('section-automations');
     if (!sec || sec.__autoOverzichtWired) return;
@@ -1385,5 +1565,5 @@
     showPanel('overzicht');
   }
 
-  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, loadBuilder, loadContacten, loadTemplates, state };
+  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, loadBuilder, loadContacten, loadTemplates, loadLog, state };
 })();
