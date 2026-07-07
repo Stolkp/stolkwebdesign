@@ -779,11 +779,18 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
             <button class="settings-btn font-mono" onclick="saveAdsSettings()">Drempels opslaan</button>
           </div>
 
-          <!-- Handmatige Google-invoer (tot de API-koppeling live is) -->
+          <!-- Handmatige invoer (tot de API-koppeling per kanaal live is) -->
           <div class="settings-card">
-            <div class="settings-card-title font-display">Google-cijfers handmatig</div>
-            <p class="settings-info">Tot de Google Ads-koppeling live is: voer hier wekelijks de cijfers in (uit Google Ads).</p>
-            <div class="form-row" style="margin-top:12px;">
+            <div class="settings-card-title font-display">Cijfers handmatig</div>
+            <p class="settings-info">Tot de API-koppeling live is: voer hier wekelijks de cijfers in (uit Google Ads of LinkedIn Campaign Manager).</p>
+            <div class="form-group" style="margin-top:12px;">
+              <label class="form-label font-mono">Kanaal</label>
+              <select class="form-input" id="ads-manual-platform">
+                <option value="google">Google Ads</option>
+                <option value="linkedin">LinkedIn</option>
+              </select>
+            </div>
+            <div class="form-row">
               <div class="form-group"><label class="form-label font-mono">Uitgaven (€)</label><input class="form-input" id="ads-g-spend" type="number"></div>
               <div class="form-group"><label class="form-label font-mono">Klikken</label><input class="form-input" id="ads-g-clicks" type="number"></div>
             </div>
@@ -791,7 +798,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
               <div class="form-group"><label class="form-label font-mono">Impressies</label><input class="form-input" id="ads-g-impr" type="number"></div>
               <div class="form-group"><label class="form-label font-mono">Leads</label><input class="form-input" id="ads-g-leads" type="number"></div>
             </div>
-            <button class="settings-btn font-mono" onclick="addManualMetric()">Google-cijfers opslaan</button>
+            <button class="settings-btn font-mono" onclick="addManualMetric()">Cijfers opslaan</button>
           </div>
         </div>
 
@@ -1515,7 +1522,7 @@ const ADS_SEV = {
   warn:     ['▲', '#d9a400'],
   critical: ['■', '#ea2525'],
 };
-const ADS_PLATFORM = { meta: 'Meta (FB/IG)', google: 'Google Ads' };
+const ADS_PLATFORM = { meta: 'Meta (FB/IG)', google: 'Google Ads', linkedin: 'LinkedIn' };
 let adsThresholds = { max_cpl: 125, max_cpa: 400, avg_project_value: 1500, target_leads_week: 5 };
 
 async function loadAdsDashboard() {
@@ -1567,7 +1574,7 @@ function renderAdsCards(rows) {
   const euro = (n) => '€' + (Number(n) || 0).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const num = (n) => (Number(n) || 0).toLocaleString('nl-NL');
 
-  const platforms = ['meta', 'google'];
+  const platforms = ['meta', 'google', 'linkedin'];
   cards.innerHTML = platforms.map(p => {
     const r = latest[p];
     const title = ADS_PLATFORM[p];
@@ -1641,8 +1648,9 @@ async function addManualMetric() {
   const impressions = parseInt(document.getElementById('ads-g-impr').value, 10) || 0;
   const leads = parseInt(document.getElementById('ads-g-leads').value, 10) || 0;
   if (!spend && !clicks && !leads) { toast('Vul minstens uitgaven of klikken in', true); return; }
+  const platform = document.getElementById('ads-manual-platform')?.value || 'google';
   const row = {
-    platform: 'google', period: 'manual', source: 'manual',
+    platform, period: 'manual', source: 'manual',
     spend, clicks, impressions, leads,
     ctr: impressions ? +((clicks / impressions) * 100).toFixed(2) : 0,
     cpc: clicks ? +(spend / clicks).toFixed(2) : 0,
@@ -1651,7 +1659,7 @@ async function addManualMetric() {
   const { error } = await db.from(ADS_TABLE).insert(row);
   if (error) { toast('Opslaan mislukt: ' + error.message, true); return; }
   ['ads-g-spend', 'ads-g-clicks', 'ads-g-impr', 'ads-g-leads'].forEach(id => { document.getElementById(id).value = ''; });
-  toast('Google-cijfers opgeslagen');
+  toast((ADS_PLATFORM[platform] || platform) + '-cijfers opgeslagen');
   loadAdsDashboard();
 }
 

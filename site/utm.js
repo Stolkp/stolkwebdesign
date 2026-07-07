@@ -1,9 +1,9 @@
 // Attributie-capture: leest advertentie-parameters uit de URL en bewaart ze, zodat het
 // contactformulier (en de landingspagina) kan meesturen uit welke advertentie een lead komt.
 // First-touch (eerste bezoek) blijft bewaard; last-touch wordt elke keer bijgewerkt.
-// Werkt voor Google Ads (gclid + utm_*) en Meta (fbclid + utm_*).
+// Werkt voor Google Ads (gclid + utm_*), Meta (fbclid + utm_*) en LinkedIn (li_fat_id + utm_*).
 (function () {
-  var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid'];
+  var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'fbclid', 'li_fat_id'];
   var FIRST_KEY = 'swd_attr_first';
   var LAST_KEY = 'swd_attr_last';
 
@@ -34,8 +34,8 @@
     try { raw = JSON.parse(localStorage.getItem(LAST_KEY) || localStorage.getItem(FIRST_KEY) || 'null'); }
     catch (e) { raw = null; }
     if (!raw) return { string: 'direct/onbekend', raw: null };
-    var src = raw.utm_source || (raw.gclid ? 'google' : (raw.fbclid ? 'meta' : 'onbekend'));
-    var med = raw.utm_medium || (raw.gclid ? 'cpc' : (raw.fbclid ? 'paid-social' : ''));
+    var src = raw.utm_source || (raw.gclid ? 'google' : (raw.fbclid ? 'meta' : (raw.li_fat_id ? 'linkedin' : 'onbekend')));
+    var med = raw.utm_medium || (raw.gclid ? 'cpc' : ((raw.fbclid || raw.li_fat_id) ? 'paid-social' : ''));
     var camp = raw.utm_campaign || '';
     var parts = [src, med, camp].filter(Boolean);
     return { string: parts.join(' / '), raw: raw };
