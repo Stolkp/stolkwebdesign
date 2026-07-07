@@ -39,7 +39,7 @@
     contacts: {
       list: [], tagsById: {}, allTags: [], contactTagsByContact: {}, suppressedEmails: new Set(),
       filter: '', view: 'list', detailId: null,
-      automationsById: {}, runs: [], logByRun: {}, eventsByRun: {},
+      automationsById: {}, runs: [], logByRun: {}, eventsByRun: {}, contactEvents: [],
     },
   };
   const B = state.builder; // korte alias, alleen builder-code hieronder
@@ -822,6 +822,13 @@
     }
   }
 
+  function eventItemHTML(ev) {
+    const label = EVENT_LABELS[ev.type] || ev.type;
+    const err = RED_EVENT_TYPES.has(ev.type);
+    const urlPart = ev.type === 'click' && ev.url ? ' — ' + ev.url : '';
+    return `<div class="ct-tl-item"><span class="ct-tl-label${err ? ' ct-tl-error' : ''}">${esc(label + urlPart)}</span><span class="ct-tl-time">${fmtDateTime(ev.created_at)}</span></div>`;
+  }
+
   function runTimelineHTML(run) {
     const logs = (Ct.logByRun[run.id] || []).map(l => Object.assign({ kind: 'log' }, l));
     const events = (Ct.eventsByRun[run.id] || []).map(e => Object.assign({ kind: 'event' }, e));
@@ -832,11 +839,19 @@
         const { text, err } = logEntryLabel(item);
         return `<div class="ct-tl-item"><span class="ct-tl-label${err ? ' ct-tl-error' : ''}">${esc(text)}</span><span class="ct-tl-time">${fmtDateTime(item.created_at)}</span></div>`;
       }
-      const label = EVENT_LABELS[item.type] || item.type;
-      const err = RED_EVENT_TYPES.has(item.type);
-      const urlPart = item.type === 'click' && item.url ? ' — ' + item.url : '';
-      return `<div class="ct-tl-item"><span class="ct-tl-label${err ? ' ct-tl-error' : ''}">${esc(label + urlPart)}</span><span class="ct-tl-time">${fmtDateTime(item.created_at)}</span></div>`;
+      return eventItemHTML(item);
     }).join('');
+  }
+
+  function contactEventsCardHTML() {
+    if (!Ct.contactEvents.length) return '';
+    return `<div class="ct-run">
+      <div class="ct-run-top">
+        <div class="ct-run-name">Contact-events</div>
+        <span class="ct-run-meta">Buiten een flow (o.a. uitschrijvingen en bounces)</span>
+      </div>
+      <div class="ct-timeline">${Ct.contactEvents.map(eventItemHTML).join('')}</div>
+    </div>`;
   }
 
   function runCardHTML(run) {
@@ -873,8 +888,9 @@
     if (!contact) { Ct.view = 'list'; renderContactenListView(panel); return; }
     const suppressed = isSuppressed(contact.email);
     const velden = (contact.velden && typeof contact.velden === 'object') ? contact.velden : {};
+    const veldWaarde = v => (v !== null && typeof v === 'object') ? JSON.stringify(v) : v;
     const veldenHtml = Object.keys(velden).length
-      ? Object.entries(velden).map(([k, v]) => `<div><div class="ct-field-lbl">${esc(k)}</div><div class="ct-field-val">${esc(v)}</div></div>`).join('')
+      ? Object.entries(velden).map(([k, v]) => `<div><div class="ct-field-lbl">${esc(k)}</div><div class="ct-field-val">${esc(veldWaarde(v))}</div></div>`).join('')
       : '';
     panel.innerHTML = `
       <div class="ct-detail-top">
@@ -892,7 +908,9 @@
         ${contactTagsManageHTML(contact)}
       </div>
       <div class="ct-timeline-wrap">
-        ${Ct.runs.length ? Ct.runs.map(runCardHTML).join('') : '<div class="auto-empty">Nog niet in een flow ingestroomd.</div>'}
+        ${Ct.runs.map(runCardHTML).join('')}
+        ${contactEventsCardHTML()}
+        ${(Ct.runs.length || Ct.contactEvents.length) ? '' : '<div class="auto-empty">Nog niet in een flow ingestroomd.</div>'}
       </div>
     `;
   }
@@ -924,6 +942,8 @@
       panel.innerHTML = '<div class="auto-empty">Laden mislukt.</div>';
       return;
     }
+    const partial = [ctagRes, tagsRes, suppRes].filter(r => r.error).map(r => r.error.message);
+    if (partial.length) note('Niet alles kon geladen worden: ' + partial[0], true);
     Ct.list = contactsRes.data || [];
     Ct.allTags = tagsRes.error ? [] : (tagsRes.data || []);
     Ct.tagsById = {};
@@ -942,23 +962,35 @@
     const panel = document.getElementById('auto-panel-contacten');
     if (!panel) return;
     panel.innerHTML = '<div class="auto-empty">Laden…</div>';
-    const [runsRes, autoRes] = await Promise.all([
+    const partial = []; // fouten in deel-queries verzamelen → één toast, doorgaan met wat er wél is
+    // Events op contact_id, niet run_id: unsub/bounce/complaint uit de webhook/unsub-function
+    // hebben run_id NULL en zouden bij een run_id-filter structureel uit de tijdlijn vallen.
+    const [runsRes, autoRes, evRes] = await Promise.all([
       db.from(T.runs).select('id,automation_id,status,wait_until,created_at').eq('contact_id', id).order('created_at', { ascending: false }),
       db.from(T.automations).select('id,naam'),
+      db.from(T.events).select('id,run_id,node,type,url,created_at').eq('contact_id', id).order('created_at', { ascending: true }),
     ]);
+    if (String(Ct.detailId) !== String(id)) return; // stale response: gebruiker klikte inmiddels verder
+    if (runsRes.error) partial.push(runsRes.error.message);
+    if (autoRes.error) partial.push(autoRes.error.message);
+    if (evRes.error) partial.push(evRes.error.message);
     Ct.runs = runsRes.error ? [] : (runsRes.data || []);
     Ct.automationsById = {};
     (autoRes.error ? [] : (autoRes.data || [])).forEach(a => { Ct.automationsById[a.id] = a.naam; });
-    const runIds = Ct.runs.map(r => r.id);
-    Ct.logByRun = {}; Ct.eventsByRun = {};
+    const runIds = Ct.runs.map(r => String(r.id));
+    const runIdSet = new Set(runIds);
+    Ct.logByRun = {}; Ct.eventsByRun = {}; Ct.contactEvents = [];
+    (evRes.error ? [] : (evRes.data || [])).forEach(e => {
+      if (e.run_id != null && runIdSet.has(String(e.run_id))) (Ct.eventsByRun[e.run_id] = Ct.eventsByRun[e.run_id] || []).push(e);
+      else Ct.contactEvents.push(e); // geen (bekende) run → contact-niveau blok in de tijdlijn
+    });
     if (runIds.length) {
-      const [logRes, evRes] = await Promise.all([
-        db.from(T.runLog).select('id,run_id,node,actie,resultaat,created_at').in('run_id', runIds).order('created_at', { ascending: true }),
-        db.from(T.events).select('id,run_id,node,type,url,created_at').in('run_id', runIds).order('created_at', { ascending: true }),
-      ]);
+      const logRes = await db.from(T.runLog).select('id,run_id,node,actie,resultaat,created_at').in('run_id', runIds).order('created_at', { ascending: true });
+      if (String(Ct.detailId) !== String(id)) return;
+      if (logRes.error) partial.push(logRes.error.message);
       (logRes.error ? [] : (logRes.data || [])).forEach(l => { (Ct.logByRun[l.run_id] = Ct.logByRun[l.run_id] || []).push(l); });
-      (evRes.error ? [] : (evRes.data || [])).forEach(e => { (Ct.eventsByRun[e.run_id] = Ct.eventsByRun[e.run_id] || []).push(e); });
     }
+    if (partial.length) note('Niet alles kon geladen worden: ' + partial[0], true);
     renderContactDetailPanel(panel);
   }
 
@@ -968,9 +1000,16 @@
     let tag = Ct.allTags.find(t => t.naam.toLowerCase() === naam.toLowerCase());
     if (!tag) {
       const { data, error } = await db.from(T.tags).insert({ naam }).select().single();
-      if (error) { note('Tag aanmaken mislukt: ' + error.message, true); return; }
-      tag = data;
-      Ct.allTags.push(tag);
+      if (error) {
+        // Race (bv. unique-violation doordat de motor of een andere tab 'm net aanmaakte):
+        // vers opvragen op naam en die id gebruiken; alleen toasten als ook dat faalt.
+        const { data: bestaand, error: selErr } = await db.from(T.tags).select('id,naam').eq('naam', naam).maybeSingle();
+        if (selErr || !bestaand) { note('Tag aanmaken mislukt: ' + error.message, true); return; }
+        tag = bestaand;
+      } else {
+        tag = data;
+      }
+      if (!Ct.allTags.some(t => String(t.id) === String(tag.id))) Ct.allTags.push(tag);
       Ct.tagsById[tag.id] = tag.naam;
     }
     const { error: linkErr } = await db.from(T.contactTags).upsert({ contact_id: contactId, tag_id: tag.id });
@@ -990,12 +1029,15 @@
     renderContactDetailPanel();
   }
 
-  function onAddTagClick() {
+  async function onAddTagClick() {
     const input = document.getElementById('ct-tag-input');
-    if (!input) return;
+    const btn = document.getElementById('ct-tag-add-btn');
+    if (!input || (btn && btn.disabled)) return; // dubbelklik-guard
     const val = input.value;
     input.value = '';
-    addTagToContact(Ct.detailId, val);
+    if (btn) btn.disabled = true;
+    try { await addTagToContact(Ct.detailId, val); }
+    finally { const b = document.getElementById('ct-tag-add-btn'); if (b) b.disabled = false; }
   }
 
   function wireContactenPanelOnce(panel) {
