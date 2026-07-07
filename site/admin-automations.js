@@ -370,7 +370,7 @@
       <div class="auto-config-title">${esc(def.label)}</div>
       <div class="auto-config-fields">${fieldsHtml || '<div class="auto-config-empty">Geen instellingen</div>'}</div>
       ${isTrigger
-        ? '<div class="auto-config-note">Trigger-node — niet verwijderbaar. Bewerk de trigger-instellingen hierboven de knoppenbalk.</div>'
+        ? '<div class="auto-config-note">Trigger-node, niet verwijderbaar. Bewerk de trigger-instellingen hierboven de knoppenbalk.</div>'
         : '<button class="row-btn danger" id="auto-config-delete" type="button">Verwijder node</button>'}
     `;
   }
@@ -471,7 +471,7 @@
     if (inList) { inList.naam = naam; inList.updated_at = payload.updated_at; }
     if (errors.length) {
       renderMessages(errors, v.warnings, null);
-      note(`"${naam}" opgeslagen als concept — nog ${errors.length} fout${errors.length === 1 ? '' : 'en'} open`, true);
+      note(`"${naam}" opgeslagen als concept, nog ${errors.length} fout${errors.length === 1 ? '' : 'en'} open`, true);
     } else {
       renderMessages([], v.warnings, 'Opgeslagen');
       note(`"${naam}" opgeslagen`);
@@ -541,7 +541,7 @@
       const type = e.dataTransfer.getData('text/plain');
       const def = SWDGraph.NODE_DEFS[type];
       if (!def) return;
-      if (def.group === 'trigger') { note('Er is al een trigger-node — een automation kan er maar één hebben', true); return; }
+      if (def.group === 'trigger') { note('Er is al een trigger-node, een automation kan er maar één hebben', true); return; }
       const rect = canvasEl.getBoundingClientRect();
       const zoom = (B.editor && B.editor.zoom) || 1;
       const x = (e.clientX - rect.left) / zoom;
@@ -819,7 +819,7 @@
   function logEntryLabel(entry) {
     const r = entry.resultaat || {};
     switch (entry.actie) {
-      case 'send_email': return { text: `Mail verstuurd${r.template ? ' — ' + r.template : ''}`, err: false };
+      case 'send_email': return { text: `Mail verstuurd${r.template ? ' · ' + r.template : ''}`, err: false };
       case 'send_email_geblokkeerd': return { text: `Mail geblokkeerd (${r.reden || 'suppression'})`, err: true };
       case 'wait': return { text: `Wacht tot ${fmtDateTime(r.tot)}`, err: false };
       case 'condition': return { text: `Voorwaarde: ${CHECK_LABELS[r.check] || r.check || ''} → ${r.uitkomst ? 'ja' : 'nee'}`, err: false };
@@ -827,10 +827,10 @@
       case 'remove_tag': return { text: `Tag verwijderd: ${r.tag || ''}`, err: false };
       case 'notify_owner': return { text: 'Seintje naar eigenaar', err: false };
       case 'set_deal_stage': return { text: `Deal-fase gewijzigd naar ${r.fase || ''}`, err: false };
-      case 'goal': return { text: `Doel bereikt${r.name ? ' — ' + r.name : ''}`, err: false };
+      case 'goal': return { text: `Doel bereikt${r.name ? ' · ' + r.name : ''}`, err: false };
       case 'mail_budget_op': return { text: 'Mail-limiet bereikt, verder volgende cyclus', err: false };
-      case 'gestopt': return { text: `Gestopt${r.reden ? ' — ' + r.reden : ''}`, err: true };
-      case 'error': return { text: `Fout${(r.fout || r.reden) ? ' — ' + (r.fout || r.reden) : ''}`, err: true };
+      case 'gestopt': return { text: `Gestopt${r.reden ? ' · ' + r.reden : ''}`, err: true };
+      case 'error': return { text: `Fout${(r.fout || r.reden) ? ' · ' + (r.fout || r.reden) : ''}`, err: true };
       default: return { text: entry.actie, err: false };
     }
   }
@@ -838,7 +838,7 @@
   function eventItemHTML(ev) {
     const label = EVENT_LABELS[ev.type] || ev.type;
     const err = RED_EVENT_TYPES.has(ev.type);
-    const urlPart = ev.type === 'click' && ev.url ? ' — ' + ev.url : '';
+    const urlPart = ev.type === 'click' && ev.url ? ' · ' + ev.url : '';
     return `<div class="ct-tl-item"><span class="ct-tl-label${err ? ' ct-tl-error' : ''}">${esc(label + urlPart)}</span><span class="ct-tl-time">${fmtDateTime(ev.created_at)}</span></div>`;
   }
 
