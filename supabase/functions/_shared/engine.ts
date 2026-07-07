@@ -40,9 +40,14 @@ export function validateGraph(graph: Graph): { errors: string[]; warnings: strin
     }
     if (n.type === "condition" && (!n.yes || !n.no)) errors.push(`condition ${id} mist een yes- of no-tak`);
     if (n.type === "condition") {
+      // check moet één van de 4 bekende voorwaarden zijn; ontbrekend/onbekend valideerde eerder stil
+      const check = n.config?.check;
+      const VALID_CHECKS = ["email_opened", "email_clicked", "has_tag", "deal_stage"];
+      if (!VALID_CHECKS.includes(String(check))) {
+        errors.push(`condition ${id} mist een geldige voorwaarde (check)`);
+      }
       // mail-checks verwijzen via config.of_node naar een send_email-node; na een
       // node-delete mag die referentie niet stil blijven bungelen
-      const check = n.config?.check;
       if (check === "email_opened" || check === "email_clicked") {
         const ofNode = n.config?.of_node;
         if (!ofNode || !nodes[String(ofNode)]) {

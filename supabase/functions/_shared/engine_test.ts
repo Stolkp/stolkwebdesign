@@ -71,6 +71,29 @@ Deno.test("validateGraph: condition met dangling of_node is error, niet-mail of_
   assertEquals(validateGraph(hasTag).errors, []);
 });
 
+Deno.test("validateGraph: condition zonder geldige check is error", () => {
+  // config.check ontbreekt
+  const missing: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: {}, yes: "n3", no: "n3" },
+    n3: { type: "goal" } } };
+  assert(validateGraph(missing).errors.some((e) => e === "condition n2 mist een geldige voorwaarde (check)"));
+
+  // config.check heeft een onbekende waarde
+  const unknown: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "unknown" }, yes: "n3", no: "n3" },
+    n3: { type: "goal" } } };
+  assert(validateGraph(unknown).errors.some((e) => e === "condition n2 mist een geldige voorwaarde (check)"));
+
+  // alle 4 geldige checks geven geen "mist een geldige voorwaarde"-error
+  const geldig: Graph = { entry: "n1", nodes: {
+    n1: { type: "trigger_form", next: "n2" },
+    n2: { type: "condition", config: { check: "has_tag", tag: "x" }, yes: "n3", no: "n3" },
+    n3: { type: "goal" } } };
+  assertEquals(validateGraph(geldig).errors, []);
+});
+
 Deno.test("validateGraph: cycle zonder wait is error, met wait niet", () => {
   const zonder: Graph = { entry: "n1", nodes: {
     n1: { type: "trigger_form", next: "n2" },
@@ -101,7 +124,7 @@ Deno.test("validateGraph: multi-path convergentie waarbij ELKE cyclus een wait b
   // Zelfde vorm, maar nu is n4 ook een wait: beide cycles (via n3 en via n4) bevatten een wait.
   const g: Graph = { entry: "n1", nodes: {
     n1: { type: "trigger_form", next: "n2" },
-    n2: { type: "condition", config: { check: "x" }, yes: "n3", no: "n4" },
+    n2: { type: "condition", config: { check: "has_tag", tag: "x" }, yes: "n3", no: "n4" },
     n3: { type: "wait", config: { days: 1 }, next: "n5" },
     n4: { type: "wait", config: { days: 1 }, next: "n5" },
     n5: { type: "add_tag", config: { tag: "y" }, next: "n2" },

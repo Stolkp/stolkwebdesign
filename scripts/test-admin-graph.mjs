@@ -161,7 +161,7 @@ test("validateGraph: multi-path convergentie waarbij ELKE cyclus een wait bevat 
     entry: "n1",
     nodes: {
       n1: { type: "trigger_form", next: "n2" },
-      n2: { type: "condition", config: { check: "x" }, yes: "n3", no: "n4" },
+      n2: { type: "condition", config: { check: "has_tag", tag: "x" }, yes: "n3", no: "n4" },
       n3: { type: "wait", config: { days: 1 }, next: "n5" },
       n4: { type: "wait", config: { days: 1 }, next: "n5" },
       n5: { type: "add_tag", config: { tag: "y" }, next: "n2" },
@@ -477,6 +477,42 @@ test("validateGraph: condition met dangling of_node is error, niet-mail of_node 
     },
   };
   assert.deepEqual(SWDGraph.validateGraph(hasTag).errors, []);
+});
+
+// Important: condition zonder geldige check valideert stil (final-review fix, SYNC met engine_test.ts).
+test("validateGraph: condition zonder geldige check is error (engine_test.ts sync)", () => {
+  // config.check ontbreekt
+  const missing = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "trigger_form", next: "n2" },
+      n2: { type: "condition", config: {}, yes: "n3", no: "n3" },
+      n3: { type: "goal" },
+    },
+  };
+  assert.ok(SWDGraph.validateGraph(missing).errors.some((e) => e === "condition n2 mist een geldige voorwaarde (check)"));
+
+  // config.check heeft een onbekende waarde
+  const unknown = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "trigger_form", next: "n2" },
+      n2: { type: "condition", config: { check: "unknown" }, yes: "n3", no: "n3" },
+      n3: { type: "goal" },
+    },
+  };
+  assert.ok(SWDGraph.validateGraph(unknown).errors.some((e) => e === "condition n2 mist een geldige voorwaarde (check)"));
+
+  // alle 4 geldige checks geven geen "mist een geldige voorwaarde"-error
+  const geldig = {
+    entry: "n1",
+    nodes: {
+      n1: { type: "trigger_form", next: "n2" },
+      n2: { type: "condition", config: { check: "has_tag", tag: "x" }, yes: "n3", no: "n3" },
+      n3: { type: "goal" },
+    },
+  };
+  assert.deepEqual(SWDGraph.validateGraph(geldig).errors, []);
 });
 
 // Minor: nul triggers is een validateGraph-error.

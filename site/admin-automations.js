@@ -161,6 +161,15 @@
       note('Bouw eerst de flow af in de Builder', true);
       return;
     }
+    if (next === 'active') {
+      const { errors } = window.SWDGraph.validateGraph(a.graph);
+      if (errors.length > 0) {
+        const first = errors[0];
+        const detail = first && first.length <= 60 ? ` (${first})` : '';
+        note(`Kan niet activeren: de flow heeft nog fouten. Open de Builder en los ze op.${detail}`, true);
+        return;
+      }
+    }
     const updated_at = new Date().toISOString();
     const { error } = await db.from(T.automations).update({ status: next, updated_at }).eq('id', id);
     if (error) { note('Bijwerken mislukt: ' + error.message, true); return; }
