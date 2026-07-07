@@ -230,7 +230,31 @@ update stolkwebdesign_automations set status = 'paused' where id = '...';  -- pa
 - [x] **Resend-domein `stolkwebdesign.nl` geverifieerd** (DKIM+SPF+MX groen, Connaxis-DNS; Resend-account `re_Jgqc…` = root `.env` RESEND_API_KEY = edge-secret). `resend_from_email` staat nu op `peter@stolkwebdesign.nl`. End-to-end getest: testlead → brug → tick → welkomstmail delivered vanaf peter@ (Resend `last_event: delivered`), daarna testdata opgeruimd. Domein-id `08fe9133-30fe-4be8-89be-0d589f2e9427`.
 - [x] **Resend-webhook geregistreerd** via de Resend-API (id `d0df5599-9337-4a9c-b44d-4f97fde69e51`, events `email.bounced` + `email.complained` → `automation-resend-webhook`). `RESEND_WEBHOOK_SECRET` (svix `whsec_…`) als edge-secret gezet via `supabase secrets set`. Geverifieerd: ongetekende POST → 401, correct-getekende svix-POST → 200 + suppression-write (testdata opgeruimd).
 
-Fase 2 (UI, Drawflow-editor, drag-and-drop flows) staat bewust buiten dit plan.
+## Automations Fase 2 (UI, 07-07)
+
+Volledige beheer-UI bovenop de Fase 1-motor: vijf subschermen onder de Automations-tab in `admin.html` (`.auto-subtab`-knoppen, panelen `#auto-panel-overzicht/builder/contacten/templates/log`).
+
+- **Overzicht:** kaartenlijst per automation (status, actieve contacten, conversie), activeren/pauzeren (activeren geblokkeerd zonder `graph.entry`), verwijderen (niet bij status actief), "Nieuwe automation"-modal.
+- **Builder:** Drawflow-canvas met palet (4 trigger- en 8 actie-nodetypes, 12 totaal in `NODE_DEFS`), config-paneel per node, Valideer-knop, opslaan geblokkeerd bij fouten tenzij status draft. Onder 900px alleen een read-only nodelijst (BFS-volgorde); canvas/palet/config verborgen.
+- **Contacten:** zoeken, tags toevoegen/verwijderen, per-contact tijdlijn (samengevoegd uit run_log en email_events, NL-labels, fouten/bounces rood gemarkeerd).
+- **Templates:** lijst, editor met live preview (desktop/390px-toggle), "Stuur testmail"-knop, verwijderen geblokkeerd zolang een flow de template gebruikt.
+- **Log:** laatste 200 run_log-regels, filter op flow en op alleen-fouten, zoek op e-mail, klik voor volledige JSON-uitklap. Onder 560px kaart-layout in plaats van tabel.
+
+**Bestanden:**
+- `site/admin-automations.js`: alle vijf schermen, state per scherm (`state.builder`/`state.contacts`/`state.templates`/`state.log`), hergebruikt de `T`-tabelnamen uit Fase 1.
+- `site/admin-automations-graph.js`: `SWDGraph` (drawflowToGraph/graphToDrawflow/validateGraph/NODE_DEFS). SYNC-afspraak: dit bestand is een gedragskopie van `supabase/functions/_shared/engine.ts` (validateGraph/nextNodeId). Wijzig je de validatielogica op de ene plek, wijzig hem ook op de andere; beide bestanden dragen bovenaan een SYNC-commentaar.
+- `site/vendor/drawflow/`: Drawflow 0.0.59 gevendored (geen npm/CDN-afhankelijkheid), geminificeerd zonder eigen changelog of docs.
+
+**Testmail-function:** `supabase/functions/automation-testmail/index.ts`, `verify_jwt: true` (aangeroepen via `db.functions.invoke` met een echte ingelogde sessie). Rendert een template met dummydata en verstuurt via Resend naar `owner_email` uit de settings-tabel, subject met een `[TEST]`-prefix. Een tijdelijke `automation-testmail-e2e`-functie diende om de verstuurlogica zonder login te testen (curl met gedeeld secret); die staat nu als inerte **410-stub** (MCP kan functies niet verwijderen, de slug blijft dus bestaan maar doet niets).
+
+**Node-testrunner:** `node scripts/test-admin-graph.mjs` test `SWDGraph` los van de browser (19 tests), naast `deno test supabase/functions/_shared/engine_test.ts` (16 tests) omdat dezelfde validatielogica nu op twee plekken bestaat (browser + Deno).
+
+**Bekende backlog-items (niet blokkerend, bewust later):**
+- Canvas-pan-offset bij drop: de auto-layout van `graphToDrawflow` plaatst nodes op `x = 40 + laag * 320`; bij een graph van 6 of meer nodes valt een deel buiten het zichtbare canvas-viewport zonder handmatig te pannen of te zoomen (Drawflow ondersteunt dat zelf).
+- Condition-zonder-check valideert stil: een condition-node zonder `config.check` (of met een check-waarde buiten de 4 bekende) geeft geen validatiefout; alleen de mail-checks (`email_opened`/`email_clicked`) hebben een `of_node`-controle.
+- Stale-guard `loadLog`: in tegenstelling tot Contacten's `openContactDetail` heeft `loadLog` geen stale-request-guard bij snel na elkaar wisselen van filters.
+
+**Verificatiemethode:** geen credentials beschikbaar in de agentomgeving, dus elk van de acht Fase 2-taken is geverifieerd met een lokale server (`python3 -m http.server` in `site/`) + Playwright + een in-place monkeypatch van `db.from` op fixture-data (nooit tegen de live database, nooit gecommit). De eind-check met een echte ingelogde sessie doet Peter zelf, zie `.superpowers/sdd/fase2-checklist-peter.md`.
 
 ## Ondertekenen-module (09-06, skill `cms-sign`)
 Factuur/offerte/overeenkomst ter SES-ondertekening: admin Factuur/Offerte-toggle + "Verstuur ter ondertekening" + Ondertekenen-tab (statuslijst + overeenkomst-composer); publieke `/onderteken?token=…` (handtekenpad) → tabel `stolkwebdesign_sign_requests` + RPC `get_sign_request` + functions `create-signature-request` (JWT) / `sign-document` (public, server-side IP). Live geverifieerd. Bezorging = **kopieer-link** (Resend-mail uit; aanzetten = `RESEND_API_KEY` + afzenderdomein). Module-kaart /06 op `/modules`. **Bijvangst:** `stolkwebdesign_invoices`-tabel ontbrak nog in dit Supabase-project → alsnog aangemaakt (factuur-opslag faalde anders stil). Zie `docs/logs/2026-06-09/02-…`.
