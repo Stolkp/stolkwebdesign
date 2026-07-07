@@ -33,7 +33,11 @@
     paused: ['Gepauzeerd', '#d9a400'],
   };
 
-  const state = { automations: [], runs: [], currentAutomationId: null };
+  const state = {
+    automations: [], runs: [], currentAutomationId: null,
+    builder: { editor: null, automation: null, selectedNodeId: null, triggerNodeId: null, templatesCache: null, templatesById: null },
+  };
+  const B = state.builder; // korte alias, alleen builder-code hieronder
 
   const fmtDateTime = s => { if (!s) return '–'; try { return new Date(s).toLocaleString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (_) { return String(s); } };
 
@@ -223,6 +227,461 @@
     showPanel('builder');
   }
 
+  // ── Builder (Task 4): Drawflow-canvas + config-paneel + valideren/opslaan ──
+
+  function injectBuilderStyles() {
+    // CSS staat in admin.html (builder-CSS hoort bij de statische shell, net als .auto-subtab hierboven).
+    // Deze functie bestaat als hook/consistentie met het injectOverzichtStyles-patroon, maar heeft niets te injecteren.
+  }
+
+  function paletteHTML() {
+    const groups = {};
+    Object.keys(SWDGraph.NODE_DEFS).forEach(type => {
+      const def = SWDGraph.NODE_DEFS[type];
+      (groups[def.group] = groups[def.group] || []).push(type);
+    });
+    const chip = type => `<div class="auto-chip" draggable="true" data-node-type="${esc(type)}">${esc(SWDGraph.NODE_DEFS[type].label)}</div>`;
+    return `
+      <div class="auto-palette-group">
+        <div class="auto-palette-heading">Trigger</div>
+        ${(groups.trigger || []).map(chip).join('')}
+      </div>
+      <div class="auto-palette-group">
+        <div class="auto-palette-heading">Acties</div>
+        ${(groups.actie || []).map(chip).join('')}
+      </div>`;
+  }
+
+  function nodeCardHTML(type, config) {
+    const def = SWDGraph.NODE_DEFS[type];
+    if (!def) return '<div class="auto-node-type">Onbekend</div>';
+    let summary = '';
+    try { summary = def.summary(config || {}, { templatesById: B.templatesById || {} }); } catch (_) { summary = ''; }
+    return `<div class="auto-node-type">${esc(def.label)}</div><div class="auto-node-summary">${esc(summary)}</div>`;
+  }
+
+  function setNodeCardHTML(id, type, config) {
+    const html = nodeCardHTML(type, config);
+    const el = document.querySelector('#node-' + id + ' .drawflow_content_node');
+    if (el) el.innerHTML = html;
+    const rec = B.editor && B.editor.drawflow && B.editor.drawflow.drawflow.Home.data[id];
+    if (rec) rec.html = html; // houdt de bewaarde drawflow-json in sync met wat er te zien is
+  }
+
+  function rehydrateAllNodeCards() {
+    if (!B.editor) return;
+    const data = (B.editor.export().drawflow.Home || {}).data || {};
+    Object.keys(data).forEach(id => {
+      const n = data[id];
+      setNodeCardHTML(id, n.name, (n.data && n.data.config) || {});
+    });
+  }
+
+  function findTriggerNodeIdInEditor() {
+    if (!B.editor) return null;
+    const data = (B.editor.export().drawflow.Home || {}).data || {};
+    let found = null;
+    Object.keys(data).forEach(id => {
+      const def = SWDGraph.NODE_DEFS[data[id].name];
+      if (def && def.group === 'trigger') found = id;
+    });
+    return found;
+  }
+
+  function addNodeToEditor(type, x, y, config) {
+    const def = SWDGraph.NODE_DEFS[type];
+    if (!def || !B.editor) return null;
+    const data = { config: config || {} };
+    const html = nodeCardHTML(type, data.config);
+    const cls = 'auto-node auto-node-' + def.group;
+    const id = String(B.editor.addNode(type, def.inputs, def.outputs, Math.round(x), Math.round(y), cls, data, html));
+    if (def.group === 'trigger') B.triggerNodeId = id;
+    renderMobileList();
+    return id;
+  }
+
+  function mailNodesOnCanvas() {
+    if (!B.editor) return [];
+    const data = (B.editor.export().drawflow.Home || {}).data || {};
+    const out = [];
+    Object.keys(data).forEach(id => {
+      const n = data[id];
+      if (n.name !== 'send_email') return;
+      const tid = n.data && n.data.config && n.data.config.template_id;
+      const t = tid && B.templatesById ? B.templatesById[tid] : null;
+      out.push({ id, label: t ? (t.naam || tid) : (tid ? tid : '(nog geen template)') });
+    });
+    return out;
+  }
+
+  function configFieldHTML(f, config, attr) {
+    attr = attr || 'data-config-key';
+    const val = (config && config[f.key] != null) ? config[f.key] : '';
+    const labelHtml = `<label class="form-label">${esc(f.label)}${f.required ? ' *' : ''}</label>`;
+    if (f.type === 'select') {
+      let opts = [];
+      if (f.options === 'templates') opts = (B.templatesCache || []).map(t => [t.id, t.naam]);
+      else if (f.options === 'mailNodes') opts = mailNodesOnCanvas().map(n => [n.id, n.label]);
+      else if (Array.isArray(f.options)) opts = f.options;
+      // config kan zowel de rauwe drawflow-id ("3") als de canonieke vorm ("n3") bevatten
+      // (afhankelijk van of de graph net geïmporteerd is via graphToDrawflow) — normaliseer voor de match.
+      const rawVal = /^n\d+$/.test(String(val)) ? String(val).slice(1) : String(val);
+      const optionsHtml = '<option value="">–</option>' + opts.map(([v, l]) =>
+        `<option value="${esc(v)}"${String(v) === rawVal ? ' selected' : ''}>${esc(l)}</option>`).join('');
+      return `<div class="form-group">${labelHtml}<select class="form-input" ${attr}="${esc(f.key)}">${optionsHtml}</select></div>`;
+    }
+    if (f.type === 'textarea') {
+      return `<div class="form-group">${labelHtml}<textarea class="form-input" ${attr}="${esc(f.key)}" rows="3">${esc(val)}</textarea></div>`;
+    }
+    const inputType = f.type === 'number' ? 'number' : (f.type === 'datetime' ? 'datetime-local' : 'text');
+    return `<div class="form-group">${labelHtml}<input class="form-input" type="${inputType}" ${attr}="${esc(f.key)}" value="${esc(val)}"></div>`;
+  }
+
+  function renderConfigPanel(nodeId) {
+    const panel = document.getElementById('auto-config');
+    if (!panel) return;
+    if (!nodeId) { panel.innerHTML = '<div class="auto-config-empty">Selecteer een node om te configureren</div>'; return; }
+    let node = null;
+    try { node = B.editor.getNodeFromId(nodeId); } catch (_) { node = null; }
+    if (!node) { panel.innerHTML = '<div class="auto-config-empty">Node niet gevonden</div>'; return; }
+    const def = SWDGraph.NODE_DEFS[node.name];
+    if (!def) { panel.innerHTML = '<div class="auto-config-empty">Onbekend nodetype</div>'; return; }
+    const config = (node.data && node.data.config) || {};
+    const isTrigger = def.group === 'trigger';
+    const fieldsHtml = (def.configFields || []).map(f => configFieldHTML(f, config)).join('');
+    panel.innerHTML = `
+      <div class="auto-config-title">${esc(def.label)}</div>
+      <div class="auto-config-fields">${fieldsHtml || '<div class="auto-config-empty">Geen instellingen</div>'}</div>
+      ${isTrigger
+        ? '<div class="auto-config-note">Trigger-node — niet verwijderbaar. Bewerk de trigger-instellingen hierboven de knoppenbalk.</div>'
+        : '<button class="row-btn danger" id="auto-config-delete" type="button">Verwijder node</button>'}
+    `;
+  }
+
+  function renderTriggerTopbarConfig() {
+    const el = document.getElementById('auto-b-trigger-config');
+    if (!el || !B.automation) return;
+    const a = B.automation;
+    const type = 'trigger_' + a.trigger_type;
+    const def = SWDGraph.NODE_DEFS[type];
+    const config = a.trigger_config || {};
+    const label = `<div class="auto-trigger-label">${esc(TRIGGER_LABELS[a.trigger_type] || a.trigger_type)} (trigger, vast na aanmaak)</div>`;
+    const fields = def ? (def.configFields || []).map(f => configFieldHTML(f, config, 'data-trigger-key')).join('') : '';
+    el.innerHTML = label + fields;
+  }
+
+  function bfsOrder(graph) {
+    const order = [];
+    const seen = new Set();
+    const queue = graph.entry ? [graph.entry] : [];
+    while (queue.length) {
+      const id = queue.shift();
+      if (!id || seen.has(id) || !graph.nodes[id]) continue;
+      seen.add(id); order.push(id);
+      const n = graph.nodes[id];
+      const refs = n.type === 'condition' ? [n.yes, n.no] : [n.next];
+      refs.forEach(r => { if (r) queue.push(r); });
+    }
+    Object.keys(graph.nodes).forEach(id => { if (!seen.has(id)) { seen.add(id); order.push(id); } });
+    return order;
+  }
+
+  function renderMobileList() {
+    const el = document.getElementById('auto-b-mobile-list');
+    if (!el || !B.editor) return;
+    const { graph } = SWDGraph.drawflowToGraph(B.editor.export());
+    const order = bfsOrder(graph);
+    el.innerHTML = order.length ? order.map(id => {
+      const n = graph.nodes[id];
+      const def = SWDGraph.NODE_DEFS[n.type];
+      let summary = '';
+      try { summary = def ? def.summary(n.config, { templatesById: B.templatesById || {} }) : ''; } catch (_) { summary = ''; }
+      return `<div class="auto-mobile-node"><div class="auto-mobile-node-label">${esc(def ? def.label : n.type)}</div><div class="auto-mobile-node-summary">${esc(summary)}</div></div>`;
+    }).join('') : '<div class="auto-empty">Leeg</div>';
+  }
+
+  function computeGraphFromEditor() {
+    return SWDGraph.drawflowToGraph(B.editor.export());
+  }
+
+  function renderMessages(errors, warnings, okMsg) {
+    const box = document.getElementById('auto-b-messages');
+    if (!box) return;
+    if (!errors.length && !warnings.length) {
+      box.innerHTML = okMsg ? `<div class="auto-msg auto-msg-ok">${esc(okMsg)}</div>` : '';
+      return;
+    }
+    const errHtml = errors.map(e => `<div class="auto-msg auto-msg-error">⚠ ${esc(e)}</div>`).join('');
+    const warnHtml = warnings.map(w => `<div class="auto-msg auto-msg-warn">• ${esc(w)}</div>`).join('');
+    box.innerHTML = errHtml + warnHtml;
+  }
+
+  function onValidateClick() {
+    const { graph, errors: convErrors } = computeGraphFromEditor();
+    const v = SWDGraph.validateGraph(graph);
+    const errors = convErrors.concat(v.errors);
+    renderMessages(errors, v.warnings, errors.length ? null : 'Flow is geldig');
+  }
+
+  async function onSaveClick() {
+    const a = B.automation;
+    if (!a) return;
+    const naamInput = document.getElementById('auto-b-naam');
+    const naam = naamInput ? naamInput.value.trim() : a.naam;
+    if (!naam) { note('Naam is verplicht', true); return; }
+    const dfExport = B.editor.export();
+    const { graph, errors: convErrors } = SWDGraph.drawflowToGraph(dfExport);
+    const v = SWDGraph.validateGraph(graph);
+    const errors = convErrors.concat(v.errors);
+    const isDraft = a.status === 'draft';
+    if (errors.length && !isDraft) {
+      renderMessages(errors, v.warnings, null);
+      note('Opslaan geblokkeerd: los eerst de fouten op (alleen concepten mogen halfaf bewaard worden)', true);
+      return;
+    }
+    const payload = {
+      naam,
+      trigger_config: a.trigger_config || {},
+      graph, // altijd best-effort: bij 0 errors de volledige geldige graph, bij draft-met-fouten best-effort
+      drawflow: dfExport,
+      updated_at: new Date().toISOString(),
+    };
+    const { error } = await db.from(T.automations).update(payload).eq('id', a.id);
+    if (error) { note('Opslaan mislukt: ' + error.message, true); return; }
+    a.naam = naam; a.graph = payload.graph; a.drawflow = payload.drawflow; a.updated_at = payload.updated_at;
+    const nameEl = document.querySelector('.auto-card-name[data-id="' + a.id + '"]');
+    if (nameEl) nameEl.textContent = naam;
+    if (errors.length) {
+      renderMessages(errors, v.warnings, null);
+      note(`"${naam}" opgeslagen als concept — nog ${errors.length} fout${errors.length === 1 ? '' : 'en'} open`, true);
+    } else {
+      renderMessages([], v.warnings, 'Opgeslagen');
+      note(`"${naam}" opgeslagen`);
+    }
+  }
+
+  function onDeleteNodeClick() {
+    if (!B.selectedNodeId || !B.editor) return;
+    B.editor.removeNodeId('node-' + B.selectedNodeId); // override hieronder blokkeert de trigger-node
+  }
+
+  function onConfigFieldInput(e) {
+    const cEl = e.target.closest('[data-config-key]');
+    if (cEl) {
+      if (!B.selectedNodeId) return;
+      let node = null;
+      try { node = B.editor.getNodeFromId(B.selectedNodeId); } catch (_) { node = null; }
+      if (!node) return;
+      const key = cEl.getAttribute('data-config-key');
+      let value = cEl.value;
+      if (cEl.tagName === 'INPUT' && cEl.type === 'number') value = value === '' ? undefined : Number(value);
+      const config = Object.assign({}, (node.data && node.data.config) || {});
+      if (value === undefined || value === '') delete config[key]; else config[key] = value;
+      B.editor.updateNodeDataFromId(B.selectedNodeId, { config });
+      setNodeCardHTML(B.selectedNodeId, node.name, config);
+      if (B.triggerNodeId != null && String(B.triggerNodeId) === String(B.selectedNodeId)) {
+        B.automation.trigger_config = config;
+        renderTriggerTopbarConfig();
+      }
+      renderMobileList();
+      return;
+    }
+    const tEl = e.target.closest('[data-trigger-key]');
+    if (tEl) {
+      if (!B.automation) return;
+      const key = tEl.getAttribute('data-trigger-key');
+      let value = tEl.value;
+      if (tEl.tagName === 'INPUT' && tEl.type === 'number') value = value === '' ? undefined : Number(value);
+      const config = Object.assign({}, B.automation.trigger_config || {});
+      if (value === undefined || value === '') delete config[key]; else config[key] = value;
+      B.automation.trigger_config = config;
+      if (B.triggerNodeId != null) {
+        B.editor.updateNodeDataFromId(B.triggerNodeId, { config });
+        const triggerType = 'trigger_' + B.automation.trigger_type;
+        setNodeCardHTML(B.triggerNodeId, triggerType, config);
+        if (String(B.selectedNodeId) === String(B.triggerNodeId)) renderConfigPanel(B.selectedNodeId);
+      }
+      renderMobileList();
+    }
+  }
+
+  function wirePaletteDnD() {
+    const palette = document.getElementById('auto-b-palette');
+    if (!palette) return;
+    palette.querySelectorAll('[data-node-type]').forEach(chip => {
+      chip.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', chip.dataset.nodeType);
+        e.dataTransfer.effectAllowed = 'copy';
+      });
+    });
+  }
+
+  function wireCanvasDrop(canvasEl) {
+    canvasEl.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+    canvasEl.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('text/plain');
+      const def = SWDGraph.NODE_DEFS[type];
+      if (!def) return;
+      if (def.group === 'trigger') { note('Er is al een trigger-node — een automation kan er maar één hebben', true); return; }
+      const rect = canvasEl.getBoundingClientRect();
+      const zoom = (B.editor && B.editor.zoom) || 1;
+      const x = (e.clientX - rect.left) / zoom;
+      const y = (e.clientY - rect.top) / zoom;
+      addNodeToEditor(type, x, y, {});
+    });
+  }
+
+  function initEditor() {
+    const canvasEl = document.getElementById('auto-canvas');
+    if (!canvasEl || typeof Drawflow === 'undefined') return;
+    canvasEl.innerHTML = '';
+    const editor = new Drawflow(canvasEl);
+    editor.reroute = true;
+    editor.start();
+    B.editor = editor;
+
+    // Trigger-node is niet verwijderbaar/dupliceerbaar: blokkeer removeNodeId voor de trigger-id.
+    const origRemoveNodeId = editor.removeNodeId.bind(editor);
+    editor.removeNodeId = function (elId) {
+      const numId = String(elId).replace(/^node-/, '');
+      if (B.triggerNodeId != null && String(B.triggerNodeId) === numId) {
+        note('De trigger-node kan niet verwijderd worden', true);
+        return;
+      }
+      origRemoveNodeId(elId);
+      if (String(B.selectedNodeId) === numId) { B.selectedNodeId = null; renderConfigPanel(null); }
+      renderMobileList();
+    };
+
+    editor.on('nodeSelected', id => {
+      B.selectedNodeId = String(id);
+      renderConfigPanel(B.selectedNodeId);
+    });
+    editor.on('nodeUnselected', () => {
+      B.selectedNodeId = null;
+      renderConfigPanel(null);
+    });
+    editor.on('connectionCreated', () => renderMobileList());
+    editor.on('connectionRemoved', () => renderMobileList());
+
+    wirePaletteDnD();
+    wireCanvasDrop(canvasEl);
+  }
+
+  function populateEditorFromAutomation() {
+    const a = B.automation;
+    const hasDrawflow = a.drawflow && a.drawflow.drawflow && a.drawflow.drawflow.Home && Object.keys(a.drawflow.drawflow.Home.data || {}).length;
+    const hasGraph = a.graph && a.graph.entry && a.graph.nodes && Object.keys(a.graph.nodes).length;
+    if (hasDrawflow) {
+      B.editor.import(a.drawflow);
+    } else if (hasGraph) {
+      B.editor.import(SWDGraph.graphToDrawflow(a.graph));
+    } else {
+      B.editor.import({ drawflow: { Home: { data: {} } } });
+      addNodeToEditor('trigger_' + a.trigger_type, 60, 80, a.trigger_config || {});
+    }
+    B.triggerNodeId = findTriggerNodeIdInEditor();
+    rehydrateAllNodeCards();
+  }
+
+  async function ensureTemplatesLoaded() {
+    if (B.templatesCache) return;
+    const { data, error } = await db.from(T.templates).select('id,naam').order('naam');
+    B.templatesCache = error ? [] : (data || []);
+    B.templatesById = {};
+    B.templatesCache.forEach(t => { B.templatesById[t.id] = t; });
+  }
+
+  function renderBuilderLayout(panel) {
+    const a = B.automation;
+    panel.innerHTML = `
+      <div class="auto-builder-topbar">
+        <div class="auto-builder-name-row">
+          <input class="auto-builder-name-input" id="auto-b-naam" value="${esc(a.naam)}">
+          <span id="auto-b-status">${statusBadge(a.status)}</span>
+        </div>
+        <div class="auto-builder-trigger-config" id="auto-b-trigger-config"></div>
+        <div class="auto-builder-actions">
+          <button class="row-btn" id="auto-b-validate" type="button">Valideer</button>
+          <button class="add-btn" id="auto-b-save" type="button">Opslaan</button>
+        </div>
+      </div>
+      <div class="auto-builder-messages" id="auto-b-messages"></div>
+      <div class="auto-builder-body">
+        <div class="auto-palette" id="auto-b-palette">${paletteHTML()}</div>
+        <div class="auto-canvas-wrap"><div id="auto-canvas"></div></div>
+        <div class="auto-config" id="auto-config"><div class="auto-config-empty">Selecteer een node om te configureren</div></div>
+      </div>
+      <div class="auto-builder-mobile">
+        <div class="auto-empty">De Builder werkt alleen op een groter scherm. Hieronder de flow als leesbare lijst.</div>
+        <div id="auto-b-mobile-list"></div>
+      </div>
+    `;
+  }
+
+  function wireBuilderPanelOnce(panel) {
+    if (panel.__autoBuilderWired) return;
+    panel.__autoBuilderWired = true;
+    panel.addEventListener('click', e => {
+      if (e.target.id === 'auto-b-validate') return onValidateClick();
+      if (e.target.id === 'auto-b-save') return onSaveClick();
+      if (e.target.closest('#auto-config-delete')) return onDeleteNodeClick();
+    });
+    panel.addEventListener('input', onConfigFieldInput);
+    panel.addEventListener('change', onConfigFieldInput);
+  }
+
+  function renderBuilderPicker(panel) {
+    const list = state.automations || [];
+    panel.innerHTML = `
+      <div class="auto-empty">Kies een automation om te bewerken.</div>
+      <div class="auto-list" id="auto-builder-picker-list" style="margin-top:14px;">
+        ${list.map(a => `<div class="auto-card" style="cursor:pointer;" data-pick="${esc(a.id)}">
+          <div class="auto-card-top"><div class="auto-card-name">${esc(a.naam)}</div>${statusBadge(a.status)}</div>
+        </div>`).join('') || '<div class="auto-empty">Nog geen automations. Maak er eerst één aan via Overzicht.</div>'}
+      </div>
+    `;
+    panel.querySelectorAll('[data-pick]').forEach(elm => elm.addEventListener('click', () => {
+      state.currentAutomationId = elm.dataset.pick;
+      loadBuilder();
+    }));
+    if (!list.length && typeof db !== 'undefined' && db) {
+      db.from(T.automations).select('id,naam,status,trigger_type,trigger_config,graph,updated_at').order('updated_at', { ascending: false })
+        .then(({ data, error }) => { if (!error && data && data.length) { state.automations = data; renderBuilderPicker(panel); } });
+    }
+  }
+
+  async function loadBuilder() {
+    injectBuilderStyles();
+    const panel = document.getElementById('auto-panel-builder');
+    if (!panel) return;
+    const id = state.currentAutomationId;
+    if (!id) { renderBuilderPicker(panel); return; }
+    if (typeof db === 'undefined' || !db) return;
+    panel.innerHTML = '<div class="auto-empty">Laden…</div>';
+    const { data, error } = await db.from(T.automations)
+      .select('id,naam,status,trigger_type,trigger_config,graph,drawflow').eq('id', id).single();
+    if (error || !data) {
+      note('Laden mislukt: ' + (error && error.message ? error.message : 'automation niet gevonden'), true);
+      state.currentAutomationId = null;
+      renderBuilderPicker(panel);
+      return;
+    }
+    B.automation = data;
+    B.selectedNodeId = null;
+    B.triggerNodeId = null;
+    await ensureTemplatesLoaded();
+    renderBuilderLayout(panel);
+    wireBuilderPanelOnce(panel);
+    initEditor();
+    populateEditorFromAutomation();
+    renderTriggerTopbarConfig();
+    renderConfigPanel(null);
+    renderMessages([], [], null);
+    renderMobileList();
+  }
+
   function wireOverzicht() {
     const sec = document.getElementById('section-automations');
     if (!sec || sec.__autoOverzichtWired) return;
@@ -255,5 +714,5 @@
     showPanel('overzicht');
   }
 
-  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, state };
+  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, loadBuilder, state };
 })();
