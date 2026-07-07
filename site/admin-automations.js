@@ -41,9 +41,11 @@
       filter: '', view: 'list', detailId: null,
       automationsById: {}, runs: [], logByRun: {}, eventsByRun: {}, contactEvents: [],
     },
+    templates: { list: [], view: 'list', editing: null, previewMode: 'desktop' },
   };
   const B = state.builder; // korte alias, alleen builder-code hieronder
   const Ct = state.contacts; // korte alias, alleen contacten-code hieronder
+  const Tpl = state.templates; // korte alias, alleen templates-code hieronder
 
   const fmtDateTime = s => { if (!s) return '–'; try { return new Date(s).toLocaleString('nl-NL', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }); } catch (_) { return String(s); } };
 
@@ -1060,6 +1062,297 @@
     });
   }
 
+  // ── Templates (Task 6) ──
+  // Skelet voor "+ Nieuwe template": letterlijk overgenomen uit emails/automation-welkom.html
+  // (fluid table-based wrapper, tekst-wordmerk, footer met {{unsubscribe_url}}-anker), tekst vervangen door korte placeholders.
+  const NEW_TEMPLATE_HTML = `<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nieuwe template</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;-webkit-text-size-adjust:100%;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;">
+<tr><td align="center" style="padding:24px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;">
+  <tr><td style="padding:28px 28px 8px;font-family:Arial,Helvetica,sans-serif;">
+    <span style="font-size:18px;font-weight:bold;letter-spacing:1px;color:#0a0a0a;">STOLK<span style="color:#e63329;">WEB</span>DESIGN</span>
+  </td></tr>
+  <tr><td style="padding:16px 28px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#1a1a1a;">
+    <p style="margin:0 0 16px;">Hoi {{voornaam|daar}},</p>
+    <p style="margin:0 0 16px;">Typ hier je bericht.</p>
+    <p style="margin:0 0 24px;"><a href="https://stolkwebdesign.nl" style="display:inline-block;background:#0a0a0a;color:#ffffff;text-decoration:none;padding:12px 22px;font-size:16px;">Knoptekst</a></p>
+    <p style="margin:0;">Groet,<br>Peter Stolk<br><span style="color:#888;">Stolkwebdesign</span></p>
+  </td></tr>
+  <tr><td style="padding:16px 28px 28px;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#888888;">
+    Geen mail meer ontvangen? <a href="{{unsubscribe_url}}" style="color:#888;">Schrijf je uit</a>.
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+
+  // Dummy-data voor de live preview — alleen client-side, geen echte contactgegevens.
+  const TEMPLATE_PREVIEW_DUMMY = { voornaam: 'Test', naam: 'Test Persoon', email: 'test@voorbeeld.nl', bedrijf: 'Voorbeeld BV', unsubscribe_url: '#' };
+  let tplPreviewTimer = null;
+
+  function clientRenderTemplate(tpl, data) {
+    return String(tpl == null ? '' : tpl).replace(/\{\{\s*([\w.]+)\s*(?:\|([^}]*))?\}\}/g, (_m, k, fb) => {
+      const v = data[k];
+      return (v === undefined || v === null || v === '') ? (fb || '') : String(v);
+    });
+  }
+
+  function injectTemplatesStyles() {
+    if (document.getElementById('auto-tpl-styles')) return;
+    const css = `
+    .tpl-list{display:flex;flex-direction:column;gap:10px}
+    .tpl-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 16px;background:#111;border:1px solid #1a1a1a;cursor:pointer;transition:border-color .15s}
+    .tpl-row:hover{border-color:#333}
+    .tpl-row-main{display:flex;flex-direction:column;gap:4px;min-width:0}
+    .tpl-row-name{font-family:'Archivo Black',sans-serif;font-size:14px;text-transform:uppercase;letter-spacing:-.01em;word-break:break-word}
+    .tpl-row-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);word-break:break-word}
+    .tpl-row-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:#666;white-space:nowrap;flex-shrink:0}
+    .tpl-editor-top{margin-bottom:16px}
+    .tpl-editor-grid{display:grid;grid-template-columns:minmax(280px,1fr) minmax(320px,1.2fr);gap:24px;align-items:start}
+    .tpl-fields{display:flex;flex-direction:column;gap:14px;min-width:0}
+    .tpl-html-textarea{font-family:'JetBrains Mono',monospace;font-size:12px;height:60vh;resize:vertical;white-space:pre;}
+    .tpl-editor-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+    .tpl-preview-col{display:flex;flex-direction:column;gap:10px;position:sticky;top:12px;min-width:0}
+    .tpl-preview-toggle{display:flex;gap:8px}
+    .tpl-preview-toggle .row-btn.active{background:var(--near-black);color:var(--white)}
+    .tpl-preview-outer{width:100%;background:#1a1a1a;padding:14px;display:flex;justify-content:center;overflow-x:auto}
+    #tpl-preview-iframe{width:100%;height:60vh;border:1px solid #333;background:#fff;display:block;flex-shrink:0;}
+    #tpl-preview-iframe.tpl-preview-mobile{width:390px;}
+    @media (max-width:900px){
+      .tpl-editor-grid{grid-template-columns:1fr}
+      .tpl-preview-col{position:static}
+    }
+    @media (max-width:480px){
+      .tpl-row{flex-direction:column;align-items:flex-start}
+      .tpl-editor-actions{flex-direction:column}
+      .tpl-editor-actions .row-btn,.tpl-editor-actions .add-btn{width:100%;text-align:center}
+    }
+    `;
+    const s = document.createElement('style');
+    s.id = 'auto-tpl-styles'; s.textContent = css;
+    document.head.appendChild(s);
+  }
+
+  function templateRowHTML(t) {
+    return `<div class="tpl-row" data-open-tpl="${esc(t.id)}">
+      <div class="tpl-row-main">
+        <div class="tpl-row-name">${esc(t.naam)}</div>
+        <div class="tpl-row-sub">${esc(t.onderwerp)}</div>
+      </div>
+      <div class="tpl-row-meta">Bijgewerkt ${fmtDateTime(t.updated_at)}</div>
+    </div>`;
+  }
+
+  function renderTemplatesListView(panel) {
+    const list = Tpl.list;
+    panel.innerHTML = `
+      <div class="auto-toolbar">
+        <button class="add-btn font-display" id="tpl-new-btn" type="button">+ Nieuwe template</button>
+        <button class="row-btn font-mono" id="tpl-refresh-btn" type="button">↻ Vernieuwen</button>
+      </div>
+      <div class="tpl-list">${list.length ? list.map(templateRowHTML).join('') : '<div class="auto-empty">Nog geen templates. Klik “+ Nieuwe template”.</div>'}</div>
+    `;
+  }
+
+  function updateTemplatePreview() {
+    const iframe = document.getElementById('tpl-preview-iframe');
+    const htmlEl = document.getElementById('tpl-html');
+    if (!iframe) return;
+    const html = htmlEl ? htmlEl.value : ((Tpl.editing && Tpl.editing.html) || '');
+    iframe.srcdoc = clientRenderTemplate(html, TEMPLATE_PREVIEW_DUMMY);
+  }
+
+  function schedulePreviewUpdate() {
+    clearTimeout(tplPreviewTimer);
+    tplPreviewTimer = setTimeout(updateTemplatePreview, 300);
+  }
+
+  function setPreviewMode(mode) {
+    Tpl.previewMode = mode;
+    const iframe = document.getElementById('tpl-preview-iframe');
+    if (iframe) iframe.classList.toggle('tpl-preview-mobile', mode === 'mobile');
+    document.querySelectorAll('#auto-panel-templates [data-preview-mode]').forEach(b =>
+      b.classList.toggle('active', b.dataset.previewMode === mode));
+  }
+
+  function renderTemplateEditorView(panel) {
+    const t = Tpl.editing || {};
+    const isNew = !t.id;
+    panel.innerHTML = `
+      <div class="tpl-editor-top">
+        <button class="row-btn font-mono" id="tpl-back-btn" type="button">← Terug naar lijst</button>
+      </div>
+      <div class="tpl-editor-grid">
+        <div class="tpl-fields">
+          <div class="form-group"><label class="form-label font-mono">Naam</label><input class="form-input" id="tpl-naam" value="${esc(t.naam || '')}" placeholder="bijv. welkom-nieuwe-lead"></div>
+          <div class="form-group"><label class="form-label font-mono">Onderwerp</label><input class="form-input" id="tpl-onderwerp" value="${esc(t.onderwerp || '')}" placeholder="Onderwerpregel, mag {{voornaam|...}} bevatten"></div>
+          <div class="form-group"><label class="form-label font-mono">Afzendernaam (optioneel)</label><input class="form-input" id="tpl-from-naam" value="${esc(t.from_naam || '')}" placeholder="Standaard uit instellingen"></div>
+          <div class="form-group"><label class="form-label font-mono">HTML</label><textarea class="form-input tpl-html-textarea" id="tpl-html" spellcheck="false">${esc(t.html != null ? t.html : NEW_TEMPLATE_HTML)}</textarea></div>
+          <div class="tpl-editor-actions">
+            <button class="add-btn font-display" id="tpl-save-btn" type="button">Opslaan</button>
+            <button class="row-btn font-mono" id="tpl-testmail-btn" type="button"${isNew ? ' disabled title="Sla eerst op"' : ''}>Stuur testmail</button>
+            ${isNew ? '' : '<button class="row-btn danger font-mono" id="tpl-delete-btn" type="button">Verwijderen</button>'}
+          </div>
+        </div>
+        <div class="tpl-preview-col">
+          <div class="tpl-preview-toggle">
+            <button class="row-btn font-mono active" data-preview-mode="desktop" type="button">Desktop</button>
+            <button class="row-btn font-mono" data-preview-mode="mobile" type="button">390px</button>
+          </div>
+          <div class="tpl-preview-outer"><iframe id="tpl-preview-iframe" title="Preview" sandbox=""></iframe></div>
+        </div>
+      </div>
+    `;
+    updateTemplatePreview();
+    setPreviewMode(Tpl.previewMode || 'desktop');
+  }
+
+  function renderTemplatesPanel(panel) {
+    panel = panel || document.getElementById('auto-panel-templates');
+    if (!panel) return;
+    if (Tpl.view === 'editor' && Tpl.editing) return renderTemplateEditorView(panel);
+    renderTemplatesListView(panel);
+  }
+
+  function openTemplateNew() {
+    Tpl.editing = { id: null, naam: '', onderwerp: '', html: NEW_TEMPLATE_HTML, from_naam: '' };
+    Tpl.view = 'editor';
+    Tpl.previewMode = 'desktop';
+    renderTemplatesPanel();
+  }
+
+  async function openTemplateEdit(id) {
+    const panel = document.getElementById('auto-panel-templates');
+    if (!panel) return;
+    panel.innerHTML = '<div class="auto-empty">Laden…</div>';
+    const { data, error } = await db.from(T.templates).select('id,naam,onderwerp,html,from_naam,updated_at').eq('id', id).single();
+    if (error || !data) {
+      note('Laden mislukt: ' + (error && error.message ? error.message : 'template niet gevonden'), true);
+      renderTemplatesPanel(panel);
+      return;
+    }
+    Tpl.editing = data;
+    Tpl.view = 'editor';
+    Tpl.previewMode = 'desktop';
+    renderTemplatesPanel(panel);
+  }
+
+  function backToTemplatesList() {
+    Tpl.view = 'list';
+    Tpl.editing = null;
+    renderTemplatesPanel();
+  }
+
+  async function onSaveTemplateClick() {
+    if (!Tpl.editing) return;
+    const naam = (document.getElementById('tpl-naam')?.value || '').trim();
+    const onderwerp = (document.getElementById('tpl-onderwerp')?.value || '').trim();
+    const fromNaamRaw = (document.getElementById('tpl-from-naam')?.value || '').trim();
+    const html = document.getElementById('tpl-html')?.value || '';
+    if (!naam) { note('Naam is verplicht', true); return; }
+    if (!onderwerp) { note('Onderwerp is verplicht', true); return; }
+    if (!html.trim()) { note('HTML is verplicht', true); return; }
+    const btn = document.getElementById('tpl-save-btn');
+    if (btn) btn.disabled = true;
+    try {
+      const payload = { naam, onderwerp, html, from_naam: fromNaamRaw || null, updated_at: new Date().toISOString() };
+      const res = Tpl.editing.id
+        ? await db.from(T.templates).update(payload).eq('id', Tpl.editing.id).select().single()
+        : await db.from(T.templates).insert(payload).select().single();
+      if (res.error) { note('Opslaan mislukt: ' + res.error.message, true); return; }
+      Tpl.editing = res.data;
+      const summary = { id: res.data.id, naam: res.data.naam, onderwerp: res.data.onderwerp, updated_at: res.data.updated_at };
+      const idx = Tpl.list.findIndex(x => String(x.id) === String(summary.id));
+      if (idx >= 0) Tpl.list[idx] = summary; else Tpl.list.unshift(summary);
+      note(`"${naam}" opgeslagen`);
+      renderTemplatesPanel();
+    } finally {
+      const b = document.getElementById('tpl-save-btn'); if (b) b.disabled = false;
+    }
+  }
+
+  async function onDeleteTemplateClick() {
+    const t = Tpl.editing;
+    if (!t || !t.id) return;
+    const { data: automations, error } = await db.from(T.automations).select('id,naam,graph');
+    if (error) { note('Kon niet controleren of de template in gebruik is: ' + error.message, true); return; }
+    const blocking = (automations || []).find(a => {
+      const nodes = (a.graph && a.graph.nodes) || {};
+      return Object.values(nodes).some(n => n.type === 'send_email' && n.config && String(n.config.template_id) === String(t.id));
+    });
+    if (blocking) { note(`Verwijderen geblokkeerd: wordt gebruikt in flow "${blocking.naam}"`, true); return; }
+    if (!confirm(`"${t.naam}" verwijderen? Dit kan niet ongedaan gemaakt worden.`)) return;
+    const { error: delErr } = await db.from(T.templates).delete().eq('id', t.id);
+    if (delErr) { note('Verwijderen mislukt: ' + delErr.message, true); return; }
+    Tpl.list = Tpl.list.filter(x => String(x.id) !== String(t.id));
+    note(`"${t.naam}" verwijderd`);
+    backToTemplatesList();
+  }
+
+  async function onSendTestmailClick() {
+    const t = Tpl.editing;
+    if (!t || !t.id) { note('Sla de template eerst op', true); return; }
+    const btn = document.getElementById('tpl-testmail-btn');
+    if (btn) btn.disabled = true;
+    try {
+      const { data, error } = await db.functions.invoke('automation-testmail', { body: { template_id: t.id } });
+      if (error) { note('Testmail versturen mislukt: ' + error.message, true); return; }
+      if (data && data.error) { note('Testmail versturen mislukt: ' + data.error, true); return; }
+      note('Testmail verstuurd — check ' + (data && data.resend_id ? 'de inbox' : ''));
+    } catch (e) {
+      note('Testmail versturen mislukt: ' + (e && e.message ? e.message : e), true);
+    } finally {
+      const b = document.getElementById('tpl-testmail-btn'); if (b) b.disabled = false;
+    }
+  }
+
+  async function loadTemplates() {
+    injectTemplatesStyles();
+    const panel = document.getElementById('auto-panel-templates');
+    if (!panel) return;
+    wireTemplatesPanelOnce(panel);
+    if (typeof db === 'undefined' || !db) return;
+    Tpl.view = 'list';
+    Tpl.editing = null;
+    panel.innerHTML = '<div class="auto-empty">Laden…</div>';
+    const { data, error } = await db.from(T.templates).select('id,naam,onderwerp,updated_at').order('naam');
+    if (error) {
+      note('Laden mislukt: ' + error.message, true);
+      panel.innerHTML = '<div class="auto-empty">Laden mislukt.</div>';
+      return;
+    }
+    Tpl.list = data || [];
+    renderTemplatesPanel(panel);
+  }
+
+  function wireTemplatesPanelOnce(panel) {
+    if (panel.__autoTemplatesWired) return;
+    panel.__autoTemplatesWired = true;
+    panel.addEventListener('click', e => {
+      if (e.target.id === 'tpl-new-btn') return openTemplateNew();
+      if (e.target.id === 'tpl-refresh-btn') return loadTemplates();
+      if (e.target.id === 'tpl-back-btn') return backToTemplatesList();
+      if (e.target.id === 'tpl-save-btn') return onSaveTemplateClick();
+      if (e.target.id === 'tpl-delete-btn') return onDeleteTemplateClick();
+      if (e.target.id === 'tpl-testmail-btn') return onSendTestmailClick();
+      const modeBtn = e.target.closest('[data-preview-mode]');
+      if (modeBtn) return setPreviewMode(modeBtn.dataset.previewMode);
+      const row = e.target.closest('[data-open-tpl]');
+      if (row) return openTemplateEdit(row.getAttribute('data-open-tpl'));
+    });
+    panel.addEventListener('input', e => {
+      if (e.target.id === 'tpl-html') schedulePreviewUpdate();
+    });
+  }
+
   function wireOverzicht() {
     const sec = document.getElementById('section-automations');
     if (!sec || sec.__autoOverzichtWired) return;
@@ -1092,5 +1385,5 @@
     showPanel('overzicht');
   }
 
-  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, loadBuilder, loadContacten, state };
+  window.SWDAutomations = { init, showPanel, T, esc, loadOverzicht, openBuilder, loadBuilder, loadContacten, loadTemplates, state };
 })();
