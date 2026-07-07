@@ -25,8 +25,9 @@ const env = (k) => (typeof process !== 'undefined' ? process.env[k] : undefined)
 const clip = (v, n) => String(v == null ? '' : v).trim().slice(0, n);
 
 async function notifyTelegram(text) {
-  const token = env('TELEGRAM_BOT_TOKEN');
-  const chat = env('TELEGRAM_CHAT_ID');
+  // Leads → aparte Leads-bot (valt terug op de generieke bot zolang de LEADS-vars nog niet gezet zijn).
+  const token = env('TELEGRAM_BOT_TOKEN_LEADS') || env('TELEGRAM_BOT_TOKEN');
+  const chat = env('TELEGRAM_CHAT_ID_LEADS') || env('TELEGRAM_CHAT_ID');
   if (!token || !chat) return;
   try {
     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
