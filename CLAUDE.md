@@ -225,9 +225,9 @@ update stolkwebdesign_automations set status = 'paused' where id = '...';  -- pa
 
 **Actieve dogfood-flow:** "Nieuwe lead opvolging" (`id 11111111-1111-1111-1111-111111111100`): form-trigger → welkomstmail → wacht 2 dagen → geklikt op de mail? → ja: seintje naar owner (info@stolksupport.nl) / nee: reminder-mail → goal. Templates `welkom-nieuwe-lead` + `reminder-nieuwe-lead` (bron: `emails/automation-welkom.html` + `emails/automation-reminder.html`).
 
-**Openstaand (Fase 1):**
-- [x] **Resend-domein `stolkwebdesign.nl` geverifieerd** (07-07, DKIM+SPF+MX groen, Connaxis-DNS; Resend-account `re_Jgqc…` = root `.env` RESEND_API_KEY = edge-secret). `resend_from_email` staat nu op `peter@stolkwebdesign.nl`. End-to-end getest: testlead → brug → tick → welkomstmail delivered vanaf peter@ (Resend `last_event: delivered`), daarna testdata opgeruimd. Domein-id `08fe9133-30fe-4be8-89be-0d589f2e9427`.
-- [ ] Resend-webhook registreren in het Resend-dashboard (`email.bounced` + `email.complained` → URL van `automation-resend-webhook`) + `RESEND_WEBHOOK_SECRET` als edge-secret zetten (optioneel voor livegang, wel netjes voor bounce-filtering)
+**Fase 1 volledig live (07-07):**
+- [x] **Resend-domein `stolkwebdesign.nl` geverifieerd** (DKIM+SPF+MX groen, Connaxis-DNS; Resend-account `re_Jgqc…` = root `.env` RESEND_API_KEY = edge-secret). `resend_from_email` staat nu op `peter@stolkwebdesign.nl`. End-to-end getest: testlead → brug → tick → welkomstmail delivered vanaf peter@ (Resend `last_event: delivered`), daarna testdata opgeruimd. Domein-id `08fe9133-30fe-4be8-89be-0d589f2e9427`.
+- [x] **Resend-webhook geregistreerd** via de Resend-API (id `d0df5599-9337-4a9c-b44d-4f97fde69e51`, events `email.bounced` + `email.complained` → `automation-resend-webhook`). `RESEND_WEBHOOK_SECRET` (svix `whsec_…`) als edge-secret gezet via `supabase secrets set`. Geverifieerd: ongetekende POST → 401, correct-getekende svix-POST → 200 + suppression-write (testdata opgeruimd).
 
 Fase 2 (UI, Drawflow-editor, drag-and-drop flows) staat bewust buiten dit plan.
 
@@ -285,7 +285,7 @@ Volledige lead-funnel voor Meta/Google-advertenties. Plan + stappenplan in `mark
 - Herbruikbare module-skills (`cms-*`) in `~/.claude/skills/` zijn gedestilleerd uit deze site.
 
 ## Openstaand
-- [ ] **Automations Fase 1 restpunt:** alleen nog de Resend-webhook registreren + `RESEND_WEBHOOK_SECRET` (bounce/complaint-filtering, optioneel). Resend-domein + afzender + end-to-end-test zijn ✅ (07-07, zie Automations hierboven)
+- [x] **Automations Fase 1 volledig live** (07-07): Resend-domein + afzender `peter@stolkwebdesign.nl` + end-to-end-test + bounce/complaint-webhook met `RESEND_WEBHOOK_SECRET`. Zie Automations hierboven. (Fase 2 = flow-editor UI, bewust later.)
 - [ ] **GDPR-module activeren:** SQL-migratie `gdpr_init.sql` draaien + Vercel env (`ADMIN_EMAIL`, `SITE_URL`) + deploy
 - [ ] Custom domain stolkwebdesign.nl: DNS naar Vercel
 - [ ] Nieuwe Vercel deploy-hook aanmaken + `VERCEL_DEPLOY_HOOK_URL` env zetten
