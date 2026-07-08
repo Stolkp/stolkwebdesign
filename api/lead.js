@@ -72,14 +72,18 @@ export default async function handler(req, res) {
     const db = createClient(SUPABASE_URL, SERVICE_KEY);
 
     const clip = (v, n) => String(v || '').trim().slice(0, n);
+    const achternaam = clip(body.achternaam, 80);
+    const bedrijf = clip(body.bedrijf, 120);
     const referenties = clip(body.referenties, 900);
     const uitstraling = clip(body.uitstraling, 200);
     const doel = clip(body.doel, 120);
     const usp = clip(body.usp, 900);
-    if (!referenties && !uitstraling && !doel && !usp) return res.status(200).json({ ok: true }); // niets ingevuld
+    if (!achternaam && !bedrijf && !referenties && !uitstraling && !doel && !usp) return res.status(200).json({ ok: true }); // niets ingevuld
 
     const blok =
       `\n\nMOCKUP-INTAKE (STAP 2)\n` +
+      (achternaam ? `Achternaam: ${achternaam}\n` : '') +
+      (bedrijf ? `Bedrijf: ${bedrijf}\n` : '') +
       (referenties ? `Referenties: ${referenties}\n` : '') +
       (uitstraling ? `Uitstraling: ${uitstraling}\n` : '') +
       (doel ? `Hoofddoel: ${doel}\n` : '') +

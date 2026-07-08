@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website laten maken in Amstelveen & Amsterdam — gratis mockup | Stolkwebdesign</title>
+<title>Website laten maken in Amstelveen & Amsterdam: gratis mockup | Stolkwebdesign</title>
 <meta name="description" content="Professionele website laten maken in de regio Amstelveen, Amsterdam & Uithoorn. Vaste prijzen, schone code, persoonlijk. Vraag een gratis mockup van je nieuwe homepage aan.">
 <!-- Advertentie-landingspagina: niet indexeren (voorkomt concurrentie met de hoofdpagina's). Staat ook NIET in de sitemap. -->
 <meta name="robots" content="noindex,follow">
@@ -37,8 +37,9 @@ body { background:var(--white); color:var(--black); font-family:'Space Grotesk',
 nav { position:sticky; top:0; z-index:100; background:var(--black); border-bottom:2px solid var(--black); display:flex; align-items:center; justify-content:space-between; padding:14px 24px; }
 .nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
 .nav-logo span { color:var(--red); }
-.nav-cta { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:var(--white); text-decoration:none; border:2px solid rgba(255,255,255,.3); padding:9px 16px; transition:border-color .15s,background .15s,color .15s; }
-.nav-cta:hover { background:var(--red); border-color:var(--red); }
+/* Vaste hex (geen theme-tokens) zodat de knop zichtbaar blijft in zowel light- als dark-mode. */
+.nav-cta { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#fff; text-decoration:none; background:#EA2525; border:2px solid #EA2525; padding:9px 16px; transition:border-color .15s,background .15s,color .15s; }
+.nav-cta:hover { background:#111; border-color:#111; color:#fff; }
 
 /* HERO */
 .hero { background:var(--near-black); color:var(--white); padding:70px 0 80px; border-bottom:2px solid var(--black); }
@@ -60,7 +61,7 @@ nav { position:sticky; top:0; z-index:100; background:var(--black); border-botto
 .form-label { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); margin-bottom:6px; display:block; }
 .form-input, .form-select, .form-textarea {
   width:100%; padding:12px 14px; background:var(--white); color:var(--black);
-  border:2px solid var(--black); border-radius:0; font-family:'Space Grotesk',sans-serif; font-size:15px; appearance:none; transition:border-color .15s;
+  border:2px solid var(--black); border-radius:0; font-family:'Space Grotesk',sans-serif; font-size:16px; appearance:none; transition:border-color .15s;
 }
 .form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color:var(--red); }
 .form-textarea { resize:vertical; min-height:88px; }
@@ -75,6 +76,14 @@ nav { position:sticky; top:0; z-index:100; background:var(--black); border-botto
 .form-success h3 { font-family:'Archivo Black',sans-serif; font-size:20px; text-transform:uppercase; margin:10px 0 8px; }
 .form-success p { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); line-height:1.8; }
 .honey { position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+
+/* GOOGLE-RATING (bewijs náást de vraag) */
+.rating { display:flex; align-items:center; gap:9px; margin:-8px 0 20px; flex-wrap:wrap; }
+.rating a { display:flex; align-items:center; gap:9px; text-decoration:none; color:inherit; }
+.rating .stars { color:var(--red); font-size:15px; letter-spacing:2px; line-height:1; }
+.rating .rating-txt { font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+.rating .rating-txt b { color:var(--black); }
+.rating a:hover .rating-txt b { color:var(--red); }
 
 /* STAP 2 — mockup-intake (verschijnt ná de aanvraag) */
 .form-step2 { display:none; }
@@ -92,6 +101,11 @@ nav { position:sticky; top:0; z-index:100; background:var(--black); border-botto
 .trust .wrap { display:flex; flex-wrap:wrap; gap:14px 36px; align-items:center; justify-content:center; }
 .trust span { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.6); }
 .trust b { color:var(--white); }
+
+/* RISICO-OMKERING (kernbelofte op het beslismoment) */
+.reassure { background:var(--bone); border-bottom:2px solid var(--black); padding:22px 0; text-align:center; }
+.reassure p { font-size:17px; color:var(--black); line-height:1.5; max-width:640px; margin:0 auto; }
+.reassure b { font-family:'Archivo Black',sans-serif; text-transform:uppercase; letter-spacing:-0.01em; }
 
 /* SECTIONS */
 section.block { padding:72px 0; border-bottom:2px solid var(--black); }
@@ -129,7 +143,10 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 .footer-bar a:hover { color:var(--white); }
 
 @media(max-width:880px){
-  .hero-grid { grid-template-columns:1fr; gap:34px; }
+  .hero { padding:42px 0 48px; }
+  .hero-grid { grid-template-columns:1fr; gap:26px; }
+  .hero-lead { margin:20px 0 22px; }
+  .hero-checks { gap:9px; }
   .steps { grid-template-columns:1fr; }
   .why { grid-template-columns:1fr; }
   .why div { border-right:0; }
@@ -140,6 +157,8 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 }
 @media(prefers-reduced-motion:reduce){ html { scroll-behavior:auto; } }
 </style>
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
 </head>
 <body>
 
@@ -154,9 +173,9 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     <div>
       <div class="eyebrow">Webdesign · Amstelveen · Amsterdam · Uithoorn</div>
       <h1>Website laten maken?<br>Zie 'm <span class="red">eerst gratis.</span></h1>
-      <p class="hero-lead">Professionele website op maat, gebouwd in schone code — geen WordPress-gedoe, geen verrassingen. Je krijgt eerst een <b>gratis mockup van je nieuwe homepage</b>. Daarna pas beslissen.</p>
+      <p class="hero-lead">Professionele website op maat, gebouwd in schone code. Geen WordPress-gedoe, geen verrassingen. Je krijgt eerst een <b>gratis mockup van je nieuwe homepage</b>. Daarna pas beslissen.</p>
       <ul class="hero-checks">
-        <li><span class="tick">→</span> Vaste prijzen vanaf €1.250 — vooraf duidelijk</li>
+        <li><span class="tick">→</span> Vaste prijzen vanaf €1.250, vooraf duidelijk</li>
         <li><span class="tick">→</span> Lokaal &amp; persoonlijk: je werkt direct met Peter</li>
         <li><span class="tick">→</span> Snelle, scroll-animated sites die klanten opleveren</li>
         <li><span class="tick">→</span> Reactie binnen 1 werkdag</li>
@@ -167,17 +186,20 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     <div id="aanvraag" class="formcard">
       <div class="formcard-title">Vraag je gratis mockup aan</div>
       <div class="formcard-sub">Vrijblijvend · geen verplichtingen</div>
+      <!-- RATING: echte Google-cijfers (5,0 · 8 reviews, gecheckt 08-07-2026). Werk dit bij als het aantal reviews verandert. -->
+      <div class="rating">
+        <a href="https://www.google.com/search?q=stolkwebdesign+reviews" target="_blank" rel="noopener">
+          <span class="stars" aria-hidden="true">★★★★★</span>
+          <span class="rating-txt"><b>5,0</b> · 8 Google-reviews</span>
+        </a>
+      </div>
       <form id="lp-form" novalidate>
         <input type="text" id="lp-company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="honey">
-        <div class="form-row">
-          <div class="form-group"><label class="form-label" for="lp-voornaam">Voornaam *</label><input class="form-input" id="lp-voornaam" autocomplete="given-name" required></div>
-          <div class="form-group"><label class="form-label" for="lp-achternaam">Achternaam</label><input class="form-input" id="lp-achternaam" autocomplete="family-name"></div>
-        </div>
+        <div class="form-group"><label class="form-label" for="lp-voornaam">Voornaam *</label><input class="form-input" id="lp-voornaam" autocomplete="given-name" required></div>
         <div class="form-row">
           <div class="form-group"><label class="form-label" for="lp-email">E-mail *</label><input type="email" class="form-input" id="lp-email" autocomplete="email" required></div>
           <div class="form-group"><label class="form-label" for="lp-tel">Telefoon</label><input type="tel" class="form-input" id="lp-tel" autocomplete="tel"></div>
         </div>
-        <div class="form-group"><label class="form-label" for="lp-bedrijf">Bedrijfsnaam</label><input class="form-input" id="lp-bedrijf" autocomplete="organization"></div>
         <div class="form-group"><label class="form-label" for="lp-site">Heb je al een website? (plak de link)</label><input class="form-input" id="lp-site" placeholder="bijv. www.mijnbedrijf.nl"></div>
         <div class="form-error font-mono" id="lp-error"></div>
         <button type="submit" class="form-submit" id="lp-btn"><span id="lp-btn-label">Vraag mijn gratis mockup aan</span></button>
@@ -186,8 +208,12 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 
       <!-- STAP 2 — mockup-intake (verschijnt ná een succesvolle aanvraag; alles optioneel) -->
       <div class="form-step2" id="lp-step2">
-        <div class="step2-head">Top, ik ben ermee bezig.<br>Nog 4 korte vragen?</div>
+        <div class="step2-head">Top, ik ben ermee bezig.<br>Nog een paar korte vragen?</div>
         <div class="step2-sub">Optioneel, maar hoe scherper je antwoord, hoe beter je mockup wordt.</div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label" for="s2-achternaam">Achternaam</label><input class="form-input" id="s2-achternaam" autocomplete="family-name"></div>
+          <div class="form-group"><label class="form-label" for="s2-bedrijf">Bedrijfsnaam</label><input class="form-input" id="s2-bedrijf" autocomplete="organization"></div>
+        </div>
         <div class="form-group">
           <label class="form-label" for="s2-ref">Welke websites vind je mooi? Plak 1-3 links, en wat vind je daar mooi aan?</label>
           <textarea class="form-textarea" id="s2-ref" placeholder="bijv. www.voorbeeld.nl, veel wit en rustige typografie"></textarea>
@@ -226,7 +252,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
       <div class="form-success" id="lp-success">
         <div class="ic">✓</div>
         <h3>Aanvraag ontvangen.</h3>
-        <p>Ik ga aan de slag met je mockup en neem binnen 1 werkdag contact op.<br>Tot snel — Peter</p>
+        <p>Ik ga aan de slag met je mockup en neem binnen 1 werkdag contact op.<br>Tot snel, Peter</p>
       </div>
     </div>
   </div>
@@ -234,9 +260,15 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 
 <!-- TRUST -->
 <div class="trust"><div class="wrap">
-  <span><b>Uithoorn</b> — beschikbaar door heel NL</span>
+  <span><b>5,0 ★</b> op Google (8 reviews)</span>
+  <span><b>Uithoorn</b>, beschikbaar door heel NL</span>
   <span>Gebouwd in <b>schone code</b> (geen WordPress-gedoe)</span>
   <span><b>Vaste prijzen</b> · geen uurtje-factuurtje</span>
+</div></div>
+
+<!-- RISICO-OMKERING: kernbelofte herhalen op het beslismoment -->
+<div class="reassure"><div class="wrap">
+  <p><b>100% gratis mockup.</b> Geen verplichtingen, geen kleine lettertjes. Je beslist pas nadat je je nieuwe homepage hebt gezien.</p>
 </div></div>
 
 <!-- HOE WERKT HET -->
@@ -244,7 +276,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="kicker">Zo werkt het</div>
   <h2 class="sec">Van aanvraag<br>naar nieuwe site</h2>
   <div class="steps">
-    <div class="step"><div class="step-num">01</div><h3>Gratis mockup</h3><p>Je vult het formulier in. Ik maak een ontwerp-voorproefje van je nieuwe homepage — afgestemd op jouw merk.</p></div>
+    <div class="step"><div class="step-num">01</div><h3>Gratis mockup</h3><p>Je vult het formulier in. Ik maak een ontwerp-voorproefje van je nieuwe homepage, afgestemd op jouw merk.</p></div>
     <div class="step"><div class="step-num">02</div><h3>Kort gesprek</h3><p>We bekijken de mockup samen (20 min, online). Past het? Dan krijg je een vaste prijs, geen verrassingen.</p></div>
     <div class="step"><div class="step-num">03</div><h3>Bouwen &amp; live</h3><p>Ik bouw je site in schone, snelle code met scroll-animaties. Jij krijgt een site die klanten oplevert.</p></div>
   </div>
@@ -268,9 +300,9 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="kicker">Waarom Stolkwebdesign</div>
   <h2 class="sec">Geen bureau-gedoe.<br>Gewoon vakwerk.</h2>
   <div class="why">
-    <div><h4><span class="num">01 ·</span> Persoonlijk &amp; lokaal</h4><p>Je werkt direct met Peter uit Uithoorn — geen accountmanagers, geen tussenlagen. Korte lijnen.</p></div>
+    <div><h4><span class="num">01 ·</span> Persoonlijk &amp; lokaal</h4><p>Je werkt direct met Peter uit Uithoorn. Geen accountmanagers, geen tussenlagen. Korte lijnen.</p></div>
     <div><h4><span class="num">02 ·</span> Schone code</h4><p>Razendsnelle sites in HTML/CSS/JS (of WordPress als je dat wilt). Geen trage plugin-bende.</p></div>
-    <div><h4><span class="num">03 ·</span> Vaste prijzen</h4><p>Vooraf weet je wat het kost. Pakketten vanaf €1.250 — geen verrassingen achteraf.</p></div>
+    <div><h4><span class="num">03 ·</span> Vaste prijzen</h4><p>Vooraf weet je wat het kost. Pakketten vanaf €1.250, geen verrassingen achteraf.</p></div>
     <div><h4><span class="num">04 ·</span> Klant-eerst</h4><p>Een site die niet alleen mooi is, maar bezoekers omzet in aanvragen en klanten.</p></div>
   </div>
 </div></section>
@@ -281,7 +313,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <h2 class="sec">Goed om<br>te weten</h2>
   <div class="faq-item"><h4>Wat kost een website?</h4><p>Vaste pakketten vanaf €1.250 (1 pagina) tot €3.500 (tot 7 pagina's + CMS). Custom/maatwerk op aanvraag. Je krijgt vooraf een duidelijke prijs.</p></div>
   <div class="faq-item"><h4>Is de mockup echt gratis?</h4><p>Ja. Je krijgt een voorproefje van je nieuwe homepage zonder kosten of verplichtingen. Bevalt het niet, dan stopt het daar.</p></div>
-  <div class="faq-item"><h4>Werk je ook buiten Amstelveen/Amsterdam?</h4><p>Zeker — ik zit in Uithoorn en werk door heel Nederland. Alles kan online.</p></div>
+  <div class="faq-item"><h4>Werk je ook buiten Amstelveen/Amsterdam?</h4><p>Zeker, ik zit in Uithoorn en werk door heel Nederland. Alles kan online.</p></div>
   <div class="faq-item"><h4>WordPress of niet?</h4><p>Beide kan. Standaard bouw ik in schone code (sneller, veiliger), maar wil je zelf in WordPress beheren, dan regel ik dat.</p></div>
 </div></section>
 
@@ -300,7 +332,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     <a href="/contact">Contact</a>
     <a href="/privacybeleid">Privacybeleid</a>
   </div>
-  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.08em;">© 2026 Stolkwebdesign — Uithoorn</div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.08em;">© 2026 Stolkwebdesign · Uithoorn</div>
 </div></footer>
 
 <!-- Attributie (UTM/gclid/fbclid) -->
@@ -310,8 +342,8 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   document.getElementById('lp-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const val = (id) => (document.getElementById(id).value || '').trim();
-    const voornaam = val('lp-voornaam'), achternaam = val('lp-achternaam'), email = val('lp-email');
-    const tel = val('lp-tel'), bedrijf = val('lp-bedrijf'), site = val('lp-site');
+    const voornaam = val('lp-voornaam'), email = val('lp-email');
+    const tel = val('lp-tel'), site = val('lp-site');
     const company = document.getElementById('lp-company').value; // honeypot
     const errorEl = document.getElementById('lp-error');
     const btn = document.getElementById('lp-btn'), btnLabel = document.getElementById('lp-btn-label');
@@ -319,9 +351,9 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     errorEl.style.display = 'none';
     if (!voornaam || !email) { errorEl.textContent = 'Vul minstens je voornaam en e-mail in.'; errorEl.style.display = 'block'; return; }
 
-    const naam = `${voornaam} ${achternaam}`.trim();
+    const naam = voornaam;
     const attribution = (typeof getAttribution === 'function') ? getAttribution() : { string: 'direct/onbekend' };
-    // Stap 1 is bewust kaal: alleen de lead vangen. De rest volgt in stap 2 + het gesprek.
+    // Stap 1 is bewust kaal: alleen de lead vangen. Achternaam/bedrijf + de rest volgen in stap 2 + het gesprek.
     const samengesteld =
       `Aanvraag via landingspagina (gratis mockup)` +
       (site ? `\nHuidige site: ${site}` : '');
@@ -332,7 +364,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          naam, email, telefoon: tel, bedrijf,
+          naam, email, telefoon: tel,
           site,
           bericht: samengesteld,
           bron: attribution.string,
@@ -382,18 +414,20 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 
     const s2btn = document.getElementById('s2-btn'), s2lbl = document.getElementById('s2-btn-label');
     s2btn.addEventListener('click', async () => {
+      const achternaam = (document.getElementById('s2-achternaam').value || '').trim();
+      const bedrijf = (document.getElementById('s2-bedrijf').value || '').trim();
       const referenties = (document.getElementById('s2-ref').value || '').trim();
       const uitstraling = selected().join(', ');
       const doel = (document.getElementById('s2-doel').value || '').trim();
       const usp = (document.getElementById('s2-usp').value || '').trim();
       // Niets ingevuld of geen id → gewoon afronden, de lead is al binnen.
-      if (!window.__leadId || (!referenties && !uitstraling && !doel && !usp)) { finish(); return; }
+      if (!window.__leadId || (!achternaam && !bedrijf && !referenties && !uitstraling && !doel && !usp)) { finish(); return; }
       s2btn.disabled = true; s2lbl.textContent = 'Versturen…';
       try {
         await fetch('/api/lead', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ mode: 'details', id: window.__leadId, referenties, uitstraling, doel, usp }),
+          body: JSON.stringify({ mode: 'details', id: window.__leadId, achternaam, bedrijf, referenties, uitstraling, doel, usp }),
         });
         try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'lead_details' }); } catch (e2) {}
       } catch (e2) { /* lead is al binnen; toon alsnog het bedankscherm */ }
