@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekentool — Stolkwebdesign | Bereken je website + modules</title>
+<meta name="description" content="Stel jouw pakket samen. Kies een website-pakket, voeg optionele modules toe en zie direct het totaalbedrag — eenmalig en per maand.">
+<meta property="og:title" content="Rekentool — Stolkwebdesign">
+<meta property="og:description" content="Bereken de kosten van je website en modules. Kies, combineer en zie live wat je betaalt.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.stolkwebdesign.nl/rekentool">
+<link rel="canonical" href="https://www.stolkwebdesign.nl/rekentool">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/cookieconsent/cookieconsent.css">
+<link rel="stylesheet" href="/cookieconsent/cc-brutalist.css">
+<script defer src="/cookieconsent/cookieconsent.umd.js"></script>
+<script defer src="/cookieconsent/cc-init.js"></script>
+<style>
+html,body{overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000000;--white:#FFFFFF;--red:#EA2525;
+  --green:#16a34a;--near-black:#0A0A0A;--bone:#F5F5F5;--muted:#767676;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--black);font-family:'Space Grotesk',sans-serif}
+.font-display{font-family:'Archivo Black',sans-serif}
+.font-mono{font-family:'JetBrains Mono',monospace}
+.red{color:var(--red)}
+
+/* ── NOISE ── */
+.noise{position:absolute;inset:0;pointer-events:none;opacity:.08;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+/* ── HOVER SHIFT ── */
+.hover-shift{display:inline-block;transition:transform .2s ease-out;position:relative;cursor:pointer}
+.hover-shift::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--red);transition:width .2s ease-out}
+.hover-shift:hover{transform:translateX(-4px) skewX(-3deg)}
+.hover-shift:hover::after{width:100%}
+.hover-shift.active{color:var(--white)}
+.hover-shift.active::after{width:100%}
+
+/* ══ NAV ══ */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:var(--black);border-bottom:2px solid var(--black);display:flex;align-items:center;justify-content:space-between;padding:16px 48px}
+.nav-logo{font-family:'Archivo Black',sans-serif;font-size:18px;text-transform:uppercase;color:var(--white);letter-spacing:-0.02em;text-decoration:none}
+.nav-links{display:flex;gap:40px;list-style:none;align-items:center}
+.nav-links a{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:rgba(255,255,255,.5);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--white);transition:transform .25s cubic-bezier(.16,1,.3,1),opacity .2s}
+.nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.nav-cta-item{display:none}
+.skip-link{position:absolute;top:-100px;left:0;background:var(--red);color:var(--white);padding:8px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none;z-index:200;transition:top .15s}
+.skip-link:focus{top:0}
+.nav-cta{font-family:'Archivo Black',sans-serif;font-size:12px;text-transform:uppercase;background:var(--red);color:var(--white);border:2px solid var(--white);padding:13px 22px;text-decoration:none;letter-spacing:.04em;transition:background .15s,color .15s}
+.nav-cta:hover{background:var(--white);color:var(--red)}
+.nav-lang{display:flex;gap:7px;align-items:center}
+.nav-lang a.active{color:var(--white)}
+.nav-lang .sep{color:rgba(255,255,255,.25)}
+
+/* ══ HERO ══ */
+.hero{position:relative;background:var(--near-black);color:var(--white);padding:168px 48px 80px;overflow:hidden;border-bottom:2px solid var(--black)}
+.hero-inner{max-width:1400px;margin:0 auto;position:relative;z-index:2}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:12px;margin-bottom:32px;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.55)}
+.hero-eyebrow-dot{width:10px;height:10px;background:var(--red);flex-shrink:0}
+.hero-headline{font-family:'Archivo Black',sans-serif;font-size:clamp(48px,7vw,96px);line-height:.9;letter-spacing:-0.04em;text-transform:uppercase;max-width:900px;margin-bottom:28px}
+.hero-sub{font-size:clamp(15px,1.4vw,18px);color:rgba(255,255,255,.65);max-width:580px;line-height:1.65}
+
+/* ══ LAYOUT ══ */
+.calc-section{background:var(--white)}
+.calc-layout{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:1fr 360px;gap:48px;padding:72px 48px 120px;align-items:start}
+
+/* ── Step header ── */
+.calc-step{margin-bottom:56px}
+.step-header{display:flex;align-items:baseline;gap:16px;margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid var(--black)}
+.step-num{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--red)}
+.step-title{font-family:'Archivo Black',sans-serif;font-size:clamp(22px,2.5vw,32px);text-transform:uppercase;letter-spacing:-0.02em}
+.step-optional{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:400}
+
+/* ── Package cards ── */
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.pkg-card{border:2px solid var(--black);padding:24px 20px;cursor:pointer;position:relative;background:var(--white);transition:transform .15s ease-out,box-shadow .15s ease-out,background .15s,color .15s;user-select:none}
+.pkg-card:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 0 var(--black)}
+.pkg-card.selected{background:var(--black);color:var(--white);box-shadow:8px 8px 0 0 var(--red);transform:translate(-3px,-3px)}
+.pkg-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;background:var(--red);color:var(--white);padding:3px 8px;margin-bottom:12px}
+.pkg-name{font-family:'Archivo Black',sans-serif;font-size:22px;text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:4px}
+.pkg-price{font-family:'Archivo Black',sans-serif;font-size:26px;letter-spacing:-0.03em;margin-bottom:20px}
+.pkg-price span{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.05em;color:var(--muted)}
+.pkg-card.selected .pkg-price span{color:rgba(255,255,255,.5)}
+.pkg-features{list-style:none}
+.pkg-features li{font-family:'Space Grotesk',sans-serif;font-size:13px;line-height:1.5;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.1);display:flex;gap:8px;align-items:baseline}
+.pkg-card.selected .pkg-features li{border-bottom-color:rgba(255,255,255,.15)}
+.pkg-features li::before{content:'+';font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--red);flex-shrink:0}
+.pkg-check{position:absolute;top:14px;right:14px;width:24px;height:24px;border:2px solid rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-family:'Archivo Black',sans-serif;font-size:13px;transition:background .15s,border-color .15s}
+.pkg-card.selected .pkg-check{background:var(--red);border-color:var(--red);color:var(--white)}
+
+/* ── Extra pages ── */
+.extra-row{display:flex;align-items:center;gap:16px;padding:14px 16px;border:2px solid var(--black);background:var(--bone);margin-bottom:16px;flex-wrap:wrap}
+.extra-row-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;flex:1;min-width:160px}
+.extra-counter{display:flex;align-items:center}
+.extra-btn{width:36px;height:36px;border:2px solid var(--black);background:var(--white);font-family:'Archivo Black',sans-serif;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s,color .12s}
+.extra-btn:hover{background:var(--black);color:var(--white)}
+.extra-val{width:44px;text-align:center;font-family:'Archivo Black',sans-serif;font-size:18px;border-top:2px solid var(--black);border-bottom:2px solid var(--black);padding:7px 0;background:var(--white)}
+.extra-price-tag{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);white-space:nowrap}
+
+/* ── Hosting note ── */
+.hosting-note{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:12px 0}
+.hosting-dot{width:8px;height:8px;background:var(--green);flex-shrink:0;border-radius:50%}
+
+/* ── Module cards ── */
+.mod-basis-wrapper{margin-bottom:14px}
+.mod-card{border:2px solid var(--black);padding:18px 20px;cursor:pointer;position:relative;background:var(--white);transition:transform .15s ease-out,box-shadow .15s ease-out,background .15s,color .15s;user-select:none}
+.mod-card:hover:not(.mod-locked):not(.mod-free):not(.mod-auto){transform:translate(-2px,-2px);box-shadow:5px 5px 0 0 var(--black)}
+.mod-card.mod-selected{background:var(--black);color:var(--white);box-shadow:6px 6px 0 0 var(--red);transform:translate(-2px,-2px)}
+.mod-card.mod-auto{background:var(--near-black);color:var(--white);cursor:default}
+.mod-card.mod-free{background:var(--bone);cursor:default;opacity:.75}
+.mod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.mod-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.mod-num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);letter-spacing:.15em;text-transform:uppercase}
+.mod-card.mod-selected .mod-num,.mod-card.mod-auto .mod-num{color:rgba(255,255,255,.45)}
+.mod-card.mod-free .mod-num{color:var(--muted)}
+.mod-status{display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.mod-dot{width:6px;height:6px;background:var(--green);flex-shrink:0;border-radius:50%}
+.mod-dot.locked{background:var(--muted)}
+.mod-name{font-family:'Archivo Black',sans-serif;font-size:17px;text-transform:uppercase;letter-spacing:-0.02em;line-height:1.05;margin-bottom:5px}
+.mod-desc{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px;line-height:1.55}
+.mod-card.mod-selected .mod-desc{color:rgba(255,255,255,.45)}
+.mod-card.mod-auto .mod-desc{color:rgba(255,255,255,.4)}
+.mod-pricing{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.mod-price-setup{font-family:'Archivo Black',sans-serif;font-size:16px;letter-spacing:-0.02em}
+.mod-price-monthly{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)}
+.mod-card.mod-selected .mod-price-monthly{color:rgba(255,255,255,.45)}
+.mod-card.mod-auto .mod-price-monthly{color:rgba(255,255,255,.4)}
+.mod-standalone-badge{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--red);color:var(--red)}
+.mod-card.mod-selected .mod-standalone-badge{border-color:rgba(255,255,255,.4);color:rgba(255,255,255,.6)}
+.mod-check{position:absolute;top:14px;right:14px;width:22px;height:22px;border:2px solid rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-size:12px;transition:background .15s,border-color .15s}
+.mod-card.mod-selected .mod-check,.mod-card.mod-auto .mod-check,.mod-card.mod-free .mod-check{background:var(--red);border-color:var(--red);color:var(--white)}
+
+/* ══ SIDEBAR ══ */
+.calc-right{position:relative}
+#sidebar-anchor{position:absolute;top:-80px}
+.calc-sidebar{position:sticky;top:88px}
+.sidebar-panel{border:2px solid var(--black);box-shadow:8px 8px 0 0 var(--red)}
+.sidebar-head{background:var(--black);color:var(--white);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em}
+.sb-count{background:var(--red);color:var(--white);font-size:10px;padding:2px 8px;min-width:22px;text-align:center}
+.sidebar-body{padding:20px}
+.sb-empty{padding:20px 0;text-align:center;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;line-height:2}
+.sb-item{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid rgba(0,0,0,.08);gap:8px}
+.sb-item-name{font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--black);flex:1}
+.sb-item-name.sb-free{color:var(--muted)}
+.sb-free-tag{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.1em;text-transform:uppercase;margin-left:5px}
+.sb-item-price{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap}
+.sb-divider{height:2px;background:var(--black);margin:14px 0}
+.total-block{padding:14px 0 0}
+.total-row{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0}
+.total-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.total-amount{font-family:'Archivo Black',sans-serif;font-size:20px;letter-spacing:-0.02em}
+.total-year-row{border-top:2px solid var(--black);margin-top:8px;padding-top:14px;display:flex;justify-content:space-between;align-items:flex-start}
+.total-year-left .total-label{color:var(--black)}
+.total-year-note{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.total-year-amount{font-family:'Archivo Black',sans-serif;font-size:28px;letter-spacing:-0.03em}
+.total-vat{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);text-align:right;padding-top:6px}
+.sidebar-ctas{margin-top:18px;display:flex;flex-direction:column;gap:10px}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.04em;background:var(--red);color:var(--white);border:2px solid var(--red);padding:14px 20px;text-decoration:none;cursor:pointer;transition:background .15s,color .15s,border-color .15s;width:100%;text-align:center}
+.btn-primary:hover{background:var(--white);color:var(--red);border-color:var(--black)}
+.btn-outline{display:inline-flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--black);background:var(--white);border:2px solid var(--black);padding:12px 20px;text-decoration:none;cursor:pointer;transition:background .15s,color .15s;width:100%}
+.btn-outline:hover{background:var(--black);color:var(--white)}
+
+/* ══ MOBILE BAR ══ */
+.mobile-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--black);color:var(--white);border-top:2px solid var(--red);padding:12px 20px;z-index:90;align-items:center;justify-content:space-between;gap:12px}
+.m-col{display:flex;flex-direction:column;gap:2px}
+.m-label{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.4)}
+.m-amount{font-family:'Archivo Black',sans-serif;font-size:18px}
+.m-cta{font-family:'Archivo Black',sans-serif;font-size:12px;text-transform:uppercase;letter-spacing:.04em;background:var(--red);color:var(--white);border:2px solid var(--red);padding:10px 16px;text-decoration:none;white-space:nowrap;flex-shrink:0}
+
+/* ══ FOOTER ══ */
+footer{background:var(--black);color:var(--white);padding:60px 48px 36px;border-top:2px solid var(--red)}
+.footer-grid{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-logo{font-family:'Archivo Black',sans-serif;font-size:20px;text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:14px}
+.footer-tagline{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase;line-height:1.7}
+.footer-col-label{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--red);margin-bottom:14px}
+.footer-links{list-style:none}
+.footer-links li{margin-bottom:9px}
+.footer-links a{font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--white)}
+.footer-bar{max-width:1400px;margin:0 auto;padding-top:28px;border-top:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:space-between}
+.footer-copy{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);letter-spacing:.08em;text-transform:uppercase}
+
+/* ══ MODAL ══ */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:center;justify-content:center;padding:24px;overflow-y:auto}
+.modal-backdrop.open{display:flex}
+.modal{background:var(--white);border:2px solid var(--black);box-shadow:12px 12px 0 0 var(--red);max-width:560px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+.modal-head{background:var(--black);color:var(--white);padding:18px 28px;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;letter-spacing:-0.02em}
+.modal-close{background:none;border:none;color:var(--white);font-family:'Archivo Black',sans-serif;font-size:22px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{color:var(--red)}
+.modal-body{padding:28px}
+.modal-intro{font-size:14px;line-height:1.7;color:var(--muted);margin-bottom:22px}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.15em;color:var(--black);margin-bottom:7px}
+.form-input{width:100%;padding:12px 14px;border:2px solid var(--black);background:var(--white);font-family:'Space Grotesk',sans-serif;font-size:14px}
+.form-input:focus{outline:none;border-color:var(--red)}
+.form-textarea{min-height:90px;resize:vertical;font-family:'Space Grotesk',sans-serif}
+.module-checks{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.module-check{display:flex;align-items:center;gap:8px;padding:10px 12px;border:2px solid var(--black);font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;cursor:pointer;user-select:none;background:var(--white)}
+.module-check input{accent-color:var(--red);width:14px;height:14px}
+.module-check.checked{background:var(--black);color:var(--white)}
+.modal-submit{width:100%;background:var(--red);color:var(--white);border:2px solid var(--red);font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.04em;padding:16px 22px;cursor:pointer;transition:background .15s,color .15s;margin-top:10px}
+.modal-submit:hover{background:var(--white);color:var(--red)}
+.modal-submit:disabled{opacity:.6;cursor:wait}
+.modal-error{color:var(--red);font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:12px}
+.modal-success{padding:40px 28px;text-align:center}
+.modal-success-icon{font-family:'Archivo Black',sans-serif;font-size:48px;color:var(--red);margin-bottom:16px}
+.modal-success-title{font-family:'Archivo Black',sans-serif;font-size:24px;text-transform:uppercase;letter-spacing:-0.02em;margin-bottom:14px}
+.modal-success-body{font-size:15px;line-height:1.65;color:var(--muted)}
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:980px){
+  body{overflow-x:hidden}
+  nav{padding:14px 20px}
+  .nav-links{display:none}
+  .nav-cta{display:none}
+  .nav-hamburger{display:flex}
+  .nav-links.open{display:flex;flex-direction:column;position:fixed;top:57px;left:0;right:0;background:var(--black);border-bottom:2px solid var(--red);padding:24px 20px;gap:0;z-index:99}
+  .nav-links.open li{border-bottom:1px solid rgba(255,255,255,.1)}
+  .nav-links.open a{display:block;padding:14px 0;font-size:14px;letter-spacing:.1em}
+  .nav-links.open .nav-cta-item{display:block;border-bottom:none;padding-top:16px}
+  .nav-cta-mobile{display:block;background:var(--red);color:var(--white);font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.04em;padding:14px 20px;text-decoration:none;text-align:center;border:2px solid rgba(255,255,255,.3)}
+  .hero{padding:120px 20px 60px}
+  .calc-layout{grid-template-columns:1fr;gap:0;padding:40px 20px 100px}
+  .pkg-grid{grid-template-columns:1fr}
+  .mod-grid{grid-template-columns:1fr}
+  .calc-sidebar{position:static;margin-top:48px}
+  .sidebar-panel{box-shadow:6px 6px 0 0 var(--red)}
+  .mobile-bar{display:flex}
+  footer{padding:48px 20px 28px}
+  .footer-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;padding:0}
+  .footer-grid>div:first-child{grid-column:1/-1}
+  .footer-logo{overflow-wrap:anywhere}
+  .module-checks{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .pkg-card,.mod-card{transition:none}
+}
+</style>
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
+</head>
+<body>
+
+<a href="#main-content" class="skip-link">Naar hoofdinhoud</a>
+
+<nav>
+  <a href="/" class="nav-logo">Stolk<span style="color:#EA2525">web</span>design<span style="color:#EA2525">®</span></a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="/portfolio" class="hover-shift">Portfolio / 01</a></li>
+    <li><a href="/#diensten" class="hover-shift">Diensten / 02</a></li>
+    <li><a href="/modules" class="hover-shift active">Modules / 03</a></li>
+    <li><a href="/#aanpak" class="hover-shift">Aanpak / 04</a></li>
+    <li><a href="/over" class="hover-shift">Over mij / 05</a></li>
+    <li><a href="/blog/" class="hover-shift">Blog / 06</a></li>
+    <li><a href="/projecten" class="hover-shift">Projecten / 07</a></li>
+    <li class="nav-cta-item"><a href="/contact" class="nav-cta-mobile">Plan een gesprek →</a></li>
+    <li class="nav-lang"><a href="/rekentool" class="active" aria-current="page">NL</a><span class="sep">/</span><a href="/en/rekentool">EN</a></li>
+  </ul>
+  <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="/contact" class="nav-cta">Plan een gesprek →</a>
+</nav>
+
+<main id="main-content">
+
+<section class="hero">
+  <div class="noise"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-eyebrow-dot"></div>
+      <span>Rekentool — Bereken je pakket</span>
+    </div>
+    <h1 class="hero-headline">Wat kost<br><span class="red">jouw pakket?</span></h1>
+    <p class="hero-sub">Kies een website-pakket, voeg modules toe en zie direct wat je betaalt — eenmalig en per maand.</p>
+  </div>
+</section>
+
+<section class="calc-section">
+  <div class="calc-layout">
+
+    <!-- LEFT -->
+    <div class="calc-left">
+
+      <!-- STEP 1: Website -->
+      <div class="calc-step">
+        <div class="step-header">
+          <span class="step-num">01</span>
+          <h2 class="step-title">Je website</h2>
+        </div>
+        <div class="pkg-grid" id="pkg-grid"></div>
+
+        <div id="extra-pages-row" style="display:none">
+          <div class="extra-row">
+            <span class="extra-row-label">Extra pagina's — €200 per stuk</span>
+            <div class="extra-counter">
+              <button class="extra-btn" onclick="adjustPages(-1)" aria-label="Minder">−</button>
+              <div class="extra-val" id="extra-val">0</div>
+              <button class="extra-btn" onclick="adjustPages(1)" aria-label="Meer">+</button>
+            </div>
+            <span class="extra-price-tag" id="extra-price-tag">+ €0</span>
+          </div>
+        </div>
+
+        <div class="hosting-note">
+          <span class="hosting-dot"></span>
+          <span>Webhosting &amp; beveiliging: €25/mnd — altijd inbegrepen bij een pakket</span>
+        </div>
+      </div>
+
+      <!-- STEP 2: Modules -->
+      <div class="calc-step">
+        <div class="step-header">
+          <span class="step-num">02</span>
+          <h2 class="step-title">Modules <span class="step-optional">(optioneel)</span></h2>
+        </div>
+
+        <!-- Basis CMS full-width -->
+        <div class="mod-basis-wrapper">
+          <div class="mod-card" id="mod-basis" onclick="toggleModule('basis')" role="checkbox" tabindex="0" aria-checked="false">
+            <div class="mod-check" id="mod-chk-basis"></div>
+            <div class="mod-head">
+              <span class="mod-num">Fundering</span>
+              <span class="mod-status"><span class="mod-dot"></span>Live</span>
+            </div>
+            <div class="mod-name">Basis CMS</div>
+            <div class="mod-desc" id="mod-desc-basis">Login-dashboard · alle modules draaien hierop</div>
+            <div class="mod-pricing">
+              <span class="mod-price-setup">€149</span>
+              <span class="mod-price-monthly">eenmalig + €19/mnd</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mod-grid" id="mod-grid"></div>
+      </div>
+
+    </div><!-- /left -->
+
+    <!-- RIGHT: Sidebar -->
+    <div class="calc-right">
+      <div id="sidebar-anchor"></div>
+      <div class="calc-sidebar">
+        <div class="sidebar-panel">
+          <div class="sidebar-head">
+            <span>Jouw pakket</span>
+            <span class="sb-count" id="sb-count">0</span>
+          </div>
+          <div class="sidebar-body">
+            <div class="sb-empty" id="sb-empty">Kies een pakket<br>om te beginnen.</div>
+            <div id="sb-filled" style="display:none">
+              <div id="sb-items"></div>
+              <div class="total-block">
+                <div class="total-row">
+                  <span class="total-label">Eenmalig</span>
+                  <span class="total-amount" id="sb-once">€0</span>
+                </div>
+                <div class="total-row">
+                  <span class="total-label">Per maand</span>
+                  <span class="total-amount" id="sb-monthly">€0</span>
+                </div>
+                <div class="total-year-row">
+                  <div class="total-year-left">
+                    <div class="total-label">Eerste jaar</div>
+                    <div class="total-year-note">eenmalig + 12× /mnd</div>
+                  </div>
+                  <span class="total-year-amount" id="sb-year">€0</span>
+                </div>
+                <div class="total-vat">Excl. BTW · Early-access 2026 tarief</div>
+              </div>
+              <div class="sidebar-ctas">
+                <a href="/contact" class="btn-primary">Plan een gesprek →</a>
+                <button class="btn-outline" onclick="openWaitlist()">Op de wachtlijst →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo font-display">Stolk<span style="color:#EA2525">web</span>design<span style="color:#EA2525">®</span></div>
+      <p class="footer-tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Navigeer</div>
+      <ul class="footer-links">
+        <li><a href="/portfolio">Portfolio</a></li>
+        <li><a href="/#diensten">Diensten</a></li>
+        <li><a href="/modules">Modules</a></li>
+        <li><a href="/rekentool">Rekentool</a></li>
+        <li><a href="/over">Over mij</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Modules</div>
+      <ul class="footer-links">
+        <li><a href="/modules#basis">Basis CMS</a></li>
+        <li><a href="/modules#content">Content</a></li>
+        <li><a href="/modules#factuur">Factuur-tool</a></li>
+        <li><a href="/modules#social">Social Campagnes</a></li>
+        <li><a href="/modules#seo">SEO Rapport</a></li>
+        <li><a href="/modules#blog">Blog</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-label font-mono">Contact</div>
+      <ul class="footer-links">
+        <li><a href="/contact">Plan een gesprek</a></li>
+        <li><a href="https://wa.me/31650222228">WhatsApp</a></li>
+        <li><a href="mailto:info@stolkwebdesign.nl">info@stolkwebdesign.nl</a></li>
+      </ul>
+      <div class="footer-col-label font-mono" style="margin-top:24px">Volg ons</div>
+      <ul class="footer-links">
+        <li><a href="https://www.linkedin.com/in/peter-stolk-66b10b2" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/stolkwebdesign.nl" target="_blank" rel="noopener">Instagram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-copy font-mono">© 2026 Stolkwebdesign — Uithoorn</span>
+    <div style="display:flex;gap:20px;flex-wrap:wrap">
+      <a href="/privacybeleid" style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);text-decoration:none">Privacybeleid</a>
+      <a href="/algemene-voorwaarden" style="font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.3);text-decoration:none">Algemene Voorwaarden</a>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-backdrop" id="waitlist-modal" role="dialog" aria-modal="true" aria-labelledby="waitlist-title">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="waitlist-title">Op de wachtlijst</span>
+      <button class="modal-close" id="waitlist-close" aria-label="Sluiten">×</button>
+    </div>
+    <div class="modal-body" id="waitlist-form-wrapper">
+      <p class="modal-intro">Vul je gegevens in — Peter neemt persoonlijk contact op zodra de modules live gaan. Wachtlijst-aanmeldingen behouden het early-access tarief 2026.</p>
+      <form id="waitlist-form-el" autocomplete="on" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="wl-email">E-mailadres *</label>
+          <input class="form-input" type="email" id="wl-email" name="email" required autocomplete="email" placeholder="jij@bedrijf.nl">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wl-name">Naam</label>
+          <input class="form-input" type="text" id="wl-name" name="name" autocomplete="name" placeholder="Voor- en achternaam">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wl-company">Bedrijf</label>
+          <input class="form-input" type="text" id="wl-company" name="company" autocomplete="organization" placeholder="Naam van je bedrijf">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Welke modules interesseren je?</label>
+          <div class="module-checks" id="wl-modules">
+            <label class="module-check"><input type="checkbox" value="basis"> Basis CMS</label>
+            <label class="module-check"><input type="checkbox" value="content"> Content</label>
+            <label class="module-check"><input type="checkbox" value="factuur"> Factuur</label>
+            <label class="module-check"><input type="checkbox" value="social"> Social</label>
+            <label class="module-check"><input type="checkbox" value="seo"> SEO</label>
+            <label class="module-check"><input type="checkbox" value="blog"> Blog</label>
+            <label class="module-check"><input type="checkbox" value="onderteken"> Ondertekenen</label>
+            <label class="module-check"><input type="checkbox" value="rooster"> Personeelsplanner</label>
+            <label class="module-check"><input type="checkbox" value="reserveren"> Reserveringen</label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="wl-notes">Vraag of opmerking</label>
+          <textarea class="form-input form-textarea" id="wl-notes" name="notes" placeholder="Wat wil je weten van Peter?"></textarea>
+        </div>
+        <button type="submit" class="modal-submit" id="wl-submit">Op de wachtlijst zetten →</button>
+        <div class="modal-error" id="wl-error" style="display:none"></div>
+      </form>
+    </div>
+    <div class="modal-body modal-success" id="waitlist-success" style="display:none">
+      <div class="modal-success-icon font-display">✓</div>
+      <div class="modal-success-title">Je staat op de lijst.</div>
+      <p class="modal-success-body">Peter neemt persoonlijk contact op zodra de modules live gaan.<br>Wachtlijst-positie + early-access tarief 2026 zijn vastgelegd.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE STICKY BAR -->
+<div class="mobile-bar" id="mobile-bar">
+  <div class="m-col">
+    <span class="m-label">Eenmalig</span>
+    <span class="m-amount" id="m-once">—</span>
+  </div>
+  <div class="m-col">
+    <span class="m-label">Per maand</span>
+    <span class="m-amount" id="m-monthly">—</span>
+  </div>
+  <a href="#sidebar-anchor" class="m-cta">Bekijk →</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+// ── DATA ──
+const PACKAGES = [
+  { id:'start',    name:'Start',     price:1250, features:['1 pagina (homepage)','Volledig ontwerp-systeem','Responsive + SEO-klaar'] },
+  { id:'onderneem',name:'Onderneem', price:2250, popular:true, features:['Tot 4 pagina\'s','Volledig ontwerp-systeem','Responsive + SEO-klaar'] },
+  { id:'groei',    name:'Groei',     price:3500, best:true, features:['Tot 7 pagina\'s','Volledig ontwerp-systeem','Basis CMS + Content gratis'] },
+];
+
+const BASIS = { setup:149, monthly:19 };
+
+const MODULES = [
+  { id:'content',    num:'01', name:'Content',          desc:'Teksten & foto\'s aanpassen',            setup:99,  monthly:15, standalone:false },
+  { id:'factuur',    num:'02', name:'Factuur',           desc:'Facturen + offertes in 60 sec',          setup:99,  monthly:9,  standalone:false },
+  { id:'social',     num:'03', name:'Social Campagnes',  desc:'Posts in 4 formats · AI-kopij',          setup:99,  monthly:39, standalone:false },
+  { id:'seo',        num:'04', name:'SEO Rapport',       desc:'Audit + actieplan · ook standalone',     setup:99,  monthly:19, standalone:true  },
+  { id:'blog',       num:'05', name:'Blog',              desc:'Notion → auto-gepubliceerde posts',      setup:99,  monthly:29, standalone:false },
+  { id:'onderteken', num:'06', name:'Ondertekenen',      desc:'eIDAS e-handtekening · link sturen',     setup:79,  monthly:7,  standalone:false },
+  { id:'rooster',    num:'07', name:'Personeelsplanner', desc:'Rooster + verlof + medewerker-links',    setup:99,  monthly:15, standalone:false },
+  { id:'reserveren', num:'08', name:'Reserveringen',     desc:'Online boeken · slots · Notion-sync',    setup:99,  monthly:19, standalone:false },
+];
+
+const state = { pkg:null, extraPages:0, modules:new Set() };
+
+// ── RENDER ──
+function init() {
+  const pgrid = document.getElementById('pkg-grid');
+  pgrid.innerHTML = PACKAGES.map(p => `
+    <div class="pkg-card" id="pkg-${p.id}" onclick="selectPkg('${p.id}')" role="radio" tabindex="0" aria-checked="false">
+      ${p.popular ? '<div class="pkg-badge">Populairste</div>' : ''}
+      ${p.best    ? '<div class="pkg-badge">Meeste modules</div>' : ''}
+      <div class="pkg-check" id="pkg-chk-${p.id}"></div>
+      <div class="pkg-name">${p.name}</div>
+      <div class="pkg-price">€${fmt(p.price)}<span> eenmalig</span></div>
+      <ul class="pkg-features">${p.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+    </div>`).join('');
+
+  const mgrid = document.getElementById('mod-grid');
+  mgrid.innerHTML = MODULES.map(m => `
+    <div class="mod-card" id="mod-${m.id}" onclick="toggleModule('${m.id}')" role="checkbox" tabindex="0" aria-checked="false">
+      <div class="mod-check" id="mod-chk-${m.id}"></div>
+      <div class="mod-head">
+        <span class="mod-num">/ ${m.num}</span>
+        <span class="mod-status"><span class="mod-dot"></span>Live</span>
+      </div>
+      <div class="mod-name">${m.name}</div>
+      <div class="mod-desc" id="mod-desc-${m.id}">${m.desc}</div>
+      <div class="mod-pricing">
+        <span class="mod-price-setup">€${m.setup}</span>
+        <span class="mod-price-monthly">eenmalig + €${m.monthly}/mnd</span>
+        ${m.standalone ? '<span class="mod-standalone-badge">Standalone</span>' : ''}
+      </div>
+    </div>`).join('');
+
+  // Keyboard support
+  document.querySelectorAll('.pkg-card,.mod-card').forEach(el =>
+    el.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } })
+  );
+}
+
+// ── INTERACTIONS ──
+function selectPkg(id) {
+  state.pkg = id;
+  PACKAGES.forEach(p => {
+    const card = document.getElementById(`pkg-${p.id}`);
+    const chk  = document.getElementById(`pkg-chk-${p.id}`);
+    const sel  = p.id === id;
+    card.classList.toggle('selected', sel);
+    card.setAttribute('aria-checked', sel);
+    chk.textContent = sel ? '✓' : '';
+  });
+  document.getElementById('extra-pages-row').style.display = 'block';
+  recalc();
+}
+
+function toggleModule(id) {
+  const isGroei = state.pkg === 'groei';
+  if (id === 'basis') {
+    const otherForced = MODULES.filter(m=>!m.standalone).some(m=>state.modules.has(m.id));
+    if (otherForced || isGroei) return;
+    state.modules.has('basis') ? state.modules.delete('basis') : state.modules.add('basis');
+  } else {
+    const mod = MODULES.find(m=>m.id===id);
+    if (!mod) return;
+    if (isGroei && id==='content') return;
+    state.modules.has(id) ? state.modules.delete(id) : state.modules.add(id);
+    if (!mod.standalone && state.modules.has(id) && !isGroei) state.modules.add('basis');
+  }
+  recalc();
+}
+
+function adjustPages(d) {
+  state.extraPages = Math.max(0, Math.min(20, state.extraPages + d));
+  document.getElementById('extra-val').textContent = state.extraPages;
+  document.getElementById('extra-price-tag').textContent = `+ €${fmt(state.extraPages * 200)}`;
+  recalc();
+}
+
+// ── CALC ──
+function recalc() {
+  const pkg = PACKAGES.find(p=>p.id===state.pkg);
+  const isGroei = state.pkg === 'groei';
+
+  // Auto-add basis when non-standalone modules selected (not groei)
+  const nonStandaloneOn = MODULES.filter(m=>!m.standalone).some(m=>state.modules.has(m.id));
+  if (nonStandaloneOn && !isGroei) state.modules.add('basis');
+
+  let setup = pkg ? pkg.price + state.extraPages * 200 : state.extraPages * 200;
+  let monthly = pkg ? 25 : 0;
+
+  // Basis
+  if (state.modules.has('basis') && !isGroei) { setup += BASIS.setup; monthly += BASIS.monthly; }
+
+  // Modules
+  MODULES.forEach(m => {
+    if (!state.modules.has(m.id)) return;
+    const free = isGroei && m.id==='content';
+    if (!free) { setup += m.setup; monthly += m.monthly; }
+  });
+
+  const year = setup + monthly * 12;
+
+  updateCards(isGroei, nonStandaloneOn);
+  updateSidebar(pkg, isGroei, setup, monthly, year);
+  updateMobileBar(pkg, setup, monthly);
+}
+
+function updateCards(isGroei, nonStandaloneOn) {
+  // Basis card
+  const basisCard  = document.getElementById('mod-basis');
+  const basisChk   = document.getElementById('mod-chk-basis');
+  const basisDesc  = document.getElementById('mod-desc-basis');
+  if (isGroei) {
+    basisCard.className = 'mod-card mod-free';
+    basisDesc.textContent = 'Gratis inbegrepen bij Groei';
+    basisChk.textContent = '✓';
+  } else if (state.modules.has('basis')) {
+    basisCard.className = nonStandaloneOn ? 'mod-card mod-auto' : 'mod-card mod-selected';
+    basisDesc.textContent = nonStandaloneOn ? 'Login-dashboard · automatisch inbegrepen' : 'Login-dashboard · alle modules draaien hierop';
+    basisChk.textContent = '✓';
+  } else {
+    basisCard.className = 'mod-card';
+    basisDesc.textContent = 'Login-dashboard · alle modules draaien hierop';
+    basisChk.textContent = '';
+  }
+  basisCard.setAttribute('aria-checked', isGroei || state.modules.has('basis'));
+
+  // Module cards
+  MODULES.forEach(m => {
+    const card = document.getElementById(`mod-${m.id}`);
+    const chk  = document.getElementById(`mod-chk-${m.id}`);
+    const desc = document.getElementById(`mod-desc-${m.id}`);
+    if (!card) return;
+    const isFree = isGroei && m.id==='content';
+    const isSel  = state.modules.has(m.id);
+    if (isFree) {
+      card.className = 'mod-card mod-free';
+      desc.textContent = 'Gratis inbegrepen bij Groei';
+      chk.textContent = '✓';
+    } else if (isSel) {
+      card.className = 'mod-card mod-selected';
+      desc.textContent = m.desc;
+      chk.textContent = '✓';
+    } else {
+      card.className = 'mod-card';
+      desc.textContent = m.desc;
+      chk.textContent = '';
+    }
+    card.setAttribute('aria-checked', isFree||isSel);
+  });
+}
+
+function fmt(n) { return n.toLocaleString('nl-NL'); }
+function eur(n) { return '€'+fmt(n); }
+
+function updateSidebar(pkg, isGroei, setup, monthly, year) {
+  const hasAny = pkg || state.modules.size > 0;
+  document.getElementById('sb-empty').style.display   = hasAny ? 'none'  : 'block';
+  document.getElementById('sb-filled').style.display  = hasAny ? 'block' : 'none';
+  if (!hasAny) { document.getElementById('sb-count').textContent = '0'; return; }
+
+  let count = pkg ? 1 : 0;
+  let html  = '';
+
+  if (pkg) {
+    html += sbItem(pkg.name, eur(pkg.price));
+    if (state.extraPages > 0)
+      html += sbItem(`+ ${state.extraPages} extra pagina${state.extraPages>1?"'s":''}`, eur(state.extraPages*200));
+    html += '<div class="sb-divider"></div>';
+    html += sbItem('Hosting', '€25<span class="sb-item-price">/mnd</span>');
+  }
+
+  if (isGroei) {
+    html += sbItemFree('Basis CMS');
+  } else if (state.modules.has('basis')) {
+    count++;
+    html += sbItem('Basis CMS', `${eur(BASIS.setup)} + €${BASIS.monthly}/mnd`);
+  }
+
+  MODULES.forEach(m => {
+    if (!state.modules.has(m.id)) return;
+    count++;
+    const isFree = isGroei && m.id==='content';
+    html += isFree ? sbItemFree(m.name) : sbItem(m.name, `${eur(m.setup)} + €${m.monthly}/mnd`);
+  });
+
+  document.getElementById('sb-items').innerHTML   = html;
+  document.getElementById('sb-count').textContent = count;
+  document.getElementById('sb-once').textContent   = eur(setup);
+  document.getElementById('sb-monthly').textContent = eur(monthly)+'/mnd';
+  document.getElementById('sb-year').textContent   = eur(year);
+}
+
+function sbItem(name, price) {
+  return `<div class="sb-item"><span class="sb-item-name">${name}</span><span class="sb-item-price">${price}</span></div>`;
+}
+function sbItemFree(name) {
+  return `<div class="sb-item"><span class="sb-item-name sb-free">${name} <span class="sb-free-tag">gratis</span></span><span class="sb-item-price">—</span></div>`;
+}
+
+function updateMobileBar(pkg, setup, monthly) {
+  const on = pkg || state.modules.size > 0;
+  document.getElementById('m-once').textContent    = on ? eur(setup)   : '—';
+  document.getElementById('m-monthly').textContent = on ? eur(monthly)+'/mnd' : '—';
+}
+
+// ── MODAL ──
+function openWaitlist() {
+  document.querySelectorAll('#wl-modules input').forEach(inp => {
+    inp.checked = state.modules.has(inp.value) ||
+      (state.pkg==='groei' && (inp.value==='basis'||inp.value==='content'));
+    inp.closest('.module-check').classList.toggle('checked', inp.checked);
+  });
+  document.getElementById('waitlist-modal').classList.add('open');
+  document.getElementById('wl-email').focus();
+}
+
+document.getElementById('waitlist-close').addEventListener('click', () =>
+  document.getElementById('waitlist-modal').classList.remove('open'));
+document.getElementById('waitlist-modal').addEventListener('click', e => {
+  if (e.target===e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+document.querySelectorAll('.module-check').forEach(label =>
+  label.addEventListener('change', () =>
+    label.classList.toggle('checked', label.querySelector('input').checked)));
+
+document.getElementById('waitlist-form-el').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = document.getElementById('wl-submit');
+  const err = document.getElementById('wl-error');
+  const email = document.getElementById('wl-email').value.trim();
+  if (!email) { err.style.display='block'; err.textContent='E-mailadres is verplicht.'; return; }
+  btn.disabled=true; btn.textContent='Even geduld…'; err.style.display='none';
+  try {
+    const mods = [...document.querySelectorAll('#wl-modules input:checked')].map(i=>i.value);
+    const { error } = await supabase.from('stolkwebdesign_module_waitlist').insert({
+      email, name:document.getElementById('wl-name').value.trim()||null,
+      company:document.getElementById('wl-company').value.trim()||null,
+      modules:mods.length?mods:null,
+      notes:document.getElementById('wl-notes').value.trim()||null,
+    });
+    if (error) throw error;
+    document.getElementById('waitlist-form-wrapper').style.display='none';
+    document.getElementById('waitlist-success').style.display='block';
+  } catch {
+    err.style.display='block';
+    err.textContent='Er ging iets mis. Mail naar info@stolkwebdesign.nl';
+    btn.disabled=false; btn.textContent='Op de wachtlijst zetten →';
+  }
+});
+
+// ── NAV ──
+document.getElementById('nav-toggle').addEventListener('click', () => {
+  const links = document.getElementById('nav-links');
+  const open  = links.classList.toggle('open');
+  document.getElementById('nav-toggle').classList.toggle('open', open);
+  document.getElementById('nav-toggle').setAttribute('aria-expanded', open);
+});
+
+init();
+</script>
+</body>
+</html>

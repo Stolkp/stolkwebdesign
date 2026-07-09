@@ -666,6 +666,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <li><a href="#aanpak" class="hover-shift">Aanpak / 04</a></li>
     <li><a href="/over" class="hover-shift">Over mij / 05</a></li>
     <li><a href="/blog/" class="hover-shift">Blog / 06</a></li>
+    <li><a href="/projecten" class="hover-shift">Projecten / 07</a></li>
     <li class="nav-cta-item"><a href="/contact" class="nav-cta-mobile">Plan een gesprek →</a></li>
       <li class="nav-lang"><a href="/" class="active" aria-current="true">NL</a><span class="sep">/</span><a href="/en">EN</a></li>
   </ul>
@@ -1328,7 +1329,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     const esc = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     try {
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      const { data, error } = await db.from('projects').select('*').order('sort_order');
+      // Alleen opgeleverd werk: concepten hebben een negatieve sort_order en staan op /projecten.
+      const { data, error } = await db.from('projects').select('*').gte('sort_order', 0).order('sort_order');
       if (error || !data || !data.length) return;   // fallback-kaarten behouden
       // De laatste oplevering staat al uitgelicht bovenaan deze sectie → niet nogmaals in de grid.
       const items = data.filter(p => !p.is_latest_launch).slice(0, 5);
@@ -1368,8 +1370,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       let p = null;
       let r = await db.from('projects').select('*').eq('is_latest_launch', true).limit(1).maybeSingle();
       p = r.data;
-      if (!p) { r = await db.from('projects').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle(); p = r.data; }
-      if (!p) { r = await db.from('projects').select('*').order('sort_order', { ascending: false }).limit(1).maybeSingle(); p = r.data; }
+      if (!p) { r = await db.from('projects').select('*').gte('sort_order', 0).order('created_at', { ascending: false }).limit(1).maybeSingle(); p = r.data; }
+      if (!p) { r = await db.from('projects').select('*').gte('sort_order', 0).order('sort_order', { ascending: false }).limit(1).maybeSingle(); p = r.data; }
       if (!p || !p.img) return;   // zonder beeld geen highlight
 
       // Net zoals de grid-kaarten: klik opent de portfolio-detailpagina (niet de live site).
