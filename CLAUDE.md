@@ -29,7 +29,7 @@ Projecten/Stolkwebdesign/
 ├── vercel.json                ← Build command + functions + crons schedule + cleanUrls
 ├── tsconfig.json              ← jsx: "react-jsx" zodat api/og.tsx parsed (scope: api/**)
 ├── supabase-seo-reports.sql   ← Schema + RLS voor seo_reports tabel (project: lkcfwndigzhzcjnhxcmb)
-├── site/                      ← index, over, portfolio, projecten, contact, admin, modules, rekentool, blog, privacybeleid, algemene-voorwaarden
+├── site/                      ← index, over, portfolio, contact, admin, modules, rekentool, blog, privacybeleid, algemene-voorwaarden
 │   ├── hero-video.mp4         ← AI-gegenereerde hero video (Kling via FAL)
 │   ├── assets/preview-cinematic.html ← Alternatieve cinematic dark variant (archief)
 │   ├── config.js              ← Supabase URL + anon key (publiek by design)
