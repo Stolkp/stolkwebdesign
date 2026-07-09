@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="facebook-domain-verification" content="9qmunvfosukmumq3ridpkjwfalwryk" />
-<title>Website laten bouwen — Peter Stolk Webdesign Amsterdam</title>
-<meta name="description" content="Wil je een professionele website laten bouwen die opvalt? Peter Stolk maakt handcrafted websites in HTML, CSS & GSAP én WordPress — snel, uniek en volledig op maat. Vanaf €1.250. Amsterdam.">
+<title>Website laten bouwen | Peter Stolk Webdesign Amsterdam</title>
+<meta name="description" content="Wil je een professionele website laten bouwen die opvalt? Peter Stolk maakt handcrafted websites in HTML, CSS & GSAP én WordPress: snel, uniek en volledig op maat. Vanaf €1.250. Amsterdam.">
 <meta name="keywords" content="website laten bouwen, webdesign Amsterdam, professionele website, WordPress website laten bouwen, HTML website, custom webdesign, website onderhoud, webhosting">
-<meta property="og:title" content="Website laten bouwen — Peter Stolk Webdesign">
+<meta property="og:title" content="Website laten bouwen | Peter Stolk Webdesign">
 <meta property="og:description" content="Handcrafted websites voor ondernemers die het verschil willen zien. HTML, CSS & GSAP én WordPress. Vanaf €1.250.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.stolkwebdesign.nl">
@@ -31,7 +31,7 @@
 <script type="text/plain" data-category="analytics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
 <script type="text/plain" data-category="ads">!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','384832226157615');fbq('track','PageView');</script>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"LocalBusiness","name":"Stolkwebdesign","url":"https://www.stolkwebdesign.nl","telephone":"+31650222228","email":"info@stolkwebdesign.nl","description":"Handcrafted websites voor ondernemers — HTML, CSS, GSAP & WordPress","address":{"@type":"PostalAddress","addressLocality":"Uithoorn","addressCountry":"NL"},"priceRange":"€€"}
+{"@context":"https://schema.org","@type":"LocalBusiness","name":"Stolkwebdesign","url":"https://www.stolkwebdesign.nl","telephone":"+31650222228","email":"info@stolkwebdesign.nl","description":"Handcrafted websites voor ondernemers: HTML, CSS, GSAP & WordPress","address":{"@type":"PostalAddress","addressLocality":"Uithoorn","addressCountry":"NL"},"priceRange":"€€"}
 </script>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -281,7 +281,7 @@ nav {
   font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
   color: rgba(255,255,255,.6); text-decoration: none;
   border-bottom: 1px solid rgba(255,255,255,.2);
-  padding-bottom: 2px;
+  padding: 14px 4px 12px; /* tap target ≥44px hoog */
   transition: color .2s, border-color .2s;
 }
 .btn-wa:hover { color: var(--white); border-color: var(--white); }
@@ -303,6 +303,13 @@ nav {
 }
 .usp-item:last-child { border-right: none; }
 .usp-check { color: var(--red); font-size: 14px; }
+
+/* Google-rating (bewijs bij het beslismoment) */
+.pkg-rating { display:inline-flex; align-items:center; gap:8px; margin-top:14px; text-decoration:none; }
+.pkg-rating .stars { color: var(--red); font-size: 14px; letter-spacing: 2px; line-height: 1; }
+.pkg-rating .txt { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.pkg-rating:hover .txt { color: var(--black); }
+.pkg-per { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:4px 0 0; }
 
 /* ══════ SECTION COMMONS ══════ */
 .section-label {
@@ -519,6 +526,8 @@ nav {
 
 /* ══════ PORTFOLIO STRIP ══════ */
 .portfolio-strip { padding: 0 48px 100px; max-width: 1400px; margin: 0 auto; }
+.portfolio-more { display:inline-block; margin-top:28px; font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--black); text-decoration:none; border-bottom:2px solid var(--red); padding:10px 0 4px; }
+.portfolio-more:hover { color:var(--red); }
 .portfolio-strip-header { padding: 80px 0 48px; }
 .portfolio-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; grid-auto-rows: 1fr; gap: 4px; }
 .port-card { position: relative; overflow: hidden; cursor: pointer; }
@@ -587,10 +596,13 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 /* ══════ RESPONSIVE ══════ */
 @media (max-width: 900px) {
   .hero-video { display: none; }
-  nav { padding: 14px 20px; }
+  nav { padding: 12px 12px; gap: 8px; }
+  .nav-logo { font-size: 12px; flex-shrink:0; }
   .nav-links { display: none; }
-  .nav-cta { display:none; }
-  .nav-hamburger { display:flex; }
+  /* CTA blijft zichtbaar naast de hamburger (thumb-first: actie altijd binnen bereik) */
+  .nav-cta { display:inline-flex; font-size: 10px; padding: 10px 10px; margin-left: auto; white-space: nowrap; letter-spacing: .02em; }
+  .nav-cta-arrow { display: none; }
+  .nav-hamburger { display:flex; flex-shrink:0; order: 3; }
   .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
   .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
   .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
@@ -608,6 +620,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   .metric:nth-child(2) { border-right: none; }
   .portfolio-grid { grid-template-columns: 1fr; }
   .port-card:first-child { grid-row: auto; }
+  /* Mobiel: max 3 kaarten zodat prijzen en bewijs eerder in beeld komen; de rest via /portfolio */
+  .portfolio-grid > *:nth-child(n+4) { display: none; }
   .solution, .process, .social-proof, .final-cta, .portfolio-strip { padding: 72px 20px; }
   .quote-block { padding: 28px; }
   .footer-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 32px; }
@@ -615,6 +629,13 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   .footer-logo { overflow-wrap: anywhere; }
   .usp-strip { grid-template-columns: repeat(2, 1fr); }
   .usp-item:nth-child(2) { border-right: none; }
+}
+@media (max-width: 374px) {
+  .nav-logo { font-size: 10px; }
+  .nav-cta { font-size: 9px; padding: 9px 8px; }
+}
+@media (max-width: 339px) {
+  .nav-cta { display: none; } /* mini-schermen: terug naar hamburger-only */
 }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
@@ -630,6 +651,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 .nav-lang .sep{color:rgba(255,255,255,.25)}
 .footer-links-row a.active{color:var(--white)}
 </style>
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
 </head>
 <body>
 
@@ -651,7 +674,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <button class="nav-hamburger" id="nav-toggle" aria-label="Menu openen" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
-  <a href="/contact" class="nav-cta">Plan een gesprek →</a>
+  <a href="/contact" class="nav-cta">Plan een gesprek<span class="nav-cta-arrow"> →</span></a>
 </nav>
 
 <main id="main-content" data-page="home">
@@ -667,14 +690,14 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="hero-content">
     <div class="hero-label">
       <div class="hero-label-dot"></div>
-      <span class="hero-label-text" data-content="home.hero_label">Peter Stolk — Webdesign · Amsterdam · Persoonlijk contact</span>
+      <span class="hero-label-text" data-content="home.hero_label">Peter Stolk · Webdesign · Amsterdam · Persoonlijk contact</span>
     </div>
     <h1 class="hero-headline">
       <span class="smash-word"><span class="smash-inner" style="animation-delay:.5s">Jouw</span></span><span class="smash-word"><span class="smash-inner" style="animation-delay:.62s">ideale</span></span><br>
       <span class="smash-word"><span class="smash-inner" style="animation-delay:.75s">website</span></span><span class="smash-word"><span class="smash-inner red" style="animation-delay:.88s">gebouwd.</span></span>
     </h1>
     <p class="hero-sub" data-content-html="home.hero_sub">
-      Wil je een <strong>professionele website laten bouwen</strong> die echt opvalt? Ik maak handcrafted websites in HTML &amp; CSS én WordPress — volledig op maat, snel en altijd up-to-date. Van A tot Z geregeld.
+      Wil je een <strong>professionele website laten bouwen</strong> die echt opvalt? Ik maak handcrafted websites in HTML &amp; CSS . Volledig op maat, snel en altijd up-to-date. Van A tot Z geregeld.
     </p>
     <div class="hero-ctas">
       <a href="#contact" class="btn-primary">
@@ -691,9 +714,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 
 <!-- USP STRIP -->
 <div class="usp-strip" data-block-id="usp-strip">
-  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_1">Persoonlijk contact</span></div>
-  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_2">Custom design — geen templates</span></div>
-  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_3">Responsief op alle devices</span></div>
+  <div class="usp-item"><span class="usp-check">★</span> <span data-content="home.usp_1">5,0 op Google (8 reviews)</span></div>
+  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_2">Custom design, geen templates</span></div>
+  <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_3">Persoonlijk contact</span></div>
   <div class="usp-item"><span class="usp-check">✓</span> <span data-content="home.usp_4">Hosting &amp; onderhoud mogelijk</span></div>
 </div>
 
@@ -796,6 +819,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         </div>
       </div>
     </div>
+    <a href="/portfolio" class="portfolio-more reveal">Bekijk alle projecten →</a>
   </div>
 </section>
 
@@ -808,7 +832,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     </div>
     <div class="reveal" style="transition-delay:.1s">
       <p class="problem-body" data-content="home.problem_body">
-        Je hebt een website — maar hij converteert niet. De opmaak klopt niet op mobiel, de laadtijd is te lang en de tekst had net zo goed van een concurrent kunnen zijn. Dat is geen website. Dat is een gemiste kans.
+        Je hebt een website, maar hij converteert niet. De opmaak klopt niet op mobiel, de laadtijd is te lang en de tekst had net zo goed van een concurrent kunnen zijn. Dat is geen website. Dat is een gemiste kans.
       </p>
       <div class="pain-list">
         <div class="pain-item">
@@ -834,25 +858,25 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="solution-inner">
     <div class="solution-header reveal">
       <div class="section-label" style="color:var(--red)" data-content="home.diensten_label">Wat ik doe / 02</div>
-      <h2 class="section-heading" style="color:var(--white)" data-content-html="home.diensten_heading">Van idee tot live —<br><span class="red">van A tot Z.</span></h2>
+      <h2 class="section-heading" data-content-html="home.diensten_heading">Van idee tot live.<br><span class="red">Van A tot Z.</span></h2>
     </div>
     <div class="pillars">
       <div class="pillar reveal">
         <div class="pillar-num">01</div>
         <div class="pillar-title" data-content="home.pillar1_title">Website laten bouwen</div>
-        <p class="pillar-body" data-content="home.pillar1_body">Ik bouw websites in HTML &amp; CSS met GSAP-animaties én WordPress — afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.</p>
+        <p class="pillar-body" data-content="home.pillar1_body">Ik bouw websites in HTML &amp; CSS met GSAP-animaties , afhankelijk van wat jouw project vraagt. Altijd op maat, altijd responsief, altijd met persoonlijk contact. Geen kant-en-klare templates, geen verborgen kosten.</p>
         <div class="pillar-price" data-content-html="home.pillar1_price">Vanaf <strong>€1.250</strong></div>
       </div>
       <div class="pillar reveal" style="transition-delay:.1s">
         <div class="pillar-num">02</div>
         <div class="pillar-title" data-content="home.pillar2_title">Webhosting &amp; beveiliging</div>
-        <p class="pillar-body" data-content="home.pillar2_body">Dedicated webhosting op een snelle server. SSL-certificaat, automatische back-ups en monitoring inbegrepen. Jouw website staat altijd online en is altijd actueel — zonder dat jij er omkijken naar hebt.</p>
+        <p class="pillar-body" data-content="home.pillar2_body">Dedicated webhosting op een snelle server. SSL-certificaat, automatische back-ups en monitoring inbegrepen. Jouw website staat altijd online en is altijd actueel, zonder dat jij er omkijken naar hebt.</p>
         <div class="pillar-price" data-content-html="home.pillar2_price">Vanaf <strong>€25 / maand</strong></div>
       </div>
       <div class="pillar reveal" style="transition-delay:.2s">
         <div class="pillar-num">03</div>
         <div class="pillar-title" data-content="home.pillar3_title">Onderhoud &amp; support</div>
-        <p class="pillar-body" data-content="home.pillar3_body">Kleine aanpassingen, nieuwe pagina's of technische vragen. Directe lijn met Peter — geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.</p>
+        <p class="pillar-body" data-content="home.pillar3_body">Kleine aanpassingen, nieuwe pagina's of technische vragen. Directe lijn met Peter: geen ticketsysteem, geen wachtrij. Je weet altijd met wie je te maken hebt en wanneer het geregeld is.</p>
         <div class="pillar-price" data-content-html="home.pillar3_price"><strong>Op aanvraag</strong></div>
       </div>
     </div>
@@ -864,8 +888,12 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="packages-inner">
     <div class="packages-header reveal">
       <div class="section-label" style="color:var(--red)" data-content="home.pakketten_label">Pakketten / 02a</div>
-      <h2 class="section-heading" data-content-html="home.pakketten_heading">Eén pagina of een hele site —<br><span class="red">jij kiest.</span></h2>
-      <p class="packages-lead" data-content="home.pakketten_lead">Geen vaste prijs voor iets wat je niet nodig hebt. Je betaalt voor de pagina's die je wilt — de eerste bevat het complete ontwerp-systeem, elke volgende bouwt daarop voort.</p>
+      <h2 class="section-heading" data-content-html="home.pakketten_heading">Eén pagina of een hele site.<br><span class="red">Jij kiest.</span></h2>
+      <p class="packages-lead" data-content="home.pakketten_lead">Geen vaste prijs voor iets wat je niet nodig hebt. Je betaalt voor de pagina's die je wilt. De eerste bevat het complete ontwerp-systeem, elke volgende bouwt daarop voort.</p>
+      <a class="pkg-rating" href="https://www.google.com/search?q=stolkwebdesign+reviews" target="_blank" rel="noopener">
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="txt"><b>5,0</b> op Google · 8 reviews</span>
+      </a>
     </div>
 
     <div class="pkg-grid reveal" style="transition-delay:.1s">
@@ -876,6 +904,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           <span class="pkg-tag" data-content="home.pkg1_tag">1 pagina</span>
         </div>
         <div class="pkg-price" data-content-html="home.pkg1_price">€1.250</div>
+        <div class="pkg-per" data-content="home.pkg1_per">€1.250 per pagina</div>
         <div class="pkg-sub" data-content="home.pkg1_sub">Eén krachtige homepage, inclusief het volledige ontwerp-systeem.</div>
         <ul class="pkg-list">
           <li>Volledig op maat ontworpen</li>
@@ -894,6 +923,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           <span class="pkg-tag" data-content="home.pkg2_tag">tot 4 pagina's</span>
         </div>
         <div class="pkg-price" data-content-html="home.pkg2_price">€2.250</div>
+        <div class="pkg-per" data-content="home.pkg2_per">vanaf €563 per pagina</div>
         <div class="pkg-sub" data-content="home.pkg2_sub">Homepage plus de pagina's die een ondernemer nodig heeft.</div>
         <ul class="pkg-list">
           <li>Alles uit Start</li>
@@ -911,6 +941,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           <span class="pkg-tag" data-content="home.pkg3_tag">tot 7 pagina's</span>
         </div>
         <div class="pkg-price" data-content-html="home.pkg3_price">€3.500</div>
+        <div class="pkg-per" data-content="home.pkg3_per">vanaf €500 per pagina, incl. CMS</div>
         <div class="pkg-sub" data-content="home.pkg3_sub">Een complete site met CMS, zodat je zelf teksten en foto's beheert.</div>
         <ul class="pkg-list">
           <li>Alles uit Onderneem</li>
@@ -926,7 +957,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="pkg-custom-main">
         <div class="pkg-custom-label" data-content="home.pkg_custom_label">Custom / op maat</div>
         <div class="pkg-custom-title" data-content="home.pkg_custom_title">Eigen systeem of integratie nodig?</div>
-        <p class="pkg-custom-body" data-content="home.pkg_custom_body">Een koppeling met je boekhouding, een klantportaal, een configurator of een volledig eigen platform — bouwen we van de grond af op maat. We bepalen samen de scope, daarna krijg je een vaste prijs.</p>
+        <p class="pkg-custom-body" data-content="home.pkg_custom_body">Een koppeling met je boekhouding, een klantportaal, een configurator of een volledig eigen platform: bouwen we van de grond af op maat. We bepalen samen de scope, daarna krijg je een vaste prijs.</p>
       </div>
       <div class="pkg-custom-cta-wrap">
         <div class="pkg-custom-price" data-content="home.pkg_custom_price">Op aanvraag</div>
@@ -938,7 +969,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="pkg-alacarte" data-content-html="home.pkg_alacarte">Meer pagina's nodig?<br><strong>€200 per extra pagina.</strong></div>
       <div class="pkg-scope">
         <div class="pkg-scope-title" data-content="home.pkg_scope_title">Wat zit er in een pagina?</div>
-        <p class="pkg-scope-body" data-content-html="home.pkg_scope_body">Eén pagina uit het vaste ontwerp-systeem · volledig responsive · basis on-page SEO (title, meta, koppen, alt) · 1 revisieronde · standaard secties met bestaande GSAP-animaties. <strong>Meerwerk</strong> — custom animatie, formulieren met logica, koppelingen of teksten schrijven — doen we tegen een vaste meerprijs, altijd vooraf afgesproken.</p>
+        <p class="pkg-scope-body" data-content-html="home.pkg_scope_body">Eén pagina uit het vaste ontwerp-systeem · volledig responsive · basis on-page SEO (title, meta, koppen, alt) · 1 revisieronde · standaard secties met bestaande GSAP-animaties. <strong>Meerwerk</strong> (custom animatie, formulieren met logica, koppelingen of teksten schrijven) doen we tegen een vaste meerprijs, altijd vooraf afgesproken.</p>
       </div>
     </div>
   </div>
@@ -949,9 +980,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="modules-teaser-inner">
     <div class="modules-teaser-header reveal">
       <div class="section-label" data-content="home.modules_label">Add-on modules / 02b</div>
-      <h2 class="section-heading" data-content-html="home.modules_heading">Niet alleen een website —<br><span class="red">een platform.</span></h2>
+      <h2 class="section-heading" data-content-html="home.modules_heading">Niet alleen een website.<br><span class="red">Een platform.</span></h2>
       <p class="modules-teaser-lead" data-content="home.modules_lead">
-        Een platform met modules. De Basis CMS is de fundering — Content, facturatie, social, SEO, blog, ondertekenen, personeelsplanning en reserveringen klik je erbij, onder één login op je eigen domein. Early-access tarief 2026.
+        Een platform met modules. De Basis CMS is de fundering: Content, facturatie, social, SEO, blog, ondertekenen, personeelsplanning en reserveringen klik je erbij, onder één login op je eigen domein. Early-access tarief 2026.
       </p>
     </div>
     <div class="modules-row reveal" style="transition-delay:.1s">
@@ -1056,14 +1087,14 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="process">
     <div class="reveal">
       <div class="section-label" data-content="home.aanpak_label">De aanpak / 03</div>
-      <h2 class="section-heading" data-content-html="home.aanpak_heading">Jouw website —<br>van brief tot <span class="red">live.</span></h2>
+      <h2 class="section-heading" data-content-html="home.aanpak_heading">Jouw website:<br>van brief tot <span class="red">live.</span></h2>
     </div>
     <div class="steps">
       <div class="step reveal">
         <div class="step-num font-display">01</div>
         <div>
           <div class="step-title font-display" data-content="home.step1_title">Kennismaken &amp; briefen.</div>
-          <p class="step-body" data-content="home.step1_body">We spreken af — digitaal of in Amsterdam. Jij vertelt me over je wensen, je merk en je doelgroep. Ik stel de vragen die nodig zijn om het goed te doen. Daarna maak ik een voorstel op maat.</p>
+          <p class="step-body" data-content="home.step1_body">We spreken af, digitaal of in Amsterdam. Jij vertelt me over je wensen, je merk en je doelgroep. Ik stel de vragen die nodig zijn om het goed te doen. Daarna maak ik een voorstel op maat.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
@@ -1071,7 +1102,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="step-num font-display">02</div>
         <div>
           <div class="step-title font-display" data-content="home.step2_title">Design &amp; feedback.</div>
-          <p class="step-body" data-content="home.step2_body">Ik ontwerp een visueel aantrekkelijk en responsief design dat perfect aansluit bij jouw merk. Jij geeft feedback, ik verwerk die — direct en efficiënt. Geen eindeloze feedbackrondes.</p>
+          <p class="step-body" data-content="home.step2_body">Ik ontwerp een visueel aantrekkelijk en responsief design dat perfect aansluit bij jouw merk. Jij geeft feedback, ik verwerk die, direct en efficiënt. Geen eindeloze feedbackrondes.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
@@ -1079,7 +1110,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="step-num font-display">03</div>
         <div>
           <div class="step-title font-display" data-content="home.step3_title">Bouwen &amp; testen.</div>
-          <p class="step-body" data-content="home.step3_body">Ik bouw de website — snel, schoon en geoptimaliseerd. Responsief op alle devices, getest in alle browsers, klaar voor zoekmachines. Jij ziet de voortgang live.</p>
+          <p class="step-body" data-content="home.step3_body">Ik bouw de website: snel, schoon en geoptimaliseerd. Responsief op alle devices, getest in alle browsers, klaar voor zoekmachines. Jij ziet de voortgang live.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
@@ -1087,7 +1118,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="step-num font-display">04</div>
         <div>
           <div class="step-title font-display" data-content="home.step4_title">Live &amp; klaar.</div>
-          <p class="step-body" data-content="home.step4_body">Jouw website gaat live. Ik regel de webhosting, het SSL-certificaat en de overdracht. Daarna ben ik beschikbaar voor onderhoud en support — zo lang als je wil.</p>
+          <p class="step-body" data-content="home.step4_body">Jouw website gaat live. Ik regel de webhosting, het SSL-certificaat en de overdracht. Daarna ben ik beschikbaar voor onderhoud en support, zo lang als je wil.</p>
         </div>
         <div class="step-arrow">→</div>
       </div>
@@ -1107,8 +1138,12 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <p class="quote-text" data-content="home.quote_text">"Peter denkt mee, reageert snel en levert precies op wat hij belooft. De site ziet er prachtig uit en werkt geweldig."</p>
       <div class="quote-attr">
         <div class="attr-name font-display" data-content="home.quote_name">Klant via Stolkwebdesign</div>
-        <div class="attr-role font-mono" data-content="home.quote_role">Ondernemer — Nederland</div>
+        <div class="attr-role font-mono" data-content="home.quote_role">Ondernemer, Nederland</div>
       </div>
+      <a class="pkg-rating" href="https://www.google.com/search?q=stolkwebdesign+reviews" target="_blank" rel="noopener" style="margin-top:18px;">
+        <span class="stars" aria-hidden="true">★★★★★</span>
+        <span class="txt"><b>5,0</b> op Google · 8 reviews</span>
+      </a>
     </div>
     <div class="metrics reveal" style="transition-delay:.15s">
       <div class="metric">
@@ -1135,7 +1170,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <section id="peter" data-block-id="over" style="border-top: 2px solid var(--black);">
   <div class="about">
     <div class="about-image reveal">
-      <img src="assets/peter stolk.png" data-content-src="fotos.peter" alt="Peter Stolk — webdesigner Uithoorn" loading="lazy"
+      <img src="assets/peter stolk.png" data-content-src="fotos.peter" alt="Peter Stolk, webdesigner Uithoorn" loading="lazy"
            style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;">
       <div class="noise" style="opacity:.18"></div>
       <div class="about-image-name font-display">Peter<br>Stolk</div>
@@ -1144,15 +1179,15 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="section-label" data-content="home.about_label">Over de maker / 04</div>
       <h2 class="section-heading" data-content-html="home.about_heading">Geen bureau.<br><span class="red">Eén vakman.</span></h2>
       <p class="about-body" data-content="home.about_body1">
-        Ik ben Peter Stolk — zelfstandig webdesigner uit Amsterdam. Ik ontwerp en bouw visueel aantrekkelijke, responsieve websites die perfect aansluiten bij wat jij voor ogen hebt. Of dat nu een handcrafted HTML-site met GSAP-animaties is, of een gebruiksvriendelijke WordPress-website — ik kies wat het beste werkt voor jouw project.
+        Ik ben Peter Stolk, zelfstandig webdesigner uit Amsterdam. Ik ontwerp en bouw visueel aantrekkelijke, responsieve websites die perfect aansluiten bij wat jij voor ogen hebt. Of dat nu een handcrafted HTML-site met GSAP-animaties is, of een gebruiksvriendelijke WordPress-website: ik kies wat het beste werkt voor jouw project.
       </p>
       <p class="about-body" style="color:var(--muted);" data-content="home.about_body2">
         Geen grote agency met juniors die je project afhandelen. Jij hebt direct contact met de persoon die jouw website bouwt. Dat maakt het verschil.
       </p>
       <div class="manifesto">
-        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Persoonlijk contact — altijd direct met Peter.</span></div>
-        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Custom designs — geen standaard templates.</span></div>
-        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Responsief op alle devices — altijd.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Persoonlijk contact: altijd direct met Peter.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Custom designs: geen standaard templates.</span></div>
+        <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Responsief op alle devices, altijd.</span></div>
         <div class="manifesto-item"><span class="manifesto-plus font-mono">+</span><span>Hosting en onderhoud mogelijk als add-ons.</span></div>
       </div>
     </div>
@@ -1182,7 +1217,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   <div class="footer-grid">
     <div>
       <div class="footer-logo font-display">Stolk<span style="color:#EA2525">web</span>design<span style="color:#EA2525">®</span></div>
-      <p class="footer-tagline" data-content-html="home.footer_tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
+      <p class="footer-tagline" data-content-html="home.footer_tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam · persoonlijk &amp; direct.</p>
     </div>
     <div>
       <div class="footer-col-label font-mono">Navigeer</div>
@@ -1219,10 +1254,10 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     </div>
   </div>
   <div class="footer-bar">
-    <span class="footer-copy font-mono">© 2026 Stolkwebdesign — Uithoorn</span>
+    <span class="footer-copy font-mono">© 2026 Stolkwebdesign · Uithoorn</span>
     <div style="display:flex; gap:20px; flex-wrap:wrap;">
-      <a href="/privacybeleid" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none; transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,.7)'" onmouseout="this.style.color='rgba(255,255,255,.3)'">Privacybeleid</a>
-      <a href="/algemene-voorwaarden" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none; transition:color .2s;" onmouseover="this.style.color='rgba(255,255,255,.7)'" onmouseout="this.style.color='rgba(255,255,255,.3)'">Algemene Voorwaarden</a>
+      <a href="/privacybeleid" class="footer-legal-link">Privacybeleid</a>
+      <a href="/algemene-voorwaarden" class="footer-legal-link">Algemene Voorwaarden</a>
     </div>
   </div>
 </footer>
