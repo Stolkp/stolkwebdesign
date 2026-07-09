@@ -1,0 +1,202 @@
+/* ═══════════════════════════════════════════════════════════════
+   STOLKWEBDESIGN — THEME.CSS
+   Dark = default (de bestaande site, ongewijzigd).
+   Light = overrides onder html[data-theme="light"].
+   Geladen ná de inline <style> per pagina; theme.js zet data-theme.
+   Spelregels light mode:
+   - Donkere secties → bone (#F5F5F5) met zwarte borders + blueprint-grid
+   - Zwart blijft bewust staan als accent: marquee, trust-strip, knoppen,
+     geselecteerde kaarten, media-frames, modal-koppen, codeblokken
+   - Rood (#EA2525) is in beide thema's identiek
+   ═══════════════════════════════════════════════════════════════ */
+
+html[data-theme="light"] { color-scheme: light; }
+
+/* ── VIEW TRANSITION (thema-wissel cirkel-reveal via theme.js) ── */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+
+/* ═══════ TOGGLE-KNOP ═══════ */
+.swd-theme-toggle {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,.35);
+  color: #FFFFFF;
+  width: 38px; height: 38px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0; flex-shrink: 0;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.swd-theme-toggle:hover { border-color: var(--red, #EA2525); background: var(--red, #EA2525); color: #FFFFFF; }
+.swd-theme-toggle:focus-visible { outline: 2px solid var(--red, #EA2525); outline-offset: 2px; }
+.swd-theme-toggle svg { width: 16px; height: 16px; display: block; }
+.swd-theme-toggle .swd-icon-sun { display: block; }
+.swd-theme-toggle .swd-icon-moon { display: none; }
+html[data-theme="light"] .swd-theme-toggle { border-color: rgba(0,0,0,.85); color: #000000; }
+html[data-theme="light"] .swd-theme-toggle:hover { background: #000000; border-color: #000000; color: #FFFFFF; }
+html[data-theme="light"] .swd-theme-toggle .swd-icon-sun { display: none; }
+html[data-theme="light"] .swd-theme-toggle .swd-icon-moon { display: block; }
+/* Rechter nav-groep die theme.js aanmaakt (toggle + cta + hamburger) */
+.swd-nav-right { display: inline-flex; align-items: center; gap: 14px; }
+/* De toggle maakt de nav ~52px voller: iets vloeiender gap zodat links
+   en CTA op laptopbreedtes niet wrappen */
+@media (min-width: 901px) {
+  nav .nav-links { gap: clamp(14px, 2.3vw, 40px); flex-wrap: nowrap; }
+  nav .nav-links a { white-space: nowrap; }
+  nav .nav-cta { white-space: nowrap; }
+}
+
+/* ═══════ BASIS ═══════ */
+html[data-theme="light"] body { background: var(--white, #FFFFFF); color: var(--black, #000000); }
+
+/* ═══════ NAV ═══════ */
+html[data-theme="light"] nav { background: var(--white); border-bottom-color: var(--black); }
+html[data-theme="light"] .nav-logo { color: var(--black); }
+html[data-theme="light"] .nav-links a { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .nav-links a:hover,
+html[data-theme="light"] .nav-links a.active { color: var(--black); }
+html[data-theme="light"] .hover-shift.active { color: var(--black); }
+html[data-theme="light"] .nav-lang a.active { color: var(--black); }
+html[data-theme="light"] .nav-lang .sep { color: rgba(0,0,0,.3); }
+html[data-theme="light"] .nav-cta { border-color: var(--black); }
+html[data-theme="light"] .nav-cta:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+html[data-theme="light"] .nav-hamburger span { background: var(--black); }
+/* Actieve nav-knop op de contactpagina (was inline wit-op-zwart) */
+.nav-cta-active { background: var(--white); color: var(--black); }
+.nav-cta-active:hover { background: var(--white); color: var(--black); border-color: var(--red); }
+html[data-theme="light"] .nav-cta-active { background: var(--black); color: var(--white); border-color: var(--black); }
+html[data-theme="light"] .nav-cta-active:hover { background: var(--red); color: var(--white); border-color: var(--red); }
+/* Mobiel uitklapmenu */
+html[data-theme="light"] .nav-links.open { background: var(--white); border-bottom-color: var(--red); }
+html[data-theme="light"] .nav-links.open li { border-bottom-color: rgba(0,0,0,.08); }
+html[data-theme="light"] .nav-cta-mobile { border-color: var(--red); }
+
+/* ═══════ HERO'S / PAGINAKOPPEN → bone + blueprint-grid ═══════ */
+html[data-theme="light"] .hero,
+html[data-theme="light"] .page-header,
+html[data-theme="light"] .head,
+html[data-theme="light"] .proj-top,
+html[data-theme="light"] .blog-header,
+html[data-theme="light"] .article-header {
+  background-color: var(--bone, #F5F5F5);
+  background-image:
+    linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  color: var(--black);
+}
+/* Hero-video en -foto zijn donker beeldmateriaal: uit in light mode */
+html[data-theme="light"] .hero-still,
+html[data-theme="light"] .hero-video,
+html[data-theme="light"] .hero-video-overlay { display: none; }
+html[data-theme="light"] .hero .noise { opacity: .06; }
+
+html[data-theme="light"] .hero-label-text,
+html[data-theme="light"] .hero-eyebrow { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .hero-sub { color: rgba(0,0,0,.62); }
+html[data-theme="light"] .hero-sub strong { color: var(--black); }
+html[data-theme="light"] .hero-lead { color: rgba(0,0,0,.62); }
+html[data-theme="light"] .hero-checks li { color: rgba(0,0,0,.8); }
+html[data-theme="light"] .page-sub { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .lead { color: rgba(0,0,0,.62); }
+
+/* Knoppen op donkere vlakken */
+html[data-theme="light"] .btn-primary:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+html[data-theme="light"] .btn-wa { color: rgba(0,0,0,.6); border-bottom-color: rgba(0,0,0,.25); }
+html[data-theme="light"] .btn-wa:hover { color: var(--black); border-color: var(--black); }
+html[data-theme="light"] .btn-ghost { color: rgba(0,0,0,.65); border-bottom-color: rgba(0,0,0,.3); }
+html[data-theme="light"] .btn-ghost:hover { color: var(--black); border-color: var(--black); }
+
+/* ═══════ HOME: SOLUTION (diensten-pijlers) ═══════ */
+html[data-theme="light"] .solution { background: var(--bone); color: var(--black); }
+html[data-theme="light"] .pillars { border-color: var(--black); }
+html[data-theme="light"] .pillar { border-right-color: var(--black); }
+html[data-theme="light"] .pillar-body { color: rgba(0,0,0,.6); }
+html[data-theme="light"] .pillar-price { border-top-color: rgba(0,0,0,.2); }
+html[data-theme="light"] .pillar-price strong { color: var(--black); }
+@media (max-width: 900px) {
+  html[data-theme="light"] .pillar { border-right-color: transparent; border-bottom-color: var(--black); }
+}
+
+/* ═══════ HOME: MODULES-TEASER (bone → wit voor sectie-ritme) ═══════ */
+html[data-theme="light"] .modules-teaser { background: var(--white); }
+
+/* ═══════ HOME: PKG-CUSTOM BAND blijft donker (bewust accent) ═══════ */
+/* geen override */
+
+/* ═══════ OVER: SKILLS ═══════ */
+html[data-theme="light"] .skills-section { background: var(--bone); color: var(--black); }
+html[data-theme="light"] .skill-card { background: var(--white); border-color: rgba(0,0,0,.15); }
+html[data-theme="light"] .skill-body { color: rgba(0,0,0,.6); }
+
+/* ═══════ CONTACT: LINKER PANEEL ═══════ */
+html[data-theme="light"] .contact-left { background: var(--bone); color: var(--black); border-right-color: var(--black); }
+html[data-theme="light"] .contact-body { color: rgba(0,0,0,.6); }
+html[data-theme="light"] .contact-option { border-color: rgba(0,0,0,.18); color: var(--black); }
+html[data-theme="light"] .contact-option:hover { border-color: var(--red); background: rgba(234,37,37,.06); }
+html[data-theme="light"] .contact-option-label { color: rgba(0,0,0,.5); }
+html[data-theme="light"] .contact-note { color: rgba(0,0,0,.4); }
+
+/* ═══════ MODULES: DONKERE SECTIES ═══════ */
+html[data-theme="light"] .module-section.dark { background: var(--bone); color: var(--black); }
+html[data-theme="light"] .module-section.dark .module-lead { color: rgba(0,0,0,.6); }
+html[data-theme="light"] .module-section.dark .feature-list { border-top-color: var(--black); }
+html[data-theme="light"] .module-section.dark .feature { border-bottom-color: rgba(0,0,0,.15); }
+html[data-theme="light"] .module-section.dark .module-pricing { border-top-color: var(--black); }
+html[data-theme="light"] .module-section.dark .price-tag { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .module-section.dark .visual-frame { box-shadow: 12px 12px 0 0 var(--black); }
+/* Geïnverteerd browser-frame — default-styling staat bij de component
+   in modules.html; hier alleen de light-flip (balk zwart, dots licht) */
+html[data-theme="light"] .visual-frame--invert { border-color: var(--black); background: var(--white); }
+html[data-theme="light"] .visual-frame--invert > .visual-bar { background: var(--black); color: var(--white); border-bottom-color: var(--black); }
+html[data-theme="light"] .visual-frame--invert .visual-dots span:nth-child(2) { background: rgba(255,255,255,.4); }
+html[data-theme="light"] .visual-frame--invert .visual-dots span:nth-child(3) { background: rgba(255,255,255,.2); }
+
+/* ═══════ PROJECT-DETAIL ═══════ */
+html[data-theme="light"] .proj-back { color: rgba(0,0,0,.5); }
+html[data-theme="light"] .proj-back:hover { color: var(--black); }
+html[data-theme="light"] .proj-meta-item { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .proj-meta-item strong { color: var(--black); }
+html[data-theme="light"] .proj-hero { background: var(--bone); }
+/* .compare (voor/na-slider) blijft donker: beeldmateriaal */
+
+/* ═══════ BLOG ═══════ */
+html[data-theme="light"] .blog-label-text { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .blog-intro { color: rgba(0,0,0,.7); }
+html[data-theme="light"] .breadcrumb,
+html[data-theme="light"] .breadcrumb a { color: rgba(0,0,0,.5); }
+html[data-theme="light"] .breadcrumb a:hover { color: var(--black); }
+html[data-theme="light"] .article-meta { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .article-meta strong { color: var(--black); }
+html[data-theme="light"] .article-body a:hover { color: var(--black); }
+/* .article-body pre (codeblok) en .post-card-cover blijven donker */
+
+/* ═══════ BEDANKT-AFSPRAAK (donkere pagina) ═══════ */
+html[data-theme="light"] .steps li { color: rgba(0,0,0,.8); }
+html[data-theme="light"] .btn { border-color: var(--black); color: var(--black); }
+html[data-theme="light"] .btn:hover { background: var(--black); color: var(--white); }
+html[data-theme="light"] .btn.red { border-color: var(--red); color: var(--white); }
+html[data-theme="light"] .btn.red:hover { background: var(--black); border-color: var(--black); color: var(--white); }
+
+/* ═══════ FOOTER (alle varianten) ═══════ */
+html[data-theme="light"] footer { background: var(--bone); color: var(--black); }
+html[data-theme="light"] .footer-tagline { color: rgba(0,0,0,.5); }
+html[data-theme="light"] .footer-col-label { color: var(--red); }
+html[data-theme="light"] .footer-links a,
+html[data-theme="light"] .footer-links-row a,
+html[data-theme="light"] footer .footer-bar a { color: rgba(0,0,0,.55); }
+html[data-theme="light"] .footer-links a:hover,
+html[data-theme="light"] .footer-links-row a:hover,
+html[data-theme="light"] footer .footer-bar a:hover { color: var(--black); }
+html[data-theme="light"] .footer-links-row a.active { color: var(--black); }
+html[data-theme="light"] .footer-bar { border-top-color: rgba(0,0,0,.15); }
+html[data-theme="light"] .footer-copy { color: rgba(0,0,0,.4); }
+/* Juridische links in de footer-bar (waren inline gestyled met JS-hover).
+   Light-kleur komt uit de generieke footer-bar-regels hierboven. */
+.footer-legal-link {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+  color: rgba(255,255,255,.3); text-decoration: none; transition: color .2s;
+}
+.footer-legal-link:hover { color: rgba(255,255,255,.7); }
