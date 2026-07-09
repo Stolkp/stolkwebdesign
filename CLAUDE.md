@@ -323,6 +323,8 @@ Volledige lead-funnel voor Meta/Google-advertenties. Plan + stappenplan in `mark
 - [ ] WhatsApp-nummer invullen
 - [ ] Portfolio: echte screenshots/mockups van projecten (deels gedaan via launch-showcase portfolio-modus)
 - [ ] Eventueel nieuwe hero-video filmen (Peter zelf — handheld, close-up)
+- [ ] **Light/dark-modus ON HOLD** (09-07, besluit Peter): al het theme-werk staat op branch `theme-light-dark` (theme.css + theme.js + integratie op alle pagina's, reviewstand 2,5/3 — zie `docs/logs/2026-07-08/02-…`). Main is theme-vrij; bij heropakken de wit-op-wit nav-valkuil breed checken (zie `docs/logs/2026-07-09/02-…`)
+- [ ] Verse Google-reviews vragen aan recente klanten (Pauline, Bestsupport08, straks BZ Events) → daarna review-aantal bijwerken op homepage/LP (nu "8 reviews")
 
 ## Logboek (belangrijkste sessies)
 - `docs/logs/2026-06-02/01-…` deploy-blokkade Hobby-cron opgelost
