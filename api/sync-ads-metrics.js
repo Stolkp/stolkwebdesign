@@ -32,10 +32,16 @@ function last7Range() {
   return { since: fmt(since), until: fmt(until) };
 }
 
-function sumLeads(actions = []) {
-  return actions
+function countLeads(actions = []) {
+  // Meta labelt één lead-conversie vaak onder meerdere action_types tegelijk
+  // (bv. lead + onsite_web_lead + offsite_conversion.fb_pixel_lead). Optellen zou
+  // dezelfde lead dubbel tellen; we nemen daarom het maximum over de lead-achtige
+  // types. Bij deze funnel (landingspagina-pixel) verwijzen ze naar dezelfde
+  // conversie, dus max = het echte aantal — en het schaalt mee (3 leads → elk type 3 → 3).
+  const vals = actions
     .filter((a) => LEAD_ACTION_TYPES.includes(a.action_type) || /lead/i.test(a.action_type || ''))
-    .reduce((t, a) => t + (parseFloat(a.value) || 0), 0);
+    .map((a) => parseFloat(a.value) || 0);
+  return vals.length ? Math.max(...vals) : 0;
 }
 
 async function fetchMeta() {
@@ -62,7 +68,7 @@ async function fetchMeta() {
   const clicks = parseInt(d.clicks || 0, 10);
   const ctr = parseFloat(d.ctr || 0);
   const cpc = parseFloat(d.cpc || (clicks ? spend / clicks : 0));
-  const leads = Math.round(sumLeads(d.actions));
+  const leads = Math.round(countLeads(d.actions));
   const cost_per_lead = leads ? +(spend / leads).toFixed(2) : 0;
   // Landingspagina-weergaven (échte bezoekers) — voor de "0 leads"-drempel, niet in de tabel opgeslagen.
   const lpv = Math.round((d.actions || [])
