@@ -29,7 +29,7 @@ Projecten/Stolkwebdesign/
 ├── vercel.json                ← Build command + functions + crons schedule + cleanUrls
 ├── tsconfig.json              ← jsx: "react-jsx" zodat api/og.tsx parsed (scope: api/**)
 ├── supabase-seo-reports.sql   ← Schema + RLS voor seo_reports tabel (project: lkcfwndigzhzcjnhxcmb)
-├── site/                      ← index, over, portfolio, contact, admin, modules, blog, privacybeleid, algemene-voorwaarden
+├── site/                      ← index, over, portfolio, projecten, contact, admin, modules, rekentool, blog, privacybeleid, algemene-voorwaarden
 │   ├── hero-video.mp4         ← AI-gegenereerde hero video (Kling via FAL)
 │   ├── assets/preview-cinematic.html ← Alternatieve cinematic dark variant (archief)
 │   ├── config.js              ← Supabase URL + anon key (publiek by design)
@@ -138,7 +138,10 @@ Projecten/Stolkwebdesign/
 - **NM We Create** — Creatief bureau
 - **Anouk Hoogendijk** — Personal brand, WordPress
 
-Via de launch-showcase-skill (portfolio-modus) kregen Sauberhaus, ExpenseMatch, CarLogic, Maestr en NM We Create device-composiet mockup-kaarten. Portfolio-kaarten zijn **WebP** (`projects/<slug>-card.webp`, via CLI `cwebp -q 90`, Homebrew `/opt/homebrew/bin/cwebp`, ~90% kleiner; fallback PNG als cwebp ontbreekt). Social-post-media blijven PNG (Blotato/Instagram).
+Via de launch-showcase-skill (portfolio-modus) kregen Sauberhaus, ExpenseMatch, CarLogic, Maestr en NM We Create device-composiet mockup-kaarten. Portfolio-kaarten zijn **WebP** (`projects/<slug>-card.webp`, via CLI `cwebp -q 90`, Homebrew `/opt/homebrew/bin/cwebp`, ~90% kleiner; fallback PNG als cwebp ontbreekt — 09-07 ontbrak cwebp op de Mac: fallback is dan WebP encoden via Chrome-canvas/Puppeteer). Social-post-media blijven PNG (Blotato/Instagram).
+
+### Concepten/pitch-demo's horen NIET in `projects` (afspraak 09-07)
+De publieke `projects`-tabel (portfolio-pagina + homepage-werkgrid + admin-tab Portfolio) is alleen voor **opgeleverd werk**. Pitch-demo's en concepten (GMSF, GS Automotive) staan in de **admin-tab Projecten** (klantprojecten-pijplijn, tabel `stolkwebdesign_client_projects`, UI `site/admin-klantprojecten.js`) met hun demo-URL in `live_url` en het voorstel in `proposal_url`. Er is op 09-07 kort een publieke `/projecten`-pagina geweest ("in de maak", negatieve-sort_order-conventie); die is dezelfde dag op Peters verzoek teruggedraaid (commit `789c112`) — niet opnieuw bouwen. Wordt een pitch een echte oplevering, dan pas via launch-showcase een `projects`-rij + kaart aanmaken. Nav-weetje uit die exercitie: een 7e nav-item past alleen op één regel t/m 1366px als de gap van 40 naar 14px gaat.
 
 ## Diensten + Prijzen
 Per-pagina model (uurtarief €75) — gepresenteerd als 3 pakketten op de homepage (`#pakketten`):
