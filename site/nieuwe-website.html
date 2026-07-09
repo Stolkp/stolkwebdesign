@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Benieuwd wat een eigen website je oplevert? | Stolkwebdesign</title>
+<meta name="description" content="Beantwoord drie korte vragen en ontvang gratis een eerste opzet van je nieuwe website. Lokaal, vaste prijzen, geen verplichtingen.">
+<!-- Outreach-landingspagina (prospect-mails): niet indexeren, staat NIET in de sitemap. -->
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://www.stolkwebdesign.nl/nieuwe-website">
+
+<!-- Cookie consent + Consent Mode v2 (default-denied staat in cc-init.js, vóór GA) -->
+<link rel="stylesheet" href="/cookieconsent/cookieconsent.css">
+<link rel="stylesheet" href="/cookieconsent/cc-brutalist.css">
+<script defer src="/cookieconsent/cookieconsent.umd.js"></script>
+<script defer src="/cookieconsent/cc-init.js"></script>
+<script type="text/plain" data-category="analytics" async src="https://www.googletagmanager.com/gtag/js?id=G-5MT8XNYTF7"></script>
+<script type="text/plain" data-category="analytics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/*ovx*/ html, body { overflow-x: hidden; }
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root { --black:#000; --white:#fff; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
+html { scroll-behavior:smooth; }
+body { background:var(--white); color:var(--black); font-family:'Space Grotesk',sans-serif; overflow-x:hidden; }
+.font-mono { font-family:'JetBrains Mono',monospace; }
+.wrap { max-width:1180px; margin:0 auto; padding:0 24px; }
+
+/* NAV (slank — minder afleiding op een landingspagina) */
+nav { position:sticky; top:0; z-index:100; background:var(--black); border-bottom:2px solid var(--black); display:flex; align-items:center; justify-content:space-between; padding:14px 24px; }
+.nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
+.nav-logo span { color:var(--red); }
+.nav-cta { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#fff; text-decoration:none; background:#EA2525; border:2px solid #EA2525; padding:9px 16px; transition:border-color .15s,background .15s,color .15s; }
+.nav-cta:hover { background:var(--black); border-color:var(--white); }
+
+/* HERO */
+.hero { background:var(--near-black); color:var(--white); padding:56px 0 64px; border-bottom:2px solid var(--black); }
+.hero-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:48px; align-items:start; }
+.eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--red); margin-bottom:22px; }
+.hero h1 { font-family:'Archivo Black',sans-serif; font-size:clamp(38px,6.4vw,72px); text-transform:uppercase; letter-spacing:-0.04em; line-height:.92; }
+.hero h1 .red { color:var(--red); }
+.hero-lead { font-size:17px; line-height:1.65; color:rgba(255,255,255,.82); margin:22px 0 24px; max-width:520px; }
+.hero-lead b { color:var(--white); }
+.hero-checks { list-style:none; display:flex; flex-direction:column; gap:11px; }
+.hero-checks li { display:flex; gap:12px; align-items:flex-start; font-size:15px; color:rgba(255,255,255,.85); }
+.hero-checks .tick { color:var(--red); font-family:'Archivo Black',sans-serif; }
+
+/* FORMULIER */
+.formcard { background:var(--bone); color:var(--black); padding:32px 28px; border:2px solid var(--black); }
+.formcard-title { font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-0.02em; line-height:1; }
+.formcard-sub { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); margin:8px 0 22px; }
+.form-group { margin-bottom:16px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-label { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); margin-bottom:6px; display:block; }
+.form-input, .form-select, .form-textarea {
+  width:100%; padding:12px 14px; font-family:'Space Grotesk',sans-serif; font-size:16px;
+  background:var(--white); border:2px solid var(--black); color:var(--black); appearance:none; border-radius:0;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color:var(--red); }
+.form-textarea { resize:vertical; min-height:74px; }
+.form-select { background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 7L11 1' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; cursor:pointer; }
+.form-submit { width:100%; padding:17px; font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:.04em; background:var(--red); color:var(--white); border:2px solid var(--red); cursor:pointer; transition:background .15s,color .15s; margin-top:6px; }
+.form-submit:hover:not(:disabled) { background:var(--black); border-color:var(--black); }
+.form-submit:disabled { opacity:.6; cursor:not-allowed; }
+.form-mini { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-top:12px; text-align:center; line-height:1.7; }
+.form-error { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--red); margin-top:10px; display:none; }
+.form-success { display:none; text-align:center; padding:30px 10px; }
+.form-success .ic { font-size:30px; }
+.form-success h3 { font-family:'Archivo Black',sans-serif; font-size:20px; text-transform:uppercase; margin:10px 0 8px; }
+.form-success p { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); line-height:1.8; }
+.honey { position:absolute; left:-9999px; opacity:0; height:0; width:0; }
+
+/* RATING (echte Google-cijfers, zie comment bij het blok) */
+.rating { display:flex; align-items:center; gap:8px; margin:0 0 18px; }
+.rating a { display:flex; align-items:center; gap:8px; text-decoration:none; }
+.rating .stars { color:var(--red); font-size:15px; letter-spacing:2px; }
+.rating .rating-txt { font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+.rating .rating-txt b { color:var(--black); }
+
+/* TRUST STRIP */
+.trust { background:var(--black); color:var(--white); border-bottom:2px solid var(--black); padding:14px 0; }
+.trust .wrap { display:flex; flex-wrap:wrap; gap:10px 28px; justify-content:center; }
+.trust span { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:rgba(255,255,255,.6); }
+.trust b { color:var(--white); }
+
+/* RISICO-OMKERING */
+.reassure { background:var(--bone); border-bottom:2px solid var(--black); padding:22px 0; text-align:center; }
+.reassure p { font-size:17px; color:var(--black); line-height:1.5; max-width:640px; margin:0 auto; }
+.reassure b { font-family:'Archivo Black',sans-serif; text-transform:uppercase; letter-spacing:-0.01em; }
+
+/* SECTIONS */
+section.block { padding:72px 0; border-bottom:2px solid var(--black); }
+.kicker { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.2em; color:var(--red); margin-bottom:14px; }
+h2.sec { font-family:'Archivo Black',sans-serif; font-size:clamp(28px,4vw,46px); text-transform:uppercase; letter-spacing:-0.03em; line-height:.95; margin-bottom:40px; }
+.steps { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.step { border:2px solid var(--black); padding:26px 22px; box-shadow:8px 8px 0 var(--black); }
+.step-num { font-family:'Archivo Black',sans-serif; font-size:40px; color:var(--red); line-height:1; }
+.step h3 { font-family:'Archivo Black',sans-serif; font-size:17px; text-transform:uppercase; margin:14px 0 8px; }
+.step p { font-size:14px; color:#333; line-height:1.65; }
+.work { display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+.work-card { border:2px solid var(--black); box-shadow:6px 6px 0 var(--black); background:var(--near-black); line-height:0; align-self:start; }
+.work-card img { width:100%; height:auto; display:block; }
+.lp-quote { border:2px solid var(--black); box-shadow:6px 6px 0 var(--black); background:var(--bone); padding:26px 24px; margin-top:32px; }
+.lp-quote .stars { color:var(--red); letter-spacing:2px; }
+.lp-quote p { font-size:16px; line-height:1.65; margin:10px 0 12px; }
+.lp-quote .who { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--muted); }
+.lp-quote .who b { color:var(--black); }
+.faq-item { border-bottom:2px solid var(--black); padding:20px 0; }
+.faq-item h4 { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; margin-bottom:8px; }
+.faq-item p { font-size:15px; color:#333; line-height:1.65; }
+.cta-band { background:var(--red); color:var(--white); padding:56px 0; text-align:center; }
+.cta-band h2 { font-family:'Archivo Black',sans-serif; font-size:clamp(26px,4vw,44px); text-transform:uppercase; letter-spacing:-0.03em; line-height:.98; margin-bottom:22px; }
+.cta-band a { display:inline-block; font-family:'Archivo Black',sans-serif; font-size:15px; text-transform:uppercase; background:var(--black); color:var(--white); border:2px solid var(--black); padding:16px 30px; text-decoration:none; transition:background .15s,color .15s; }
+.cta-band a:hover { background:var(--white); color:var(--black); }
+
+/* FOOTER */
+footer { background:var(--black); color:var(--white); padding:34px 0; }
+.footer-bar { display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between; }
+.footer-logo { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; }
+.footer-logo span { color:var(--red); }
+.footer-bar a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.45); text-decoration:none; }
+.footer-bar a:hover { color:var(--white); }
+
+@media(max-width:880px){
+  .hero { padding:42px 0 48px; }
+  .hero-grid { grid-template-columns:1fr; gap:26px; }
+  .hero-lead { margin:20px 0 22px; }
+  .steps { grid-template-columns:1fr; }
+  .form-row { grid-template-columns:1fr; }
+}
+@media(max-width:560px){
+  .work { grid-template-columns:1fr; }
+}
+@media(prefers-reduced-motion:reduce){ html { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Stolk<span>web</span>design<span>®</span></a>
+  <a href="#vragen" class="nav-cta">Gratis eerste opzet →</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Webdesign · Uithoorn · Amstelveen · De Ronde Venen</div>
+      <h1>Benieuwd wat een website<br>je <span class="red">oplevert?</span></h1>
+      <p class="hero-lead">Je kreeg een mail van mij omdat ik online geen (werkende) website van je bedrijf kon vinden. Beantwoord drie korte vragen en ik maak <b>gratis een eerste opzet</b> van hoe jouw site eruit kan zien. Daarna beslis je pas.</p>
+      <ul class="hero-checks">
+        <li><span class="tick">→</span> Vaste prijzen vanaf €1.250, vooraf duidelijk</li>
+        <li><span class="tick">→</span> Lokaal en persoonlijk: je werkt direct met Peter</li>
+        <li><span class="tick">→</span> Jij hoeft niets aan te leveren voor de eerste opzet</li>
+        <li><span class="tick">→</span> Reactie binnen 1 werkdag</li>
+      </ul>
+    </div>
+
+    <!-- VRAGENFORMULIER -->
+    <div id="vragen" class="formcard">
+      <div class="formcard-title">Drie korte vragen</div>
+      <div class="formcard-sub">Kost 2 minuten · gratis en vrijblijvend</div>
+      <!-- RATING: echte Google-cijfers (5,0 · 8 reviews, gecheckt 08-07-2026). Werk dit bij als het aantal reviews verandert. -->
+      <div class="rating">
+        <a href="https://www.google.com/search?q=stolkwebdesign+reviews" target="_blank" rel="noopener">
+          <span class="stars" aria-hidden="true">★★★★★</span>
+          <span class="rating-txt"><b>5,0</b> · 8 Google-reviews</span>
+        </a>
+      </div>
+      <form id="iq-form" novalidate>
+        <input type="text" id="iq-company" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" class="honey">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label" for="iq-voornaam">Voornaam *</label><input class="form-input" id="iq-voornaam" autocomplete="given-name" required></div>
+          <div class="form-group"><label class="form-label" for="iq-bedrijf">Bedrijfsnaam</label><input class="form-input" id="iq-bedrijf" autocomplete="organization"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label" for="iq-email">E-mail *</label><input type="email" class="form-input" id="iq-email" autocomplete="email" required></div>
+          <div class="form-group"><label class="form-label" for="iq-tel">Telefoon</label><input type="tel" class="form-input" id="iq-tel" autocomplete="tel"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="iq-heeft">1. Heb je al een website?</label>
+          <select class="form-select" id="iq-heeft">
+            <option value="">Selecteer…</option>
+            <option>Nee, nog geen</option>
+            <option>Ja, maar verouderd of niet af</option>
+            <option>Ja, en die werkt prima</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="iq-doel">2. Wat moet je site vooral opleveren?</label>
+          <select class="form-select" id="iq-doel">
+            <option value="">Selecteer…</option>
+            <option>Meer aanvragen of offertes</option>
+            <option>Beter vindbaar in Google</option>
+            <option>Professionelere uitstraling</option>
+            <option>Weet ik nog niet, adviseer me</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="iq-info">3. Wat moet ik weten over je bedrijf?</label>
+          <textarea class="form-textarea" id="iq-info" placeholder="Bijv. wat je doet en voor wie. Eén of twee zinnen is genoeg."></textarea>
+        </div>
+        <div class="form-error font-mono" id="iq-error"></div>
+        <button type="submit" class="form-submit" id="iq-btn"><span id="iq-btn-label">Verstuur en ontvang je eerste opzet</span></button>
+        <p class="form-mini">Geen spam. Geen verplichtingen. Door te verzenden ga je akkoord met het <a href="/privacybeleid" style="color:var(--muted);text-decoration:underline;">privacybeleid</a>.</p>
+      </form>
+
+      <div class="form-success" id="iq-success">
+        <div class="ic">✓</div>
+        <h3>Ontvangen, dank je.</h3>
+        <p>Ik ga aan de slag met je eerste opzet en neem binnen 1 werkdag contact op.<br>Tot snel, Peter</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- TRUST -->
+<div class="trust"><div class="wrap">
+  <span><b>5,0 ★</b> op Google (8 reviews)</span>
+  <span><b>Uithoorn</b>, actief in de hele regio</span>
+  <span>Gebouwd in <b>schone code</b> (geen WordPress-gedoe)</span>
+  <span><b>Vaste prijzen</b> · geen uurtje-factuurtje</span>
+</div></div>
+
+<!-- RISICO-OMKERING -->
+<div class="reassure"><div class="wrap">
+  <p><b>100% gratis eerste opzet.</b> Geen verplichtingen, geen kleine lettertjes. Je beslist pas nadat je hebt gezien hoe jouw site eruit kan zien.</p>
+</div></div>
+
+<!-- HOE WERKT HET -->
+<section class="block"><div class="wrap">
+  <div class="kicker">Zo werkt het</div>
+  <h2 class="sec">Van drie vragen<br>naar eigen site</h2>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><h3>Jij beantwoordt 3 vragen</h3><p>Kost je 2 minuten. Je hoeft geen teksten of foto's aan te leveren, dat komt later wel.</p></div>
+    <div class="step"><div class="step-num">02</div><h3>Ik maak een eerste opzet</h3><p>Gratis en op maat voor jouw bedrijf. We bekijken hem samen in een kort gesprek van 20 minuten.</p></div>
+    <div class="step"><div class="step-num">03</div><h3>Jij beslist</h3><p>Past het? Dan krijg je een vaste prijs en bouw ik je site. Past het niet? Dan stopt het daar, zonder kosten.</p></div>
+  </div>
+</div></section>
+
+<!-- RECENT WERK -->
+<section class="block"><div class="wrap">
+  <div class="kicker">Recent werk</div>
+  <h2 class="sec">Zo kan jouw site<br>eruit zien</h2>
+  <div class="work">
+    <div class="work-card"><img src="/assets/lp/sauberhaus-card.webp" width="800" height="800" loading="lazy" alt="Website Sauberhaus door Stolkwebdesign"></div>
+    <div class="work-card"><img src="/assets/lp/maestr-card.webp" width="800" height="800" loading="lazy" alt="Website Maestr door Stolkwebdesign"></div>
+    <div class="work-card"><img src="/assets/lp/nm-we-create-card.webp" width="800" height="800" loading="lazy" alt="Website NM We Create door Stolkwebdesign"></div>
+    <div class="work-card"><img src="/assets/lp/bestsupport08-card.webp" width="800" height="800" loading="lazy" alt="Website Bestsupport08 door Stolkwebdesign"></div>
+  </div>
+  <!-- Echte Google-review (Isis Jonker, ergomind.nl) -->
+  <div class="lp-quote">
+    <span class="stars" aria-hidden="true">★★★★★</span>
+    <p>"Peter heeft mij heel goed geholpen met het bouwen van mijn website. Als ik een vraag heb reageert hij snel en een probleem weet hij snel op te lossen. Als je een goede communicatie en service belangrijk vindt moet je echt voor Stolkwebdesign gaan."</p>
+    <div class="who"><b>Isis Jonker</b> · Ergomind.nl · Google-review</div>
+  </div>
+</div></section>
+
+<!-- FAQ -->
+<section class="block"><div class="wrap">
+  <div class="kicker">Veelgestelde vragen</div>
+  <h2 class="sec">Goed om<br>te weten</h2>
+  <div class="faq-item"><h4>Wat kost een website?</h4><p>Vaste pakketten vanaf €1.250 (1 pagina) tot €3.500 (tot 7 pagina's + CMS). Je krijgt vooraf een duidelijke prijs, geen verrassingen achteraf.</p></div>
+  <div class="faq-item"><h4>Is die eerste opzet echt gratis?</h4><p>Ja. Je ziet eerst hoe jouw site eruit kan zien, zonder kosten of verplichtingen. Bevalt het niet, dan stopt het daar.</p></div>
+  <div class="faq-item"><h4>Ik heb nog geen teksten of foto's</h4><p>Geen probleem. Voor de eerste opzet heb ik alleen je antwoorden nodig. Teksten en beeld regelen we daarna samen, ik help daarbij.</p></div>
+  <div class="faq-item"><h4>Hoe snel staat een site live?</h4><p>Een complete site staat meestal binnen 2 tot 4 weken live, afhankelijk van de omvang en hoe snel jij kunt reageren.</p></div>
+</div></section>
+
+<!-- CTA BAND -->
+<div class="cta-band"><div class="wrap">
+  <h2>Twee minuten,<br>drie vragen</h2>
+  <a href="#vragen">Ontvang je gratis eerste opzet →</a>
+</div></div>
+
+<!-- FOOTER -->
+<footer><div class="wrap footer-bar">
+  <div class="footer-logo">Stolk<span>web</span>design<span>®</span></div>
+  <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;">
+    <a href="/">Home</a>
+    <a href="/portfolio">Portfolio</a>
+    <a href="/contact">Contact</a>
+    <a href="/privacybeleid">Privacybeleid</a>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.08em;">© 2026 Stolkwebdesign · Uithoorn</div>
+</div></footer>
+
+<!-- Attributie (UTM/gclid/fbclid) -->
+<script src="/utm.js"></script>
+<script>
+  const IQ_LOADED_AT = Date.now();
+  document.getElementById('iq-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const val = (id) => (document.getElementById(id).value || '').trim();
+    const voornaam = val('iq-voornaam'), bedrijf = val('iq-bedrijf'), email = val('iq-email');
+    const tel = val('iq-tel'), heeft = val('iq-heeft'), doel = val('iq-doel'), info = val('iq-info');
+    const company = document.getElementById('iq-company').value; // honeypot
+    const errorEl = document.getElementById('iq-error');
+    const btn = document.getElementById('iq-btn'), btnLabel = document.getElementById('iq-btn-label');
+
+    errorEl.style.display = 'none';
+    if (!voornaam || !email) { errorEl.textContent = 'Vul minstens je voornaam en e-mail in.'; errorEl.style.display = 'block'; return; }
+
+    const attribution = (typeof getAttribution === 'function') ? getAttribution() : { string: 'direct/onbekend' };
+    const samengesteld =
+      `Aanvraag via interesse-pagina (/nieuwe-website)` +
+      (heeft ? `\nHeeft al een website: ${heeft}` : '') +
+      (doel ? `\nDoel van de site: ${doel}` : '') +
+      (info ? `\nOver het bedrijf: ${info}` : '');
+
+    btn.disabled = true; btnLabel.textContent = 'Versturen…';
+    try {
+      const res = await fetch('/api/lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          naam: voornaam, bedrijf, email, telefoon: tel,
+          dienst: 'Website-interesse',
+          bericht: samengesteld,
+          bron: attribution.string,
+          company,
+          elapsed_ms: Date.now() - IQ_LOADED_AT,
+        }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) { throw new Error(d.error || `Server fout (${res.status})`); }
+      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'generate_lead', method: 'landing_interesse' }); } catch (e2) {}
+      document.getElementById('iq-form').style.display = 'none';
+      document.querySelectorAll('#vragen > .formcard-title, #vragen > .formcard-sub').forEach((el) => { el.style.display = 'none'; });
+      document.getElementById('iq-success').style.display = 'block';
+    } catch (err) {
+      errorEl.textContent = err.message || 'Er ging iets mis. Probeer het opnieuw of mail me direct.';
+      errorEl.style.display = 'block';
+      btn.disabled = false; btnLabel.textContent = 'Verstuur en ontvang je eerste opzet';
+    }
+  });
+</script>
+
+</body>
+</html>
