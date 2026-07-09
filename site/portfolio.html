@@ -46,7 +46,7 @@ body { background: var(--white); color: var(--black); font-family: 'Space Grotes
 /* NAV */
 nav { position: fixed; top:0; left:0; right:0; z-index:100; background:var(--black); border-bottom:2px solid var(--black); display:flex; align-items:center; justify-content:space-between; padding:16px 48px; }
 .nav-logo { font-family:'Archivo Black',sans-serif; font-size:18px; text-transform:uppercase; color:var(--white); letter-spacing:-0.02em; text-decoration:none; }
-.nav-links { display:flex; gap:14px; list-style:none; }
+.nav-links { display:flex; gap:40px; list-style:none; }
 .nav-links a { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.15em; color:rgba(255,255,255,.5); text-decoration:none; transition:color .2s; }
 .nav-links a:hover, .nav-links a.active { color:var(--white); }
 .nav-cta { font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; background:var(--red); color:var(--white); border:2px solid var(--white); padding:13px 22px; text-decoration:none; transition:background .15s,color .15s; }
@@ -146,7 +146,6 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
     <li><a href="/#aanpak">Aanpak / 04</a></li>
     <li><a href="/over">Over mij / 05</a></li>
     <li><a href="/blog/">Blog / 06</a></li>
-    <li><a href="/projecten">Projecten / 07</a></li>
     <li class="nav-cta-item"><a href="/contact" class="nav-cta-mobile">Plan een gesprek →</a></li>
       <li class="nav-lang"><a href="/portfolio" class="active" aria-current="true">NL</a><span class="sep">/</span><a href="/en/portfolio">EN</a></li>
   </ul>
@@ -274,8 +273,7 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
   async function loadProjects() {
     const grid = document.getElementById('portfolio-grid');
     grid.innerHTML = '<div style="grid-column:1/-1;padding:80px;text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);">Laden...</div>';
-    // Alleen opgeleverd werk: concepten hebben een negatieve sort_order en staan op /projecten.
-    const { data, error } = await db.from('projects').select('*').gte('sort_order', 0).order('sort_order');
+    const { data, error } = await db.from('projects').select('*').order('sort_order');
     if (error || !data) {
       grid.innerHTML = '<div style="grid-column:1/-1;padding:80px;text-align:center;font-family:\'JetBrains Mono\',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);">Portfolio tijdelijk niet beschikbaar.</div>';
       return;
