@@ -96,6 +96,20 @@ export default async function handler(req, res) {
       // status-guard: alleen verse leads (blast-radius klein bij geraden id's)
       const { error: updErr } = await db.from(TABLE).update({ notes: merged }).eq('id', id).eq('status', 'nieuwe_lead');
       if (updErr) { console.error('Lead details update error:', updErr.message); return res.status(502).json({ error: 'Kon de details niet opslaan.' }); }
+
+      // Seintje via Telegram: de stap-2-antwoorden kwamen tot nu toe alleen op de lead-kaart
+      // terecht, waardoor je ze in Telegram miste. Fire-and-forget, mag de respons nooit breken.
+      await notifyTelegram(
+        `📋 Mockup-intake ingevuld (lead #${id})\n\n` +
+        (achternaam ? `👤 Achternaam: ${achternaam}\n` : '') +
+        (bedrijf ? `🏢 Bedrijf: ${bedrijf}\n` : '') +
+        (uitstraling ? `🎨 Uitstraling: ${uitstraling}\n` : '') +
+        (doel ? `🎯 Hoofddoel: ${doel}\n` : '') +
+        (usp ? `⭐ Sterkste punt: ${usp}\n` : '') +
+        (referenties ? `🔗 Referenties: ${referenties}\n` : '') +
+        `\n→ Volledig op de lead-kaart: https://www.stolkwebdesign.nl/admin`
+      );
+
       return res.status(200).json({ ok: true });
     } catch (err) {
       console.error('Lead details exception:', err);
