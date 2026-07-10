@@ -69,6 +69,16 @@
     return `<div class="${cls || 'cp-nextstep'}${od ? ' overdue' : ''}">▸ ${esc(r.next_step || 'Opvolgen')}${date}</div>`;
   }
 
+  // Demo-preview vervaldatum: pitch-demo's gaan 14 dagen na deploy offline.
+  // Voorbij de datum = "verlopen" (rood), anders "verloopt · {datum}".
+  const demoExpired = r => r.demo_expires_at && new Date(r.demo_expires_at) < today();
+  function demoExpiryHTML(r) {
+    if (!r.demo_expires_at) return '';
+    const dood = demoExpired(r);
+    const tekst = dood ? `Demo verlopen · ${fmtFull(r.demo_expires_at)}` : `Demo verloopt · ${fmtFull(r.demo_expires_at)}`;
+    return `<div class="cp-demo${dood ? ' expired' : ''}">${dood ? '⏻' : '◷'} ${tekst}</div>`;
+  }
+
   const eventsFor = id => events.filter(e => e.project_id == id);
 
   // De doorlopen statussen in chronologische volgorde (voor de flow-balk).
@@ -158,6 +168,8 @@
     .cp-value{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#37a04a}
     .cp-nextstep{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.03em;color:#9a9a9a;border-top:1px solid #1a1a1a;padding-top:9px;line-height:1.5}
     .cp-nextstep.overdue{color:#ea2525}
+    .cp-demo{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.03em;color:#9a9a9a;margin-top:7px;line-height:1.5}
+    .cp-demo.expired{color:#ea2525;font-weight:600}
     /* flow-balk (verloop) */
     .cp-flow{display:flex;align-items:center;gap:0;flex-wrap:wrap}
     .cp-flow-dot{width:9px;height:9px;border-radius:50%;background:var(--c);flex:0 0 auto;opacity:.85}
@@ -331,6 +343,7 @@
         </div>
         ${flowHTML(r)}
         ${nextStepHTML(r)}
+        ${demoExpiryHTML(r)}
       </div>`).join('');
   }
 
@@ -418,6 +431,7 @@
           ${r.deal_value ? `<span class="cp-value" style="font-size:12px">${eur(r.deal_value)}</span>` : ''}
         </div>
         ${(r.next_step || r.next_step_date) ? nextStepHTML(r, 'cp-nextstep') : ''}
+        ${demoExpiryHTML(r)}
         ${r.notes ? `<div class="cp-panel-notes">${esc(r.notes)}</div>` : ''}
         <div class="cp-status-label">Zet de status (klik of toets 1–8)</div>
         <div class="cp-statusgrid">${sbtns}</div>
@@ -473,7 +487,7 @@
   function openModal(id) {
     const r = id ? rows.find(x => x.id == id) : {
       name: '', category: '', status: 'voorgesteld', tags: [], contact_email: '', contact_phone: '',
-      live_url: '', figma_url: '', repo_url: '', proposal_url: '', pages_built: 0, pages_total: 1, notes: '',
+      live_url: '', figma_url: '', repo_url: '', proposal_url: '', demo_expires_at: '', pages_built: 0, pages_total: 1, notes: '',
       sort_order: (rows.reduce((m, x) => Math.max(m, x.sort_order || 0), 0) + 10),
     };
     const box = document.getElementById('cp-modal'); if (!box) return;
@@ -499,11 +513,15 @@
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label font-mono">Live / demo-URL</label><input class="form-input" id="cpm-live" value="${esc(r.live_url || '')}"></div>
-        <div class="form-group"><label class="form-label font-mono">Figma-URL</label><input class="form-input" id="cpm-figma" value="${esc(r.figma_url || '')}"></div>
+        <div class="form-group"><label class="form-label font-mono">Demo vervaldatum</label><input class="form-input blog-date" type="date" id="cpm-demo-exp" value="${esc(r.demo_expires_at || '')}"></div>
       </div>
       <div class="form-row">
+        <div class="form-group"><label class="form-label font-mono">Figma-URL</label><input class="form-input" id="cpm-figma" value="${esc(r.figma_url || '')}"></div>
         <div class="form-group"><label class="form-label font-mono">Repo-URL</label><input class="form-input" id="cpm-repo" value="${esc(r.repo_url || '')}"></div>
+      </div>
+      <div class="form-row">
         <div class="form-group"><label class="form-label font-mono">Voorstel-URL</label><input class="form-input" id="cpm-proposal" value="${esc(r.proposal_url || '')}"></div>
+        <div class="form-group"></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label font-mono">Waarde (€)</label><input class="form-input" type="number" id="cpm-value" value="${r.deal_value || 0}" placeholder="1995"></div>
@@ -538,6 +556,7 @@
       deal_value: parseFloat(g('cpm-value').value) || 0,
       next_step: g('cpm-next').value.trim(),
       next_step_date: g('cpm-date').value || null,
+      demo_expires_at: g('cpm-demo-exp').value || null,
       notes: g('cpm-notes').value,
       updated_at: nowISO(),
     };

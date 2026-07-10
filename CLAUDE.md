@@ -114,6 +114,7 @@ Projecten/Stolkwebdesign/
 | `automations_claim.sql` | Atomaire claim-RPC stolkwebdesign_automation_claim_runs (FOR UPDATE SKIP LOCKED) waar automation-tick runs uit trekt |
 | `automations_cron.sql` | pg_cron-job swd-automation-tick (elke 5 min, via pg_net → automation-tick). **In git staat een placeholder** `<AUTOMATION_SECRET>` i.p.v. het echte secret; de live cron is met het echte secret geladen via `execute_sql`, dus dit bestand alleen is niet genoeg om de cron te reproduceren |
 | `automations_dogfood_flow.sql` | Seed van de actieve dogfood-flow "Nieuwe lead opvolging" (zie Automations hieronder) + de 2 e-mailtemplates |
+| `client_projects_demo_expiry.sql` | Kolom `demo_expires_at date` op stolkwebdesign_client_projects: vervaldatum van een pitch-demo (14 dagen na deploy). Gezet door `scripts/deploy-demo/deploy-demo.mjs` in de monorepo; Projecten-tab toont "Demo verloopt/verlopen"-badge (`admin-klantprojecten.js`, `demoExpiryHTML`); dagelijkse checker `scripts/check-demo-expiry.mjs` (launchd 09:20) → Telegram + concept-mail. Live 10-07 via Management API |
 
 ## Design System
 | Element        | Waarde                        |
