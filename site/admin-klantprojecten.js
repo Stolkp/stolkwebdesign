@@ -50,6 +50,7 @@
 
   let rows = [];
   let events = [];     // opvolg-events (newest first)
+  let clicks = [];     // outreach-linkkliks (stolkwebdesign_prospect_clicks, sync vanaf tracking-project)
   let view = 'grid';   // 'grid' | 'pipeline' | 'focus'
   let focusList = [];  // huidige (gefilterde) lijst waar de focus-view doorheen bladert
   let focusPos = 0;
@@ -214,6 +215,8 @@
     .cp-link{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;padding:9px 14px;border:1px solid #333;color:#cfcfcf;text-decoration:none;transition:all .15s;background:transparent}
     .cp-link:hover{border-color:var(--red);color:#fff}
     .cp-panel-notes{font-size:13px;line-height:1.7;color:#bbb;margin:18px 0;white-space:pre-line}
+    .cp-clicks{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;color:#888;margin:10px 0 0;text-transform:uppercase}
+    .cp-clicks b{color:#eee;font-weight:700}
     .cp-panel-prog{display:flex;align-items:center;gap:12px;margin:16px 0}
     .cp-panel-prog .cp-progress{flex:1}
     .cp-panel-prog span.lbl{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#888;white-space:nowrap}
@@ -240,13 +243,15 @@
   // ── data ──
   async function load() {
     if (typeof db === 'undefined' || !db) return;
-    const [pr, ev] = await Promise.all([
+    const [pr, ev, cl] = await Promise.all([
       db.from(T).select('*').order('sort_order').order('id'),
       db.from(EV).select('*').order('event_date', { ascending: false }).order('id', { ascending: false }),
+      db.from('stolkwebdesign_prospect_clicks').select('*').order('code'),
     ]);
     if (pr.error) { note('Laden mislukt: ' + pr.error.message, true); return; }
     rows = pr.data || [];
     events = ev.error ? [] : (ev.data || []);
+    clicks = cl.error ? [] : (cl.data || []);
     renderSummary();
     renderFilters();
     render();
@@ -322,7 +327,7 @@
         ${bar(r.pages_built, r.pages_total)}
         <div class="cp-card-meta">
           <span>${r.pages_built || 0}/${r.pages_total || 1} pagina's</span>
-          <span>${r.deal_value ? `<span class="cp-value">${eur(r.deal_value)}</span>` : ''}${r.live_url ? ' ↗ demo' : ''}</span>
+          <span>${r.deal_value ? `<span class="cp-value">${eur(r.deal_value)}</span>` : ''}${r.live_url ? ' ↗ demo' : ''}${clicksTotal(r.name) ? ` · ${clicksTotal(r.name)} kliks` : ''}</span>
         </div>
         ${flowHTML(r)}
         ${nextStepHTML(r)}
@@ -350,6 +355,19 @@
         <div class="cp-col-body">${cards}</div>
       </div>`;
     }).join('');
+  }
+
+  const clicksFor = name => clicks.filter(c => c.prospect && String(c.prospect).toLowerCase() === String(name || '').toLowerCase());
+  const clicksTotal = name => clicksFor(name).reduce((s, c) => s + (c.clicks || 0), 0);
+
+  function clicksHTML(r) {
+    const L = clicksFor(r.name);
+    if (!L.length) return '';
+    const parts = L.map(c => {
+      const laatst = c.clicks && c.last_click ? ` (laatste ${fmtFull(c.last_click)})` : '';
+      return `${esc(c.label || c.code)}: <b>${c.clicks || 0}</b> kliks${laatst}`;
+    });
+    return `<div class="cp-clicks">Outreach-kliks → ${parts.join(' · ')}</div>`;
   }
 
   function actionLinks(r) {
@@ -393,6 +411,7 @@
           </div>
         </div>
         ${actionLinks(r)}
+        ${clicksHTML(r)}
         <div class="cp-panel-prog">
           <span class="lbl">${r.pages_built || 0}/${r.pages_total || 1} pagina's</span>
           ${bar(r.pages_built, r.pages_total)}
