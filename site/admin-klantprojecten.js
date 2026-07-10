@@ -246,6 +246,23 @@
     .cp-hint{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#555;margin-left:auto}
     .cp-empty{padding:40px 24px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:#555;text-transform:uppercase;letter-spacing:.1em;background:#0a0a0a;border:1px solid #1a1a1a}
     @media(max-width:900px){.cp-statusgrid{grid-template-columns:repeat(2,1fr)}.cp-panel{padding:22px}.cp-panel-name{font-size:24px}.cp-hint{display:none}}
+    @media(max-width:600px){
+      .cp-grid{grid-template-columns:1fr}
+      .cp-toolbar{flex-direction:column;align-items:stretch}
+      .cp-viewtoggle{margin-left:0}
+      .cp-vt{flex:1;text-align:center}
+      .cp-filters{flex-direction:column;align-items:stretch}
+      .cp-search{flex:1 1 auto;min-width:0;font-size:16px}
+      .cp-panel{padding:16px}
+      .cp-panel-name{font-size:20px}
+      .cp-panel-notes{font-size:16px}
+      .cp-tl-note{font-size:15px}
+      .cp-links{flex-direction:column}
+      .cp-link{display:block;width:100%;text-align:center;box-sizing:border-box}
+      .cp-focus-nav{flex-direction:column;align-items:stretch}
+      .cp-next{width:100%}
+      .cp-focus-bar{flex-wrap:wrap}
+    }
     `;
     const s = document.createElement('style');
     s.id = 'cp-styles'; s.textContent = css;

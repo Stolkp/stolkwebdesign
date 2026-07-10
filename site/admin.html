@@ -61,7 +61,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 
 /* SIDEBAR */
 .sidebar { background:#0c0c0c; border-right:2px solid #1a1a1a; padding:32px 0; }
-.sidebar-section { margin-bottom:8px; }
+.sidebar-section { margin-bottom:20px; }
 .sidebar-label { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.2em; color:#444; padding:0 24px 8px; }
 .sidebar-item {
   display:flex; align-items:center; gap:12px;
@@ -74,6 +74,22 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 .sidebar-item:hover { background:#141414; color:var(--white); }
 .sidebar-item.active { background:#141414; color:var(--white); border-left-color:var(--red); }
 .sidebar-icon { width:16px; opacity:.6; }
+.sidebar-count {
+  margin-left:auto; min-width:18px; height:18px; padding:0 5px;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700;
+  background:var(--red); color:#fff;
+}
+
+/* MOBIELE NAV (burger + drawer) */
+.nav-burger {
+  display:none; background:none; border:1px solid #2a2a2a; color:var(--white);
+  width:40px; height:40px; align-items:center; justify-content:center;
+  cursor:pointer; padding:0; flex:0 0 auto;
+}
+.nav-burger svg { width:18px; height:18px; }
+.sidebar-backdrop { display:none; }
+.admin-nav-left { display:flex; align-items:center; gap:14px; min-width:0; }
 
 /* MAIN */
 .main { padding:40px; overflow-y:auto; }
@@ -186,10 +202,33 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 
 @media(max-width:900px) {
   .admin-body { grid-template-columns:1fr; }
-  .sidebar { display:none; }
+  .nav-burger { display:flex; }
+  .admin-nav { padding:14px 16px; }
+  .sidebar {
+    position:fixed; top:72px; left:0; bottom:0; width:min(300px,85vw); z-index:950;
+    transform:translateX(-105%); transition:transform .2s ease;
+    overflow-y:auto; -webkit-overflow-scrolling:touch;
+    border-right:2px solid #1a1a1a;
+  }
+  .sidebar.open { transform:translateX(0); }
+  body.sidebar-open .sidebar-backdrop {
+    display:block; position:fixed; inset:72px 0 0 0;
+    background:rgba(0,0,0,.6); z-index:900;
+  }
+  .sidebar-item { padding:14px 24px; font-size:12px; }
+  .main { padding:24px 16px; }
+  .page-title { font-size:22px; }
+  .main input, .main select, .main textarea { font-size:16px; }
+  .table-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; }
   .settings-grid { grid-template-columns:1fr; }
   .form-row { grid-template-columns:1fr; }
   .photo-slot { grid-template-columns:1fr; }
+  .modal { padding:24px 18px; }
+  .add-btn, .content-save-btn { width:100%; justify-content:center; }
+  .factuur-toolbar { flex-direction:column; align-items:stretch; }
+  .factuur-toolbar .add-btn, .factuur-toolbar .settings-btn { width:100%; margin:0; justify-content:center; }
+  #sign-list > div, #ads-actions > div { flex-wrap:wrap; }
+  #sign-list > div > span:last-child { flex-wrap:wrap; }
 }
 
 /* FACTUUR */
@@ -455,7 +494,12 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 <!-- ADMIN -->
 <div id="admin-screen">
   <nav class="admin-nav">
-    <div class="admin-nav-logo font-display">Stolk<span>®</span> Admin</div>
+    <div class="admin-nav-left">
+      <button class="nav-burger" aria-label="Menu" onclick="toggleSidebar()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13"/></svg>
+      </button>
+      <div class="admin-nav-logo font-display">Stolk<span>®</span> Admin</div>
+    </div>
     <div class="admin-nav-right">
       <div class="admin-badge font-mono">● Ingelogd</div>
       <button class="admin-logout font-mono" onclick="doLogout()">Uitloggen</button>
@@ -463,67 +507,77 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
   </nav>
 
   <div class="admin-body">
+    <div class="sidebar-backdrop" onclick="closeSidebar()"></div>
     <!-- SIDEBAR -->
     <div class="sidebar">
       <div class="sidebar-section">
-        <div class="sidebar-label font-mono">Beheer</div>
-        <div class="sidebar-item active font-mono" onclick="showSection('projects', this)">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/></svg>
-          Portfolio
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('content', this)">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 7h12M2 11h8"/></svg>
-          Content
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('layout', this); initLayout();">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="13" height="3"/><rect x="1.5" y="7" width="13" height="3"/><rect x="1.5" y="12.5" width="13" height="2"/></svg>
-          Layout
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('factuur', this)">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1.5" width="10" height="13"/><path d="M5.5 5h5M5.5 8h5M5.5 11h3"/></svg>
-          Factuur
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('social', this)">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="6" height="6"/><rect x="8.5" y="1.5" width="6" height="6"/><rect x="1.5" y="8.5" width="6" height="6"/><rect x="8.5" y="8.5" width="6" height="6"/></svg>
-          Campagnes
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('automations', this); if (window.SWDAutomations) window.SWDAutomations.init();">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="3" cy="3" r="1.8"/><circle cx="13" cy="8" r="1.8"/><circle cx="3" cy="13" r="1.8"/><path d="M4.6 3.6L11.4 7.4M4.6 12.4L11.4 8.6"/></svg>
-          Automations
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('blog', this); loadBlogList();">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 1.5h7l3 3v10H3z"/><path d="M9.5 1.5v3.5H13"/><path d="M5.5 8h5M5.5 11h3"/></svg>
-          Blog
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('klantprojecten', this); loadClientProjects();">
+        <div class="sidebar-label font-mono">Sales</div>
+        <div class="sidebar-item active font-mono" data-section="klantprojecten" onclick="showSection('klantprojecten', this); loadClientProjects();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="6" height="6"/><rect x="8.5" y="1.5" width="6" height="6"/><rect x="1.5" y="8.5" width="6" height="6"/><rect x="8.5" y="8.5" width="6" height="6"/></svg>
           Projecten
         </div>
-        <div class="sidebar-item font-mono" onclick="showSection('sign', this); loadSignList();">
+        <div class="sidebar-item font-mono" data-section="sign" onclick="showSection('sign', this); loadSignList();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s2-5 4-5 1 3 2.5 3S11 4 13 4"/><path d="M2 14h12"/></svg>
           Ondertekenen
         </div>
-        <div class="sidebar-item font-mono" onclick="showSection('ads', this); loadAdsDashboard();">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 11l3.5-4 3 2.5L13 4"/><path d="M10 4h3v3"/></svg>
-          Advertenties
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('rooster', this); loadRooster();">
-          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11"/><path d="M2 6h12M5.5 1.5v3M10.5 1.5v3"/></svg>
-          Rooster
-        </div>
-        <div class="sidebar-item font-mono" onclick="showSection('reserveringen', this); loadBookings();">
+        <div class="sidebar-item font-mono" data-section="reserveringen" onclick="showSection('reserveringen', this); loadBookings();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg>
           Reserveringen
         </div>
-        <div class="sidebar-item font-mono" onclick="showSection('gdpr', this); loadGdprRequests();">
+        <div class="sidebar-item font-mono" data-section="gdpr" onclick="showSection('gdpr', this); loadGdprRequests();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5L2 4v4c0 3.3 2.5 5.8 6 6.5 3.5-.7 6-3.2 6-6.5V4L8 1.5z"/></svg>
           Privacyverzoeken
         </div>
-        <div class="sidebar-item font-mono" onclick="showSection('designsystem', this); loadBrandKit();">
+        <div class="sidebar-item font-mono" data-section="factuur" onclick="showSection('factuur', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1.5" width="10" height="13"/><path d="M5.5 5h5M5.5 8h5M5.5 11h3"/></svg>
+          Factuur
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label font-mono">Marketing</div>
+        <div class="sidebar-item font-mono" data-section="social" onclick="showSection('social', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="6" height="6"/><rect x="8.5" y="1.5" width="6" height="6"/><rect x="1.5" y="8.5" width="6" height="6"/><rect x="8.5" y="8.5" width="6" height="6"/></svg>
+          Campagnes
+        </div>
+        <div class="sidebar-item font-mono" data-section="ads" onclick="showSection('ads', this); loadAdsDashboard();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 11l3.5-4 3 2.5L13 4"/><path d="M10 4h3v3"/></svg>
+          Advertenties
+        </div>
+        <div class="sidebar-item font-mono" data-section="automations" onclick="showSection('automations', this); if (window.SWDAutomations) window.SWDAutomations.init();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="3" cy="3" r="1.8"/><circle cx="13" cy="8" r="1.8"/><circle cx="3" cy="13" r="1.8"/><path d="M4.6 3.6L11.4 7.4M4.6 12.4L11.4 8.6"/></svg>
+          Automations
+        </div>
+        <div class="sidebar-item font-mono" data-section="blog" onclick="showSection('blog', this); loadBlogList();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 1.5h7l3 3v10H3z"/><path d="M9.5 1.5v3.5H13"/><path d="M5.5 8h5M5.5 11h3"/></svg>
+          Blog
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label font-mono">Website</div>
+        <div class="sidebar-item font-mono" data-section="projects" onclick="showSection('projects', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="currentColor"><rect x="1" y="1" width="6" height="6"/><rect x="9" y="1" width="6" height="6"/><rect x="1" y="9" width="6" height="6"/><rect x="9" y="9" width="6" height="6"/></svg>
+          Portfolio
+        </div>
+        <div class="sidebar-item font-mono" data-section="content" onclick="showSection('content', this)">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12M2 7h12M2 11h8"/></svg>
+          Content
+        </div>
+        <div class="sidebar-item font-mono" data-section="layout" onclick="showSection('layout', this); initLayout();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="1.5" width="13" height="3"/><rect x="1.5" y="7" width="13" height="3"/><rect x="1.5" y="12.5" width="13" height="2"/></svg>
+          Layout
+        </div>
+        <div class="sidebar-item font-mono" data-section="designsystem" onclick="showSection('designsystem', this); loadBrandKit();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/><circle cx="5" cy="11" r="2.5"/><circle cx="11" cy="11" r="2.5"/></svg>
           Design System
         </div>
-        <div class="sidebar-item font-mono" onclick="showSection('settings', this)">
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label font-mono">Beheer</div>
+        <div class="sidebar-item font-mono" data-section="rooster" onclick="showSection('rooster', this); loadRooster();">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="12" height="11"/><path d="M2 6h12M5.5 1.5v3M10.5 1.5v3"/></svg>
+          Rooster
+        </div>
+        <div class="sidebar-item font-mono" data-section="settings" onclick="showSection('settings', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
           Instellingen
         </div>
@@ -542,7 +596,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
     <div class="main">
 
       <!-- PROJECTS -->
-      <div id="section-projects" class="page-section active">
+      <div id="section-projects" class="page-section">
         <div class="page-title font-display">Portfolio projecten</div>
         <div class="page-sub font-mono">Projecten beheren — wijzigingen worden direct opgeslagen in Supabase</div>
 
@@ -680,7 +734,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
       </div>
 
       <!-- KLANTPROJECTEN -->
-      <div id="section-klantprojecten" class="page-section">
+      <div id="section-klantprojecten" class="page-section active">
         <div class="page-title font-display">Projecten</div>
         <div class="page-sub font-mono">Je klantprojecten — pijplijn-status · voortgang · snelkoppelingen</div>
         <div class="cp-toolbar no-print">
@@ -1129,6 +1183,14 @@ function showAdmin() {
   renderProjects();
   loadContent();
   loadSocial();
+  // Externe modules laden ná dit script; daarom via setTimeout de start-tab kiezen
+  setTimeout(() => {
+    if (!openSectionFromHash()) {
+      showSection('klantprojecten');
+      try { loadClientProjects(); } catch (e) { console.warn(e); }
+    }
+    if (window.SWDBadges) SWDBadges.init();
+  }, 0);
 }
 
 function showLogin() {
@@ -1362,12 +1424,49 @@ async function deleteProject(id) {
 }
 
 // ── NAVIGATION ──
+function toggleSidebar() {
+  const open = document.querySelector('.sidebar').classList.toggle('open');
+  document.body.classList.toggle('sidebar-open', open);
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('open');
+  document.body.classList.remove('sidebar-open');
+}
+
 function showSection(name, el) {
+  const target = document.getElementById('section-' + name);
+  if (!target) return;
   document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
-  document.getElementById('section-' + name).classList.add('active');
-  el.classList.add('active');
+  target.classList.add('active');
+  const item = el || document.querySelector('.sidebar-item[data-section="' + name + '"]');
+  if (item) item.classList.add('active');
+  history.replaceState(null, '', '#' + name);
+  if (typeof closeSidebar === 'function') closeSidebar();
+  if (window.SWDBadges) SWDBadges.refreshSoon();
 }
+
+// Deep-linking: #<sectie> of #<sectie>:<id> (id gereserveerd voor focus-openers)
+const SECTION_LOADERS = {
+  layout: () => initLayout(),
+  automations: () => window.SWDAutomations && SWDAutomations.init(),
+  blog: () => loadBlogList(),
+  klantprojecten: () => loadClientProjects(),
+  sign: () => loadSignList(),
+  ads: () => loadAdsDashboard(),
+  rooster: () => loadRooster(),
+  reserveringen: () => loadBookings(),
+  gdpr: () => loadGdprRequests(),
+  designsystem: () => loadBrandKit(),
+};
+function openSectionFromHash() {
+  const name = decodeURIComponent(location.hash.slice(1)).split(':')[0];
+  if (!name || !document.getElementById('section-' + name)) return false;
+  showSection(name);
+  try { if (SECTION_LOADERS[name]) SECTION_LOADERS[name](); } catch (e) { console.warn('Loader ' + name + ':', e); }
+  return true;
+}
+window.addEventListener('hashchange', openSectionFromHash);
 
 // ── ONDERTEKENEN (Ondertekenen-module) ──
 const SIGN_TABLE = 'stolkwebdesign_sign_requests';
@@ -2831,5 +2930,6 @@ initAuth();
 <script src="vendor/drawflow/drawflow.min.js"></script>
 <script src="admin-automations-graph.js"></script>
 <script src="admin-automations.js"></script>
+<script src="admin-badges.js"></script>
 </body>
 </html>

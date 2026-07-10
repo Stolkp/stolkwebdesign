@@ -107,7 +107,7 @@ export default async function handler(req) {
     `🔗 Bron: ${bron}\n` +
     (site ? `🌐 Site: ${site}\n` : '') +
     (bericht ? `\n📝 ${bericht.slice(0, 400)}\n` : '') +
-    `\n→ In je CMS: https://www.stolkwebdesign.nl/admin`
+    `\n→ In je CMS: https://www.stolkwebdesign.nl/admin#klantprojecten`
   ).catch(() => {});
 
   return json({ ok: true, id: data?.id });

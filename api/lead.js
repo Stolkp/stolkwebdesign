@@ -107,7 +107,7 @@ export default async function handler(req, res) {
         (doel ? `🎯 Hoofddoel: ${doel}\n` : '') +
         (usp ? `⭐ Sterkste punt: ${usp}\n` : '') +
         (referenties ? `🔗 Referenties: ${referenties}\n` : '') +
-        `\n→ Volledig op de lead-kaart: https://www.stolkwebdesign.nl/admin`
+        `\n→ Volledig op de lead-kaart: https://www.stolkwebdesign.nl/admin#klantprojecten`
       );
 
       return res.status(200).json({ ok: true });
@@ -175,7 +175,7 @@ export default async function handler(req, res) {
       `🔗 Bron: ${bron || 'direct/onbekend'}\n` +
       (site ? `🌐 Site: ${site}\n` : '') +
       `\n📝 ${String(bericht).slice(0, 400)}\n\n` +
-      `→ In je CMS: https://www.stolkwebdesign.nl/admin`
+      `→ In je CMS: https://www.stolkwebdesign.nl/admin#klantprojecten`
     );
 
     return res.status(200).json({ ok: true, id: data?.id });
