@@ -32,6 +32,7 @@
 <script defer src="/cookieconsent/cc-init.js"></script>
 <script type="text/plain" data-category="analytics" async src="https://www.googletagmanager.com/gtag/js?id=G-5MT8XNYTF7"></script>
 <script type="text/plain" data-category="analytics">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-5MT8XNYTF7');</script>
+<script defer src="/utm.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
@@ -1639,6 +1640,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         source:  modal.dataset.source || 'modules-page'
       });
       if (error) throw error;
+      try { if (typeof gtag === 'function') gtag('event', 'generate_lead', { method: 'module_waitlist' }); } catch (e2) {}
       formArea.style.display = 'none';
       successEl.style.display = 'block';
     } catch (err) {

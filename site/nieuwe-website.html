@@ -328,7 +328,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
       });
       const d = await res.json().catch(() => ({}));
       if (!res.ok) { throw new Error(d.error || `Server fout (${res.status})`); }
-      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'generate_lead', method: 'landing_interesse' }); } catch (e2) {}
+      try { if (typeof gtag === 'function') gtag('event', 'generate_lead', { method: 'landing_interesse' }); } catch (e2) {}
       document.getElementById('iq-form').style.display = 'none';
       document.querySelectorAll('#vragen > .formcard-title, #vragen > .formcard-sub').forEach((el) => { el.style.display = 'none'; });
       document.getElementById('iq-success').style.display = 'block';

@@ -386,7 +386,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
       const d = await res.json().catch(() => ({}));
       if (!res.ok) { throw new Error(d.error || `Server fout (${res.status})`); }
       try { if (typeof fbq === 'function') fbq('track', 'Lead'); } catch (e2) {}
-      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'generate_lead', method: 'landing_mockup' }); } catch (e2) {}
+      try { if (typeof gtag === 'function') gtag('event', 'generate_lead', { method: 'landing_mockup' }); } catch (e2) {}
       window.__leadId = d.id || null;
       document.getElementById('lp-form').style.display = 'none';
       // De kaart-kop ("Vraag je gratis mockup aan") hoort bij stap 1 — weg zodra we verder zijn.
@@ -440,7 +440,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ mode: 'details', id: window.__leadId, achternaam, bedrijf, referenties, uitstraling, doel, usp }),
         });
-        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'lead_details' }); } catch (e2) {}
+        try { if (typeof gtag === 'function') gtag('event', 'lead_details', { method: 'landing_mockup' }); } catch (e2) {}
       } catch (e2) { /* lead is al binnen; toon alsnog het bedankscherm */ }
       finish();
     });

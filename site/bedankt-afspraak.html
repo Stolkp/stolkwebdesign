@@ -85,10 +85,10 @@ footer a { color:rgba(255,255,255,.45); text-decoration:none; }
   (function () {
     var attr = (typeof getAttribution === 'function') ? getAttribution().string : 'direct/onbekend';
     try {
-      window.dataLayer = window.dataLayer || [];
       // Markeer 'book_appointment' in GA4 als sleutelgebeurtenis en importeer 'm als
       // Google Ads-conversie. (Aparte, hoogwaardigere conversie dan een formulier-lead.)
-      window.dataLayer.push({ event: 'book_appointment', method: 'calcom', source: attr });
+      // gtag('event', ...) i.p.v. kale dataLayer.push: zonder GTM leest gtag.js dat formaat niet.
+      if (typeof gtag === 'function') gtag('event', 'book_appointment', { method: 'calcom', source: attr });
     } catch (e) {}
     try { if (typeof fbq === 'function') { fbq('track', 'Schedule'); fbq('track', 'Lead'); } } catch (e) {}
 

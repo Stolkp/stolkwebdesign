@@ -41,3 +41,20 @@
     return { string: parts.join(' / '), raw: raw };
   };
 })();
+
+// Contact-klik-tracking: meet kliks op WhatsApp-, telefoon- en mail-links als GA4-event
+// 'contact_click' (method: whatsapp/telefoon/email). Vuurt alleen als gtag geladen is
+// (dus na analytics-consent); zonder consent gebeurt er niets.
+(function () {
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var method = null;
+    if (href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1) method = 'whatsapp';
+    else if (href.indexOf('tel:') === 0) method = 'telefoon';
+    else if (href.indexOf('mailto:') === 0) method = 'email';
+    if (!method) return;
+    try { if (typeof gtag === 'function') gtag('event', 'contact_click', { method: method, page: window.location.pathname }); } catch (err) {}
+  }, true);
+})();

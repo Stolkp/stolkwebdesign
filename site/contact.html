@@ -353,7 +353,8 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
 
       // Conversie-events (alleen als de tags na cookie-consent geladen zijn)
       try { if (typeof fbq === 'function') fbq('track', 'Lead'); } catch (e2) {}
-      try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'generate_lead', method: 'contact_form' }); } catch (e2) {}
+      // gtag('event', ...) i.p.v. kale dataLayer.push: zonder GTM-container leest gtag.js dat formaat niet.
+      try { if (typeof gtag === 'function') gtag('event', 'generate_lead', { method: 'contact_form' }); } catch (e2) {}
 
       // Succes
       document.getElementById('contact-form').style.display = 'none';
