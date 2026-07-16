@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{TITLE}} — Stolkwebdesign Blog</title>
+<title>{{TITLE}} · Stolkwebdesign Blog</title>
 <meta name="description" content="{{EXCERPT}}">
 <meta name="keywords" content="webdesign, hosting, {{TOPIC}}, website laten bouwen, mkb">
 <meta property="og:title" content="{{TITLE}}">
@@ -36,9 +36,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root { --black:#000; --white:#FFF; --red:#EA2525; --near-black:#0A0A0A; --bone:#F5F5F5; --muted:#767676; }
+:root { --black:#000; --ink:#0A0A0A; --white:#FFF; --paper:#FCFBFA; --bone:#F6F5F3; --red:#EA2525; --muted:#6C6A66; --hair:#E7E4DF; }
 html { scroll-behavior: smooth; }
-body { background: var(--white); color: var(--black); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; line-height: 1.6; }
+body { background: var(--paper); color: var(--ink); font-family: 'Space Grotesk', sans-serif; overflow-x: hidden; line-height: 1.7; -webkit-text-size-adjust: 100%; }
 .font-display { font-family: 'Archivo Black', sans-serif; }
 .font-mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -48,7 +48,7 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(
 .nav-links { display: flex; gap:40px; list-style: none; }
 .nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: rgba(255,255,255,.5); text-decoration: none; transition: color .2s; }
 .nav-links a:hover, .nav-links a.active { color: var(--white); }
-.nav-cta { font-family: 'Archivo Black', sans-serif; font-size: 12px; text-transform: uppercase; background: var(--red); color: var(--white); border: 2px solid var(--white); padding: 13px 22px; text-decoration: none; letter-spacing: .04em; transition: background .15s, color .15s; }
+.nav-cta { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 12px; text-transform: uppercase; background: var(--red); color: var(--white); border: 2px solid var(--white); padding: 12px 20px; text-decoration: none; letter-spacing: .04em; transition: background .15s, color .15s; }
 .nav-cta:hover { background: var(--white); color: var(--red); }
 .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
 .nav-hamburger span { display:block; width:22px; height:2px; background:var(--white); }
@@ -56,59 +56,66 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: var(
 .skip-link:focus { top:0; }
 
 /* ARTICLE HEADER */
-.article-header { background: var(--near-black); color: var(--white); padding: 140px 48px 80px; position: relative; overflow: hidden; }
-.article-header-inner { max-width: 920px; margin: 0 auto; position: relative; z-index: 2; }
-.breadcrumb { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: rgba(255,255,255,.5); margin-bottom: 28px; }
-.breadcrumb a { color: rgba(255,255,255,.5); text-decoration: none; transition: color .15s; }
+.article-header { background: var(--ink); color: var(--white); padding: 128px 0 150px; position: relative; overflow: hidden; }
+.article-header.no-cover { padding-bottom: 76px; }
+.article-header-inner { max-width: 800px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+.breadcrumb { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.4); margin-bottom: 28px; }
+.breadcrumb a { color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
 .breadcrumb a:hover { color: var(--white); }
-.breadcrumb .sep { color: var(--red); margin: 0 12px; }
-.topic-tag { display:inline-block; background: var(--red); color: var(--white); padding: 6px 14px; font-family: 'Archivo Black', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; margin-bottom: 28px; }
-h1.article-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(36px, 6vw, 72px); line-height: 1.02; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 32px; }
-.article-meta { display: flex; gap: 32px; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.55); }
-.article-meta strong { color: var(--white); font-weight: normal; }
-.article-noise { position: absolute; inset: 0; opacity: .08; mix-blend-mode: multiply; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); z-index: 1; }
+.breadcrumb .sep { margin: 0 10px; }
+.article-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 22px; }
+.topic-tag { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: .14em; background: var(--red); color: var(--white); padding: 5px 10px; }
+.article-meta .m { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.55); }
+.article-meta .dot { color: rgba(255,255,255,.3); }
+h1.article-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(32px, 5vw, 52px); line-height: 1.03; letter-spacing: -0.025em; margin-bottom: 22px; text-wrap: balance; }
+.article-intro { font-size: 19px; line-height: 1.55; color: rgba(255,255,255,.72); max-width: 60ch; }
+.article-noise { position: absolute; inset: 0; opacity: .06; mix-blend-mode: screen; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='4' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); z-index: 1; }
 
-/* COVER */
-.article-cover { max-width: 1080px; margin: -48px auto 0; padding: 0 48px; position: relative; z-index: 5; }
-.article-cover img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border: 2px solid var(--black); box-shadow: 8px 8px 0 0 var(--red); display: block; }
+/* HERO / COVER - echt beeld met offset-schaduw, uitgelijnd met kop en body */
+.article-cover { max-width: 800px; margin: -110px auto 0; padding: 0 40px; position: relative; z-index: 5; }
+.article-cover img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; border: 2px solid var(--ink); box-shadow: 14px 14px 0 0 var(--red); background: var(--bone); }
 
 /* BODY */
-.article-body { max-width: 720px; margin: 0 auto; padding: 80px 48px; font-size: 18px; line-height: 1.75; color: var(--near-black); }
-.article-body h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(24px, 3vw, 36px); text-transform: uppercase; letter-spacing: -0.01em; margin: 56px 0 20px; line-height: 1.15; }
-.article-body h3 { font-family: 'Archivo Black', sans-serif; font-size: clamp(20px, 2.4vw, 26px); text-transform: uppercase; letter-spacing: -0.01em; margin: 40px 0 16px; line-height: 1.2; }
-.article-body p { margin-bottom: 24px; }
-.article-body ul, .article-body ol { margin: 0 0 24px 28px; }
-.article-body li { margin-bottom: 8px; }
-.article-body a { color: var(--black); text-decoration: none; border-bottom: 2px solid var(--red); transition: background .15s; padding: 0 2px; }
-.article-body a:hover { background: var(--red); color: var(--white); }
-.article-body blockquote { border-left: 4px solid var(--red); margin: 32px 0; padding: 8px 0 8px 24px; font-style: italic; color: var(--muted); }
-.article-body code { font-family: 'JetBrains Mono', monospace; background: var(--bone); padding: 2px 6px; font-size: 0.92em; border: 1px solid #ddd; }
-.article-body pre { background: var(--near-black); color: var(--white); padding: 20px; overflow-x: auto; margin: 24px 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.5; border: 2px solid var(--black); }
+.article-body { max-width: 800px; margin: 0 auto; padding: 56px 40px 40px; font-size: 19px; line-height: 1.7; color: #1a1a1a; }
+.article-body > *:first-child { margin-top: 0; }
+.article-body h2 { font-family: 'Archivo Black', sans-serif; font-size: 26px; letter-spacing: -0.015em; margin: 52px 0 18px; line-height: 1.12; text-wrap: balance; color: var(--ink); }
+.article-body h3 { font-family: 'Archivo Black', sans-serif; font-size: 20px; letter-spacing: -0.01em; margin: 40px 0 14px; line-height: 1.2; color: var(--ink); }
+.article-body p { margin-bottom: 26px; }
+.article-body ul, .article-body ol { margin: 0 0 26px; padding-left: 0; list-style: none; }
+.article-body ul li { position: relative; padding-left: 24px; margin-bottom: 11px; }
+.article-body ul li::before { content: ""; position: absolute; left: 0; top: 12px; width: 8px; height: 8px; background: var(--red); }
+.article-body ol { padding-left: 22px; list-style: decimal; }
+.article-body ol li { margin-bottom: 11px; padding-left: 4px; }
+.article-body strong { font-weight: 700; }
+.article-body a { color: var(--red); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 2px; }
+.article-body blockquote { font-family: 'Archivo Black', sans-serif; font-size: 23px; line-height: 1.22; letter-spacing: -0.02em; border-left: 4px solid var(--red); padding: 6px 0 6px 24px; margin: 40px 0; color: var(--ink); }
+.article-body blockquote p { margin: 0; }
+.article-body code { font-family: 'JetBrains Mono', monospace; background: var(--bone); padding: 2px 6px; font-size: 0.9em; border: 1px solid var(--hair); }
+.article-body pre { background: var(--ink); color: var(--white); padding: 20px; overflow-x: auto; margin: 26px 0; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.5; border: 2px solid var(--ink); }
 .article-body pre code { background: none; padding: 0; border: none; color: inherit; }
-.article-body img { max-width: 100%; height: auto; margin: 32px 0; border: 2px solid var(--black); }
-.article-body hr { border: none; border-top: 2px solid var(--black); margin: 48px 0; }
+.article-body img { max-width: 100%; height: auto; margin: 32px 0; border: 2px solid var(--ink); }
+.article-body hr { border: none; border-top: 2px solid var(--hair); margin: 44px 0; }
 
-/* CTA AAN HET EIND */
-.article-cta { background: var(--red); color: var(--white); padding: 64px 48px; text-align: center; margin: 0; }
-.article-cta-inner { max-width: 720px; margin: 0 auto; }
-.article-cta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .25em; opacity: .8; margin-bottom: 16px; }
-.article-cta h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 4vw, 44px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 24px; }
-.article-cta p { font-size: 17px; margin-bottom: 32px; opacity: .92; }
-.article-cta-btn { display: inline-block; font-family: 'Archivo Black', sans-serif; font-size: 14px; text-transform: uppercase; background: var(--white); color: var(--red); border: 2px solid var(--black); padding: 16px 28px; text-decoration: none; letter-spacing: .04em; box-shadow: 8px 8px 0 0 var(--black); transition: transform .15s, box-shadow .15s; }
-.article-cta-btn:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--black); }
+/* CTA - verfijnd blok i.p.v. felrode slab */
+.article-cta { max-width: 800px; margin: 56px auto 0; padding: 0 40px; }
+.article-cta-inner { border: 2px solid var(--ink); box-shadow: 10px 10px 0 0 var(--ink); padding: 38px 34px; background: var(--white); }
+.article-cta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: var(--red); margin-bottom: 12px; }
+.article-cta h2 { font-family: 'Archivo Black', sans-serif; font-size: 26px; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 14px; text-wrap: balance; color: var(--ink); }
+.article-cta p { font-size: 16px; color: var(--muted); margin-bottom: 24px; }
+.article-cta-btn { display: inline-block; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; text-transform: uppercase; background: var(--red); color: var(--white); padding: 15px 26px; text-decoration: none; letter-spacing: .06em; transition: transform .15s; }
+.article-cta-btn:hover { transform: translate(-2px,-2px); }
 
-/* RELATED */
-.related { background: var(--bone); padding: 80px 48px; }
-.related-inner { max-width: 1200px; margin: 0 auto; }
-.related-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .25em; color: var(--muted); margin-bottom: 16px; }
-.related h2 { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 4vw, 44px); text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 48px; }
-.related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
-.related-card { background: var(--white); border: 2px solid var(--black); box-shadow: 8px 8px 0 0 var(--black); padding: 28px; text-decoration: none; color: var(--black); display: flex; flex-direction: column; gap: 16px; transition: transform .15s, box-shadow .15s; }
-.related-card:hover { transform: translate(-3px,-3px); box-shadow: 11px 11px 0 0 var(--red); }
-.related-card-topic { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .2em; color: var(--red); }
-.related-card h3 { font-family: 'Archivo Black', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.2; }
-.related-card p { color: var(--muted); font-size: 14px; line-height: 1.55; }
-.related-card-link { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: var(--red); margin-top: auto; }
+/* RELATED - binnen dezelfde kolom */
+.related { padding: 0; }
+.related-inner { max-width: 800px; margin: 80px auto 0; padding: 44px 40px 90px; border-top: 2px solid var(--hair); }
+.related-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .14em; color: var(--muted); margin-bottom: 26px; }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+.related-card { background: var(--white); border: 2px solid var(--ink); padding: 22px; text-decoration: none; color: var(--ink); display: flex; flex-direction: column; gap: 8px; transition: transform .12s, box-shadow .12s; }
+.related-card:hover { transform: translate(-3px,-3px); box-shadow: 7px 7px 0 0 var(--ink); }
+.related-card-topic { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .12em; color: var(--red); }
+.related-card h3 { font-family: 'Archivo Black', sans-serif; font-size: 17px; letter-spacing: -0.01em; line-height: 1.15; }
+.related-card p { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.related-card-link { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--red); margin-top: 6px; }
 
 /* FOOTER */
 footer { background: var(--black); color: var(--white); padding: 80px 48px 40px; }
@@ -131,12 +138,17 @@ footer { background: var(--black); color: var(--white); padding: 80px 48px 40px;
   .nav-links { display: none; }
   .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
   .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; border-bottom:1px solid rgba(255,255,255,.1); }
-  .article-header { padding: 110px 20px 60px; }
-  .article-cover { padding: 0 20px; margin-top: -32px; }
-  .article-cover img { box-shadow: 5px 5px 0 0 var(--red); }
-  .article-body { padding: 56px 20px; font-size: 17px; }
-  .article-cta { padding: 56px 20px; }
-  .related { padding: 56px 20px; }
+  .article-header { padding: 104px 0 128px; }
+  .article-header.no-cover { padding-bottom: 60px; }
+  .article-header-inner { padding: 0 22px; }
+  h1.article-title { font-size: 32px; }
+  .article-intro { font-size: 17px; }
+  .article-cover { padding: 0 22px; margin-top: -96px; }
+  .article-cover img { box-shadow: 9px 9px 0 0 var(--red); }
+  .article-body { padding: 44px 22px 32px; font-size: 17px; }
+  .article-body h2 { font-size: 23px; }
+  .article-cta { padding: 0 22px; }
+  .related-inner { padding: 40px 22px 72px; }
   footer { padding: 56px 20px 32px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
 }
@@ -163,7 +175,7 @@ footer { background: var(--black); color: var(--white); padding: 80px 48px 40px;
 <main id="main-content">
 
 <!-- HEADER -->
-<header class="article-header">
+<header class="article-header {{HEADER_CLASS}}">
   <div class="article-noise"></div>
   <div class="article-header-inner">
     <div class="breadcrumb">
@@ -171,13 +183,14 @@ footer { background: var(--black); color: var(--white); padding: 80px 48px 40px;
       <a href="/blog/">Blog</a><span class="sep">/</span>
       <span>{{TOPIC}}</span>
     </div>
-    <span class="topic-tag">{{TOPIC}}</span>
-    <h1 class="article-title">{{TITLE}}</h1>
     <div class="article-meta">
-      <div>Door <strong>Peter Stolk</strong></div>
-      <div>Gepubliceerd <strong>{{DATE_HUMAN}}</strong></div>
-      <div>Leestijd <strong>{{READ_TIME}} min</strong></div>
+      <span class="topic-tag">{{TOPIC}}</span>
+      <span class="dot">·</span><span class="m">Door Peter Stolk</span>
+      <span class="dot">·</span><span class="m">{{DATE_HUMAN}}</span>
+      <span class="dot">·</span><span class="m">{{READ_TIME}} min lezen</span>
     </div>
+    <h1 class="article-title">{{TITLE}}</h1>
+    <p class="article-intro">{{EXCERPT}}</p>
   </div>
 </header>
 
@@ -192,9 +205,9 @@ footer { background: var(--black); color: var(--white); padding: 80px 48px 40px;
 <!-- CTA -->
 <section class="article-cta">
   <div class="article-cta-inner">
-    <div class="article-cta-label">Klaar voor je eigen project?</div>
+    <div class="article-cta-label">Zelf een site laten maken?</div>
     <h2>Laat een website bouwen die opvalt.</h2>
-    <p>Handcrafted in HTML, CSS &amp; GSAP of WordPress — afhankelijk van wat past. Vanaf €2.500.</p>
+    <p>Handcrafted in HTML, CSS &amp; GSAP of WordPress, afhankelijk van wat past. Vanaf €2.500.</p>
     <a href="https://cal.com/peter-stolk-9dkoig/30min" class="article-cta-btn">Plan een gesprek →</a>
   </div>
 </section>
@@ -209,7 +222,7 @@ footer { background: var(--black); color: var(--white); padding: 80px 48px 40px;
   <div class="footer-grid">
     <div>
       <div class="footer-logo font-display">Stolk<span style="color:#EA2525">web</span>design<span style="color:#EA2525">®</span></div>
-      <p class="footer-tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam — persoonlijk &amp; direct.</p>
+      <p class="footer-tagline">Professionele websites laten bouwen<br>voor ondernemers met smaak.<br>Amsterdam, persoonlijk &amp; direct.</p>
     </div>
     <div>
       <div class="footer-col-label font-mono">Navigeer</div>
@@ -246,7 +259,7 @@ footer { background: var(--black); color: var(--white); padding: 80px 48px 40px;
     </div>
   </div>
   <div class="footer-bar">
-    <span class="footer-copy font-mono">© 2026 Stolkwebdesign — Uithoorn</span>
+    <span class="footer-copy font-mono">© 2026 Stolkwebdesign, Uithoorn</span>
     <div style="display:flex; gap:20px; flex-wrap:wrap;">
       <a href="/privacybeleid.html" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none;">Privacybeleid</a>
       <a href="/algemene-voorwaarden.html" style="font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:rgba(255,255,255,.3); text-decoration:none;">Algemene Voorwaarden</a>

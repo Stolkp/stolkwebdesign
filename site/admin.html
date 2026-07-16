@@ -724,8 +724,9 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
       <!-- BLOG -->
       <div id="section-blog" class="page-section">
         <div class="page-title font-display">Blog</div>
-        <div class="page-sub font-mono">Plan wanneer een blog zichtbaar wordt — zet een datum en hij verschijnt vanzelf</div>
+        <div class="page-sub font-mono">Bewerk je posts, plan wanneer ze zichtbaar worden, of zet ze meteen live</div>
         <div style="display:flex; gap:10px; align-items:center; margin:16px 0;">
+          <button class="settings-btn font-mono" onclick="openBlogNew()">＋ Nieuwe blog</button>
           <button class="settings-btn font-mono" onclick="loadBlogList()">↻ Vernieuwen</button>
           <button class="settings-btn font-mono" onclick="rebuildNow(this)">⟳ Site nu herbouwen</button>
         </div>
@@ -1127,6 +1128,93 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
     <div class="form-actions">
       <button class="btn-cancel font-mono" onclick="closeModal()">Annuleren</button>
       <button class="btn-save font-display" onclick="saveProject()">Project opslaan →</button>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG EDIT MODAL -->
+<div class="modal-overlay" id="blog-modal" onclick="if(event.target===this)closeBlogModal()">
+  <div class="modal">
+    <button class="modal-close font-mono" onclick="closeBlogModal()">✕ Sluiten</button>
+    <div class="modal-title font-display" id="blog-modal-title">Blog bewerken</div>
+    <input type="hidden" id="b-id">
+
+    <div class="form-group">
+      <label class="form-label font-mono">Titel *</label>
+      <input type="text" id="b-title" class="form-input" placeholder="Titel van de blog">
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label font-mono">Slug (URL) *</label>
+        <input type="text" id="b-slug" class="form-input" placeholder="mijn-blog-titel">
+      </div>
+      <div class="form-group">
+        <label class="form-label font-mono">Onderwerp</label>
+        <select id="b-topic" class="form-input">
+          <option value="webdesign">Webdesign</option>
+          <option value="hosting">Hosting</option>
+          <option value="tooling">Tooling</option>
+          <option value="mkb">Voor de MKB</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Samenvatting (intro + kaart-preview)</label>
+      <textarea id="b-excerpt" class="form-textarea" placeholder="Korte intro die bovenaan de post en op de kaart komt..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Inhoud (Markdown)</label>
+      <textarea id="b-body" class="form-textarea" style="min-height:280px;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;" placeholder="## Kop&#10;&#10;Gewone alinea. **Vet**, een [link](/pad), en:&#10;- lijstitem"></textarea>
+      <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;margin-top:6px;letter-spacing:.04em;line-height:1.7;">Markdown: <b>##</b> kop · <b>**vet**</b> · <b>-</b> lijst · <b>[tekst](link)</b>. Gebruik geen em-dashes (—).</p>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label font-mono">Hero-afbeelding</label>
+      <div class="img-field">
+        <div class="img-prev" id="b-cover-prev"></div>
+        <input type="text" id="b-cover" class="form-input" placeholder="upload of plak een URL" onchange="setImgPreview('b-cover')">
+        <button type="button" class="upload-btn" id="b-cover-btn" onclick="document.getElementById('b-cover-file').click()">↑ Upload</button>
+        <input type="file" accept="image/*" id="b-cover-file" style="display:none" onchange="uploadProjectImage(this,'b-cover')">
+      </div>
+    </div>
+
+    <p style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#555;line-height:1.7;margin-bottom:4px;">Na opslaan wordt de site opnieuw gebouwd zodat de wijziging live komt (±1-2 min). Let op: de slug wijzigen verandert de URL van de post.</p>
+
+    <div class="form-actions">
+      <button class="btn-cancel font-mono" id="blog-delete-btn" style="display:none;margin-right:auto;color:#e05252;border-color:#5a2020;" onclick="deleteBlogPost(this)">Verwijderen</button>
+      <button class="btn-cancel font-mono" onclick="closeBlogModal()">Annuleren</button>
+      <button class="btn-save font-display" id="blog-save-btn" onclick="saveBlogEdit(this)">Opslaan →</button>
+    </div>
+  </div>
+</div>
+
+<!-- BLOG PUBLICEER + DEEL MODAL -->
+<div class="modal-overlay" id="blog-share-modal" onclick="if(event.target===this)closeBlogShare()">
+  <div class="modal">
+    <button class="modal-close font-mono" onclick="closeBlogShare()">✕ Sluiten</button>
+    <div class="modal-title font-display">Publiceer &amp; deel</div>
+    <input type="hidden" id="s-id">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#888;margin-bottom:18px;line-height:1.7;">
+      Zet de post live en deel hem in één keer naar je socials. De hero-afbeelding gaat als beeld mee.
+    </div>
+    <div class="form-group">
+      <label class="form-label font-mono">Kanalen</label>
+      <div style="display:flex;gap:22px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:13px;color:#ddd;">
+        <label style="display:flex;gap:8px;align-items:center;cursor:pointer;"><input type="checkbox" id="s-linkedin" checked> LinkedIn</label>
+        <label style="display:flex;gap:8px;align-items:center;cursor:pointer;"><input type="checkbox" id="s-instagram" checked> Instagram</label>
+      </div>
+      <p id="s-cover-warn" style="display:none;font-family:'JetBrains Mono',monospace;font-size:10px;color:#e0a000;margin-top:10px;line-height:1.6;">⚠ Geen hero-afbeelding: Instagram vereist een beeld. Voeg er een toe via Bewerken, of vink Instagram uit.</p>
+    </div>
+    <div class="form-group">
+      <label class="form-label font-mono">Bericht (caption)</label>
+      <textarea id="s-caption" class="form-textarea" style="min-height:150px;"></textarea>
+    </div>
+    <div class="form-actions">
+      <button class="btn-cancel font-mono" onclick="closeBlogShare()">Annuleren</button>
+      <button class="btn-save font-display" id="s-go" onclick="doBlogShare(this)">Publiceer &amp; deel nu →</button>
     </div>
   </div>
 </div>
@@ -2862,7 +2950,9 @@ async function loadBlogList() {
       </div>
       <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:${color};white-space:nowrap;">● ${label}</span>
       <input type="date" class="form-input blog-date" id="blogdate-${p.id}" value="${toDateInput(p.published_at)}" title="Kies een publicatiedatum" onclick="if(this.showPicker)this.showPicker()">
-      <div style="display:flex;gap:6px;white-space:nowrap;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+        <button class="row-btn" onclick="openBlogEdit('${p.id}')">✎ Bewerken</button>
+        <button class="row-btn" onclick="openBlogShare('${p.id}')">📣 Deel</button>
         <button class="row-btn" onclick="saveBlogDate('${p.id}',this)">Opslaan</button>
         <button class="row-btn" onclick="publishBlogNow('${p.id}',this)">Nu live</button>
         <button class="row-btn danger" onclick="unpublishBlog('${p.id}',this)">Concept</button>
@@ -2882,12 +2972,16 @@ async function saveBlogDate(id, btn) {
   loadBlogList();
 }
 async function publishBlogNow(id, btn) {
-  if (!confirm('Deze blog nu publiceren? Hij wordt zichtbaar bij de eerstvolgende rebuild.')) return;
-  btn.disabled = true;
+  if (!confirm('Deze blog nu publiceren en de site live bijwerken?')) return;
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Bezig…';
   const { error } = await db.from(BLOG_TABLE).update({ published_at: new Date().toISOString() }).eq('id', id);
-  btn.disabled = false;
-  if (error) { toast('Mislukt: ' + error.message, true); return; }
-  toast('Op live gezet — klik "Site nu herbouwen" voor direct live');
+  if (error) { btn.disabled = false; btn.textContent = orig; toast('Mislukt: ' + error.message, true); return; }
+  // Meteen een rebuild triggeren zodat de post echt live komt (in plaats van pas bij de ochtend-rebuild).
+  const rb = await triggerRebuild();
+  btn.disabled = false; btn.textContent = orig;
+  if (rb.ok) toast('Gepubliceerd. ' + (rb.message || 'Site wordt over ±1-2 min bijgewerkt.'));
+  else if (rb.needsHook) toast('Gepubliceerd. Komt live bij de dagelijkse rebuild (deploy-hook nog niet ingesteld).');
+  else toast('Gepubliceerd. Rebuild starten mislukt: ' + rb.error, true);
   loadBlogList();
 }
 async function unpublishBlog(id, btn) {
@@ -2899,16 +2993,143 @@ async function unpublishBlog(id, btn) {
   toast('Terug naar concept');
   loadBlogList();
 }
-async function rebuildNow(btn) {
-  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Bezig…';
+// Gedeelde rebuild-trigger: roept /api/rebuild aan (Edge, JWT). Geeft {ok, message} of {ok:false, error, needsHook}.
+async function triggerRebuild() {
   try {
     const { data: { session } } = await db.auth.getSession();
     const r = await fetch('/api/rebuild', { method: 'POST', headers: { Authorization: 'Bearer ' + session.access_token } });
     const j = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status));
-    toast(j.message || 'Rebuild gestart');
-  } catch (e) { toast('Rebuild mislukt: ' + e.message, true); }
-  finally { btn.disabled = false; btn.textContent = orig; }
+    if (!r.ok) return { ok: false, error: j.error || ('HTTP ' + r.status), needsHook: r.status === 503 };
+    return { ok: true, message: j.message };
+  } catch (e) { return { ok: false, error: e.message }; }
+}
+async function rebuildNow(btn) {
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Bezig…';
+  const rb = await triggerRebuild();
+  if (rb.ok) toast(rb.message || 'Rebuild gestart');
+  else if (rb.needsHook) toast('Deploy-hook nog niet ingesteld in Vercel (VERCEL_DEPLOY_HOOK_URL).', true);
+  else toast('Rebuild mislukt: ' + rb.error, true);
+  btn.disabled = false; btn.textContent = orig;
+}
+
+// ── BLOG BEWERKEN / NIEUW ──
+function slugify(s) { return (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80); }
+function fillBlogForm(d) {
+  document.getElementById('b-id').value = d.id || '';
+  document.getElementById('b-title').value = d.title || '';
+  document.getElementById('b-slug').value = d.slug || '';
+  document.getElementById('b-topic').value = d.topic || 'webdesign';
+  document.getElementById('b-excerpt').value = d.excerpt || '';
+  document.getElementById('b-body').value = d.body_md || '';
+  document.getElementById('b-cover').value = d.cover_url || '';
+  setImgPreview('b-cover');
+}
+async function openBlogEdit(id) {
+  const { data, error } = await db.from(BLOG_TABLE).select('*').eq('id', id).single();
+  if (error) { toast('Laden mislukt: ' + error.message, true); return; }
+  fillBlogForm(data);
+  document.getElementById('blog-modal-title').textContent = 'Blog bewerken';
+  document.getElementById('blog-save-btn').textContent = 'Opslaan & live bijwerken →';
+  document.getElementById('blog-delete-btn').style.display = '';
+  document.getElementById('blog-modal').classList.add('open');
+}
+function openBlogNew() {
+  fillBlogForm({});
+  document.getElementById('blog-modal-title').textContent = 'Nieuwe blog schrijven';
+  document.getElementById('blog-save-btn').textContent = 'Concept opslaan →';
+  document.getElementById('blog-delete-btn').style.display = 'none';
+  document.getElementById('blog-modal').classList.add('open');
+}
+function closeBlogModal() { document.getElementById('blog-modal').classList.remove('open'); }
+async function saveBlogEdit(btn) {
+  const id = document.getElementById('b-id').value;
+  const isNew = !id;
+  const title = document.getElementById('b-title').value.trim();
+  let slug = document.getElementById('b-slug').value.trim();
+  if (!slug && title) slug = slugify(title);
+  const patch = {
+    title, slug,
+    topic: document.getElementById('b-topic').value,
+    excerpt: document.getElementById('b-excerpt').value.trim(),
+    body_md: document.getElementById('b-body').value,
+    cover_url: document.getElementById('b-cover').value.trim() || null,
+  };
+  if (!patch.title || !patch.slug) { toast('Titel en slug zijn verplicht', true); return; }
+  if (/—/.test(patch.title + patch.excerpt + patch.body_md)) {
+    if (!confirm('Er staat een em-dash (—) in de tekst. Die willen we nergens. Toch opslaan?')) return;
+  }
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Bezig…';
+  let error;
+  if (isNew) ({ error } = await db.from(BLOG_TABLE).insert({ ...patch, published_at: null }));
+  else ({ error } = await db.from(BLOG_TABLE).update(patch).eq('id', id));
+  if (error) { btn.disabled = false; btn.textContent = orig; toast('Opslaan mislukt: ' + error.message, true); return; }
+  btn.disabled = false; btn.textContent = orig;
+  closeBlogModal();
+  if (isNew) {
+    toast("Nieuwe blog opgeslagen als concept. Zet 'm live wanneer je wil.");
+  } else {
+    const rb = await triggerRebuild();
+    if (rb.ok) toast('Opgeslagen. ' + (rb.message || 'Site wordt over ±1-2 min bijgewerkt.'));
+    else if (rb.needsHook) toast('Opgeslagen. Zichtbaar bij de eerstvolgende rebuild (deploy-hook nog niet ingesteld).');
+    else toast('Opgeslagen. Rebuild starten mislukt: ' + rb.error, true);
+  }
+  loadBlogList();
+}
+async function deleteBlogPost(btn) {
+  const id = document.getElementById('b-id').value;
+  if (!id) return;
+  if (!confirm('Deze blog definitief verwijderen? Dit kan niet ongedaan worden gemaakt.')) return;
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Bezig…';
+  const { error } = await db.from(BLOG_TABLE).delete().eq('id', id);
+  if (error) { btn.disabled = false; btn.textContent = orig; toast('Verwijderen mislukt: ' + error.message, true); return; }
+  const rb = await triggerRebuild();
+  btn.disabled = false; btn.textContent = orig;
+  closeBlogModal();
+  toast('Verwijderd.' + (rb.ok ? ' Site wordt bijgewerkt.' : ''));
+  loadBlogList();
+}
+
+// ── BLOG PUBLICEREN + DELEN ──
+async function openBlogShare(id) {
+  const { data, error } = await db.from(BLOG_TABLE).select('*').eq('id', id).single();
+  if (error) { toast('Laden mislukt: ' + error.message, true); return; }
+  document.getElementById('s-id').value = data.id;
+  const link = 'https://www.stolkwebdesign.nl/blog/' + data.slug + '.html';
+  document.getElementById('s-caption').value = (data.title || '') + '\n\n' + (data.excerpt || '') + '\n\nLees verder: ' + link;
+  const noCover = !data.cover_url;
+  document.getElementById('s-cover-warn').style.display = noCover ? '' : 'none';
+  document.getElementById('s-instagram').checked = !noCover;
+  document.getElementById('blog-share-modal').classList.add('open');
+}
+function closeBlogShare() { document.getElementById('blog-share-modal').classList.remove('open'); }
+async function doBlogShare(btn) {
+  const id = document.getElementById('s-id').value;
+  const channels = [];
+  if (document.getElementById('s-linkedin').checked) channels.push('linkedin');
+  if (document.getElementById('s-instagram').checked) channels.push('instagram');
+  if (!channels.length) { toast('Kies minstens één kanaal', true); return; }
+  const caption = document.getElementById('s-caption').value;
+  btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Bezig…';
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    const r = await fetch('/api/publish-blog-social', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.access_token },
+      body: JSON.stringify({ postId: id, channels, caption }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok && r.status !== 207) throw new Error(j.error || ('HTTP ' + r.status));
+    const sent = Object.entries(j.results || {}).filter(([, v]) => v && v.ok).map(([k]) => k);
+    const failed = Object.entries(j.results || {}).filter(([, v]) => v && v.error).map(([k, v]) => k + ' (' + v.error + ')');
+    let msg = sent.length ? 'Live + gedeeld naar ' + sent.join(', ') : 'Live gezet';
+    if (failed.length) msg += ' · mislukt: ' + failed.join(', ');
+    if (j.needsHook) msg += ' · zichtbaar bij de eerstvolgende rebuild';
+    toast(msg, failed.length > 0);
+    closeBlogShare();
+    loadBlogList();
+  } catch (e) {
+    toast('Delen mislukt: ' + e.message, true);
+  } finally { btn.disabled = false; btn.textContent = orig; }
 }
 
 // ── TOAST ──

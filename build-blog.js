@@ -31,7 +31,7 @@ function renderPost(post, tpl, allPosts) {
   const bodyHtml = marked.parse(post.body_md || '', { breaks: false, gfm: true });
   const topicLabel = TOPIC_LABELS[post.topic] || htmlEscape(post.topic || 'Algemeen');
   const canonical = `${SITE_URL}/blog/${post.slug}.html`;
-  const ogImage = (post.carousel_urls && post.carousel_urls[0]) || `${SITE_URL}/assets/og-image.png`;
+  const ogImage = post.cover_url || (post.carousel_urls && post.carousel_urls[0]) || `${SITE_URL}/assets/og-image.png`;
 
   const coverBlock = post.cover_url
     ? `<figure class="article-cover"><img src="${htmlEscape(post.cover_url)}" alt="${htmlEscape(post.title)}" loading="eager"></figure>`
@@ -49,7 +49,7 @@ function renderPost(post, tpl, allPosts) {
       </a>`)
     .join('');
   const relatedBlock = related
-    ? `<section class="related"><div class="related-inner"><div class="related-label">Lees ook</div><h2>Meer over webdesign &amp; hosting.</h2><div class="related-grid">${related}</div></div></section>`
+    ? `<section class="related"><div class="related-inner"><div class="related-label">Meer over webdesign &amp; hosting</div><div class="related-grid">${related}</div></div></section>`
     : '';
 
   const replacements = {
@@ -63,6 +63,7 @@ function renderPost(post, tpl, allPosts) {
     '{{READ_TIME}}': String(readTime(post.body_md)),
     '{{CANONICAL_URL}}': canonical,
     '{{OG_IMAGE_URL}}': ogImage,
+    '{{HEADER_CLASS}}': post.cover_url ? '' : 'no-cover',
     '{{COVER_BLOCK}}': coverBlock,
     '{{BODY_HTML}}': bodyHtml,
     '{{RELATED_BLOCK}}': relatedBlock,
