@@ -2,7 +2,8 @@
  * admin-klantprojecten.js — Stolkwebdesign interne klantprojecten-pijplijn (admin-zijde)
  *
  * CRM-achtig overzicht van klantprojecten, geïnspireerd op de cold-calling-kaart: een rooster
- * van kaarten + een "één-kaart-tegelijk" focus-view met een 8-knops statusgrid (pijplijn),
+ * van kaarten in vier blokken (Actief/Live/Afgewezen/On hold) + een "één-kaart-tegelijk"
+ * focus-view met een 7-knops statusgrid (pijplijn),
  * voortgangsbalk, snelkoppelingen (Live/Figma/Repo/Voorstel/Mail) en vorige/volgende + toetsen.
  *
  * Data in de privé Supabase-tabel stolkwebdesign_client_projects (RLS: authenticated-only).
@@ -21,22 +22,31 @@
     note:     ['📝', 'Notitie',     '#8a8a8a'],
   };
 
-  // Pijplijn-statussen (label + kleur). Volgorde = de 8 knoppen in het statusgrid.
+  // Pijplijn-statussen (label + kleur). Volgorde = de knoppen in het statusgrid.
+  // Samengevoegd 17-07: afgerond → live, akkoord → in_uitvoering (oude waarden in
+  // event-historie renderen via de grijze fallback).
   const STATUSES = {
     nieuwe_lead:   ['Nieuwe lead',   '#ff6a00'],
     voorgesteld:   ['Voorgesteld',   '#8a8a8a'],
     in_gesprek:    ['In gesprek',    '#d9a400'],
-    akkoord:       ['Akkoord',       '#37a04a'],
     in_uitvoering: ['In uitvoering', '#4a7de0'],
     live:          ['Live',          '#22c55e'],
     afgewezen:     ['Afgewezen',     '#ea2525'],
     on_hold:       ['On hold',       '#666666'],
-    afgerond:      ['Afgerond',      '#c9c9c9'],
   };
   const ORDER = Object.keys(STATUSES);
 
-  // Statussen die als "open pijplijn" tellen voor het waarde-totaal.
-  const PIPELINE = ['nieuwe_lead', 'voorgesteld', 'in_gesprek', 'akkoord', 'in_uitvoering'];
+  // Statussen die als "open pijplijn" tellen voor het waarde-totaal en de teller.
+  const PIPELINE = ['nieuwe_lead', 'voorgesteld', 'in_gesprek', 'in_uitvoering'];
+
+  // Rooster-blokken: actief werk bovenaan, daarna de zijsporen. 'Actief' vangt
+  // defensief ook onbekende statussen (alles wat niet in een ander blok valt).
+  const GRID_GROUPS = [
+    ['Actief',    r => !['live', 'afgewezen', 'on_hold'].includes(r.status), '#ffffff'],
+    ['Live',      r => r.status === 'live',      '#22c55e'],
+    ['Afgewezen', r => r.status === 'afgewezen', '#ea2525'],
+    ['On hold',   r => r.status === 'on_hold',   '#666666'],
+  ];
 
   const note = (m, e) => (typeof toast === 'function' ? toast(m, e) : (e ? alert(m) : void 0));
   const esc = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -46,7 +56,7 @@
   const fmtDate = s => { if (!s) return ''; const [y, m, d] = String(s).split('-'); return d ? `${d}-${m}` : s; };
   const fmtFull = s => { if (!s) return ''; const [y, m, d] = String(s).slice(0, 10).split('-'); return d ? `${d}-${m}-${y}` : s; };
   const eur = n => (n ? '€' + Number(n).toLocaleString('nl-NL') : '');
-  const isOverdue = r => r.next_step_date && new Date(r.next_step_date) < today() && !['live', 'afgerond', 'afgewezen'].includes(r.status);
+  const isOverdue = r => r.next_step_date && new Date(r.next_step_date) < today() && !['live', 'afgewezen'].includes(r.status);
 
   let rows = [];
   let events = [];     // opvolg-events (newest first)
@@ -154,12 +164,17 @@
     .cp-leg{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#999;display:flex;align-items:center;gap:6px}
     .cp-leg i{width:9px;height:9px;display:inline-block}
     .cp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:24px}
-    .cp-card{background:#111;border:1px solid #1a1a1a;padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:12px;transition:border-color .15s}
-    .cp-card:hover{border-color:#444}
+    .cp-gsec{grid-column:1/-1;display:flex;align-items:center;gap:10px;font-family:'Archivo Black',sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:.02em;color:#e6e6e6;border-bottom:1px solid #222;padding:6px 0 9px;margin-top:14px}
+    .cp-gsec:first-child{margin-top:0}
+    .cp-gsec i{width:10px;height:10px;display:inline-block;flex:0 0 auto}
+    .cp-gsec .num{font-family:'JetBrains Mono',monospace;font-size:10px;color:#666;letter-spacing:.08em}
+    .cp-card{background:#111;border:1px solid #1a1a1a;padding:20px;cursor:pointer;display:flex;flex-direction:column;gap:12px;transition:border-color .15s,transform .15s,box-shadow .15s}
+    .cp-card:hover{border-color:#444;transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(234,37,37,.14)}
     .cp-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-    .cp-card-name{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;letter-spacing:-.01em;line-height:1.1}
+    .cp-card-top>div{min-width:0}
+    .cp-card-name{font-family:'Archivo Black',sans-serif;font-size:16px;text-transform:uppercase;letter-spacing:-.01em;line-height:1.1;overflow-wrap:break-word}
     .cp-card-cat{font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:5px}
-    .cp-badge{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;padding:4px 9px;border:1px solid;white-space:nowrap}
+    .cp-badge{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.1em;padding:4px 9px;border:1px solid;white-space:nowrap;flex-shrink:0}
     .cp-chips{display:flex;flex-wrap:wrap;gap:5px}
     .cp-chip{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#9a9a9a;border:1px solid #2a2a2a;padding:2px 7px}
     .cp-progress{height:6px;background:#000;border:1px solid #222;overflow:hidden}
@@ -293,7 +308,7 @@
     const counts = {}; ORDER.forEach(k => counts[k] = 0);
     rows.forEach(r => { counts[r.status] = (counts[r.status] || 0) + 1; });
     const live = counts.live || 0, bezig = counts.in_uitvoering || 0;
-    const pipeline = total - live - (counts.afgerond || 0);
+    const pipeline = rows.filter(r => PIPELINE.includes(r.status)).length;
     const seg = ORDER.filter(k => counts[k]).map(k =>
       `<span style="width:${counts[k] / total * 100}%;background:${STATUSES[k][1]}"></span>`).join('');
     const legend = ORDER.filter(k => counts[k]).map(k =>
@@ -338,12 +353,8 @@
     document.querySelectorAll('.cp-vt').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   }
 
-  function renderGrid() {
-    const grid = document.getElementById('cp-grid');
-    if (!rows.length) { grid.innerHTML = '<div class="cp-empty">Nog geen projecten. Klik “+ Project”.</div>'; return; }
-    const list = visibleRows();
-    if (!list.length) { grid.innerHTML = '<div class="cp-empty">Geen projecten voor deze filter of zoekterm.</div>'; return; }
-    grid.innerHTML = list.map(r => `
+  function cardHTML(r) {
+    return `
       <div class="cp-card" data-open="${r.id}">
         <div class="cp-card-top">
           <div>
@@ -361,7 +372,23 @@
         ${flowHTML(r)}
         ${nextStepHTML(r)}
         ${demoExpiryHTML(r)}
-      </div>`).join('');
+      </div>`;
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById('cp-grid');
+    if (!rows.length) { grid.innerHTML = '<div class="cp-empty">Nog geen projecten. Klik “+ Project”.</div>'; return; }
+    const list = visibleRows();
+    if (!list.length) { grid.innerHTML = '<div class="cp-empty">Geen projecten voor deze filter of zoekterm.</div>'; return; }
+    // Vier blokken (Actief / Live / Afgewezen / On hold); lege blokken verschijnen niet.
+    let taken = new Set();
+    grid.innerHTML = GRID_GROUPS.map(([label, match, col]) => {
+      const sub = list.filter(r => !taken.has(r.id) && match(r));
+      sub.forEach(r => taken.add(r.id));
+      if (!sub.length) return '';
+      return `<div class="cp-gsec"><i style="background:${col}"></i>${esc(label)}<span class="num">${sub.length}</span></div>`
+        + sub.map(cardHTML).join('');
+    }).join('');
   }
 
   function renderPipeline() {
@@ -450,7 +477,7 @@
         ${(r.next_step || r.next_step_date) ? nextStepHTML(r, 'cp-nextstep') : ''}
         ${demoExpiryHTML(r)}
         ${r.notes ? `<div class="cp-panel-notes">${esc(r.notes)}</div>` : ''}
-        <div class="cp-status-label">Zet de status (klik of toets 1–8)</div>
+        <div class="cp-status-label">Zet de status (klik of toets 1–${ORDER.length})</div>
         <div class="cp-statusgrid">${sbtns}</div>
         <div class="cp-tl-headrow">
           <div class="cp-status-label">Opvolging — zo is het gelopen</div>
@@ -463,7 +490,7 @@
           <button class="row-btn font-mono" data-nav="prev">‹ Vorige</button>
           <button class="row-btn font-mono" data-edit="${r.id}">Bewerken</button>
           <button class="row-btn danger font-mono" data-del="${r.id}">Verwijderen</button>
-          <span class="cp-hint">Esc terug · Enter/→ volgende · ← vorige · 1–8 status</span>
+          <span class="cp-hint">Esc terug · Enter/→ volgende · ← vorige · 1–${ORDER.length} status</span>
         </div>
       </div>`;
   }
@@ -711,7 +738,7 @@
       if (e.key === 'Escape') { e.preventDefault(); view = 'grid'; render(); }
       else if (e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); step(1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
-      else if (/^[1-8]$/.test(e.key)) { e.preventDefault(); const st = ORDER[+e.key - 1]; if (st && focusList[focusPos]) setStatus(focusList[focusPos].id, st); }
+      else if (/^[1-9]$/.test(e.key) && +e.key <= ORDER.length) { e.preventDefault(); const st = ORDER[+e.key - 1]; if (st && focusList[focusPos]) setStatus(focusList[focusPos].id, st); }
     });
   }
 

@@ -20,7 +20,7 @@ window.SWDBadges = (() => {
           .select('status,next_step_date,demo_expires_at');
         if (error) throw error;
         const t = today();
-        const closed = ['live', 'afgerond', 'afgewezen'];
+        const closed = ['live', 'afgewezen'];
         return data.filter(r => r.status === 'nieuwe_lead'
           || (r.next_step_date && r.next_step_date < t && !closed.includes(r.status))
           || (r.demo_expires_at && r.demo_expires_at < t && !closed.includes(r.status))).length;
