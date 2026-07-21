@@ -370,6 +370,26 @@
     window.location.href = url;
   }
 
+  // Print → "Bewaar als PDF": Chrome gebruikt document.title als standaard-
+  // bestandsnaam. Die tijdelijk op het factuur-/offertenummer zetten zodat de
+  // PDF onder dat nummer wordt opgeslagen, en na afloop netjes terugzetten.
+  function printInvoice() {
+    const isOfferte = (inv.docType || 'factuur') === 'offerte';
+    const naam = (inv.number || '').trim() || (isOfferte ? 'Offerte' : 'Factuur');
+    const prev = document.title;
+    let restored = false;
+    const restore = () => {
+      if (restored) return; restored = true;
+      document.title = prev;
+      window.removeEventListener('afterprint', restore);
+    };
+    window.addEventListener('afterprint', restore);
+    document.title = naam;
+    window.print();
+    // Vangnet voor browsers die afterprint niet vuren.
+    setTimeout(restore, 1000);
+  }
+
   function init() {
     const section = document.getElementById('section-factuur');
     if (!section) return;
@@ -396,7 +416,7 @@
     }
 
     const printBtn = document.getElementById('fact-print');
-    if (printBtn) printBtn.addEventListener('click', () => window.print());
+    if (printBtn) printBtn.addEventListener('click', printInvoice);
     const mailBtn = document.getElementById('fact-mail');
     if (mailBtn) mailBtn.addEventListener('click', mailtoDraft);
     const resetBtn = document.getElementById('fact-reset');
