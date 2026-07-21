@@ -12,6 +12,10 @@
   const KEY = 'swd-invoice-draft-v1';   // factuurconcept (wisselt per factuur)
   const SKEY = 'swd-invoice-sender-v1';  // afzendergegevens (vast, blijven bewaard)
   const SIG_TABLE = 'stolkwebdesign_sign_requests'; // Ondertekenen-module
+  // Design System-tabel = merkbron voor de opgemaakte klant-mail. Dit is de
+  // koppelings-seam: bij een klant-installatie wijs je 'm naar hun eigen tabel
+  // (generieke naam 'design_system'), dan pakt de mail automatisch dát merk.
+  const DS_TABLE = 'stolkwebdesign_design_system';
 
   // Vast bedrijfslogo — STOLK/DESIGN zwart, WEB + ® rood — als vector (geen
   // font-afhankelijkheid, ziet er overal identiek uit). Gelijk aan assets/logo-outline.svg.
@@ -357,17 +361,182 @@
     if (contactregel) L.push(contactregel);
     return L.join('\n');
   }
+  function mailSubject() {
+    const doc = (inv.docType || 'factuur') === 'offerte' ? 'Offerte' : 'Factuur';
+    return `${doc} ${inv.number} van ${inv.sender.bedrijf || 'Stolkwebdesign'}`;
+  }
   function mailtoDraft() {
-    const isOfferte = (inv.docType || 'factuur') === 'offerte';
-    const doc = isOfferte ? 'Offerte' : 'Factuur';
-    const subject = `${doc} ${inv.number} van ${inv.sender.bedrijf || 'Stolkwebdesign'}`;
     const to = inv.client.email || '';
     if (!to) notify('Tip: vul het e-mailadres van de klant in, dan staat de ontvanger er meteen bij.');
     else notify('Je mailprogramma opent. Hang de opgeslagen PDF als bijlage aan.');
     const url = 'mailto:' + encodeURIComponent(to)
-      + '?subject=' + encodeURIComponent(subject)
+      + '?subject=' + encodeURIComponent(mailSubject())
       + '&body=' + encodeURIComponent(buildMailBody());
     window.location.href = url;
+  }
+
+  // ── Opgemaakte HTML-mail in de merkstijl van de site (Design System) ─────────
+  // Merktokens komen live uit DS_TABLE. E-mailclients laden geen custom fonts,
+  // dus fonts zijn labels met web-safe fallback en het logo is een tekst-wordmerk
+  // in de merkkleuren. Alles inline (Gmail stript <style>-blokken bij plakken).
+  let brandTokens = null;
+  function fallbackTokens() {
+    return {
+      accent: '#EA2525', ink: '#000000', paper: '#FFFFFF', bone: '#F5F5F5', muted: '#767676',
+      radius: '0', displayFont: 'Archivo Black', bodyFont: 'Space Grotesk',
+      wordmarkParts: [{ text: 'Stolk', color: '#000000' }, { text: 'web', color: '#EA2525' }, { text: 'design', color: '#000000' }, { text: '®', color: '#EA2525' }],
+    };
+  }
+  async function loadBrandTokens() {
+    if (brandTokens) return brandTokens;
+    const fb = fallbackTokens();
+    if (typeof db === 'undefined') { brandTokens = fb; return brandTokens; }
+    try {
+      const { data, error } = await db.from(DS_TABLE).select('section,field,value,meta');
+      if (error || !data) { brandTokens = fb; return brandTokens; }
+      const g = (s, f) => data.find(r => r.section === s && r.field === f);
+      const col = f => { const r = g('colors', f); return r && r.value; };
+      const wm = g('logo', 'wordmark');
+      brandTokens = {
+        accent: col('red') || fb.accent,
+        ink: col('black') || fb.ink,
+        paper: col('white') || fb.paper,
+        bone: col('bone') || fb.bone,
+        muted: col('muted') || fb.muted,
+        radius: (g('meta', 'radius') && g('meta', 'radius').value) || fb.radius,
+        displayFont: (g('fonts', 'display') && g('fonts', 'display').value) || fb.displayFont,
+        bodyFont: (g('fonts', 'body') && g('fonts', 'body').value) || fb.bodyFont,
+        wordmarkParts: (wm && wm.meta && Array.isArray(wm.meta.parts) && wm.meta.parts.length) ? wm.meta.parts : fb.wordmarkParts,
+      };
+      return brandTokens;
+    } catch (e) { brandTokens = fb; return brandTokens; }
+  }
+
+  // De pasteable mail-body (gecentreerde 600px-tabel, volledig inline).
+  function emailInner(t) {
+    const isOfferte = (inv.docType || 'factuur') === 'offerte';
+    const Doc = isOfferte ? 'Offerte' : 'Factuur';
+    const c = inv.client, s = inv.sender, tot = calc();
+    const vn = firstName(c.naam);
+    const aanhef = vn ? `Beste ${esc(vn)},` : (c.bedrijf ? `Beste ${esc(c.bedrijf)},` : 'Beste,');
+    const rad = String(t.radius || '0').replace(/[^0-9]/g, '') || '0';
+    const fHead = `'${esc(t.displayFont)}', Arial, Helvetica, sans-serif`;
+    const fBody = `'${esc(t.bodyFont)}', Arial, Helvetica, sans-serif`;
+    const wm = (t.wordmarkParts || []).map(p => `<span style="color:${esc(p.color || t.ink)};">${esc(p.text)}</span>`).join('') || esc(s.bedrijf || Doc);
+
+    const intro = isOfferte
+      ? 'Hierbij de offerte, je vindt hem als PDF in de bijlage.'
+      : 'Hierbij de factuur voor onze samenwerking. De factuur zit als PDF in de bijlage.';
+    const slot = isOfferte
+      ? 'Wil je me laten weten of dit zo goed is? Dan maak ik het verder in orde.'
+      : 'Heb je nog een vraag? Laat het gerust weten.';
+    const dueLabel = isOfferte ? 'Geldig tot' : 'Vervaldatum';
+
+    const row = (label, val, opts) => {
+      opts = opts || {};
+      const vStyle = opts.big
+        ? `font-family:${fHead};font-size:22px;font-weight:800;color:${esc(t.accent)};`
+        : `font-family:${fBody};font-size:16px;font-weight:700;color:${esc(t.ink)};`;
+      return `<tr>
+        <td style="padding:9px 0;border-bottom:1px solid ${esc(t.bone)};font-family:${fBody};font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:${esc(t.muted)};">${esc(label)}</td>
+        <td align="right" style="padding:9px 0;border-bottom:1px solid ${esc(t.bone)};${vStyle}">${val}</td>
+      </tr>`;
+    };
+
+    let payHTML = '';
+    if (!isOfferte) {
+      if (inv.pay === 'tikkie' && inv.tikkie) {
+        payHTML = `<a href="${esc(inv.tikkie)}" style="display:inline-block;background:${esc(t.accent)};color:#ffffff;font-family:${fHead};font-weight:800;text-transform:uppercase;letter-spacing:.04em;font-size:16px;text-decoration:none;padding:14px 26px;border-radius:${rad}px;">Betaal via Tikkie</a>`;
+      } else if (s.iban) {
+        const tnv = s.iban_naam ? `<div style="font-family:${fBody};font-size:14px;color:${esc(t.muted)};margin-top:4px;">t.n.v. ${esc(s.iban_naam)}</div>` : '';
+        payHTML = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${esc(t.bone)};border-left:3px solid ${esc(t.accent)};border-radius:${rad}px;"><tr><td style="padding:16px 18px;">
+          <div style="font-family:${fBody};font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:${esc(t.muted)};margin-bottom:6px;">Bankoverschrijving</div>
+          <div style="font-family:${fBody};font-size:18px;font-weight:700;color:${esc(t.ink)};">${esc(s.iban)}</div>
+          ${tnv}
+          <div style="font-family:${fBody};font-size:14px;color:${esc(t.muted)};margin-top:6px;">o.v.v. ${esc(inv.number)}</div>
+        </td></tr></table>`;
+      }
+    }
+
+    const notesHTML = inv.notes
+      ? `<tr><td style="padding:0 24px 8px;font-family:${fBody};font-size:15px;line-height:1.6;color:${esc(t.muted)};">${nl2br(inv.notes)}</td></tr>`
+      : '';
+
+    const footParts = [s.bedrijf, s.kvk ? ('KvK ' + s.kvk) : '', s.btw ? ('BTW ' + s.btw) : '', s.iban].filter(Boolean).map(esc).join(' · ');
+    const sigContact = [esc(s.email), esc(s.tel)].filter(Boolean).join(' · ');
+
+    return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:${esc(t.bone)};margin:0;padding:0;">
+<tr><td align="center" style="padding:24px 12px;">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:${esc(t.paper)};border:2px solid ${esc(t.ink)};">
+  <tr><td style="height:6px;background:${esc(t.accent)};font-size:0;line-height:0;">&nbsp;</td></tr>
+  <tr><td style="padding:26px 24px 18px;border-bottom:2px solid ${esc(t.ink)};">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+      <td style="font-family:${fHead};font-weight:800;font-size:18px;letter-spacing:-.5px;text-transform:uppercase;">${wm}</td>
+      <td align="right" style="font-family:${fHead};font-weight:800;font-size:18px;letter-spacing:-.5px;text-transform:uppercase;color:${esc(t.ink)};">${esc(Doc)}</td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="padding:24px 24px 6px;font-family:${fBody};font-size:17px;font-weight:700;color:${esc(t.ink)};">${aanhef}</td></tr>
+  <tr><td style="padding:0 24px 18px;font-family:${fBody};font-size:16px;line-height:1.65;color:${esc(t.ink)};">${esc(intro)}</td></tr>
+  <tr><td style="padding:0 24px 18px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+      ${row(Doc + 'nummer', esc(inv.number))}
+      ${row('Bedrag', esc(euro(tot.total)), { big: true })}
+      ${inv.due ? row(dueLabel, esc(dnl(inv.due))) : ''}
+    </table>
+  </td></tr>
+  ${payHTML ? `<tr><td style="padding:0 24px 20px;">${payHTML}</td></tr>` : ''}
+  <tr><td style="padding:0 24px 22px;font-family:${fBody};font-size:16px;line-height:1.65;color:${esc(t.ink)};">${esc(slot)}</td></tr>
+  ${notesHTML}
+  <tr><td style="padding:0 24px 26px;font-family:${fBody};font-size:16px;line-height:1.6;color:${esc(t.ink)};">
+    Met vriendelijke groet,<br>
+    <strong>${esc(s.contact || s.bedrijf || 'Peter Stolk')}</strong>${s.bedrijf && s.bedrijf !== (s.contact || '') ? '<br>' + esc(s.bedrijf) : ''}
+    ${sigContact ? `<br><span style="color:${esc(t.muted)};font-size:14px;">${sigContact}</span>` : ''}
+  </td></tr>
+  <tr><td style="padding:16px 24px;background:${esc(t.ink)};font-family:${fBody};font-size:12px;line-height:1.7;letter-spacing:.04em;color:#bbbbbb;word-break:break-word;">${footParts}</td></tr>
+</table>
+</td></tr>
+</table>`;
+  }
+
+  function emailPreviewDoc(inner) {
+    return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body style="margin:0;padding:14px;background:#e9e9e9;">${inner}</body></html>`;
+  }
+
+  let lastEmailInner = '';
+  async function openMailBox() {
+    const box = document.getElementById('fact-mail-box');
+    if (!box) { mailtoDraft(); return; }   // terugval: geen box in de HTML → platte mailto
+    const t = await loadBrandTokens();
+    lastEmailInner = emailInner(t);
+    const toEl = document.getElementById('fact-mail-to');
+    if (toEl) toEl.textContent = inv.client.email ? '· ' + inv.client.email : '· vul het klant-e-mailadres in';
+    const ifr = document.getElementById('fact-mail-preview');
+    if (ifr) ifr.srcdoc = emailPreviewDoc(lastEmailInner);
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  async function copyMailHtml() {
+    if (!lastEmailInner) lastEmailInner = emailInner(await loadBrandTokens());
+    const html = lastEmailInner, plain = buildMailBody();
+    try {
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html': new Blob([html], { type: 'text/html' }),
+        'text/plain': new Blob([plain], { type: 'text/plain' }),
+      })]);
+      notify('Opgemaakte mail gekopieerd — plak in Gmail/Mail met Cmd+V.');
+    } catch (e) {
+      // Terugval: rich copy via een tijdelijke selectie.
+      const d = document.createElement('div');
+      d.contentEditable = 'true';
+      d.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;';
+      d.innerHTML = html;
+      document.body.appendChild(d);
+      const range = document.createRange(); range.selectNodeContents(d);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
+      sel.removeAllRanges(); document.body.removeChild(d);
+      notify(ok ? 'Opgemaakte mail gekopieerd — plak met Cmd+V.' : 'Kopiëren lukte niet; selecteer de voorbeeldmail handmatig.', !ok);
+    }
   }
 
   // Print → "Bewaar als PDF": Chrome gebruikt document.title als standaard-
@@ -418,7 +587,13 @@
     const printBtn = document.getElementById('fact-print');
     if (printBtn) printBtn.addEventListener('click', printInvoice);
     const mailBtn = document.getElementById('fact-mail');
-    if (mailBtn) mailBtn.addEventListener('click', mailtoDraft);
+    if (mailBtn) mailBtn.addEventListener('click', openMailBox);
+    const mailCopy = document.getElementById('fact-mail-copy');
+    if (mailCopy) mailCopy.addEventListener('click', copyMailHtml);
+    const mailOpen = document.getElementById('fact-mail-open');
+    if (mailOpen) mailOpen.addEventListener('click', mailtoDraft);
+    const mailClose = document.getElementById('fact-mail-close');
+    if (mailClose) mailClose.addEventListener('click', () => { const b = document.getElementById('fact-mail-box'); if (b) b.style.display = 'none'; });
     const resetBtn = document.getElementById('fact-reset');
     if (resetBtn) resetBtn.addEventListener('click', () => {
       if (!confirm('Concept wissen en opnieuw beginnen?')) return;
