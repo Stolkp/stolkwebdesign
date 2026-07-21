@@ -275,9 +275,32 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 }
 
 @media print {
-  body * { visibility:hidden !important; }
+  /* Alleen de factuur/offerte drukt af. De admin-chrome (nav, zijbalk, formulier,
+     toolbars) moet écht uit de flow — met alleen visibility:hidden bleef die ruimte
+     innemen en leverde de print tientallen lege pagina's op. Nu display:none. */
+  .admin-nav, .sidebar, .sidebar-backdrop, .no-print { display:none !important; }
+  #section-factuur .page-title, #section-factuur .page-sub { display:none !important; }
+  /* html/body niet op 100vh laten staan, anders duwt die net-1123px een lege
+     tweede pagina eruit. Hoogte laten meebewegen met de factuur. */
+  html, body, #admin-screen { height:auto !important; min-height:0 !important; margin:0 !important; }
+  /* Hele keten tot de factuur op volle breedte forceren. Bij A4-printbreedte
+     (~794px) treffen óók de mobiele max-width:900px-regels; daar wordt de
+     zijbalk position:fixed en resolvet width:auto tot 0. Expliciete 100% + block
+     dwingt de factuurkolom terug op volle paginabreedte. */
+  .admin-body, .main, #section-factuur, .factuur-layout, .factuur-preview-wrap {
+    display:block !important; width:100% !important; max-width:none !important;
+    margin:0 !important; padding:0 !important; min-height:0 !important;
+    overflow:visible !important; grid-template-columns:none !important;
+  }
+  /* De print-blokken van Rooster/Reserveringen zetten body *{visibility:hidden};
+     de factuur zelf weer zichtbaar maken (hogere specificiteit wint van body *). */
   #invoice-paper, #invoice-paper * { visibility:visible !important; }
-  #invoice-paper { position:absolute; left:0; top:0; width:210mm; min-height:auto; margin:0; padding:18mm 16mm; box-shadow:none !important; transform:none !important; }
+  #invoice-paper {
+    position:static !important; width:100% !important; min-height:0 !important;
+    margin:0 !important; padding:16mm 15mm !important;
+    box-shadow:none !important; transform:none !important;
+    background:#fff !important; color:#111 !important;
+  }
   @page { size:A4; margin:0; }
   * { animation:none !important; transition:none !important; }
 }
@@ -364,7 +387,11 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
   .ros-shift { background:#f3f3f3 !important; }
   .ros-shift .ros-who, .ros-shift .ros-time, .ros-day-head * { color:#000 !important; }
   .row-btn, .ros-add { display:none !important; }
-  @page { size:A4 landscape; margin:10mm; }
+  /* Landscape ALLEEN voor het rooster via een named page — een kale
+     @page{size:A4 landscape} is globaal en zette óók de factuur/offerte in
+     liggend A4 (verkeerd formaat + spilt naar pagina 2). */
+  @page swdRoosterLandscape { size:A4 landscape; margin:10mm; }
+  #rooster-grid { page:swdRoosterLandscape; }
 }
 
 /* RESERVERINGEN */
@@ -661,6 +688,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
             </select>
           </label>
           <button class="content-save-btn font-display" id="fact-print">↧ Print / opslaan als PDF</button>
+          <button class="content-save-btn font-display" id="fact-mail" style="background:#111;border-color:#333;color:#fff;">✉ Mail naar klant</button>
           <button class="content-save-btn font-display" id="fact-save" style="background:var(--red);border-color:var(--red);color:#fff;">💾 Opslaan in lijst</button>
           <button class="content-save-btn font-display" id="fact-send" style="background:#111;border-color:#333;color:#fff;">✍ Verstuur ter ondertekening</button>
           <button class="settings-btn font-mono" id="fact-reset" style="margin:0;">↺ Nieuw concept</button>

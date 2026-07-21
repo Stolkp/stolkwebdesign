@@ -319,6 +319,57 @@
     notify('Verwijderd ✓'); loadInvoiceList();
   }
 
+  // ── Mail naar klant ──────────────────────────────────────────────────────────
+  // Opent het eigen mailprogramma (mailto) met een nette begeleidende tekst.
+  // Verstuurt nooit zelf; Peter hangt de opgeslagen PDF eraan en verstuurt.
+  function firstName(naam) { return (naam || '').trim().split(/\s+/)[0] || ''; }
+  function buildMailBody() {
+    const isOfferte = (inv.docType || 'factuur') === 'offerte';
+    const c = inv.client, s = inv.sender;
+    const total = euro(calc().total);
+    const vn = firstName(c.naam);
+    const aanhef = vn ? `Beste ${vn},` : (c.bedrijf ? `Beste ${c.bedrijf},` : 'Beste,');
+    const L = [];
+    L.push(aanhef, '');
+    if (isOfferte) {
+      L.push('Hierbij de offerte, je vindt hem als PDF in de bijlage.', '');
+      L.push(`Offertenummer: ${inv.number}`);
+      L.push(`Bedrag: ${total}`);
+      if (inv.due) L.push(`Geldig tot: ${dnl(inv.due)}`);
+      L.push('', 'Wil je me laten weten of dit zo goed is? Dan maak ik het verder in orde.');
+    } else {
+      L.push('Hierbij de factuur voor onze samenwerking. De factuur zit als PDF in de bijlage.', '');
+      L.push(`Factuurnummer: ${inv.number}`);
+      L.push(`Bedrag: ${total}`);
+      if (inv.due) L.push(`Vervaldatum: ${dnl(inv.due)}`);
+      L.push('');
+      if (inv.pay === 'tikkie' && inv.tikkie) {
+        L.push(`Betalen kan eenvoudig via deze Tikkie-link: ${inv.tikkie}`);
+      } else if (s.iban) {
+        const tnv = s.iban_naam ? ` t.n.v. ${s.iban_naam}` : '';
+        L.push(`Je kunt het bedrag overmaken op ${s.iban}${tnv}, onder vermelding van ${inv.number}.`);
+      }
+      L.push('', 'Heb je nog een vraag? Laat het gerust weten.');
+    }
+    L.push('', 'Met vriendelijke groet,', s.contact || s.bedrijf || 'Peter Stolk');
+    if (s.bedrijf && s.bedrijf !== (s.contact || '')) L.push(s.bedrijf);
+    const contactregel = [s.email, s.tel].filter(Boolean).join('  |  ');
+    if (contactregel) L.push(contactregel);
+    return L.join('\n');
+  }
+  function mailtoDraft() {
+    const isOfferte = (inv.docType || 'factuur') === 'offerte';
+    const doc = isOfferte ? 'Offerte' : 'Factuur';
+    const subject = `${doc} ${inv.number} van ${inv.sender.bedrijf || 'Stolkwebdesign'}`;
+    const to = inv.client.email || '';
+    if (!to) notify('Tip: vul het e-mailadres van de klant in, dan staat de ontvanger er meteen bij.');
+    else notify('Je mailprogramma opent. Hang de opgeslagen PDF als bijlage aan.');
+    const url = 'mailto:' + encodeURIComponent(to)
+      + '?subject=' + encodeURIComponent(subject)
+      + '&body=' + encodeURIComponent(buildMailBody());
+    window.location.href = url;
+  }
+
   function init() {
     const section = document.getElementById('section-factuur');
     if (!section) return;
@@ -346,6 +397,8 @@
 
     const printBtn = document.getElementById('fact-print');
     if (printBtn) printBtn.addEventListener('click', () => window.print());
+    const mailBtn = document.getElementById('fact-mail');
+    if (mailBtn) mailBtn.addEventListener('click', mailtoDraft);
     const resetBtn = document.getElementById('fact-reset');
     if (resetBtn) resetBtn.addEventListener('click', () => {
       if (!confirm('Concept wissen en opnieuw beginnen?')) return;
