@@ -53,6 +53,7 @@
       client: { naam: '', bedrijf: '', email: '', adres: '', plaats: '' },
       items: [{ id: uid(), titel: '', toelichting: '', aantal: 1, prijs: 0 }],
       vat: 21, pay: 'iban', tikkie: '', notes: '',
+      paid: false, paidAt: '',   // alleen relevant voor facturen
     };
   }
 
@@ -175,6 +176,13 @@
     if (window.SignRender) {
       p.innerHTML = window.SignRender.documentHTML(inv, inv.docType || 'factuur');
     }
+    // BETAALD-stempel op de factuur (ook zichtbaar op de geprinte PDF).
+    if ((inv.docType || 'factuur') !== 'offerte' && inv.paid) {
+      const stamp = document.createElement('div');
+      stamp.className = 'inv-paid-stamp';
+      stamp.innerHTML = 'Betaald' + (inv.paidAt ? `<div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;margin-top:4px;">${esc(dnl(inv.paidAt))}</div>` : '');
+      p.appendChild(stamp);
+    }
   }
 
   // ── Binding ──────────────────────────────────────────────────────────────────
@@ -245,25 +253,121 @@
     const b = SIG_BADGE[status]; if (!b) return '';
     return `<span class="font-mono" style="font-size:10px;color:${b[1]};white-space:nowrap;">${b[0]}</span>`;
   }
+  // Eén rij in het overzicht. `kind` bepaalt de acties.
+  function ovRow(r, sigStatus, kind) {
+    const badge = kind === 'paid' ? '<span class="fact-badge-paid">● Betaald</span>' : sigBadge(sigStatus);
+    const acts = ['<button class="settings-btn font-mono" style="margin:0;padding:5px 10px;" data-fopen="' + r.id + '">Open</button>'];
+    if (kind === 'offerte') acts.push('<button class="settings-btn font-mono" style="margin:0;padding:5px 10px;border-color:#2e8b40;color:#4caf60;" data-fconvert="' + r.id + '">→ Factuur</button>');
+    if (kind === 'open') acts.push('<button class="settings-btn font-mono" style="margin:0;padding:5px 10px;border-color:#2e8b40;color:#4caf60;" data-fpaid="' + r.id + '">Betaald</button>');
+    if (kind === 'paid') acts.push('<button class="settings-btn font-mono" style="margin:0;padding:5px 10px;" data-funpaid="' + r.id + '">Terug naar open</button>');
+    acts.push('<button class="row-btn danger font-mono" data-frm="' + r.id + '">Verwijder</button>');
+    return `<div class="fact-ovrow">
+      <span class="fact-ovrow-main"><strong style="color:#fff;">${esc(r.number || '—')}</strong> · ${esc(r.client_name || '—')} · ${euro(r.total)} ${badge}</span>
+      <span class="fact-ovrow-actions">${acts.join('')}</span>
+    </div>`;
+  }
   async function loadInvoiceList() {
-    const el = document.getElementById('fact-list'); if (!el) return;
-    if (typeof db === 'undefined') { el.textContent = 'Niet beschikbaar.'; return; }
-    el.textContent = 'Laden…';
+    const off = document.getElementById('fact-list-offertes');
+    const open = document.getElementById('fact-list-open');
+    const paid = document.getElementById('fact-list-paid');
+    if (!off || !open || !paid) return;
+    const setAll = (msg) => { const m = `<div class="fact-ovempty">${msg}</div>`; off.innerHTML = m; open.innerHTML = m; paid.innerHTML = m; };
+    if (typeof db === 'undefined') { setAll('Niet beschikbaar.'); return; }
+    setAll('Laden…');
     const { data: { session } } = await db.auth.getSession();
-    if (!session) { el.textContent = 'Log eerst in om je facturen te zien.'; return; }
-    const { data, error } = await db.from('stolkwebdesign_invoices').select('id,number,client_name,total,updated_at').order('updated_at', { ascending: false });
-    if (error) { el.textContent = 'Fout: ' + error.message; return; }
-    if (!data.length) { el.textContent = 'Nog geen bewaarde facturen.'; return; }
-    // Nieuwste ondertekenstatus per bron-document (één query, ingelogd → directe select mag).
+    if (!session) { setAll('Log eerst in.'); return; }
+    const { data, error } = await db.from('stolkwebdesign_invoices').select('id,number,client_name,total,updated_at,data').order('updated_at', { ascending: false });
+    if (error) { setAll('Fout: ' + esc(error.message)); return; }
+    // Nieuwste ondertekenstatus per bron-document.
     const sigMap = {};
     const { data: sigs } = await db.from(SIG_TABLE).select('source_id,status,created_at').not('source_id', 'is', null).order('created_at', { ascending: false });
     (sigs || []).forEach(s => { if (s.source_id && !(s.source_id in sigMap)) sigMap[s.source_id] = s.status; });
-    el.innerHTML = data.map(r => `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #1a1a1a;">
-      <span style="color:#ddd"><strong>${esc(r.number || '—')}</strong> · ${esc(r.client_name || '—')} · ${euro(r.total)} ${sigBadge(sigMap[r.id])}</span>
-      <span style="display:flex;gap:6px;">
-        <button class="settings-btn font-mono" style="margin:0;padding:5px 10px;" data-fopen="${r.id}">Open</button>
-        <button class="row-btn danger font-mono" data-frm="${r.id}">Verwijder</button>
-      </span></div>`).join('');
+    const buckets = { offerte: [], open: [], paid: [] };
+    (data || []).forEach(r => {
+      const d = r.data || {};
+      const isOfferte = (d.docType || 'factuur') === 'offerte';
+      const kind = isOfferte ? 'offerte' : (d.paid ? 'paid' : 'open');
+      buckets[kind].push(ovRow(r, sigMap[r.id], kind));
+    });
+    off.innerHTML = buckets.offerte.length ? buckets.offerte.join('') : '<div class="fact-ovempty">Nog geen offertes.</div>';
+    open.innerHTML = buckets.open.length ? buckets.open.join('') : '<div class="fact-ovempty">Geen openstaande facturen.</div>';
+    paid.innerHTML = buckets.paid.length ? buckets.paid.join('') : '<div class="fact-ovempty">Nog geen betaalde facturen.</div>';
+  }
+
+  // ── Weergave-wissel overzicht ⇄ editor ──────────────────────────────────────
+  function showFactOverview() {
+    const ov = document.getElementById('fact-overview'), ed = document.getElementById('fact-editor');
+    if (ed) ed.style.display = 'none';
+    if (ov) ov.style.display = 'block';
+    loadInvoiceList();
+  }
+  function showFactEditor() {
+    const ov = document.getElementById('fact-overview'), ed = document.getElementById('fact-editor');
+    if (ov) ov.style.display = 'none';
+    if (ed) ed.style.display = 'block';
+    refreshEditorChrome();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  // Toolbar/titel afstemmen op het huidige documenttype + betaald-status.
+  function refreshEditorChrome() {
+    const isOfferte = (inv.docType || 'factuur') === 'offerte';
+    const sel = document.getElementById('fact-doctype'); if (sel) sel.value = inv.docType || 'factuur';
+    const title = document.getElementById('fact-editor-title'); if (title) title.textContent = isOfferte ? 'Offerte' : 'Factuur';
+    const conv = document.getElementById('fact-convert'); if (conv) conv.style.display = isOfferte ? '' : 'none';
+    const paidBtn = document.getElementById('fact-mark-paid');
+    if (paidBtn) {
+      paidBtn.style.display = isOfferte ? 'none' : '';
+      paidBtn.textContent = inv.paid ? '✓ Betaald — zet terug op open' : 'Markeer als betaald';
+      paidBtn.style.background = inv.paid ? '#123a1c' : '#0e0e0e';
+    }
+  }
+  function newDoc(type) {
+    const keepSender = inv.sender;
+    inv = defaultInv(); inv.sender = keepSender;
+    inv.docType = type;
+    inv.number = type === 'offerte' ? ('OFF-' + autoNumber()) : autoNumber();
+    save(); renderForm(); renderPreview();
+    showFactEditor();
+  }
+  // Offerte → factuur, in-place (zelfde record). De offerte wordt de factuur.
+  async function convertCurrentToInvoice() {
+    if ((inv.docType || 'factuur') !== 'offerte') return;
+    if (!confirm('Deze offerte omzetten naar een factuur? Het document wordt dan een factuur.')) return;
+    inv.docType = 'factuur';
+    inv.number = autoNumber();
+    inv.date = todayISO(); inv.due = plusDaysISO(14);
+    inv.paid = false; inv.paidAt = '';
+    save(); renderForm(); renderPreview(); refreshEditorChrome();
+    if (inv._dbId) await saveToList(); else notify('Omgezet naar factuur ✓');
+  }
+  async function convertById(id) {
+    if (!confirm('Deze offerte omzetten naar een factuur?')) return;
+    const { data, error } = await db.from('stolkwebdesign_invoices').select('data').eq('id', id).single();
+    if (error || !data) { notify('Omzetten mislukt', true); return; }
+    const d = data.data || {};
+    d.docType = 'factuur'; d.number = autoNumber(); d.date = todayISO(); d.due = plusDaysISO(14); d.paid = false; d.paidAt = '';
+    const { error: e2 } = await db.from('stolkwebdesign_invoices').update({ data: d, number: d.number, updated_at: new Date().toISOString() }).eq('id', id);
+    if (e2) { notify('Omzetten mislukt: ' + e2.message, true); return; }
+    if (inv._dbId === id) { inv = Object.assign(defaultInv(), d); inv._dbId = id; inv.sender = loadSender(); save(); renderForm(); renderPreview(); }
+    notify('Offerte omgezet naar factuur ✓'); loadInvoiceList();
+  }
+  // Betaald-status zetten (huidige editor).
+  function togglePaidCurrent() {
+    if ((inv.docType || 'factuur') === 'offerte') return;
+    inv.paid = !inv.paid;
+    inv.paidAt = inv.paid ? todayISO() : '';
+    save(); renderPreview(); refreshEditorChrome();
+    if (inv._dbId) saveToList();
+  }
+  // Betaald-status zetten vanuit het overzicht (per id).
+  async function setPaidById(id, paidVal) {
+    const { data, error } = await db.from('stolkwebdesign_invoices').select('data').eq('id', id).single();
+    if (error || !data) { notify('Bijwerken mislukt', true); return; }
+    const d = data.data || {}; d.paid = paidVal; d.paidAt = paidVal ? todayISO() : '';
+    const { error: e2 } = await db.from('stolkwebdesign_invoices').update({ data: d, updated_at: new Date().toISOString() }).eq('id', id);
+    if (e2) { notify('Bijwerken mislukt: ' + e2.message, true); return; }
+    if (inv._dbId === id) { inv.paid = paidVal; inv.paidAt = d.paidAt; save(); renderPreview(); refreshEditorChrome(); }
+    notify(paidVal ? 'Gemarkeerd als betaald ✓' : 'Terug naar openstaand ✓'); loadInvoiceList();
   }
 
   // ── Ondertekenen (Verstuur ter ondertekening) ───────────────────────────────────
@@ -312,8 +416,8 @@
     inv = Object.assign(defaultInv(), data.data || {});
     inv._dbId = id; inv.sender = loadSender();
     save(); renderForm(); renderPreview();
-    notify('Factuur geladen ✓');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    showFactEditor();
+    notify('Geladen ✓');
   }
   async function deleteInvoice(id) {
     if (!confirm('Deze bewaarde factuur verwijderen?')) return;
@@ -594,35 +698,56 @@
     if (mailOpen) mailOpen.addEventListener('click', mailtoDraft);
     const mailClose = document.getElementById('fact-mail-close');
     if (mailClose) mailClose.addEventListener('click', () => { const b = document.getElementById('fact-mail-box'); if (b) b.style.display = 'none'; });
-    const resetBtn = document.getElementById('fact-reset');
-    if (resetBtn) resetBtn.addEventListener('click', () => {
-      if (!confirm('Concept wissen en opnieuw beginnen?')) return;
-      const keepSender = inv.sender;       // afzendergegevens behouden
-      inv = defaultInv(); inv.sender = keepSender;   // nieuw concept = niet meer gekoppeld aan een bewaarde factuur
-      save(); renderForm(); renderPreview();
-    });
 
     const saveBtn = document.getElementById('fact-save');
     if (saveBtn) saveBtn.addEventListener('click', saveToList);
     const refreshBtn = document.getElementById('fact-refresh');
     if (refreshBtn) refreshBtn.addEventListener('click', loadInvoiceList);
 
+    // Overzicht ⇄ editor + Nieuw-menu.
+    const backBtn = document.getElementById('fact-back');
+    if (backBtn) backBtn.addEventListener('click', showFactOverview);
+    const newBtn = document.getElementById('fact-new');
+    const newMenu = document.getElementById('fact-new-menu');
+    if (newBtn && newMenu) {
+      newBtn.addEventListener('click', (e) => { e.stopPropagation(); newMenu.classList.toggle('open'); });
+      document.addEventListener('click', () => newMenu.classList.remove('open'));
+    }
+    const newF = document.getElementById('fact-new-factuur');
+    if (newF) newF.addEventListener('click', () => { if (newMenu) newMenu.classList.remove('open'); newDoc('factuur'); });
+    const newO = document.getElementById('fact-new-offerte');
+    if (newO) newO.addEventListener('click', () => { if (newMenu) newMenu.classList.remove('open'); newDoc('offerte'); });
+
+    // Betaald + omzetten.
+    const paidBtn = document.getElementById('fact-mark-paid');
+    if (paidBtn) paidBtn.addEventListener('click', togglePaidCurrent);
+    const convBtn = document.getElementById('fact-convert');
+    if (convBtn) convBtn.addEventListener('click', convertCurrentToInvoice);
+
     // Documenttype-toggle (Factuur / Offerte) — verandert koppen in de preview + het ondertekentype.
     const docTypeSel = document.getElementById('fact-doctype');
     if (docTypeSel) {
       docTypeSel.value = inv.docType || 'factuur';
-      docTypeSel.addEventListener('change', () => { inv.docType = docTypeSel.value; save(); renderPreview(); });
+      docTypeSel.addEventListener('change', () => { inv.docType = docTypeSel.value; if (inv.docType === 'offerte') { inv.paid = false; inv.paidAt = ''; } save(); renderPreview(); refreshEditorChrome(); });
     }
     // Verstuur ter ondertekening + kopieer-link.
     const sendBtn = document.getElementById('fact-send');
     if (sendBtn) sendBtn.addEventListener('click', sendForSignature);
     const copyBtn = document.getElementById('fact-send-copy');
     if (copyBtn) copyBtn.addEventListener('click', copySendUrl);
-    const listEl = document.getElementById('fact-list');
-    if (listEl) listEl.addEventListener('click', (e) => {
+    // Overzicht-acties (gedelegeerd over de drie lijsten).
+    const ov = document.getElementById('fact-overview');
+    if (ov) ov.addEventListener('click', (e) => {
       const o = e.target.closest('[data-fopen]'); if (o) { openInvoice(o.getAttribute('data-fopen')); return; }
+      const cv = e.target.closest('[data-fconvert]'); if (cv) { convertById(cv.getAttribute('data-fconvert')); return; }
+      const pd = e.target.closest('[data-fpaid]'); if (pd) { setPaidById(pd.getAttribute('data-fpaid'), true); return; }
+      const up = e.target.closest('[data-funpaid]'); if (up) { setPaidById(up.getAttribute('data-funpaid'), false); return; }
       const r = e.target.closest('[data-frm]'); if (r) { deleteInvoice(r.getAttribute('data-frm')); }
     });
+
+    // Start op het overzicht; editor opent bij Nieuw/Open.
+    window.SWDFactuur = { enter: showFactOverview };
+    showFactOverview();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

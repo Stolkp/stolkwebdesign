@@ -242,8 +242,28 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 .invoice-paper {
   width:210mm; min-height:297mm; background:#fff; color:#111; padding:20mm 18mm;
   font-family:'Space Grotesk',sans-serif; box-shadow:0 0 0 1px #1a1a1a, 16px 16px 0 0 rgba(234,37,37,.18);
-  transform-origin:top left;
+  transform-origin:top left; position:relative;
 }
+/* Betaald-stempel op de factuur */
+.inv-paid-stamp { position:absolute; top:60mm; right:16mm; transform:rotate(-8deg); border:3px solid #2e8b40; color:#2e8b40; font-family:'Archivo Black',sans-serif; font-size:24px; line-height:1; letter-spacing:1px; text-transform:uppercase; padding:8px 16px 6px; background:rgba(255,255,255,.55); text-align:center; }
+/* Factuur/offerte-overzicht */
+.fact-ovbar { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin:20px 0 26px; }
+.fact-new-wrap { position:relative; }
+.fact-new-menu { display:none; position:absolute; top:calc(100% + 6px); left:0; z-index:30; background:#0e0e0e; border:1px solid #333; min-width:190px; }
+.fact-new-menu.open { display:block; }
+.fact-new-opt { display:block; width:100%; text-align:left; background:transparent; border:none; border-bottom:1px solid #1a1a1a; color:#ddd; padding:12px 16px; cursor:pointer; font-size:12px; }
+.fact-new-opt:last-child { border-bottom:none; }
+.fact-new-opt:hover { background:#161616; color:#fff; }
+.fact-ovblock { margin-bottom:20px; border:1px solid #1a1a1a; background:#0e0e0e; }
+.fact-ovhead { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid #1a1a1a; font-family:'Archivo Black',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:#eee; }
+.fact-ovlist { padding:4px 16px 8px; }
+.fact-ovrow { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:11px 0; border-bottom:1px solid #161616; flex-wrap:wrap; }
+.fact-ovrow:last-child { border-bottom:none; }
+.fact-ovrow-main { color:#ddd; font-family:'JetBrains Mono',monospace; font-size:12px; }
+.fact-ovrow-actions { display:flex; gap:6px; flex-wrap:wrap; }
+.fact-badge-paid { font-family:'JetBrains Mono',monospace; font-size:10px; color:#4caf60; border:1px solid rgba(76,175,96,.4); padding:2px 7px; text-transform:uppercase; letter-spacing:.08em; white-space:nowrap; }
+.fact-ovempty { font-family:'JetBrains Mono',monospace; font-size:12px; color:#555; padding:10px 0; }
+@media(max-width:560px){ .fact-ovrow { flex-direction:column; align-items:flex-start; } }
 .inv-head { display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #000; padding-bottom:18px; margin-bottom:28px; }
 .inv-brand { font-family:'Archivo Black',sans-serif; font-size:22px; text-transform:uppercase; letter-spacing:-0.02em; }
 .inv-reg { color:var(--red); }
@@ -287,7 +307,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
      (~794px) treffen óók de mobiele max-width:900px-regels; daar wordt de
      zijbalk position:fixed en resolvet width:auto tot 0. Expliciete 100% + block
      dwingt de factuurkolom terug op volle paginabreedte. */
-  .admin-body, .main, #section-factuur, .factuur-layout, .factuur-preview-wrap {
+  .admin-body, .main, #section-factuur, #fact-editor, .factuur-layout, .factuur-preview-wrap {
     display:block !important; width:100% !important; max-width:none !important;
     margin:0 !important; padding:0 !important; min-height:0 !important;
     overflow:visible !important; grid-template-columns:none !important;
@@ -296,7 +316,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
      de factuur zelf weer zichtbaar maken (hogere specificiteit wint van body *). */
   #invoice-paper, #invoice-paper * { visibility:visible !important; }
   #invoice-paper {
-    position:static !important; width:100% !important; min-height:0 !important;
+    position:relative !important; width:100% !important; min-height:0 !important;
     margin:0 !important; padding:16mm 15mm !important;
     box-shadow:none !important; transform:none !important;
     background:#fff !important; color:#111 !important;
@@ -547,7 +567,7 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5L2 4v4c0 3.3 2.5 5.8 6 6.5 3.5-.7 6-3.2 6-6.5V4L8 1.5z"/></svg>
           Privacyverzoeken
         </div>
-        <div class="sidebar-item font-mono" data-section="factuur" onclick="showSection('factuur', this)">
+        <div class="sidebar-item font-mono" data-section="factuur" onclick="showSection('factuur', this); if(window.SWDFactuur)window.SWDFactuur.enter();">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1.5" width="10" height="13"/><path d="M5.5 5h5M5.5 8h5M5.5 11h3"/></svg>
           Factuur
         </div>
@@ -676,10 +696,43 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 
       <!-- FACTUUR -->
       <div id="section-factuur" class="page-section">
-        <div class="page-title font-display">Factuur-tool</div>
-        <div class="page-sub font-mono">Live A4-preview · print naar PDF · concept wordt lokaal bewaard</div>
+        <!-- OVERZICHT -->
+        <div id="fact-overview" class="no-print">
+          <div class="page-title font-display">Facturen &amp; offertes</div>
+          <div class="page-sub font-mono">Overzicht van je offertes en facturen · maak nieuw · markeer als betaald</div>
+
+          <div class="fact-ovbar">
+            <div class="fact-new-wrap">
+              <button class="content-save-btn font-display" id="fact-new" style="background:var(--red);border-color:var(--red);color:#fff;">＋ Nieuw ▾</button>
+              <div id="fact-new-menu" class="fact-new-menu">
+                <button class="fact-new-opt font-mono" id="fact-new-factuur">Nieuwe factuur</button>
+                <button class="fact-new-opt font-mono" id="fact-new-offerte">Nieuwe offerte</button>
+              </div>
+            </div>
+            <button class="settings-btn font-mono" id="fact-refresh" style="margin:0;">↻ Vernieuwen</button>
+          </div>
+
+          <div class="fact-ovblock">
+            <div class="fact-ovhead"><span>Offertes</span></div>
+            <div id="fact-list-offertes" class="fact-ovlist"><div class="fact-ovempty">Laden…</div></div>
+          </div>
+          <div class="fact-ovblock">
+            <div class="fact-ovhead"><span>Openstaande facturen</span></div>
+            <div id="fact-list-open" class="fact-ovlist"><div class="fact-ovempty">Laden…</div></div>
+          </div>
+          <div class="fact-ovblock">
+            <div class="fact-ovhead"><span>Betaalde facturen</span></div>
+            <div id="fact-list-paid" class="fact-ovlist"><div class="fact-ovempty">Laden…</div></div>
+          </div>
+        </div>
+
+        <!-- EDITOR -->
+        <div id="fact-editor" style="display:none;">
+        <div class="page-title font-display" id="fact-editor-title">Factuur</div>
+        <div class="page-sub font-mono">Live A4-preview · print naar PDF</div>
 
         <div class="factuur-toolbar no-print">
+          <button class="settings-btn font-mono" id="fact-back" style="margin:0;">← Overzicht</button>
           <label class="font-mono" style="display:flex;align-items:center;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#888;">
             Type
             <select class="form-input" id="fact-doctype" style="width:auto;padding:8px 12px;margin:0;">
@@ -687,12 +740,13 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
               <option value="offerte">Offerte</option>
             </select>
           </label>
-          <button class="content-save-btn font-display" id="fact-print">↧ Print / opslaan als PDF</button>
+          <button class="content-save-btn font-display" id="fact-print">↧ Print / PDF</button>
           <button class="content-save-btn font-display" id="fact-mail" style="background:#111;border-color:#333;color:#fff;">✉ Mail naar klant</button>
-          <button class="content-save-btn font-display" id="fact-save" style="background:var(--red);border-color:var(--red);color:#fff;">💾 Opslaan in lijst</button>
+          <button class="content-save-btn font-display" id="fact-save" style="background:var(--red);border-color:var(--red);color:#fff;">💾 Opslaan</button>
+          <button class="content-save-btn font-display" id="fact-mark-paid" style="background:#0e0e0e;border-color:#2e8b40;color:#4caf60;">Markeer als betaald</button>
+          <button class="content-save-btn font-display" id="fact-convert" style="background:#111;border-color:#333;color:#fff;display:none;">→ Zet om naar factuur</button>
           <button class="content-save-btn font-display" id="fact-send" style="background:#111;border-color:#333;color:#fff;">✍ Verstuur ter ondertekening</button>
-          <button class="settings-btn font-mono" id="fact-reset" style="margin:0;">↺ Nieuw concept</button>
-          <span class="fact-hint font-mono">Tip: kies in het printvenster "Bewaar als PDF" · marges "Geen" · achtergronden aanvinken.</span>
+          <span class="fact-hint font-mono">Tip: bij "Bewaar als PDF" marges "Geen", achtergronden aanvinken.</span>
         </div>
 
         <div id="fact-mail-box" class="no-print" style="display:none;margin:0 0 14px;border:1px solid #1a1a1a;background:#0e0e0e;">
@@ -718,20 +772,13 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
           </div>
         </div>
 
-        <div class="fact-saved no-print" style="margin:14px 0;border:1px solid #1a1a1a;background:#0e0e0e;">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #1a1a1a;">
-            <span class="font-display" style="font-size:12px;text-transform:uppercase;letter-spacing:.04em;">Bewaarde facturen</span>
-            <button class="settings-btn font-mono" id="fact-refresh" style="margin:0;">↻ Vernieuwen</button>
-          </div>
-          <div id="fact-list" style="padding:10px 16px 12px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#777;">Klik “↻ Vernieuwen” om je bewaarde facturen te laden.</div>
-        </div>
-
         <div class="factuur-layout">
           <div class="factuur-form no-print" id="factuur-form"></div>
           <div class="factuur-preview-wrap">
             <div id="invoice-paper" class="invoice-paper"></div>
           </div>
         </div>
+        </div><!-- /fact-editor -->
       </div>
 
       <!-- SOCIAL CAMPAGNES -->
