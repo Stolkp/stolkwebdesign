@@ -747,6 +747,9 @@
 
     // Start op het overzicht; editor opent bij Nieuw/Open.
     window.SWDFactuur = { enter: showFactOverview };
+    // Laadde de Supabase-lib niet, dan is db null → admin.html toont al de laadfout;
+    // hier stil stoppen zodat er geen losse null-fout in de console lekt.
+    if (typeof db === 'undefined' || !db) return;
     showFactOverview();
   }
 

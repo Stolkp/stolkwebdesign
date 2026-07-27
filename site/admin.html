@@ -8,7 +8,10 @@
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase-lib lokaal gehost (vendor/) i.p.v. jsdelivr: geen CDN-afhankelijkheid meer,
+     zodat een geblokkeerde/kapot-gecachete CDN de admin niet meer bricken kan. CDN-fallback
+     alleen als het lokale bestand onverhoopt niet laadt (deploy-mishap). -->
+<script src="vendor/supabase/supabase.min.js" onerror="var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';document.head.appendChild(s);this.remove();"></script>
 <script src="config.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="vendor/drawflow/drawflow.min.css">
@@ -1314,9 +1317,32 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 
 <script>
 // ── INIT ──
-const { createClient } = window.supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Laadt de Supabase-lib (vendor/) onverhoopt niet, dan is window.supabase leeg. Vang dat
+// hier af met een nette melding i.p.v. de cryptische "Cannot access 'db' before
+// initialization" die je verderop kreeg toen db (const) nooit werd gezet.
+const supabaseReady = !!(window.supabase && window.supabase.createClient);
+let db = supabaseReady ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 let currentProjects = [];
+
+function showLibLoadError() {
+  const box = document.querySelector('.login-box');
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  if (btn) btn.disabled = true;
+  if (errEl) {
+    errEl.innerHTML = 'Kon de database-bibliotheek niet laden.<br>Controleer je verbinding en herlaad de pagina.';
+    errEl.style.display = 'block';
+  }
+  if (box && !document.getElementById('lib-reload-btn')) {
+    const r = document.createElement('button');
+    r.id = 'lib-reload-btn';
+    r.className = 'login-btn font-display';
+    r.textContent = 'Opnieuw laden ↻';
+    r.style.marginTop = '12px';
+    r.onclick = function () { location.reload(); };
+    box.appendChild(r);
+  }
+}
 
 // ── AUTH ──
 async function initAuth() {
@@ -3231,7 +3257,7 @@ function toast(msg, isError = false) {
   setTimeout(() => el.classList.remove('show'), 3000);
 }
 
-initAuth();
+if (supabaseReady) { initAuth(); } else { showLibLoadError(); }
 </script>
 <script src="sign-render.js"></script>
 <script src="admin-factuur.js"></script>
