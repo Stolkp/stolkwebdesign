@@ -2915,8 +2915,9 @@ function renderSocialPosts() {
 
     if (p.kind === 'carousel') {
       const slides = Array.isArray(p.media_urls) ? p.media_urls : [];
+      const isVid = (u) => /\.(mp4|webm|mov)(\?|$)/i.test(u);
       const strip = slides.length ? slides.map((u, i) => `<div style="width:96px">
-            <img src="${esc(u)}" style="width:96px;height:96px;object-fit:cover;border:2px solid var(--black);display:block">
+            ${isVid(u) ? `<video src="${esc(u)}" style="width:96px;height:96px;object-fit:cover;border:2px solid var(--black);display:block" muted playsinline preload="metadata"></video>` : `<img src="${esc(u)}" style="width:96px;height:96px;object-fit:cover;border:2px solid var(--black);display:block">`}
             <div style="display:flex;justify-content:space-between;align-items:center;font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:3px">
               <span>${i + 1}</span>
               <span>
@@ -2928,9 +2929,9 @@ function renderSocialPosts() {
           </div>`).join('') : '<div class="social-empty" style="padding:18px">Nog geen slides — klik op “↑ Slides toevoegen” en kies je carousel-slides (op volgorde).</div>';
       return `<div class="social-post">
       <div class="social-post-preview" id="prev-${p.id}">
-        ${slides.length ? `<img src="${esc(slides[0])}" style="width:100%;border:2px solid var(--black);display:block">` : socialPreviewHTML(p)}
+        ${slides.length ? (isVid(slides[0]) ? `<video src="${esc(slides[0])}" style="width:100%;border:2px solid var(--black);display:block" controls muted playsinline preload="metadata"></video>` : `<img src="${esc(slides[0])}" style="width:100%;border:2px solid var(--black);display:block">`) : socialPreviewHTML(p)}
         <div style="font-family:'Archivo Black',sans-serif;font-size:13px;margin-top:10px;letter-spacing:-.01em">${esc(p.headline) || 'Carousel'}</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.1em">${slides.length} beeld(en)</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.1em">${slides.length} ${slides.some(isVid) ? 'video/beeld(en)' : 'beeld(en)'}</div>
       </div>
       <div class="social-post-fields">
         <div class="cms-group-title" style="margin:0 0 10px;font-size:11px;">Carousel-slides (2–10, op volgorde)</div>
