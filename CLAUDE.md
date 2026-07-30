@@ -71,7 +71,7 @@ Projecten/Stolkwebdesign/
 | `render-social-post.tsx` | Edge (@vercel/og) | Rendert 1 social-post in 4 formaten on-demand (`?post=<id>&fmt=ig\|li\|gbp\|story[&dl=1]`), leest post via anon-key, geen storage/secrets (hergebruikt SUPABASE_URL/ANON_KEY). LET OP Satori: geen `{var} →` (2 text-nodes) en multi-child divs `display:flex` — zie memory reference_vercel_og_satori |
 | `poll-notion.js` | serverless + cron | Pollt Notion DB op Status=Approved (Vercel cron `0 8 * * *` — 1×/dag; Hobby staat geen sub-daily cron toe) |
 | `regenerate-carousel.js` | serverless | Admin endpoint om slides opnieuw te genereren |
-| `publish-social-post.js` | serverless, JWT | Publiceert/plant CMS-post via Blotato (LinkedIn 6535 + Instagram 30624); single = render→Storage, carousel = media_urls (2-10). Accepteert ook 1 beeld (single-image post); "… — Instagram Story"-post → `target.mediaType:'story'` (anders feed); legt bij succes publicatie-status vast (`published_at`/`scheduled_for`/`publish_target`) → status-badge + "Opnieuw publiceren"-waarschuwing |
+| `publish-social-post.js` | serverless, JWT | Publiceert/plant CMS-post via Blotato (LinkedIn 6535 + Instagram 30624 + **Bluesky 51355**, sinds 30-07); single = render→Storage, carousel = media_urls (2-10, mag ook mp4-video zijn — eerste video-publicatie bewezen 29-07). Accepteert ook 1 beeld (single-image post); "… — Instagram Story"-post → `target.mediaType:'story'` (anders feed); Bluesky max 300 tekens (`caption_bluesky`); **LinkedIn post op de bedrijfspagina via env `BLOTATO_LINKEDIN_PAGE_ID=18102589`** (zonder pageId → persoonlijk profiel, zo ging de eerste post per ongeluk); legt bij succes publicatie-status vast (`published_at`/`scheduled_for`/`publish_target`) → status-badge + "Opnieuw publiceren"-waarschuwing |
 | `manage-schedules.js` | serverless, JWT | Beheert ingeplande Blotato-posts (list/cancel/reschedule via /v2/schedules) |
 | `generate-image.js` | serverless, JWT | AI-beeld via OpenRouter GPT Image (gpt-5.4-image-2) → Storage → bg_image (single) of media_urls (carousel). Vereist OPENROUTER_API_KEY |
 | `generate-campaign.js` | serverless, JWT | AI-voorstellen via Anthropic (claude-haiku-4-5): N campagne-posts óf carousel-beeld-prompts in merkstem |
@@ -102,6 +102,7 @@ Projecten/Stolkwebdesign/
 | `social_launch_seed.sql` | Seed launch-2026-campagne (8 single posts, bestsupport08-stijl) |
 | `projects_launch_fields.sql` | Kolommen launched_at + is_latest_launch op projects + partial unique index (Launch Showcase, homepage-highlight) |
 | `social_posts_publish_status.sql` | Publicatie-status kolommen published_at/scheduled_for/publish_target op _posts |
+| `social_posts_bluesky.sql` | Kolom caption_bluesky op _posts (Bluesky als volwaardig kanaal, patroon Stolksupport). Live 30-07 via Management API |
 | `invoices_init.sql` | Tabel stolkwebdesign_invoices (PRIVÉ — alleen authenticated, geen anon) voor bewaarde facturen |
 | `design_system_init.sql` | Brand Kit: tabel stolkwebdesign_design_system (section/field/value/meta jsonb) + RLS (public read, superuser write op e-mail-allowlist) + seed van alle merktokens |
 | `sign_requests_init.sql` | Ondertekenen: tabel stolkwebdesign_sign_requests + SECURITY DEFINER RPC get_sign_request(token) (anon GEEN table-rechten, token-only read, flipt pending→viewed). Audit trail: snapshot/naam/IP/UA/tijdstip |
@@ -178,6 +179,8 @@ Notion DB "Blog drafts" (page `36ff84f0…81d1`) → Vercel Cron `/api/poll-noti
 
 ## Social / Campagnes-pijplijn
 Sinds 04-06: Campagnes-tab kan **publiceren/inplannen/annuleren via Blotato** (`publish-social-post.js` + `manage-schedules.js`), **carousels** (`kind`/`media_urls`), **AI-beeld** (`generate-image.js`, OpenRouter GPT Image) en **AI-content** (`generate-campaign.js`, Anthropic) — alle endpoints JWT-beveiligd (Supabase-sessie). Knop **"✨ Carousel van deze post"** (`makeCarouselFromPost` in admin.html: maakt niet-destructief een nieuwe carousel-post met kop+sub als AI-brief). Social-render wordmark = driekleur. Zie `docs/logs/2026-06-04/02-…` + `03-…`.
+
+**Video + Bluesky (29/30-07):** carousel-posts mogen mp4's in `media_urls` (admin rendert ze als `<video>`; kind 'single' negeert media_urls — video-post dus altijd als carousel aanmaken). Bluesky is een volwaardig kanaal: eigen textarea (max 300) + checkbox, voorvinken op "· Bluesky" in de kop. Referentiecase: campagne "Showcases" (scroll-film-video's Noordlicht/Vide, gevuld door `scripts/scroll-capture/publish-drafts.mjs` in de monorepo). Zie monorepo-log 30-07/03.
 
 Launch Showcase-integratie: Campagnes-tab toont per carousel-post de plek-kop; publish-checkboxes vinken standaard het platform uit de kop aan; campagne "Opleveringen" bevat per launch 3 aparte concept-posts (Instagram / LinkedIn / Instagram Story, elk 1 beeld in het juiste formaat). Agent-Loops (Skills/Agent-Loops) schrijft daarnaast doer→checker concept-posts in campagne "AI-concepten" (`stolkwebdesign_social_posts`), niets gaat live tot Peter publiceert.
 
@@ -289,7 +292,7 @@ INSERT op `stolkwebdesign_module_waitlist` triggert een Supabase Database Webhoo
 - `SUPABASE_URL` / `SUPABASE_ANON_KEY` (o.a. render-social-post.tsx) + service-role key (server-side functions)
 - `OPENROUTER_API_KEY` (generate-image.js)
 - Anthropic key (generate-campaign.js, chat.js)
-- Blotato (publish-social-post.js / manage-schedules.js)
+- Blotato (publish-social-post.js / manage-schedules.js): API-key + LINKEDIN/INSTAGRAM/BLUESKY account-id's + `BLOTATO_LINKEDIN_PAGE_ID` (bedrijfspagina; sensitive, waarden niet te pullen)
 - `RESEND_API_KEY` (optioneel, nu uit: bezorging ondertekenen = kopieer-link)
 - `VERCEL_DEPLOY_HOOK_URL` (nog opnieuw aan te maken, zie Open punten)
 - Root `.env` lokaal: `SUPABASE_SERVICE_ROLE_KEY` voor launch-showcase-scripts
