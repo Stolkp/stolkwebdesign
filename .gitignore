@@ -9,3 +9,4 @@ site/assets/preview-cinematic.html
 
 # Generated blog HTML (build artifact — source = Supabase)
 site/blog/*.html
+.env*

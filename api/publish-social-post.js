@@ -8,7 +8,9 @@
 //   3. POST naar Blotato /v2/posts met de bijbehorende caption (caption_instagram / caption_linkedin)
 //
 // Env: SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY, BLOTATO_API_KEY,
-//      BLOTATO_LINKEDIN_ACCOUNT_ID, BLOTATO_LINKEDIN_PAGE_ID (optioneel), BLOTATO_INSTAGRAM_ACCOUNT_ID
+//      BLOTATO_LINKEDIN_ACCOUNT_ID, BLOTATO_LINKEDIN_PAGE_ID (optioneel — zonder pageId post
+//      LinkedIn op het persoonlijke profiel i.p.v. de bedrijfspagina), BLOTATO_INSTAGRAM_ACCOUNT_ID,
+//      BLOTATO_BLUESKY_ACCOUNT_ID
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -120,6 +122,20 @@ export default async function handler(req, res) {
         text: post.caption_instagram || post.headline || '',
         scheduledTime,
         mediaType: isStory ? 'story' : undefined,
+      });
+    }
+    if (platforms.includes('bluesky')) {
+      const bsText = post.caption_bluesky || post.caption_linkedin || post.headline || '';
+      if (bsText.length > 300) {
+        return res.status(400).json({ error: `Bluesky-tekst is ${bsText.length} tekens; maximaal 300.`, results });
+      }
+      const urls = isCarousel ? carouselUrls : [await renderAndStore(admin, origin, postId, 'li')];
+      results.bluesky = await postViaBlotato({
+        accountId: process.env.BLOTATO_BLUESKY_ACCOUNT_ID,
+        targetType: 'bluesky',
+        mediaUrls: urls,
+        text: bsText,
+        scheduledTime,
       });
     }
   } catch (e) {

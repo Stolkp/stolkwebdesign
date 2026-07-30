@@ -2596,6 +2596,7 @@ async function publishPost(postId, btn) {
   const platforms = [];
   if (document.getElementById('pp-li-' + postId)?.checked) platforms.push('linkedin');
   if (document.getElementById('pp-ig-' + postId)?.checked) platforms.push('instagram');
+  if (document.getElementById('pp-bs-' + postId)?.checked) platforms.push('bluesky');
   if (!platforms.length) { toast('Kies minstens één kanaal.', true); return; }
 
   const whenVal = document.getElementById('pp-when-' + postId)?.value;
@@ -2891,8 +2892,9 @@ function renderSocialPosts() {
     // Vink standaard alleen het platform aan dat in de kop staat ("… — Instagram" / "… — LinkedIn").
     // Staat er geen platform in de kop, dan beide aan (oud gedrag).
     const _hl = (p.headline || '').toLowerCase();
-    const _wantLi = _hl.includes('linkedin'), _wantIg = _hl.includes('instagram'), _both = !_wantLi && !_wantIg;
-    const liChk = (_wantLi || _both) ? 'checked' : '', igChk = (_wantIg || _both) ? 'checked' : '';
+    const _wantLi = _hl.includes('linkedin'), _wantIg = _hl.includes('instagram'), _wantBs = _hl.includes('bluesky');
+    const _both = !_wantLi && !_wantIg && !_wantBs;
+    const liChk = (_wantLi || _both) ? 'checked' : '', igChk = (_wantIg || _both) ? 'checked' : '', bsChk = _wantBs ? 'checked' : '';
     // Status-badge + knoplabel als de post al verstuurd/ingepland is.
     let statusLine = '', pubBtnLabel = '📤 Publiceer / Plan';
     if (p.published_at) {
@@ -2906,12 +2908,14 @@ function renderSocialPosts() {
           <span style="font-family:'JetBrains Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Publiceren naar</span>
           <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-li-${p.id}" ${liChk}> LinkedIn</label>
           <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-ig-${p.id}" ${igChk}> Instagram</label>
+          <label style="font-family:'JetBrains Mono',monospace;font-size:12px;display:inline-flex;align-items:center;gap:5px"><input type="checkbox" id="pp-bs-${p.id}" ${bsChk}> Bluesky</label>
           <label style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);display:inline-flex;align-items:center;gap:6px">Plannen (leeg = nu) <input type="datetime-local" id="pp-when-${p.id}" style="font-family:inherit;font-size:12px;padding:5px 7px;border:2px solid var(--black);background:#fff"></label>
           <button class="content-save-btn" style="background:var(--red);border-color:var(--red);color:#fff" onclick="publishPost('${p.id}', this)">${pubBtnLabel}</button>
         </div>`;
     const captionsLiIg = `<div class="cms-group-title" style="margin:18px 0 10px;font-size:11px;">Captions per platform</div>
         <div class="form-group"><label class="form-label font-mono">LinkedIn</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_linkedin">${esc(p.caption_linkedin)}</textarea></div>
-        <div class="form-group"><label class="form-label font-mono">Instagram</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_instagram">${esc(p.caption_instagram)}</textarea></div>`;
+        <div class="form-group"><label class="form-label font-mono">Instagram</label><textarea class="form-textarea" rows="2" data-spost="${p.id}" data-sfield="caption_instagram">${esc(p.caption_instagram)}</textarea></div>
+        <div class="form-group"><label class="form-label font-mono">Bluesky (max 300 tekens)</label><textarea class="form-textarea" rows="2" maxlength="300" data-spost="${p.id}" data-sfield="caption_bluesky">${esc(p.caption_bluesky)}</textarea></div>`;
 
     if (p.kind === 'carousel') {
       const slides = Array.isArray(p.media_urls) ? p.media_urls : [];
@@ -3004,7 +3008,8 @@ async function saveSocialPost(id, btn) {
   const { error } = await db.from('stolkwebdesign_social_posts').update({
     eyebrow: p.eyebrow || '', headline: p.headline || '', sub: p.sub || '', cta: p.cta || '', cta_link: p.cta_link || '',
     theme: p.theme || 'black', bg_image: p.bg_image || '',
-    caption_linkedin: p.caption_linkedin || '', caption_instagram: p.caption_instagram || '', caption_gbp: p.caption_gbp || ''
+    caption_linkedin: p.caption_linkedin || '', caption_instagram: p.caption_instagram || '', caption_gbp: p.caption_gbp || '',
+    caption_bluesky: p.caption_bluesky || ''
   }).eq('id', id);
   btn.disabled = false; btn.textContent = t;
   if (error) { toast('Fout: ' + error.message, true); return; }
