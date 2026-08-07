@@ -311,6 +311,12 @@ nav {
 .pkg-rating .txt { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
 .pkg-rating:hover .txt { color: var(--black); }
 .pkg-per { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:4px 0 0; }
+/* Gespreide variant: bewust rustig onder de hoofdprijs. Het bedrag mag nooit afbreken. */
+.pkg-spread { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:10px 0 16px; padding-top:10px; border-top:1px solid rgba(0,0,0,.12); line-height:1.6; }
+.pkg-spread b { color:var(--black); white-space:nowrap; }
+.pkg-betaal { margin-top:22px; border:2px solid var(--black); padding:20px 22px; font-size:15px; line-height:1.65; }
+.pkg-betaal b { font-family:'Archivo Black',sans-serif; text-transform:uppercase; letter-spacing:-.01em; }
+.pkg-betaal .nw { white-space:nowrap; }
 
 /* ══════ SECTION COMMONS ══════ */
 .section-label {
@@ -904,6 +910,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         </div>
         <div class="pkg-price" data-content-html="home.pkg1_price">€1.250</div>
         <div class="pkg-per" data-content="home.pkg1_per">€1.250 per pagina</div>
+        <div class="pkg-spread" data-content-html="home.pkg1_spread">Liever gespreid? <b>€500</b> vooraf + <b>€75 p/m</b> (12 mnd)</div>
         <div class="pkg-sub" data-content="home.pkg1_sub">Eén krachtige homepage, inclusief het volledige ontwerp-systeem.</div>
         <ul class="pkg-list">
           <li>Volledig op maat ontworpen</li>
@@ -923,6 +930,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         </div>
         <div class="pkg-price" data-content-html="home.pkg2_price">€2.250</div>
         <div class="pkg-per" data-content="home.pkg2_per">vanaf €563 per pagina</div>
+        <div class="pkg-spread" data-content-html="home.pkg2_spread">Liever gespreid? <b>€1.000</b> vooraf + <b>€125 p/m</b> (12 mnd)</div>
         <div class="pkg-sub" data-content="home.pkg2_sub">Homepage plus de pagina's die een ondernemer nodig heeft.</div>
         <ul class="pkg-list">
           <li>Alles uit Start</li>
@@ -941,6 +949,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         </div>
         <div class="pkg-price" data-content-html="home.pkg3_price">€3.500</div>
         <div class="pkg-per" data-content="home.pkg3_per">vanaf €500 per pagina, incl. CMS</div>
+        <div class="pkg-spread" data-content-html="home.pkg3_spread">Liever gespreid? <b>€1.500</b> vooraf + <b>€200 p/m</b> (12 mnd)</div>
         <div class="pkg-sub" data-content="home.pkg3_sub">Een complete site met CMS, zodat je zelf teksten en foto's beheert.</div>
         <ul class="pkg-list">
           <li>Alles uit Onderneem</li>
@@ -950,6 +959,10 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         </ul>
         <a class="pkg-cta" href="/contact">Plan een gesprek</a>
       </div>
+    </div>
+
+    <div class="pkg-betaal reveal" data-content-html="home.pkg_betaal">
+      <b>Ineens of gespreid, jij kiest.</b> Betaal je in één keer, dan geldt de prijs hierboven. Wil je het liever over een jaar uitsmeren, dan betaal je een deel vooraf en de rest per maand. Dat kost ongeveer <span class="nw">11 procent</span> meer, omdat ik het werk vooraf doe. Na twaalf betaalde maanden is de site hoe dan ook jouw eigendom. Wil je dat er daarna élke maand aan je site en je vindbaarheid gewerkt wordt, vraag dan naar het abonnement.
     </div>
 
     <div class="pkg-custom reveal">
