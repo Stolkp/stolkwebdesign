@@ -128,7 +128,29 @@ Adset aangepast: Audience Network eruit (`publisher_platforms` nu facebook + ins
 blijven automatisch), `age_min` van 28 naar 35. Back-up van de oude staat in
 `Skills/Meta Ads/backups/adset-120246782265430393-voor-maandmodel.json`.
 
-### Openstaand: het optimalisatiedoel kan niet op deze adset
+### Opgelost via een nieuwe adset (07-08)
+
+Nieuwe adset **`Stolkwebdesign | Maandmodel | €5`** (`120247802748880393`) in dezelfde campagne:
+`LANDING_PAGE_VIEWS`, toeschrijvingsvenster 1 dag, €5 per dag, targeting exact overgenomen
+(NL, 35-60, Facebook + Instagram, dezelfde interesses en gedragingen). De vier advertenties
+draaien daar nu, met hergebruikte creatives. De oude adset `Launch | €5` staat op PAUSED, net als
+alle advertenties erin.
+
+**Geen `promoted_object` op de nieuwe adset.** Getest met `execution_options=['validate_only']`,
+wat drie varianten oplevert:
+
+| Variant | Uitkomst |
+|---|---|
+| zonder `promoted_object` | OK, en dit is de juiste |
+| `pixel_id` alleen | geweigerd (`error_subcode 1885014`, ongeldige combinatie) |
+| `pixel_id` + `custom_event_type: LANDING_PAGE_VIEW` | bestaat niet als waarde |
+| `pixel_id` + `custom_event_type: CONTENT_VIEW` | technisch OK, inhoudelijk fout: zou sturen op een ViewContent-event dat de pagina niet afvuurt |
+
+Bij `LANDING_PAGE_VIEWS` leidt Meta het signaal zelf af uit de pixel op de pagina. De pixel blijft
+dus gewoon leads meten, er wordt alleen niet meer op gestuurd. `validate_only` is hier het nuttige
+gereedschap: je test een combinatie zonder een adset aan te maken die je daarna moet opruimen.
+
+### Historie: waarom het niet op de oude adset kon
 
 De adset optimaliseert nog steeds op `OFFSITE_CONVERSIONS` (pixel-event LEAD), en dat blijft de
 grootste rem. Omzetten naar `LANDING_PAGE_VIEWS` blijkt onmogelijk op een bestaande adset:
