@@ -157,6 +157,21 @@ h2.sec { font-family:'Archivo Black',sans-serif; font-size:clamp(28px,4vw,46px);
 .plan-cta { display:block; width:100%; margin-top:20px; padding:16px; text-align:center; font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:.04em; background:var(--red); color:var(--white); border:2px solid var(--red); text-decoration:none; transition:background .15s,border-color .15s; }
 .plan-cta:hover { background:var(--black); border-color:var(--black); }
 
+/* INSTAP: bewust ondergeschikt aan de prijskaart hierboven. Geen offset-shadow, geen rode knop,
+   platte band. Het is een terugvaloptie voor wie €350 te veel vindt, geen tweede hoofdaanbod. */
+.instap { margin-top:26px; border:2px solid var(--black); background:var(--bone); padding:24px; }
+.instap-kop { display:flex; flex-wrap:wrap; gap:10px 18px; align-items:baseline; justify-content:space-between; }
+.instap-kop h3 { font-family:'Archivo Black',sans-serif; font-size:19px; text-transform:uppercase; letter-spacing:-.02em; }
+.instap-prijs { font-family:'Archivo Black',sans-serif; font-size:26px; letter-spacing:-.02em; color:var(--red); white-space:nowrap; }
+.instap p { font-size:15px; line-height:1.6; color:#333; margin-top:12px; max-width:760px; }
+.instap ul { list-style:none; margin-top:16px; display:grid; grid-template-columns:1fr 1fr; gap:9px 24px; }
+.instap li { font-size:14px; line-height:1.5; color:#333; display:flex; gap:10px; }
+.instap li > span { min-width:0; }
+.instap .tick { color:var(--red); font-family:'Archivo Black',sans-serif; flex-shrink:0; }
+.instap-uit { margin-top:16px; padding-top:14px; border-top:2px solid rgba(0,0,0,.12); font-size:14px; line-height:1.55; color:var(--muted); }
+.instap-uit b { color:var(--black); }
+@media(max-width:700px){ .instap ul { grid-template-columns:1fr; } }
+
 .faq-item { border-bottom:2px solid var(--black); padding:20px 0; }
 .faq-item h4 { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; margin-bottom:8px; }
 .faq-item p { font-size:15px; color:#333; line-height:1.65; }
@@ -347,6 +362,24 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
       </div>
     </div>
   </div>
+
+  <!-- Terugvaloptie voor wie €350 te veel vindt. Bewust onder de hoofdkaart en visueel rustiger. -->
+  <div class="instap">
+    <div class="instap-kop">
+      <h3>Liever kleiner beginnen?</h3>
+      <div class="instap-prijs">€125 p/m</div>
+    </div>
+    <p>Eén pagina waar alles op staat: wat je doet, wie je bent, je werk en hoe mensen je bereiken. Ook op maat ontworpen en in schone code gebouwd, alleen compacter.</p>
+    <ul>
+      <li><span class="tick">→</span> <span>Eén pagina, volledig op maat en snel op de telefoon</span></li>
+      <li><span class="tick">→</span> <span>Hosting, beveiliging, updates en back-ups</span></li>
+      <li><span class="tick">→</span> <span>Kleine tekst- en fotowijzigingen, gewoon even mailen</span></li>
+      <li><span class="tick">→</span> <span>Geen opstartkosten, twaalf maanden looptijd</span></li>
+      <li><span class="tick">→</span> <span>Daarna €50 per maand voor hosting en onderhoud</span></li>
+      <li><span class="tick">→</span> <span>Na twaalf betaalde maanden is de site jouw eigendom</span></li>
+    </ul>
+    <p class="instap-uit"><b>Wat er niet in zit:</b> het maandelijkse werk aan je vindbaarheid in Google. Geen bijgehouden bedrijfsprofiel, geen nieuwe pagina's, geen rapportage. Wil je dat er later bij, dan schuif je door naar het volledige abonnement.</p>
+  </div>
 </div></section>
 
 <!-- RECENT WERK -->
@@ -385,6 +418,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="kicker">Veelgestelde vragen</div>
   <h2 class="sec">Goed om<br>te weten</h2>
   <div class="faq-item"><h4>Wat kost het precies?</h4><p>Vanaf €350 per maand, exclusief btw. Daar zit alles in: de nieuwe site, hosting, onderhoud en het maandelijkse werk aan je vindbaarheid. Geen opstartkosten. Wat het bij jou wordt hangt af van de omvang van de site, en dat weet je vóór je iets tekent.</p></div>
+  <div class="faq-item"><h4>Kan het ook kleiner?</h4><p>Ja. Voor €125 per maand krijg je één pagina waar alles op staat, ook op maat gebouwd, inclusief hosting en kleine wijzigingen. Daarna €50 per maand voor hosting en onderhoud. Het verschil met €350 is het maandelijkse werk aan je vindbaarheid in Google: dat zit er bij de instap niet in. Je kunt later doorschuiven.</p></div>
   <div class="faq-item"><h4>Zit ik dan twaalf maanden vast?</h4><p>De looptijd is twaalf maanden, daarna is het per maand opzegbaar. Wil je er eerder uit, dan factureer ik de resterende maanden in één keer en is de site meteen van jou. Je koopt dus een site, je huurt hem niet.</p></div>
   <div class="faq-item"><h4>Van wie is de website?</h4><p>Van jou. Na twaalf betaalde maanden is de site je eigendom, inclusief de code. Stop je daarna, dan kun je hem meenemen naar een andere partij.</p></div>
   <div class="faq-item"><h4>Kan ik ook gewoon in één keer betalen?</h4><p>Ja. Vaste pakketten vanaf €1.250 voor één pagina tot €3.500 voor een grotere site. Zeg het in het gesprek, dan reken ik het allebei voor je uit.</p></div>

@@ -11,6 +11,36 @@ maanden is de site eigendom van de klant.
 **Landingspagina:** `/website-laten-maken` (omgebouwd 06-08, zie sectie onderaan).
 Eén taak, één knop: gratis mockup aanvragen.
 
+## Instap-variant: €125 per maand (07-08)
+
+Terugvaloptie voor wie €350 te veel vindt. **Staat bewust niet in de advertenties**, alleen op de
+landingspagina onder de hoofdkaart en in het verkoopgesprek.
+
+| | |
+|---|---|
+| Prijs | €125 p/m, twaalf maanden, daarna €50 p/m voor hosting en onderhoud |
+| Scope | Eén pagina waar alles op staat, op maat ontworpen, in schone code |
+| Inbegrepen | Hosting, beveiliging, updates, back-ups, kleine tekst- en fotowijzigingen |
+| **Niet** inbegrepen | Het maandelijkse werk aan vindbaarheid in Google. Dat is het hele onderscheid met €350 |
+| Eigendom | Na twaalf betaalde maanden is de site van de klant |
+
+**Waarom dit binnen de ondergrens valt:** 12 × €125 = €1.500, boven de €1.250 excl. voor een
+one-pager. De €250 verschil is de vergoeding voor het spreiden. Over drie jaar levert dit €2.700
+op tegen €2.150 bij het oude model (€1.250 ineens + €25 p/m hosting), en het is terugkerend geld.
+
+**Waarom het niet in de advertenties zit:** een €350-klant is over drie jaar ruwweg vier keer
+zoveel waard. Zet je beide prijzen in de advertentie, dan kiest vrijwel iedereen de goedkoopste en
+wordt de €350 decoratie. Bovendien draaien de €350-advertenties pas sinds 07-08; een tweede prijs
+ernaast maakt de meting onleesbaar. De route is dus: binnenhalen op €125, later de vindbaarheid
+erbij verkopen richting €350.
+
+**Onderbouwing uit de eigen data:** twee van de vier juli-leads pasten hier beter bij dan bij wat ze
+kregen. Baguala had geen website en verkocht op pasars, maar kreeg een webshopvoorstel van €2.999.
+Verbeeck Installaties wilde letterlijk "gewoon wat de menigte ook heeft".
+
+**Afbakening die erin moet blijven:** "kleine tekst- en fotowijzigingen". Zonder die grens wordt
+€50 per maand op termijn gratis herbouwwerk.
+
 ---
 
 ## Ad 1 · Angle: geen bedrag ineens
