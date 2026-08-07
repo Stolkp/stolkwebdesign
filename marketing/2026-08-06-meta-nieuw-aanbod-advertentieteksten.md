@@ -107,7 +107,49 @@ Eén taak, één knop: gratis mockup aanvragen.
 
 ---
 
-## Reparatie van het advertentieaccount (wacht op akkoord)
+## Uitgevoerd op 06/07-08-2026
+
+Live gezet. De vier advertenties draaien, de drie oude staan uit.
+
+| Advertentie | Ad-id | Beeld |
+|---|---|---|
+| `Stolkwebdesign \| 1x1 \| maand-bedrag` | 120247802083650393 | `maand-1-bedrag_1x1.png` |
+| `Stolkwebdesign \| 1x1 \| maand-stilstand` | 120247802108830393 | `maand-2-stilstand_1x1.png` |
+| `Stolkwebdesign \| 1x1 \| maand-een-bedrag` | 120247802116990393 | `maand-3-een-bedrag_1x1.png` |
+| `Stolkwebdesign \| 9x16 \| maand-eigendom` | 120247802118680393 | bestaande video 1714020579882377 |
+
+Gepauzeerd: `1x1 \| vakman` (120246782827860393), `9x16 \| ambacht-video` (120246997386180393)
+en `1x1 \| custom` (stond al uit). **Let op bij zo'n omzetting: er stonden twee oude advertenties
+met de €1.250-claim aan, niet één.** De video-ad was in de cijfers vrijwel doodgeknepen (€0,14 tot
+€1,37 per week) en viel daardoor bijna buiten beeld, maar stond wel gewoon op ACTIVE. Controleer na
+een aanbodswitch dus élke actieve ad op de oude prijsclaim, niet alleen degene die het budget opat.
+
+Adset aangepast: Audience Network eruit (`publisher_platforms` nu facebook + instagram, posities
+blijven automatisch), `age_min` van 28 naar 35. Back-up van de oude staat in
+`Skills/Meta Ads/backups/adset-120246782265430393-voor-maandmodel.json`.
+
+### Openstaand: het optimalisatiedoel kan niet op deze adset
+
+De adset optimaliseert nog steeds op `OFFSITE_CONVERSIONS` (pixel-event LEAD), en dat blijft de
+grootste rem. Omzetten naar `LANDING_PAGE_VIEWS` blijkt onmogelijk op een bestaande adset:
+
+1. Meta weigert het doel zolang het toeschrijvingsvenster op 7 dagen na klik staat
+   (`error_subcode 1885559`: bij dit doel is alleen 1 dag toegestaan).
+2. Dat venster laat zich niet wijzigen na aanmaak (`error_subcode 1504040`, letterlijk:
+   "Update toeschrijvingsperiode wordt na het maken van een advertentieset niet meer ondersteund.
+   Maak in plaats daarvan een nieuwe advertentieset").
+
+De enige route is dus een **nieuwe adset** met `LANDING_PAGE_VIEWS` + venster 1 dag + dezelfde
+targeting, de vier ads daarheen kopiëren en deze adset pauzeren. Er gaat niets verloren: deze adset
+is nooit uit de leerfase geweest. Aparte beslissing, nog niet gedaan.
+
+> **Scripts staan buiten versiebeheer.** `Skills/Meta Ads/` is gitignored vanwege de `.env`, dus
+> `apply_maandmodel_fixes.py`, `launch_maandmodel_ads.py` en `render-creatives.mjs` zitten niet in
+> git. Raken die kwijt, dan is deze notitie de bron. Ad-designs staan in
+> `Skills/Meta Ads/ad-designs/maand-*.html`, renderen met
+> `node scripts/render-creatives.mjs`.
+
+## Reparatie van het advertentieaccount
 
 Los van het nieuwe aanbod zitten er drie dingen fout in de adset. Script:
 `Skills/Meta Ads/scripts/apply_maandmodel_fixes.py`, draait standaard als dry-run en maakt een
