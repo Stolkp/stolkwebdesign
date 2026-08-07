@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website laten maken in Amstelveen & Amsterdam: gratis mockup | Stolkwebdesign</title>
-<meta name="description" content="Professionele website laten maken in de regio Amstelveen, Amsterdam & Uithoorn. Vaste prijzen, schone code, persoonlijk. Vraag een gratis mockup van je nieuwe homepage aan.">
+<title>Nieuwe website vanaf €350 per maand | Stolkwebdesign</title>
+<meta name="description" content="Een nieuwe website zonder groot bedrag ineens. Site, hosting, onderhoud en vindbaarheid voor één vast bedrag per maand. Na twaalf maanden is de site van jou. Vraag eerst een gratis mockup aan.">
 <!-- Advertentie-landingspagina: niet indexeren (voorkomt concurrentie met de hoofdpagina's). Staat ook NIET in de sitemap. -->
 <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="https://www.stolkwebdesign.nl/website-laten-maken">
@@ -51,6 +51,8 @@ nav { position:sticky; top:0; z-index:100; background:var(--black); border-botto
 .hero-checks { list-style:none; display:flex; flex-direction:column; gap:12px; }
 .hero-checks li { display:flex; gap:12px; align-items:flex-start; font-size:15px; color:rgba(255,255,255,.85); }
 .hero-checks .tick { color:var(--red); font-family:'Archivo Black',sans-serif; flex-shrink:0; }
+/* Getal + eenheid horen bij elkaar: "€350 p/m" mag nooit over twee regels breken. */
+.nw { white-space:nowrap; }
 
 /* FORM CARD */
 .formcard { background:var(--bone); color:var(--black); padding:32px 28px; border:2px solid var(--black); }
@@ -133,6 +135,28 @@ h2.sec { font-family:'Archivo Black',sans-serif; font-size:clamp(28px,4vw,46px);
 .why h4 { font-family:'Archivo Black',sans-serif; font-size:15px; text-transform:uppercase; margin-bottom:8px; }
 .why p { font-size:14px; color:#333; line-height:1.6; }
 .why .num { color:var(--red); }
+/* ABONNEMENT: wat zit er elke maand in + prijsanker */
+.plan { display:grid; grid-template-columns:1fr .82fr; gap:26px; align-items:start; }
+.plan > * { min-width:0; }
+.plan-list { list-style:none; border:2px solid var(--black); }
+.plan-list li { display:flex; gap:14px; align-items:flex-start; padding:16px 20px; border-bottom:2px solid var(--black); font-size:15px; line-height:1.55; }
+.plan-list li:last-child { border-bottom:0; }
+.plan-list .tick { color:var(--red); font-family:'Archivo Black',sans-serif; flex-shrink:0; }
+.price-card { border:2px solid var(--black); box-shadow:8px 8px 0 var(--black); background:var(--white); }
+.price-anchor { padding:18px 22px; border-bottom:2px solid var(--black); background:var(--bone); }
+.price-anchor .lbl { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.14em; color:var(--muted); margin-bottom:10px; }
+.price-anchor .row { display:flex; justify-content:space-between; gap:12px; font-size:14px; line-height:1.5; padding:5px 0; color:#333; }
+.price-anchor .row b { font-family:'JetBrains Mono',monospace; white-space:nowrap; color:var(--black); }
+.price-main { padding:26px 22px; }
+.price-main .big { font-family:'Archivo Black',sans-serif; font-size:clamp(38px,5vw,54px); line-height:1; letter-spacing:-0.03em; color:var(--red); white-space:nowrap; }
+.price-main .per { font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-top:10px; }
+.price-terms { list-style:none; margin-top:18px; display:flex; flex-direction:column; gap:9px; }
+.price-terms li { font-size:14px; line-height:1.5; color:#333; display:flex; gap:10px; }
+.price-terms .tick { color:var(--red); font-family:'Archivo Black',sans-serif; flex-shrink:0; }
+.price-note { font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); line-height:1.7; margin-top:18px; }
+.plan-cta { display:block; width:100%; margin-top:20px; padding:16px; text-align:center; font-family:'Archivo Black',sans-serif; font-size:14px; text-transform:uppercase; letter-spacing:.04em; background:var(--red); color:var(--white); border:2px solid var(--red); text-decoration:none; transition:background .15s,border-color .15s; }
+.plan-cta:hover { background:var(--black); border-color:var(--black); }
+
 .faq-item { border-bottom:2px solid var(--black); padding:20px 0; }
 .faq-item h4 { font-family:'Archivo Black',sans-serif; font-size:16px; text-transform:uppercase; margin-bottom:8px; }
 .faq-item p { font-size:15px; color:#333; line-height:1.65; }
@@ -158,6 +182,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   .why { grid-template-columns:1fr; }
   .why div { border-right:0; }
   .form-row { grid-template-columns:1fr; }
+  .plan { grid-template-columns:1fr; }
 }
 @media(max-width:560px){
   .work { grid-template-columns:1fr; }
@@ -177,20 +202,20 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow">Webdesign · Amstelveen · Amsterdam · Uithoorn</div>
-      <h1>Website laten maken?<br>Zie 'm <span class="red">eerst gratis.</span></h1>
-      <p class="hero-lead">Professionele website op maat, gebouwd in schone code. Geen WordPress-gedoe, geen verrassingen. Je krijgt eerst een <b>gratis mockup van je nieuwe homepage</b>. Daarna pas beslissen.</p>
+      <h1>Nieuwe website<br>vanaf <span class="red"><span class="nw">€350 p/m.</span></span></h1>
+      <p class="hero-lead">Geen bedrag ineens. Je krijgt een website op maat, gebouwd in schone code, plus hosting, onderhoud en elke maand werk aan je vindbaarheid in Google. Alles in één vast bedrag. En je ziet eerst een <b>gratis mockup van je nieuwe homepage</b>, daarna beslis je pas.</p>
       <ul class="hero-checks">
-        <li><span class="tick">→</span> Vaste prijzen vanaf €1.250, vooraf duidelijk</li>
-        <li><span class="tick">→</span> Lokaal &amp; persoonlijk: je werkt direct met Peter</li>
-        <li><span class="tick">→</span> Snelle, scroll-animated sites die klanten opleveren</li>
-        <li><span class="tick">→</span> Reactie binnen 1 werkdag</li>
+        <li><span class="tick">→</span> Geen opstartkosten, geen groot bedrag vooraf</li>
+        <li><span class="tick">→</span> Site, hosting, onderhoud en vindbaarheid in één bedrag</li>
+        <li><span class="tick">→</span> Na twaalf maanden is de site jouw eigendom</li>
+        <li><span class="tick">→</span> Lokaal en persoonlijk: je werkt direct met Peter</li>
       </ul>
     </div>
 
     <!-- AANVRAAGFORMULIER -->
     <div id="aanvraag" class="formcard">
       <div class="formcard-title">Vraag je gratis mockup aan</div>
-      <div class="formcard-sub">Vrijblijvend · geen verplichtingen</div>
+      <div class="formcard-sub"><span class="nw">Vanaf €350 p/m</span> · geen opstartkosten · vrijblijvend</div>
       <!-- RATING: echte Google-cijfers (5,0 · 8 reviews, gecheckt 08-07-2026). Werk dit bij als het aantal reviews verandert. -->
       <div class="rating">
         <a href="https://www.google.com/search?q=stolkwebdesign+reviews" target="_blank" rel="noopener">
@@ -268,7 +293,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <span><b>5,0 ★</b> op Google (8 reviews)</span>
   <span><b>Uithoorn</b>, beschikbaar door heel NL</span>
   <span>Gebouwd in <b>schone code</b> (geen WordPress-gedoe)</span>
-  <span><b>Vaste prijzen</b> · geen uurtje-factuurtje</span>
+  <span><b class="nw">Geen opstartkosten</b> · maandbedrag, geen uurtje-factuurtje</span>
 </div></div>
 
 <!-- RISICO-OMKERING: kernbelofte herhalen op het beslismoment -->
@@ -282,8 +307,45 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <h2 class="sec">Van aanvraag<br>naar nieuwe site</h2>
   <div class="steps">
     <div class="step"><div class="step-num">01</div><h3>Gratis mockup</h3><p>Je vult het formulier in. Ik maak een ontwerp-voorproefje van je nieuwe homepage, afgestemd op jouw merk.</p></div>
-    <div class="step"><div class="step-num">02</div><h3>Kort gesprek</h3><p>We bekijken de mockup samen (20 min, online). Past het? Dan krijg je een vaste prijs, geen verrassingen.</p></div>
-    <div class="step"><div class="step-num">03</div><h3>Bouwen &amp; live</h3><p>Ik bouw je site in schone, snelle code met scroll-animaties. Jij krijgt een site die klanten oplevert.</p></div>
+    <div class="step"><div class="step-num">02</div><h3>Kort gesprek</h3><p>We bekijken de mockup samen (20 min, online). Past het? Dan spreken we het maandbedrag af, zonder verrassingen achteraf.</p></div>
+    <div class="step"><div class="step-num">03</div><h3>Live, en dan bijhouden</h3><p>Ik bouw je site in schone, snelle code. Daarna hou ik hem elke maand bij, van hosting tot je vindbaarheid in Google.</p></div>
+  </div>
+</div></section>
+
+<!-- HET ABONNEMENT: wat zit erin + wat kost het (de vraag die meteen na "hoe werkt het" komt) -->
+<section class="block"><div class="wrap">
+  <div class="kicker">Het abonnement</div>
+  <h2 class="sec">Wat je krijgt,<br>en wat het kost.</h2>
+  <div class="plan">
+    <ul class="plan-list">
+      <li><span class="tick">→</span> <span>Een volledig nieuwe website op maat, in jouw eigen stijl, gebouwd in schone code</span></li>
+      <li><span class="tick">→</span> <span>Snel en goed leesbaar op de telefoon, waar de meeste bezoekers vandaan komen</span></li>
+      <li><span class="tick">→</span> <span>Hosting, beveiliging, updates en back-ups, elke maand geregeld</span></li>
+      <li><span class="tick">→</span> <span>Je Google-bedrijfsprofiel bijgehouden met berichten en foto's</span></li>
+      <li><span class="tick">→</span> <span>Elke maand een nieuwe of verbeterde pagina, zodat Google blijft zien dat er beweging in zit</span></li>
+      <li><span class="tick">→</span> <span>Kleine aanpassingen aan teksten en foto's, gewoon even mailen</span></li>
+      <li><span class="tick">→</span> <span>Korte maandelijkse update, elk kwartaal een leesbaar rapport met de cijfers</span></li>
+    </ul>
+
+    <div class="price-card">
+      <div class="price-anchor">
+        <div class="lbl">Los afgenomen</div>
+        <div class="row"><span>Nieuwe site als eenmalig project</span><b class="nw">vanaf €2.250</b></div>
+        <div class="row"><span>Onderhoud en vindbaarheid los</span><b class="nw">vanaf €195 p/m</b></div>
+      </div>
+      <div class="price-main">
+        <div class="big">€350 p/m</div>
+        <div class="per">Alles bij elkaar, één bedrag</div>
+        <ul class="price-terms">
+          <li><span class="tick">→</span> <span>Geen opstartkosten</span></li>
+          <li><span class="tick">→</span> <span>Looptijd twaalf maanden, daarna per maand opzegbaar</span></li>
+          <li><span class="tick">→</span> <span>Na twaalf betaalde maanden is de site jouw eigendom</span></li>
+          <li><span class="tick">→</span> <span>Eerder stoppen kan: de resterende maanden worden dan in één keer gefactureerd en de site is direct van jou</span></li>
+        </ul>
+        <p class="price-note">Prijzen excl. btw. Liever in één keer betalen? Dat kan ook, met vaste pakketten vanaf €1.250. Zeg het in het gesprek.</p>
+        <a href="#aanvraag" class="plan-cta">Vraag je gratis mockup aan →</a>
+      </div>
+    </div>
   </div>
 </div></section>
 
@@ -313,7 +375,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="why">
     <div><h4><span class="num">01 ·</span> Persoonlijk &amp; lokaal</h4><p>Je werkt direct met Peter uit Uithoorn. Geen accountmanagers, geen tussenlagen. Korte lijnen.</p></div>
     <div><h4><span class="num">02 ·</span> Schone code</h4><p>Razendsnelle sites in HTML/CSS/JS (of WordPress als je dat wilt). Geen trage plugin-bende.</p></div>
-    <div><h4><span class="num">03 ·</span> Vaste prijzen</h4><p>Vooraf weet je wat het kost. Pakketten vanaf €1.250, geen verrassingen achteraf.</p></div>
+    <div><h4><span class="num">03 ·</span> Eén vast maandbedrag</h4><p>Geen groot bedrag ineens en geen losse rekeningen voor hosting, onderhoud en vindbaarheid. Eén bedrag, vooraf duidelijk.</p></div>
     <div><h4><span class="num">04 ·</span> Klant-eerst</h4><p>Een site die niet alleen mooi is, maar bezoekers omzet in aanvragen en klanten.</p></div>
   </div>
 </div></section>
@@ -322,7 +384,10 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 <section class="block"><div class="wrap">
   <div class="kicker">Veelgestelde vragen</div>
   <h2 class="sec">Goed om<br>te weten</h2>
-  <div class="faq-item"><h4>Wat kost een website?</h4><p>Vaste pakketten vanaf €1.250 (1 pagina) tot €3.500 (tot 7 pagina's + CMS). Custom/maatwerk op aanvraag. Je krijgt vooraf een duidelijke prijs.</p></div>
+  <div class="faq-item"><h4>Wat kost het precies?</h4><p>Vanaf €350 per maand, exclusief btw. Daar zit alles in: de nieuwe site, hosting, onderhoud en het maandelijkse werk aan je vindbaarheid. Geen opstartkosten. Wat het bij jou wordt hangt af van de omvang van de site, en dat weet je vóór je iets tekent.</p></div>
+  <div class="faq-item"><h4>Zit ik dan twaalf maanden vast?</h4><p>De looptijd is twaalf maanden, daarna is het per maand opzegbaar. Wil je er eerder uit, dan factureer ik de resterende maanden in één keer en is de site meteen van jou. Je koopt dus een site, je huurt hem niet.</p></div>
+  <div class="faq-item"><h4>Van wie is de website?</h4><p>Van jou. Na twaalf betaalde maanden is de site je eigendom, inclusief de code. Stop je daarna, dan kun je hem meenemen naar een andere partij.</p></div>
+  <div class="faq-item"><h4>Kan ik ook gewoon in één keer betalen?</h4><p>Ja. Vaste pakketten vanaf €1.250 voor één pagina tot €3.500 voor een grotere site. Zeg het in het gesprek, dan reken ik het allebei voor je uit.</p></div>
   <div class="faq-item"><h4>Is de mockup echt gratis?</h4><p>Ja. Je krijgt een voorproefje van je nieuwe homepage zonder kosten of verplichtingen. Bevalt het niet, dan stopt het daar.</p></div>
   <div class="faq-item"><h4>Werk je ook buiten Amstelveen/Amsterdam?</h4><p>Zeker, ik zit in Uithoorn en werk door heel Nederland. Alles kan online.</p></div>
   <div class="faq-item"><h4>WordPress of niet?</h4><p>Beide kan. Standaard bouw ik in schone code (sneller, veiliger), maar wil je zelf in WordPress beheren, dan regel ik dat.</p></div>
