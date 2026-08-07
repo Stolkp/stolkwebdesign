@@ -11,37 +11,53 @@ maanden is de site eigendom van de klant.
 **Landingspagina:** `/website-laten-maken` (omgebouwd 06-08, zie sectie onderaan).
 Eén taak, één knop: gratis mockup aanvragen.
 
-## Instap-variant: €125 per maand (07-08)
+## Instap-variant: €500 vooraf + €75 per maand (07-08)
 
-Terugvaloptie voor wie €350 te veel vindt. **Staat bewust niet in de advertenties**, alleen op de
-landingspagina onder de hoofdkaart en in het verkoopgesprek.
+Terugvaloptie voor wie het volledige abonnement te veel vindt. **Staat bewust niet in de
+advertenties**, alleen op de landingspagina onder de hoofdkaart en in het verkoopgesprek.
 
 | | |
 |---|---|
-| Prijs | €125 p/m, twaalf maanden, daarna €50 p/m voor hosting en onderhoud |
+| Prijs | €500 bij de start, daarna €75 p/m. Minimaal twaalf maanden, daarna maandelijks opzegbaar |
+| Jaar 1 | €1.400 totaal (tegenover €4.200 voor het volledige abonnement) |
 | Scope | Eén pagina waar alles op staat, op maat ontworpen, in schone code |
 | Inbegrepen | Hosting, beveiliging, updates, back-ups, kleine tekst- en fotowijzigingen |
-| **Niet** inbegrepen | Het maandelijkse werk aan vindbaarheid in Google. Dat is het hele onderscheid met €350 |
+| **Niet** inbegrepen | Het maandelijkse werk aan vindbaarheid in Google. Dat is het hele onderscheid |
 | Eigendom | Na twaalf betaalde maanden is de site van de klant |
 
-**Waarom dit binnen de ondergrens valt:** 12 × €125 = €1.500, boven de €1.250 excl. voor een
-one-pager. De €250 verschil is de vergoeding voor het spreiden. Over drie jaar levert dit €2.700
-op tegen €2.150 bij het oude model (€1.250 ineens + €25 p/m hosting), en het is terugkerend geld.
+**Waarom deze opbouw en niet €125 per maand.** Drie varianten doorgerekend:
 
-**Waarom het niet in de advertenties zit:** een €350-klant is over drie jaar ruwweg vier keer
-zoveel waard. Zet je beide prijzen in de advertentie, dan kiest vrijwel iedereen de goedkoopste en
-wordt de €350 decoratie. Bovendien draaien de €350-advertenties pas sinds 07-08; een tweede prijs
-ernaast maakt de meting onleesbaar. De route is dus: binnenhalen op €125, later de vindbaarheid
-erbij verkopen richting €350.
+| | Direct binnen | Jaar 1 | 3 jaar | 5 jaar |
+|---|---|---|---|---|
+| €750 vooraf + €50 p/m | €800 | €1.350 | €2.550 | €3.750 |
+| **€500 vooraf + €75 p/m** | €575 | €1.400 | €3.200 | €5.000 |
+| €125 p/m × 12, daarna €50 | €125 | €1.500 | €2.700 | €3.900 |
+
+Alle drie passeren de ondergrens van €1.250 in maand 10, dus dat was niet het onderscheid. Het
+verschil zit in kasstroom en in wat er na jaar 1 blijft hangen. Die €75 tikt over jaren harder aan
+dan €250 extra vooraf: over vijf jaar scheelt het €1.250 met de €750-variant.
+
+**Twee dingen die overeind moeten blijven:**
+
+1. **De twaalf maanden verplichting.** €500 vooraf is op zichzelf onder de ondergrens. Is het
+   maandbedrag vrij opzegbaar, dan heb je bij opzegging na drie maanden €725 binnen voor een
+   compleet gebouwde site.
+2. **Verkoop de €75 als onderhoud plus wijzigingen, niet als hosting.** Het is drie keer de eigen
+   hostingprijs (site zegt "vanaf €25 per maand"). Als het als hosting voelt, zegt men na jaar 1 op
+   en verlies je precies het deel waar deze opbouw het van moet hebben.
+
+**Waarom het niet in de advertenties zit:** een klant op het volledige abonnement is over drie jaar
+ruim twee keer zoveel waard. Zet je beide prijzen in de advertentie, dan kiest vrijwel iedereen de
+goedkoopste. Bovendien draaien de €350-advertenties pas sinds 07-08; een tweede prijs ernaast maakt
+de meting onleesbaar. De route is: binnenhalen op de instap, later de vindbaarheid erbij verkopen.
 
 **Onderbouwing uit de eigen data:** twee van de vier juli-leads pasten hier beter bij dan bij wat ze
 kregen. Baguala had geen website en verkocht op pasars, maar kreeg een webshopvoorstel van €2.999.
 Verbeeck Installaties wilde letterlijk "gewoon wat de menigte ook heeft".
 
-**Afbakening die erin moet blijven:** "kleine tekst- en fotowijzigingen". Zonder die grens wordt
-€50 per maand op termijn gratis herbouwwerk.
-
----
+**Let op de spanning met het hoofdaanbod:** het volledige abonnement belooft "geen opstartkosten",
+de instap heeft er wél een. Op de pagina staat dat expliciet als keuze benoemd: wil je niets vooraf
+betalen, neem dan het volledige abonnement.
 
 ## Ad 1 · Angle: geen bedrag ineens
 
