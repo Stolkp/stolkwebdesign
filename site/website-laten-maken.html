@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nieuwe website vanaf €350 per maand | Stolkwebdesign</title>
+<title>Alles voor je website in één bedrag per maand | Stolkwebdesign</title>
 <meta name="description" content="Een nieuwe website zonder groot bedrag ineens. Site, hosting, onderhoud en vindbaarheid voor één vast bedrag per maand. Na twaalf maanden is de site van jou. Vraag eerst een gratis mockup aan.">
 <!-- Advertentie-landingspagina: niet indexeren (voorkomt concurrentie met de hoofdpagina's). Staat ook NIET in de sitemap. -->
 <meta name="robots" content="noindex,follow">
@@ -217,7 +217,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="wrap hero-grid">
     <div>
       <div class="eyebrow">Webdesign · Amstelveen · Amsterdam · Uithoorn</div>
-      <h1>Nieuwe website<br>vanaf <span class="red"><span class="nw">€350 p/m.</span></span></h1>
+      <h1>Alles voor je website<br>in <span class="red">één bedrag per maand.</span></h1>
       <p class="hero-lead">Geen bedrag ineens. Je krijgt een website op maat, gebouwd in schone code, plus hosting, onderhoud en elke maand werk aan je vindbaarheid in Google. Alles in één vast bedrag. En je ziet eerst een <b>gratis mockup van je nieuwe homepage</b>, daarna beslis je pas.</p>
       <ul class="hero-checks">
         <li><span class="tick">→</span> Geen opstartkosten, geen groot bedrag vooraf</li>
@@ -230,7 +230,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     <!-- AANVRAAGFORMULIER -->
     <div id="aanvraag" class="formcard">
       <div class="formcard-title">Vraag je gratis mockup aan</div>
-      <div class="formcard-sub"><span class="nw">Vanaf €350 p/m</span> · geen opstartkosten · vrijblijvend</div>
+      <div class="formcard-sub">Gratis · geen opstartkosten · vrijblijvend</div>
       <!-- RATING: echte Google-cijfers (5,0 · 8 reviews, gecheckt 08-07-2026). Werk dit bij als het aantal reviews verandert. -->
       <div class="rating">
         <a href="https://www.google.com/search?q=stolkwebdesign+reviews" target="_blank" rel="noopener">
@@ -246,6 +246,18 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
           <div class="form-group"><label class="form-label" for="lp-tel">Telefoon</label><input type="tel" class="form-input" id="lp-tel" autocomplete="tel"></div>
         </div>
         <div class="form-group"><label class="form-label" for="lp-site">Heb je al een website? (plak de link)</label><input class="form-input" id="lp-site" placeholder="bijv. www.mijnbedrijf.nl"></div>
+        <!-- Kwalificatievraag (13-08): filtert vóór de gratis mockup, en draagt tegelijk het prijsanker
+             nu het bedrag uit de hero is. Zie docs/logs/2026-08-13. -->
+        <div class="form-group"><label class="form-label" for="lp-budget">Wat wil je hier maandelijks aan kwijt zijn? *</label>
+          <select class="form-select" id="lp-budget" required>
+            <option value="">Maak een keuze</option>
+            <option value="tot 200">Tot €200 per maand</option>
+            <option value="200-400">€200 tot €400 per maand</option>
+            <option value="400-700">€400 tot €700 per maand</option>
+            <option value="meer dan 700">Meer dan €700 per maand</option>
+            <option value="weet ik nog niet">Weet ik nog niet</option>
+          </select>
+        </div>
         <div class="form-error font-mono" id="lp-error"></div>
         <button type="submit" class="form-submit" id="lp-btn"><span id="lp-btn-label">Vraag mijn gratis mockup aan</span></button>
         <p class="form-mini">Geen spam. Geen verplichtingen. Door te verzenden ga je akkoord met het <a href="/privacybeleid" style="color:var(--muted);text-decoration:underline;">privacybeleid</a>.</p>
@@ -455,19 +467,21 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     e.preventDefault();
     const val = (id) => (document.getElementById(id).value || '').trim();
     const voornaam = val('lp-voornaam'), email = val('lp-email');
-    const tel = val('lp-tel'), site = val('lp-site');
+    const tel = val('lp-tel'), site = val('lp-site'), budget = val('lp-budget');
     const company = document.getElementById('lp-company').value; // honeypot
     const errorEl = document.getElementById('lp-error');
     const btn = document.getElementById('lp-btn'), btnLabel = document.getElementById('lp-btn-label');
 
     errorEl.style.display = 'none';
     if (!voornaam || !email) { errorEl.textContent = 'Vul minstens je voornaam en e-mail in.'; errorEl.style.display = 'block'; return; }
+    if (!budget) { errorEl.textContent = 'Kies wat je hier maandelijks aan kwijt wilt zijn.'; errorEl.style.display = 'block'; return; }
 
     const naam = voornaam;
     const attribution = (typeof getAttribution === 'function') ? getAttribution() : { string: 'direct/onbekend' };
     // Stap 1 is bewust kaal: alleen de lead vangen. Achternaam/bedrijf + de rest volgen in stap 2 + het gesprek.
     const samengesteld =
       `Aanvraag via landingspagina (gratis mockup)` +
+      `\nBudget per maand: ${budget}` +
       (site ? `\nHuidige site: ${site}` : '');
 
     btn.disabled = true; btnLabel.textContent = 'Versturen…';
