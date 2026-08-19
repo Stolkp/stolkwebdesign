@@ -114,7 +114,9 @@ const AANBOD = [
   },
 ];
 
-const euro = (c) => `€${(c / 100).toFixed(2).replace('.', ',')}`;
+// nl-NL zodat duizendtallen een punt krijgen: 1000 wordt €1.000,00 en niet €1000,00.
+const euro = (c) =>
+  (c / 100).toLocaleString('nl-NL', { style: 'currency', currency: 'EUR' });
 
 async function vindOfMaakBtw() {
   const bestaand = await stripe('tax_rates?limit=100');

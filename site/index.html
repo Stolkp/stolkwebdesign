@@ -55,6 +55,23 @@
   --near-black: #0A0A0A;
   --bone: #F5F5F5;
   --muted: #767676;
+
+  /* Tekst op donkere vlakken. Hier stonden acht losse doorzichtigheden
+     (.25 .35 .45 .5 .55 .6 .65 .7) die met het blote oog niet uit elkaar te
+     houden zijn en samen acht kleurrollen kostten. Drie rollen is genoeg:
+     secundair, gedempt, zwak. Randen en achtergronden hebben hun eigen
+     waarden en staan hier bewust buiten. */
+  --on-dark-2: rgba(255,255,255,.65);
+  --on-dark-3: rgba(255,255,255,.45);
+  --on-dark-4: rgba(255,255,255,.25);
+
+  /* Spatiëring op hoofdletterlabels. Hier stonden zeven waarden
+     (.04 .05 .08 .1 .12 .15 .2) die drie taken deden. Nu drie rollen, met
+     waarden dicht bij het origineel zodat tekstbreedtes nauwelijks verschuiven.
+     Koppen gebruiken deze tokens niet: die staan op em-waarden per maat. */
+  --track-tight: .05em;   /* knoppen en CTA's */
+  --track-label: .1em;    /* labels, footer, meta */
+  --track-wide: .18em;    /* eyebrows boven een sectie */
 }
 
 html { scroll-behavior: smooth; overflow-x: hidden; max-width: 100%; }
@@ -181,8 +198,8 @@ nav {
 .nav-links { display: flex; gap:40px; list-style: none; }
 .nav-links a {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; text-transform: uppercase; letter-spacing: .15em;
-  color: rgba(255,255,255,.5); text-decoration: none;
+  font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-wide);
+  color: var(--on-dark-3); text-decoration: none;
   transition: color .2s;
 }
 .nav-hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:4px; }
@@ -191,7 +208,7 @@ nav {
 .nav-hamburger.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
 .nav-hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
 .nav-cta-item { display:none; }
-.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.1em; text-decoration:none; z-index:200; transition:top .15s; }
+.skip-link { position:absolute; top:-100px; left:0; background:var(--red); color:var(--white); padding:8px 16px; font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing: var(--track-label); text-decoration:none; z-index:200; transition:top .15s; }
 .skip-link:focus { top:0; }
 .nav-links a:hover { color: var(--white); }
 .nav-cta {
@@ -199,7 +216,7 @@ nav {
   font-size: 12px; text-transform: uppercase;
   background: var(--red); color: var(--white);
   border: 2px solid var(--white); padding: 13px 22px;
-  text-decoration: none; letter-spacing: .04em;
+  text-decoration: none; letter-spacing: var(--track-tight);
   transition: background .15s, color .15s;
 }
 .nav-cta:hover { background: var(--white); color: var(--red); }
@@ -243,7 +260,7 @@ nav {
 .hero-label-text {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px; text-transform: uppercase;
-  letter-spacing: .2em; color: rgba(255,255,255,.55);
+  letter-spacing: var(--track-wide); color: var(--on-dark-3);
 }
 .hero-headline {
   font-family: 'Archivo Black', sans-serif;
@@ -255,7 +272,7 @@ nav {
 .hero-headline .red { color: var(--red); }
 .hero-sub {
   font-size: clamp(15px, 1.4vw, 18px);
-  color: rgba(255,255,255,.6); max-width: 540px;
+  color: var(--on-dark-2); max-width: 540px;
   line-height: 1.65; margin-bottom: 48px;
   opacity: 0; animation: smashUp .7s ease forwards 1.4s;
   animation-play-state: paused;
@@ -269,7 +286,7 @@ nav {
 .btn-primary {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: 'Archivo Black', sans-serif;
-  font-size: 13px; text-transform: uppercase; letter-spacing: .04em;
+  font-size: 13px; text-transform: uppercase; letter-spacing: var(--track-tight);
   background: var(--red); color: var(--white);
   border: 2px solid var(--red); padding: 16px 32px;
   text-decoration: none;
@@ -279,8 +296,8 @@ nav {
 .btn-wa {
   display: inline-flex; align-items: center; gap: 8px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
-  color: rgba(255,255,255,.6); text-decoration: none;
+  font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label);
+  color: var(--on-dark-2); text-decoration: none;
   border-bottom: 1px solid rgba(255,255,255,.2);
   padding: 14px 4px 12px; /* tap target ≥44px hoog */
   transition: color .2s, border-color .2s;
@@ -300,7 +317,7 @@ nav {
   display: flex; align-items: center; gap: 10px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px; text-transform: uppercase;
-  letter-spacing: .12em; color: var(--muted);
+  letter-spacing: var(--track-label); color: var(--muted);
 }
 .usp-item:last-child { border-right: none; }
 .usp-check { color: var(--red); font-size: 14px; }
@@ -308,21 +325,21 @@ nav {
 /* Google-rating (bewijs bij het beslismoment) */
 .pkg-rating { display:inline-flex; align-items:center; gap:8px; margin-top:14px; text-decoration:none; }
 .pkg-rating .stars { color: var(--red); font-size: 14px; letter-spacing: 2px; line-height: 1; }
-.pkg-rating .txt { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+.pkg-rating .txt { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing: var(--track-label); color:var(--muted); }
 .pkg-rating:hover .txt { color: var(--black); }
-.pkg-per { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:4px 0 0; }
+.pkg-per { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing: var(--track-label); color:var(--muted); margin:4px 0 0; }
 /* Gespreide variant: bewust rustig onder de hoofdprijs. Het bedrag mag nooit afbreken. */
-.pkg-spread { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:10px 0 16px; padding-top:10px; border-top:1px solid rgba(0,0,0,.12); line-height:1.6; }
+.pkg-spread { font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing: var(--track-tight); color:var(--muted); margin:10px 0 16px; padding-top:10px; border-top:1px solid rgba(0,0,0,.12); line-height:1.6; }
 .pkg-spread b { color:var(--black); white-space:nowrap; }
 .pkg-betaal { margin-top:22px; border:2px solid var(--black); padding:20px 22px; font-size:15px; line-height:1.65; }
-.pkg-betaal b { font-family:'Archivo Black',sans-serif; text-transform:uppercase; letter-spacing:-.01em; }
+.pkg-betaal b { font-family:'Archivo Black',sans-serif; text-transform:uppercase; letter-spacing: -0.01em; }
 .pkg-betaal .nw { white-space:nowrap; }
 
 /* ══════ SECTION COMMONS ══════ */
 .section-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px; text-transform: uppercase;
-  letter-spacing: .2em; color: var(--red);
+  letter-spacing: var(--track-wide); color: var(--red);
   margin-bottom: 20px;
 }
 .section-heading {
@@ -348,7 +365,7 @@ nav {
   align-items: start;
   border-bottom: 2px solid var(--black); padding: 22px 0;
 }
-.pain-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: .1em; padding-top: 3px; }
+.pain-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: var(--track-label); padding-top: 3px; }
 .pain-text { font-family: 'Archivo Black', sans-serif; font-size: clamp(16px, 1.8vw, 22px); text-transform: uppercase; line-height: 1.2; letter-spacing: -0.02em; }
 
 /* ══════ DIENSTEN (oplossing) ══════ */
@@ -360,8 +377,8 @@ nav {
 .pillar:last-child { border-right: none; }
 .pillar-num { font-family: 'Archivo Black', sans-serif; font-size: clamp(52px, 6vw, 88px); color: var(--red); line-height: 1; margin-bottom: 20px; }
 .pillar-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(18px, 2vw, 26px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 14px; }
-.pillar-body { font-size: 14px; color: rgba(255,255,255,.6); line-height: 1.75; margin-bottom: 20px; }
-.pillar-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: .1em; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,.15); padding-top: 16px; }
+.pillar-body { font-size: 14px; color: var(--on-dark-2); line-height: 1.75; margin-bottom: 20px; }
+.pillar-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--red); letter-spacing: var(--track-label); text-transform: uppercase; border-top: 1px solid rgba(255,255,255,.15); padding-top: 16px; }
 .pillar-price strong { color: var(--white); }
 
 /* ══════ MODULES TEASER ══════ */
@@ -401,7 +418,7 @@ nav {
 .module-mini-head {
   display: flex; align-items: center; justify-content: space-between;
   font-family: 'JetBrains Mono', monospace; font-size: 10px;
-  letter-spacing: .15em; text-transform: uppercase;
+  letter-spacing: var(--track-wide); text-transform: uppercase;
   margin-bottom: 4px;
 }
 .module-mini-num { color: var(--red); }
@@ -424,14 +441,14 @@ nav {
 .module-mini-price {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px; color: var(--muted);
-  letter-spacing: .05em;
+  letter-spacing: var(--track-tight);
   margin-top: auto;
 }
 .module-mini-price strong { color: var(--black); }
 .modules-teaser-cta {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: 'Archivo Black', sans-serif;
-  font-size: 14px; text-transform: uppercase; letter-spacing: .04em;
+  font-size: 14px; text-transform: uppercase; letter-spacing: var(--track-tight);
   background: var(--black); color: var(--white);
   border: 2px solid var(--black); padding: 16px 32px;
   text-decoration: none;
@@ -452,38 +469,38 @@ nav {
 .pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; align-items: stretch; }
 .pkg-card { border: 2px solid var(--black); background: var(--white); box-shadow: 8px 8px 0 0 var(--black); padding: 36px 30px; display: flex; flex-direction: column; }
 .pkg-card.featured { box-shadow: 8px 8px 0 0 var(--red); position: relative; }
-.pkg-ribbon { position: absolute; top: -2px; right: -2px; background: var(--red); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; padding: 6px 12px; }
+.pkg-ribbon { position: absolute; top: -2px; right: -2px; background: var(--red); color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: var(--track-wide); text-transform: uppercase; padding: 6px 12px; }
 .pkg-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
-.pkg-name { font-family: 'Archivo Black', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: -.02em; }
-.pkg-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--muted); padding: 4px 8px; white-space: nowrap; }
-.pkg-price { font-family: 'Archivo Black', sans-serif; font-size: 46px; letter-spacing: -.03em; line-height: 1; margin-bottom: 8px; }
+.pkg-name { font-family: 'Archivo Black', sans-serif; font-size: 22px; text-transform: uppercase; letter-spacing: -0.02em; }
+.pkg-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--muted); border: 1px solid var(--muted); padding: 4px 8px; white-space: nowrap; }
+.pkg-price { font-family: 'Archivo Black', sans-serif; font-size: 46px; letter-spacing: -0.03em; line-height: 1; margin-bottom: 8px; }
 .pkg-sub { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 24px; min-height: 38px; }
 .pkg-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin: 0 0 28px; padding: 0; flex: 1; }
 .pkg-list li { font-size: 14px; line-height: 1.5; padding-left: 24px; position: relative; }
 .pkg-list li::before { content: '+'; position: absolute; left: 0; color: var(--red); font-family: 'JetBrains Mono', monospace; font-weight: 700; }
-.pkg-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; background: var(--black); color: var(--white); border: 2px solid var(--black); padding: 14px 20px; text-decoration: none; transition: background .15s, color .15s; }
+.pkg-cta { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: var(--track-tight); background: var(--black); color: var(--white); border: 2px solid var(--black); padding: 14px 20px; text-decoration: none; transition: background .15s, color .15s; }
 .pkg-cta:hover { background: var(--red); border-color: var(--red); }
 .pkg-card.featured .pkg-cta { background: var(--red); border-color: var(--red); }
 .pkg-card.featured .pkg-cta:hover { background: var(--black); border-color: var(--black); }
 .pkg-foot { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 28px 48px; justify-content: space-between; align-items: flex-start; border-top: 2px solid var(--black); padding-top: 32px; }
-.pkg-alacarte { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--black); line-height: 1.6; }
+.pkg-alacarte { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: var(--track-tight); text-transform: uppercase; color: var(--black); line-height: 1.6; }
 .pkg-alacarte strong { color: var(--red); }
 .pkg-scope { max-width: 680px; }
-.pkg-scope-title { font-family: 'Archivo Black', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: -.01em; margin-bottom: 10px; }
+.pkg-scope-title { font-family: 'Archivo Black', sans-serif; font-size: 14px; text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 10px; }
 .pkg-scope-body { font-size: 13px; color: var(--muted); line-height: 1.7; }
 .pkg-scope-body strong { color: var(--black); }
 .pkg-custom { margin-top: 28px; background: var(--near-black); color: var(--white); border: 2px solid var(--black); box-shadow: 8px 8px 0 0 var(--red); padding: 40px; display: flex; gap: 40px; align-items: center; justify-content: space-between; }
 .pkg-custom-main { max-width: 720px; }
-.pkg-custom-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--red); margin-bottom: 14px; }
-.pkg-custom-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(22px, 2.4vw, 30px); text-transform: uppercase; letter-spacing: -.02em; line-height: 1.05; margin-bottom: 14px; }
-.pkg-custom-body { font-size: 14px; line-height: 1.7; color: rgba(255,255,255,.7); }
+.pkg-custom-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: var(--track-wide); text-transform: uppercase; color: var(--red); margin-bottom: 14px; }
+.pkg-custom-title { font-family: 'Archivo Black', sans-serif; font-size: clamp(22px, 2.4vw, 30px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05; margin-bottom: 14px; }
+.pkg-custom-body { font-size: 14px; line-height: 1.7; color: var(--on-dark-2); }
 .pkg-custom-cta-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; flex-shrink: 0; }
-.pkg-custom-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.55); }
-.pkg-custom-cta { display: inline-flex; align-items: center; gap: 8px; font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; background: var(--red); color: var(--white); border: 2px solid var(--red); padding: 14px 24px; text-decoration: none; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
+.pkg-custom-price { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--on-dark-3); }
+.pkg-custom-cta { display: inline-flex; align-items: center; gap: 8px; font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: var(--track-tight); background: var(--red); color: var(--white); border: 2px solid var(--red); padding: 14px 24px; text-decoration: none; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
 .pkg-custom-cta:hover { background: var(--white); color: var(--black); border-color: var(--white); }
 @media (max-width: 900px) {
   .packages { padding: 72px 20px; }
-  .pkg-grid { grid-template-columns: 1fr; gap: 22px; }
+  .pkg-grid { grid-template-columns: minmax(0,1fr); gap: 22px; }
   .pkg-price { font-size: 42px; }
   .pkg-sub { min-height: 0; }
   .pkg-custom { flex-direction: column; align-items: flex-start; gap: 24px; padding: 32px 24px; }
@@ -514,13 +531,13 @@ nav {
 .quote-mark { font-family: 'Archivo Black', sans-serif; font-size: 130px; line-height: .7; color: var(--red); margin-bottom: -28px; display: block; }
 .quote-text { font-family: 'Archivo Black', sans-serif; font-size: clamp(22px, 2.8vw, 38px); text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.05; margin-top: 20px; }
 .quote-attr { margin-top: 36px; padding-top: 28px; border-top: 2px solid var(--black); }
-.attr-name { font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
-.attr-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: .1em; margin-top: 4px; }
+.attr-name { font-family: 'Archivo Black', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: var(--track-tight); }
+.attr-role { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: var(--track-label); margin-top: 4px; }
 .metrics { display: grid; grid-template-columns: repeat(4, 1fr); border: 2px solid var(--black); margin-top: 56px; }
 .metric { padding: 36px 32px; border-right: 2px solid var(--black); }
 .metric:last-child { border-right: none; }
 .metric-num { font-family: 'Archivo Black', sans-serif; font-size: clamp(36px, 4.5vw, 64px); color: var(--red); line-height: 1; margin-bottom: 10px; }
-.metric-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; }
+.metric-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); }
 
 /* ══════ OVER PETER ══════ */
 .about { padding: 100px 48px; max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; }
@@ -528,12 +545,12 @@ nav {
 .about-image-name { font-family: 'Archivo Black', sans-serif; font-size: clamp(28px, 4vw, 56px); text-transform: uppercase; color: var(--white); letter-spacing: -0.03em; line-height: 1; }
 .about-body { font-size: 16px; line-height: 1.75; margin: 20px 0 36px; }
 .manifesto { border-top: 2px solid var(--black); padding-top: 28px; }
-.manifesto-item { display: flex; align-items: baseline; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; padding: 11px 0; border-bottom: 1px solid rgba(0,0,0,.1); }
+.manifesto-item { display: flex; align-items: baseline; gap: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); padding: 11px 0; border-bottom: 1px solid rgba(0,0,0,.1); }
 .manifesto-plus { color: var(--red); font-size: 13px; }
 
 /* ══════ PORTFOLIO STRIP ══════ */
 .portfolio-strip { padding: 0 48px 100px; max-width: 1400px; margin: 0 auto; }
-.portfolio-more { display:inline-block; margin-top:28px; font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.12em; color:var(--black); text-decoration:none; border-bottom:2px solid var(--red); padding:10px 0 4px; }
+.portfolio-more { display:inline-block; margin-top:28px; font-family:'JetBrains Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing: var(--track-label); color:var(--black); text-decoration:none; border-bottom:2px solid var(--red); padding:10px 0 4px; }
 .portfolio-more:hover { color:var(--red); }
 .portfolio-strip-header { padding: 80px 0 48px; }
 .portfolio-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; grid-auto-rows: 1fr; gap: 4px; }
@@ -553,7 +570,7 @@ nav {
   position: absolute; top: 18px; right: 18px; z-index: 2;
   width: 40px; height: 40px; border: 2px solid rgba(255,255,255,.25);
   display: flex; align-items: center; justify-content: center;
-  color: rgba(255,255,255,.5); font-size: 16px;
+  color: var(--on-dark-3); font-size: 16px;
   opacity: 0; transform: translateY(-6px);
   transition: opacity .25s, transform .25s, border-color .2s, background .2s, color .2s;
 }
@@ -564,41 +581,47 @@ nav {
 .port-bg-4 { background: linear-gradient(145deg, #11100a 0%, #2e2a0a 100%); }
 .port-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,.9) 0%, rgba(0,0,0,.1) 60%); }
 .port-info { position: relative; z-index: 1; }
-.port-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+.port-tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: var(--track-wide); text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
 .port-name { font-family: 'Archivo Black', sans-serif; font-size: clamp(18px, 2vw, 24px); color: var(--white); text-transform: uppercase; letter-spacing: -0.02em; }
-.port-type { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 4px; }
+.port-type { font-size: 12px; color: var(--on-dark-3); margin-top: 4px; }
 
 /* ══════ FINAL CTA ══════ */
 .final-cta { background: var(--red); color: var(--white); padding: 100px 48px; position: relative; overflow: hidden; border-top: 2px solid var(--black); }
 .final-cta .noise { opacity: .12; mix-blend-mode: multiply; }
 .final-cta-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
-.final-cta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .2em; color: rgba(255,255,255,.65); margin-bottom: 28px; }
+.final-cta-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-wide); color: var(--on-dark-2); margin-bottom: 28px; }
 .final-cta-heading { font-family: 'Archivo Black', sans-serif; font-size: clamp(44px, 8vw, 120px); line-height: .88; letter-spacing: -0.04em; text-transform: uppercase; max-width: 1050px; margin-bottom: 56px; }
 .btn-white {
   display: inline-flex; align-items: center; gap: 12px;
   font-family: 'Archivo Black', sans-serif;
-  font-size: 16px; text-transform: uppercase; letter-spacing: .03em;
+  font-size: 16px; text-transform: uppercase; letter-spacing: var(--track-tight);
   background: var(--white); color: var(--red);
   border: 2px solid var(--white); padding: 20px 40px;
   text-decoration: none;
   transition: background .15s, color .15s;
 }
 .btn-white:hover { background: var(--red); color: var(--white); }
-.final-secondary { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: rgba(255,255,255,.65); margin-top: 24px; display: block; }
+.final-secondary { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--on-dark-2); margin-top: 24px; display: block; }
 .final-secondary a { color: var(--white); }
 
 /* ══════ FOOTER ══════ */
 footer { background: var(--black); color: var(--white); padding: 60px 48px 36px; border-top: 2px solid var(--red); }
 .footer-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
 .footer-logo { font-family: 'Archivo Black', sans-serif; font-size: 20px; text-transform: uppercase; letter-spacing: -0.02em; margin-bottom: 14px; }
-.footer-tagline { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; line-height: 1.7; }
-.footer-col-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .15em; color: var(--red); margin-bottom: 14px; }
+.footer-tagline { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--on-dark-4); letter-spacing: var(--track-label); text-transform: uppercase; line-height: 1.7; }
+.footer-col-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-wide); color: var(--red); margin-bottom: 14px; }
 .footer-links { list-style: none; }
 .footer-links li { margin-bottom: 9px; }
-.footer-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.45); text-decoration: none; transition: color .2s; }
+.footer-links a { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--on-dark-3); text-decoration: none; transition: color .2s; }
 .footer-links a:hover { color: var(--white); }
 .footer-bar { max-width: 1400px; margin: 0 auto; padding-top: 28px; border-top: 1px solid rgba(255,255,255,.12); display: flex; align-items: center; justify-content: space-between; }
-.footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,.25); letter-spacing: .08em; text-transform: uppercase; }
+.footer-copy { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--on-dark-4); letter-spacing: var(--track-label); text-transform: uppercase; }
+/* Deze klasse had geen enkele regel, dus de drie juridische links renderden in het
+   standaard-linkblauw van de browser (#0000EE). Zelfde rol als .footer-links a, dus
+   bewust dezelfde waarden en geen nieuwe kleur. De cookie-link wordt door
+   cookieconsent/cc-init.js aangemaakt en erft deze klasse van de privacy-link. */
+.footer-legal-link { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: var(--track-label); color: var(--on-dark-3); text-decoration: none; transition: color .2s; }
+.footer-legal-link:hover { color: var(--white); }
 
 /* ══════ RESPONSIVE ══════ */
 @media (max-width: 900px) {
@@ -607,14 +630,14 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   .nav-logo { font-size: 12px; flex-shrink:0; }
   .nav-links { display: none; }
   /* CTA blijft zichtbaar naast de hamburger (thumb-first: actie altijd binnen bereik) */
-  .nav-cta { display:inline-flex; font-size: 10px; padding: 10px 10px; margin-left: auto; white-space: nowrap; letter-spacing: .02em; }
+  .nav-cta { display:inline-flex; font-size: 10px; padding: 10px 10px; margin-left: auto; white-space: nowrap; letter-spacing: var(--track-tight); }
   .nav-cta-arrow { display: none; }
   .nav-hamburger { display:flex; flex-shrink:0; order: 3; }
   .nav-links.open { display:flex; flex-direction:column; position:fixed; top:57px; left:0; right:0; background:var(--black); border-bottom:2px solid var(--red); padding:24px 20px; gap:0; z-index:99; }
   .nav-links.open li { border-bottom:1px solid rgba(255,255,255,.1); }
-  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing:.1em; }
+  .nav-links.open a { display:block; padding:14px 0; font-size:14px; letter-spacing: var(--track-label); }
   .nav-links.open .nav-cta-item { display:block; border-bottom:none; padding-top:16px; }
-  .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing:.04em; padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
+  .nav-cta-mobile { display:block; background:var(--red); color:var(--white); font-family:'Archivo Black',sans-serif; font-size:13px; text-transform:uppercase; letter-spacing: var(--track-tight); padding:14px 20px; text-decoration:none; text-align:center; border:2px solid rgba(255,255,255,.3); }
   .hero video { display: none; }
   .hero-content { padding: 60px 20px 48px; }
   .problem, .about { grid-template-columns: 1fr; padding: 72px 20px; gap: 40px; }
@@ -623,7 +646,11 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   .pillar:last-child { border-bottom: none; }
   .step { grid-template-columns: 80px 1fr; gap: 20px; }
   .step-arrow { display: none; }
-  .metrics { grid-template-columns: repeat(2, 1fr); }
+  /* minmax(0,…) zodat de kolom écht mag krimpen. Een grid-item gaat standaard
+     niet onder zijn min-content-breedte, waardoor de inhoud de kolom breder
+     duwde dan het scherm. De bijbehorende typografie staat in het blok voor
+     smalle schermen onderaan. */
+  .metrics { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .metric:nth-child(2) { border-right: none; }
   .portfolio-grid { grid-template-columns: 1fr; }
   .port-card:first-child { grid-row: auto; }
@@ -637,6 +664,22 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
   .usp-strip { grid-template-columns: repeat(2, 1fr); }
   .usp-item:nth-child(2) { border-right: none; }
 }
+/* Smalle telefoons. Alles hierboven blijft ongemoeid; hier staan alleen de maten
+   die op 320 en 360 niet meer pasten. Gemeten met scripts/layout-check.mjs: zonder
+   dit blok liepen de hero-kop, de sectiekoppen, de kerncijfers en de pakketkaarten
+   tot tientallen pixels buiten beeld. Dat werd weggeknipt door overflow-x:hidden,
+   dus je zag geen scrollbalk maar wel afgesneden tekst. */
+@media (max-width: 480px) {
+  .hero-headline { font-size: clamp(40px, 12vw, 52px); }
+  .section-heading { font-size: clamp(26px, 8vw, 36px); }
+  .metric { padding: 24px 16px; }
+  .metric-num { font-size: clamp(26px, 7vw, 40px); }
+  .pkg-card { padding: 28px 20px; }
+  /* Pakketnaam en tag staan in één flexrij zonder wrap; op 320 passen ze niet
+     naast elkaar en steekt de tag de kaart uit. */
+  .pkg-head { flex-wrap: wrap; }
+}
+
 @media (max-width: 374px) {
   .nav-logo { font-size: 10px; }
   .nav-cta { font-size: 9px; padding: 9px 8px; }
@@ -655,7 +698,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 .nav-lang{display:flex;gap:7px;align-items:center}
 .nav-links.open .nav-lang{padding:14px 0;width:100%}
 .nav-lang a.active{color:var(--white)}
-.nav-lang .sep{color:rgba(255,255,255,.25)}
+.nav-lang .sep{color: var(--on-dark-4)}
 .footer-links-row a.active{color:var(--white)}
 </style>
 </head>
@@ -726,7 +769,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </div>
 
 <!-- MARQUEE 1 -->
-<div class="marquee-container">
+<!-- Een lopende band hoort buiten beeld te steken; zonder deze opt-out vult hij
+     het rapport van scripts/layout-check.mjs met valse meldingen. -->
+<div class="marquee-container" data-layout-check="skip">
   <div class="marquee-track">
     <span class="marquee-item">WEBSITE LATEN BOUWEN</span><span class="marquee-item marquee-sep">✱</span>
     <span class="marquee-item">SAUBERHAUS</span><span class="marquee-item marquee-sep">✱</span>
@@ -746,15 +791,23 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <!-- Stijl voor de uitgelichte 'Net opgeleverd'-kaart (bovenaan de werk-sectie; alleen bij data) -->
 <style>
   #net-opgeleverd { display: none; }
-  .latest { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; padding-bottom: 60px; margin-bottom: 56px; border-bottom: 2px solid var(--black); }
+  /* minmax(0,…) i.p.v. kale fr: een grid-item krimpt standaard niet onder zijn
+     min-content-breedte, en de klantnaam is één ondeelbaar woord in hoofdletters.
+     Zonder dit duwt een naam als BESTSUPPORT08 de kolom breder dan het scherm en
+     lijnen de tag en de omschrijving uit tegen die te brede doos. */
+  .latest { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(0,.95fr); gap: 56px; align-items: center; padding-bottom: 60px; margin-bottom: 56px; border-bottom: 2px solid var(--black); }
+  .latest-body { min-width: 0; }
   .latest-media { position: relative; }
   .latest-media img { display: block; width: 100%; border: 2px solid var(--black); box-shadow: 16px 16px 0 0 var(--red); }
-  .latest-eyebrow { font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--red); font-size: 13px; display: flex; align-items: center; gap: 11px; margin-bottom: 22px; }
+  .latest-eyebrow { font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: var(--track-wide); text-transform: uppercase; color: var(--red); font-size: 13px; display: flex; align-items: center; gap: 11px; margin-bottom: 22px; }
   .latest-eyebrow .ldot { width: 10px; height: 10px; background: var(--red); border-radius: 50%; display: inline-block; animation: lpulse 2s infinite; }
-  .latest-name { font-family: 'Archivo Black', sans-serif; font-size: 60px; line-height: .94; letter-spacing: -.03em; text-transform: uppercase; }
-  .latest-tag { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-top: 18px; }
+  /* De naam komt uit het CMS en is vaak één lang woord in hoofdletters. Schalen
+     met clamp i.p.v. een vaste maat, en anywhere als vangnet voor een naam die
+     ook op de kleinste maat nog te breed is. */
+  .latest-name { font-family: 'Archivo Black', sans-serif; font-size: clamp(26px, 8.5vw, 60px); line-height: .94; letter-spacing: -0.03em; text-transform: uppercase; overflow-wrap: anywhere; }
+  .latest-tag { font-family: 'JetBrains Mono', monospace; font-size: 14px; letter-spacing: var(--track-label); text-transform: uppercase; color: var(--muted); margin-top: 18px; }
   .latest-desc { font-size: 18px; line-height: 1.5; margin-top: 18px; max-width: 460px; color: #222; }
-  .latest-btn { display: inline-flex; align-items: center; gap: 12px; margin-top: 32px; background: var(--black); color: var(--white); font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; padding: 16px 26px; border: 2px solid var(--black); transition: background .2s, border-color .2s; text-decoration: none; }
+  .latest-btn { display: inline-flex; align-items: center; gap: 12px; margin-top: 32px; background: var(--black); color: var(--white); font-family: 'JetBrains Mono', monospace; font-weight: 700; letter-spacing: var(--track-label); text-transform: uppercase; font-size: 14px; padding: 16px 26px; border: 2px solid var(--black); transition: background .2s, border-color .2s; text-decoration: none; }
   .latest-btn:hover { background: var(--red); border-color: var(--red); }
   @keyframes lpulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
   @media (max-width: 860px) { .latest { grid-template-columns: 1fr; gap: 32px; padding-bottom: 44px; margin-bottom: 40px; } .latest-name { font-size: 42px; } .latest-media { order: -1; } }
@@ -771,7 +824,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <div id="net-opgeleverd">
       <div class="latest reveal">
         <div class="latest-media">
-          <a id="latest-media-link" href="#"><img id="latest-img" src="" alt=""></a>
+          <!-- src wordt door loadLatestLaunch() gezet; geen lege src, want die
+               laat sommige browsers de pagina zelf opnieuw opvragen -->
+          <a id="latest-media-link" href="#"><img id="latest-img" alt=""></a>
         </div>
         <div class="latest-body">
           <div class="latest-eyebrow"><span class="ldot"></span> Net opgeleverd</div>
@@ -1079,7 +1134,9 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 </section>
 
 <!-- MARQUEE 2 -->
-<div class="marquee-container">
+<!-- Een lopende band hoort buiten beeld te steken; zonder deze opt-out vult hij
+     het rapport van scripts/layout-check.mjs met valse meldingen. -->
+<div class="marquee-container" data-layout-check="skip">
   <div class="marquee-track" style="animation-direction:reverse; animation-duration:28s">
     <span class="marquee-item">GEEN TEMPLATES</span><span class="marquee-item marquee-sep">✱</span>
     <span class="marquee-item">CUSTOM WEBDESIGN</span><span class="marquee-item marquee-sep">✱</span>

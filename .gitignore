@@ -10,3 +10,16 @@ site/assets/preview-cinematic.html
 # Generated blog HTML (build artifact — source = Supabase)
 site/blog/*.html
 .env*
+
+# Nooit in een publieke repo. BTW/ bevat de kwartaalstukken van de administratie.
+BTW/
+
+# Rommel uit een scriptfout: iets schreef naar het letterlijke pad "undefined".
+undefined/
+supabase/.temp/
+
+# Social-assets en screenshots: samen meer dan 100 MB en niet nodig voor de site.
+marketing/launch-socials/
+marketing/goede-prompts/
+marketing/linkedin-banner/
+linkedin/

@@ -630,6 +630,14 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
       </div>
       <div class="sidebar-section">
         <div class="sidebar-label font-mono">Beheer</div>
+        <div class="sidebar-item font-mono" data-section="toolkit" onclick="showSection('toolkit', this); loadToolkit()">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="12" height="8" rx="1"/><path d="M6 6V4a2 2 0 0 1 4 0v2"/></svg>
+          Toolkit
+        </div>
+        <div class="sidebar-item font-mono" data-section="loops" onclick="showSection('loops', this); loadLoops()">
+          <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8a5 5 0 1 1-1.9-3.9"/><path d="M13 2v3h-3"/></svg>
+          Loops
+        </div>
         <div class="sidebar-item font-mono" data-section="settings" onclick="showSection('settings', this)">
           <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2"/></svg>
           Instellingen
@@ -1061,6 +1069,19 @@ input[type="date"].blog-date::-webkit-calendar-picker-indicator:hover { opacity:
 
       <!-- SETTINGS -->
       <!-- DESIGN SYSTEM / BRAND KIT -->
+      <!-- TOOLKIT -->
+      <div id="section-toolkit" class="page-section">
+        <div class="page-title font-display">Toolkit</div>
+        <div class="page-sub font-mono">Alles wat je hebt: skills, workflows, koppelingen en draaiende jobs. Gevuld door scripts/toolkit/scan.mjs.</div>
+        <div id="toolkit-body"></div>
+      </div>
+
+      <div id="section-loops" class="page-section">
+        <div class="page-title font-display">Loops</div>
+        <div class="page-sub font-mono">Draaien de terugkerende jobs op de Mac nog. Gemeten door scripts/loops/report.mjs, elk uur.</div>
+        <div id="loops-body"></div>
+      </div>
+
       <div id="section-designsystem" class="page-section">
         <div class="page-title font-display">Design System</div>
         <div class="page-sub font-mono">Je huisstijl in één overzicht — kleuren, fonts, logo. Download je merkbestanden.</div>
@@ -1665,6 +1686,8 @@ const SECTION_LOADERS = {
   reserveringen: () => loadBookings(),
   gdpr: () => loadGdprRequests(),
   designsystem: () => loadBrandKit(),
+  toolkit: () => loadToolkit(),
+  loops: () => loadLoops(),
 };
 function openSectionFromHash() {
   const name = decodeURIComponent(location.hash.slice(1)).split(':')[0];
@@ -3270,6 +3293,8 @@ if (supabaseReady) { initAuth(); } else { showLibLoadError(); }
 <script src="/admin-rooster.js"></script>
 <script src="/admin-bookings.js"></script>
 <script src="/admin-brandkit.js"></script>
+<script src="/admin-toolkit.js"></script>
+<script src="/admin-loops.js"></script>
 <script src="/admin-klantprojecten.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 <script src="/admin-layout.js"></script>
