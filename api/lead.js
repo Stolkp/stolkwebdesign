@@ -8,6 +8,10 @@
 //
 // Env: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY (al aanwezig voor de andere functions).
 //      TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID (optioneel — voor een seintje bij elke lead).
+//      RESEND_API_KEY (optioneel — speed-to-lead bevestigingsmail; zonder key wordt de mail
+//      stil overgeslagen en meldt het Telegram-seintje dat) + ANTHROPIC_API_KEY (optioneel —
+//      parafrase-fragment in die mail; zonder key of bij een trage call valt de mail terug
+//      op de generieke zin).
 
 import { createClient } from '@supabase/supabase-js';
 
@@ -30,6 +34,133 @@ async function notifyTelegram(text) {
       body: JSON.stringify({ chat_id: chat, text, disable_web_page_preview: true }),
     });
   } catch (e) { /* een seintje mag de lead nooit breken */ }
+}
+
+// ── Speed-to-lead: directe bevestigingsmail naar de lead (21-08) ──────────────────────────
+// Vaste tekst van Peter; AI vult alleen één kort fragment in (parafrase van het bericht,
+// het "fuzzy variable"-patroon). Elke stap is fout-tolerant: een mail-fout mag de lead
+// nooit breken. Let op dubbelmail-risico: de automation-flow "Nieuwe lead opvolging"
+// (11111111-…) staat op paused; zet je die ooit weer aan, haal dan eerst de
+// welkomstmail-node daaruit, anders krijgt de lead twee mails.
+
+const CONFIRM_FROM = 'Peter Stolk <peter@stolkwebdesign.nl>';
+const CONFIRM_REPLY_TO = 'peter@stolkwebdesign.nl';
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+// Parafraseert het lead-bericht tot één kort fragment dat grammaticaal past in
+// "Ik lees dat je …". Faalt of treuzelt de call (>3s), dan '' en valt de mail
+// terug op een generieke zin. Bedragen/budgetten mogen nooit teruggemaild worden
+// (het LP-bericht bevat de budgetkeuze).
+async function fuzzyParaphrase(bericht, dienst) {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key || !bericht) return '';
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5',
+        max_tokens: 60,
+        messages: [{
+          role: 'user',
+          content:
+            'Vul de zin "Ik lees dat je …" aan als reactie op onderstaand bericht van iemand die het contactformulier van een webdesignstudio invulde. Geef alleen wat er na "Ik lees dat je" komt.\n' +
+            'Regels: maximaal 10 woorden, begin niet met het woord "je" (dat staat er al), begin met een kleine letter, geen punt aan het einde, geen aanhalingstekens, geen namen, zeg niets over geld of budget, geen e-mailadressen of URL\'s. Geef alleen het zinsdeel, niets eromheen.\n' +
+            (dienst ? `Gekozen dienst: ${dienst}\n` : '') +
+            `Bericht:\n${String(bericht).slice(0, 1200)}`,
+        }],
+      }),
+      signal: AbortSignal.timeout(3000),
+    });
+    if (!r.ok) return '';
+    const data = await r.json();
+    let frag = String(data?.content?.[0]?.text || '').trim().replace(/\s+/g, ' ');
+    frag = frag.replace(/^["'`]+|["'`.]+$/g, '').trim();
+    // Normaliseer een herhaald "dat je" naar alleen "je"; de compositie in
+    // sendLeadConfirmation vangt een fragment dat met "je" begint netjes op.
+    frag = frag.replace(/^dat\s+je\s+/i, 'je ').trim();
+    if (!frag || frag.length > 110 || /sorry|kan (ik )?niet|€|budget|\d{3,}/i.test(frag)) return '';
+    return frag.charAt(0).toLowerCase() + frag.slice(1);
+  } catch {
+    return '';
+  }
+}
+
+// Zelfde opbouw als emails/automation-welkom.html (huisstijl-mail: tekst-wordmerk,
+// fluid 600px, 16px, table-based) maar zonder CTA-knop en zonder uitschrijf-voettekst:
+// dit is een een-op-een transactionele bevestiging, geen campagne.
+function confirmationHtml({ voornaam, leesZin }) {
+  return `<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Je aanvraag is binnen</title>
+</head>
+<body style="margin:0;padding:0;background:#f5f5f5;-webkit-text-size-adjust:100%;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;">
+<tr><td align="center" style="padding:24px 12px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width:100%;max-width:600px;background:#ffffff;">
+  <tr><td style="padding:28px 28px 8px;font-family:Arial,Helvetica,sans-serif;">
+    <span style="font-size:18px;font-weight:bold;letter-spacing:1px;color:#0a0a0a;">STOLK<span style="color:#e63329;">WEB</span>DESIGN</span>
+  </td></tr>
+  <tr><td style="padding:16px 28px 28px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:1.6;color:#1a1a1a;">
+    <p style="margin:0 0 16px;">Hoi ${voornaam},</p>
+    <p style="margin:0 0 16px;">Je aanvraag is binnen. ${leesZin}</p>
+    <p style="margin:0 0 16px;">Je hoort binnen &eacute;&eacute;n werkdag van me, meestal eerder.</p>
+    <p style="margin:0;">Groet,<br>Peter Stolk<br><span style="color:#888;">Stolkwebdesign</span></p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>`;
+}
+
+// Verstuurt de bevestigingsmail via Resend. Geeft een korte status-string terug
+// voor het Telegram-seintje; gooit nooit.
+async function sendLeadConfirmation({ naam, email, bericht, dienst }) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return 'overgeslagen (geen RESEND_API_KEY)';
+  const voornaam = String(naam || '').trim().split(/\s+/)[0] || 'daar';
+  const frag = await fuzzyParaphrase(bericht, dienst);
+  // Begint het fragment al met "je" (subject herhaald door het model), dan plakken
+  // we alleen "dat" ervoor; anders "dat je". Voorkomt "Ik lees dat je je een …".
+  const leesZin = frag
+    ? `Ik lees dat ${/^je\s/i.test(frag) ? frag : `je ${frag}`}. Daar ga ik voor je naar kijken.`
+    : 'Ik lees je bericht zo goed door.';
+  const text =
+    `Hoi ${voornaam},\n\n` +
+    `Je aanvraag is binnen. ${leesZin}\n\n` +
+    `Je hoort binnen één werkdag van me, meestal eerder.\n\n` +
+    `Groet,\nPeter Stolk\nStolkwebdesign`;
+  try {
+    const r = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: `Bearer ${key}` },
+      body: JSON.stringify({
+        from: CONFIRM_FROM,
+        to: [email],
+        reply_to: CONFIRM_REPLY_TO,
+        subject: `Re: je aanvraag, ${voornaam}`,
+        html: confirmationHtml({ voornaam: escapeHtml(voornaam), leesZin: escapeHtml(leesZin) }),
+        text,
+      }),
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!r.ok) {
+      const e = await r.text().catch(() => '');
+      console.error('Resend lead-mail error:', r.status, e.slice(0, 300));
+      return `mislukt (Resend ${r.status})`;
+    }
+    return frag ? 'verstuurd, met parafrase' : 'verstuurd, zonder parafrase';
+  } catch (err) {
+    console.error('Resend lead-mail exception:', err?.message);
+    return 'mislukt (netwerk/timeout)';
+  }
 }
 
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
@@ -165,6 +296,10 @@ export default async function handler(req, res) {
       return res.status(502).json({ error: 'Kon de lead niet opslaan. Probeer WhatsApp of e-mail.' });
     }
 
+    // Speed-to-lead: directe bevestigingsmail naar de lead. Bewust ná de insert
+    // (de lead staat al veilig) en vóór het Telegram-seintje (status gaat mee).
+    const mailStatus = await sendLeadConfirmation({ naam, email, bericht, dienst });
+
     // Seintje via Telegram (optioneel, blokkeert de respons niet bij een fout)
     await notifyTelegram(
       `🎯 Nieuwe lead (Stolkwebdesign)\n\n` +
@@ -175,6 +310,7 @@ export default async function handler(req, res) {
       `🔗 Bron: ${bron || 'direct/onbekend'}\n` +
       (site ? `🌐 Site: ${site}\n` : '') +
       `\n📝 ${String(bericht).slice(0, 400)}\n\n` +
+      `✉️ Bevestigingsmail: ${mailStatus}\n` +
       `→ In je CMS: https://www.stolkwebdesign.nl/admin#klantprojecten`
     );
 
