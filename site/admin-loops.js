@@ -19,9 +19,13 @@ const LP_STATUS = {
   groen:  { label: 'Draait',     kleur: '#37a04a' },
   oranje: { label: 'Aandacht',   kleur: '#d9a400' },
   rood:   { label: 'Storing',    kleur: 'var(--red)' },
+  // Wacht: hoort erbij en is niet stuk, maar heeft nog geen resultaat laten zien.
+  // Bijvoorbeeld een weekjob die net is aangepast, of die twee minuten geleden
+  // aan de beurt kwam. Zonder deze stand werd dat ten onrechte "aandacht".
+  wacht:  { label: 'Wacht',      kleur: '#4a7fb5' },
   grijs:  { label: 'Staat uit',  kleur: '#888' },
 };
-const LP_VOLGORDE = ['rood', 'oranje', 'groen', 'grijs'];
+const LP_VOLGORDE = ['rood', 'oranje', 'wacht', 'groen', 'grijs'];
 
 // Ouder dan dit en de meting zelf is verdacht: de rapporteur draait elk uur, dus
 // als hij al een halve dag niets heeft gezegd stond de Mac uit of is hij omgevallen.
@@ -73,7 +77,7 @@ function lpRender() {
   const uit = lpRijen.filter(r => r.status === 'grijs');
   const tel = (s) => actief.filter(r => r.status === s).length;
 
-  const tellers = ['groen', 'oranje', 'rood'].map(s => `
+  const tellers = ['groen', 'wacht', 'oranje', 'rood'].map(s => `
     <button class="lp-teller font-mono${lpFilter.status === s ? ' on' : ''}" data-status="${s}">
       <span class="lp-num">${tel(s)}</span>
       <span><span class="lp-stip" style="background:${LP_STATUS[s].kleur}"></span> ${LP_STATUS[s].label}</span>
@@ -86,6 +90,7 @@ function lpRender() {
     : 'Nog niet gemeten.';
 
   const stuk = actief.filter(r => r.status === 'rood' || r.status === 'oranje').length;
+  // 'wacht' staat bewust niet in die telling: dat is geen probleem om op te lossen.
 
   body.innerHTML = `
     <style>
@@ -111,8 +116,10 @@ function lpRender() {
       .lp-kop{display:flex;gap:8px;align-items:baseline;justify-content:space-between}
       .lp-naam{font-weight:700;letter-spacing:-0.01em;line-height:1.2;overflow-wrap:anywhere}
       .lp-vlag{font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;flex:none}
-      .lp-om{font-size:12.5px;color:#555;line-height:1.45;flex:1;
-        display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+      /* Niet afkappen. Een line-clamp sneed de laatste regel af, en de eindcheck
+         rekent afgeknipte tekst terecht als fout. De tegels worden hier gewoon
+         even hoog per rij van. */
+      .lp-om{font-size:12.5px;color:#555;line-height:1.45;flex:1}
       .lp-voet{margin-top:auto;padding-top:8px;border-top:1px solid #eee;display:flex;flex-direction:column;gap:3px}
       .lp-regel{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#333;overflow-wrap:anywhere}
       .lp-reden{font-family:'JetBrains Mono',monospace;font-size:10.5px;overflow-wrap:anywhere}
