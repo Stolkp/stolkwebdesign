@@ -59,7 +59,7 @@ Projecten/Stolkwebdesign/
 ├── marketing/launch-socials/  ← Bestand-gebaseerde brutalist launch-carousels (HTML→Playwright PNG) + captions + README; los van de CMS-campagne. Ook doelmap voor go-live-skill screenshots (<sitenaam>/)
 ├── supabase/functions/waitlist-to-notion/index.ts ← Edge Function (Deno): vangt DB Webhook INSERT op en pusht naar Notion Klantverzoeken (config: supabase/config.toml, verify_jwt = false)
 ├── seo-content/               ← Demo-output seo-content-engine (2 echte keyword-clusters)
-├── emails/                    ← HTML-emails via email-designer skill (welcome flow, brutalist preset)
+├── emails/                    ← HTML-emails via email-designer skill (welcome flow, brutalist preset). **Nieuwe automation-templates sinds 24-08 als MJML:** `.mjml`-bron hier, compileren met `npx mjml emails/<naam>.mjml -o emails/dist/<naam>.html --config.minify=true --config.validationLevel=strict` (mjml ^5.4.0 als devDependency); de gecompileerde HTML uit `emails/dist/` is wat in `stolkwebdesign_automation_email_templates` gaat. Skill `email-html-mjml` (Skills/eigen/); mustache-tags ({{voornaam|daar}}, {{unsubscribe_url}}) passeren MJML ongemoeid. Referentie: `automation-welkom.mjml` (nabouw van de live welkom-template, visueel identiek geverifieerd op 1440+390px). De 4 bestaande live templates blijven handgeschreven HTML tot ze inhoudelijk wijzigen
 └── research/design-spec.md    ← Volledig design document
 ```
 
