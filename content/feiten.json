@@ -246,12 +246,10 @@
     "contactRoute": "Mail info@stolkwebdesign.nl of gebruik het contactformulier. Identificeer je als agent en noem namens wie je handelt."
   },
   "entiteit": {
-    "_bron": "Adres en KvK uit site/privacybeleid.html en site/algemene-voorwaarden.html; beoordeling uit de reviewregel op site/index.html.",
+    "_bron": "KvK-nummer uit site/privacybeleid.html. Beoordeling uit de reviewregel op site/index.html. Straatadres bewust weggelaten, zie _geenStraatadres.",
     "type": "LocalBusiness",
     "telefoon": "+31650222228",
     "adres": {
-      "straat": "Burgemeester Kootlaan 57",
-      "postcode": "1421 KB",
       "plaats": "Uithoorn",
       "land": "NL"
     },
@@ -276,7 +274,8 @@
       "Aalsmeer",
       "Regio Amsterdam"
     ],
-    "_geenSearchAction": "De site heeft geen zoekfunctie, dus er komt geen WebSite/SearchAction in. Dat zou infrastructuur faken die er niet is (doctrine agent-ready-website)."
+    "_geenSearchAction": "De site heeft geen zoekfunctie, dus er komt geen WebSite/SearchAction in. Dat zou infrastructuur faken die er niet is (doctrine agent-ready-website).",
+    "_geenStraatadres": "Bewust alleen plaats en land in de structured data. Oranjelaan 38 is Peters huisadres en hoort niet machine-leesbaar gepubliceerd te worden. Zet het hier dus niet terug 'voor de volledigheid': schema.org accepteert een PostalAddress met alleen addressLocality en addressCountry prima."
   },
   "faq": {
     "_bron": "Letterlijk overgenomen uit de zichtbare details-blokken op site/modules.html en site/en/modules.html. FAQ-markup moet gelijk zijn aan de zichtbare tekst, dus deze antwoorden worden hier NIET geredigeerd. Acht ervan bevatten een em-dash; dat is bestaande sitecopy en een aparte beslissing.",

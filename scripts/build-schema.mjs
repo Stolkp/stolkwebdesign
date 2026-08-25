@@ -48,10 +48,13 @@ const organisatie = (id = U('#organisatie')) => ({
   telephone: e.telefoon,
   description: m.samenvatting,
   priceRange: e.prijsklasse,
+  // Straat en postcode alleen opnemen als ze in feiten.json staan. Ze staan er
+  // bewust niet in: het is een huisadres. undefined-velden vallen weg bij
+  // JSON.stringify, dus dit levert een geldige PostalAddress met plaats en land.
   address: {
     '@type': 'PostalAddress',
-    streetAddress: e.adres.straat,
-    postalCode: e.adres.postcode,
+    streetAddress: e.adres.straat || undefined,
+    postalCode: e.adres.postcode || undefined,
     addressLocality: e.adres.plaats,
     addressCountry: e.adres.land,
   },
