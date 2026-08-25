@@ -87,8 +87,20 @@ lees ze na voordat ze live gaan.
 
 ---
 
-## Wat dit oplevert
+## Wat dit oplevert (bijgesteld na uitvoering, 25-08)
 
-Met deze toevoegingen komen alle vijf de casepagina's boven de 250 woorden en `/contact` op
-ongeveer 290. Dan staat Stolkwebdesign op 100 van de 100 in de scan, en belangrijker: er
-staan zes pagina's meer die een antwoordmachine kán citeren.
+De casetekst staat sinds 25-08 in de database en is live. De pagina's gingen van 157 tot
+168 woorden naar 198 tot 222.
+
+Dat is **onder de drempel van 250** die ik hierboven noemde. Mijn inschatting dat één alinea
+genoeg zou zijn, klopte niet: de toegevoegde alinea's zijn 50 tot 55 woorden en de rest van
+de pagina (navigatie, voettekst) telt niet mee als inhoud. Er zou per project nog ongeveer
+40 woorden bij moeten.
+
+Dat oprekken met vulling is bewust niet gedaan. Een alinea toevoegen die niets zegt maakt de
+pagina langer en slechter, en dat is precies het soort tekst waar een antwoordmachine
+overheen leest. Wat wél helpt is één extra concreet feit per project: hoe lang het traject
+duurde, wat de klant sindsdien zelf doet, of een cijfer. Die informatie heb jij, ik niet.
+
+Het FAQ-blok voor `/contact` staat nog niet live: daar leg je jezelf vast op "een eerste
+gesprek kost niets" en "antwoord binnen één werkdag", dus dat wacht op jouw akkoord.
