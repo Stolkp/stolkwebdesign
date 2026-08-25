@@ -1,21 +1,24 @@
 {
   "$schema": "https://schemas.agentskills.io/discovery/0.2.0/index.json",
   "version": "0.2.0",
-  "provider": { "name": "Stolkwebdesign", "url": "https://www.stolkwebdesign.nl" },
+  "provider": {
+    "name": "Stolkwebdesign",
+    "url": "https://www.stolkwebdesign.nl"
+  },
   "skills": [
     {
       "name": "Website laten bouwen",
       "type": "service",
-      "description": "Handcrafted, scroll-geanimeerde website op maat in HTML/CSS/GSAP of WordPress, in drie pakketten vanaf €950.",
+      "description": "Handgebouwde, scroll-geanimeerde website op maat in HTML, CSS en GSAP of WordPress, in vier pakketten vanaf €1.250.",
       "url": "https://www.stolkwebdesign.nl/.well-known/agent-skills/website-laten-bouwen/SKILL.md",
-      "digest": "sha256:b4875f72bcb68156396cb4ede10e2b68d092ac23fb79b6ff247ae59dec965763"
+      "digest": "sha256:4ad9d14cada96595b6ad411b317664d165a583264bccb9bb24ba56eff1626df6"
     },
     {
       "name": "Website-modules",
       "type": "service",
-      "description": "Add-on modules op de Basis CMS — zelf content beheren, facturen maken, social plannen en bloggen.",
+      "description": "Add-on modules op de Basis CMS: zelf content beheren, facturen maken, social plannen, bloggen, ondertekenen, roosteren en reserveringen aannemen.",
       "url": "https://www.stolkwebdesign.nl/.well-known/agent-skills/modules/SKILL.md",
-      "digest": "sha256:6761228d98b894fbd13f849bfe4d879a7036be0d7fdebe6428154bcdb0dfda18"
+      "digest": "sha256:ff1cdaf17599db06fc53b9817015c58b8a4bd040a4faaa8adbbfd5e4b5da080c"
     }
   ]
 }

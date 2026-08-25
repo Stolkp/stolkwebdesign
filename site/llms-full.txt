@@ -1,49 +1,101 @@
-# Stolkwebdesign — volledige inhoud voor taalmodellen
+# Stolkwebdesign: volledige inhoud voor taalmodellen
 
-> Webdesignstudio van Peter Stolk uit Uithoorn (bedient regio Amsterdam).
-> Handcrafted, scroll-geanimeerde websites in schone HTML, CSS & GSAP én
-> WordPress. Uniek, snel en volledig op maat — geen kant-en-klare templates.
+> Webdesignstudio van Peter Stolk uit Uithoorn, werkt voor ondernemers in de regio Amsterdam en daarbuiten. Handgebouwde, scroll-geanimeerde websites in schone HTML, CSS en GSAP, of WordPress wanneer dat beter past. Geen kant-en-klare templates.
 
 ## Wie is Peter Stolk
-Zelfstandig webdesigner met 7+ jaar ervaring. Bouwt websites met de hand: schone
-HTML/CSS/JavaScript met GSAP-scrollanimaties, of WordPress wanneer dat beter past.
-Persoonlijk contact, één aanspreekpunt, designs op maat van het merk. Gevestigd in
-Uithoorn, werkt voor ondernemers in de regio Amsterdam en daarbuiten.
+Peter Stolk is zelfstandig webdesigner, gevestigd in Uithoorn, werkzaam in de regio Amsterdam en daarbuiten. Hij bouwt websites met de hand: schone HTML, CSS en JavaScript met GSAP-scrollanimaties, of WordPress wanneer dat beter past bij de klant. Eén aanspreekpunt, ontwerp op maat, geen kant-en-klare templates.
+
+Naast Stolkwebdesign draait Stolksupport (https://www.stolksupport.nl): AI-automatisering: chatbots, workflows, documentverwerking.
 
 ## Aanpak
-Elke site volgt een research- en strategieproces vóór er één regel code wordt
-geschreven: merkanalyse, marktonderzoek, design- en contentbrief, bouw, en een
-kwaliteitscheck. Het resultaat is een snelle, unieke site die opvalt en converteert.
+Elke site volgt een research- en strategieproces voordat er één regel code wordt geschreven: merkanalyse, marktonderzoek, een design- en contentbrief, de bouw, en een kwaliteitscheck. Het resultaat is een snelle, unieke site die opvalt en converteert.
 
-## Website laten bouwen — pakketten (per-pagina-model, uurtarief €75)
-- Start — €950: homepage / 1 pagina, inclusief volledig ontwerpsysteem.
-- Onderneem — €1.500: tot 4 pagina's (meest gekozen).
-- Groei — €2.450: tot 7 pagina's + Basis CMS + content.
-- Extra pagina buiten pakket: €200.
-- Custom / op maat (eigen systeem, integratie, klantportaal, platform): op aanvraag.
-- Webhosting & beveiliging: vanaf €25/maand. Onderhoud & support: op aanvraag.
+## Pakketten
+Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina bouwt daarop voort.
 
-## Modules (add-ons)
-Draaien op de Basis CMS (€149 eenmalig, 1× per klant — de fundering met login):
-- Content — €99 homepage + €49/extra pagina: teksten en foto's zelf beheren.
-- Factuur — €199: facturen maken, als PDF printen en bewaren.
-- Social — €99 + €149/campagne: social posts en carousels genereren en plannen.
-- Blog — €99 + €89/blog: blogpijplijn vanuit Notion naar de site + social.
-- SEO-rapport — €99 + per actiepunt: SEO-audit in een eigen client-portal (geen Basis CMS nodig).
+### Start: €1.250
+Omvang: 1 pagina (€1.250 per pagina).
+Eén krachtige homepage, inclusief het volledige ontwerpsysteem, basis on-page SEO en één revisieronde.
+Gespreid betalen: €500 vooraf plus €75 per maand, 12 maanden.
 
-## Voor wie
-Mkb-ondernemers die zich willen onderscheiden met een premium, snelle website en
-waarde hechten aan persoonlijk contact en maatwerk in plaats van een template.
+### Onderneem: €2.250
+Omvang: tot 4 pagina's (vanaf €563 per pagina).
+Homepage plus de pagina's die een ondernemer nodig heeft: Over, Diensten, Contact. Klaar voor add-on modules. Meest gekozen.
+Gespreid betalen: €1.000 vooraf plus €125 per maand, 12 maanden.
+
+### Groei: €3.500
+Omvang: tot 7 pagina's (vanaf €500, inclusief CMS per pagina).
+Een complete site met CMS, zodat je zelf teksten en foto's kunt aanpassen.
+Gespreid betalen: €1.500 vooraf plus €200 per maand, 12 maanden.
+
+### Custom / op maat: op aanvraag
+Omvang: eigen systeem of integratie.
+Eerst scope bepalen, daarna een vaste prijs.
+
+Extra pagina buiten een pakket: €200.
+Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 voor hosting en onderhoud, maandelijks opzegbaar.
+
+## Modules
+Alles draait op de Basis CMS: één login op je eigen domein. Per module een maandbedrag plus een eenmalige setup. Early-access tarief 2026.
+
+### Basis CMS: €19 per maand plus €149 setup
+Status: fundering, vereist voor alle modules. Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login, hosting en updates inbegrepen.
+
+### Content: €15 per maand plus €99 setup
+Status: live. Zelf teksten en foto's aanpassen op alle pagina's, onbeperkt.
+
+### Factuur-tool: €9 per maand plus €99 setup
+Status: live. Onbeperkt facturen en PDF's, zonder Moneybird of Mollie.
+
+### Social Campagnes: €39 per maand plus €99 setup
+Status: live. Vier campagnes per maand in vier formaten. Extra campagne €29.
+
+### SEO-rapport: €99 eenmalig, actiepunten op uurbasis
+Status: live. Score, prioriteiten en actieplan. Per actiepunt zelf oppakken of laten doen.
+
+### Blog: €29 per maand plus €99 setup
+Status: Q3 2026. Twee artikelen per maand met AI en SEO-meta. Extra artikel €39.
+
+### Ondertekenen: €7 per maand plus €79 setup
+Status: nieuw. Onbeperkt eIDAS-handtekeningen, status in één oogopslag.
+
+### Personeelsplanner: €15 per maand plus €99 setup
+Status: nieuw. Onbeperkt medewerkers, diensten en deel-links. Rooster printen of als PDF.
+
+### Reserveringen: €19 per maand plus €99 setup
+Status: nieuw. Onbeperkt boekingen, dubbel-boek-vrij, klant kan zelf annuleren.
+
+### SEO-content: €149 setup plus €89 per pagina
+Status: live. Artikel plus FAQ plus structured data, vindbaar in Google en in AI-overviews. Dienst-en-stad-project vanaf €490 voor 10 pagina's.
+
+### Gevonden worden door AI: €29 per maand plus €199 setup
+Status: nieuw. Meten en inrichten of AI-antwoordmachines zoals ChatGPT, Perplexity en de AI-antwoorden in Google je site kunnen vinden, lezen en citeren. Inclusief maandelijkse hermeting en een citatietrend in je eigen portal.
+
+## Overige diensten
+### Webhosting en beveiliging: vanaf €25 per maand
+Dedicated webhosting, de site staat altijd online en is actueel.
+
+### Doorlopende SEO: €195 per maand
+Blijvend werken aan je vindbaarheid in Google.
+
+### Onderhoud en support: op aanvraag
+Kleine aanpassingen en doorontwikkeling.
+
+## Pagina's
+- https://www.stolkwebdesign.nl/ (Website laten bouwen): Pakketten, werkwijze en de modules in het kort.
+- https://www.stolkwebdesign.nl/over (Over Peter Stolk): Zelfstandig webdesigner uit Uithoorn met ruim zeven jaar ervaring. Persoonlijk contact, één aanspreekpunt.
+- https://www.stolkwebdesign.nl/portfolio (Portfolio): Selectie van opgeleverde projecten.
+- https://www.stolkwebdesign.nl/modules (Modules): De acht add-on modules op de Basis CMS, met prijs en status per module.
+- https://www.stolkwebdesign.nl/website-laten-maken (Website laten maken): Uitgebreide uitleg van het traject, van eerste gesprek tot livegang.
+- https://www.stolkwebdesign.nl/rekentool (Rekentool): Zelf uitrekenen wat jouw site kost op basis van het aantal pagina's en de modules.
+- https://www.stolkwebdesign.nl/contact (Contact): Plan een gesprek, mail of WhatsApp.
+- https://www.stolkwebdesign.nl/blog/ (Blog): Artikelen over webdesign, de modules en het ambacht.
+
+## Voor agents
+Publiek en alleen-lezen. Geen registratie of API-sleutel nodig om de site te lezen.
+Mail info@stolkwebdesign.nl of gebruik het contactformulier. Identificeer je als agent en noem namens wie je handelt.
 
 ## Contact
-- E-mail: info@stolkwebdesign.nl
-- WhatsApp: https://wa.me/31650222228
-- Telefoon: +31 6 50 22 22 28
-- Contactpagina: https://www.stolkwebdesign.nl/contact
-- Locatie: Uithoorn, Nederland (regio Amsterdam)
+E-mail info@stolkwebdesign.nl, WhatsApp https://wa.me/31650222228, contactpagina https://www.stolkwebdesign.nl/contact.
 
-## Hoe een agent zich hoort te identificeren
-Stuur een beschrijvende User-Agent (naam van je agent/product + een contact-URL),
-respecteer robots.txt en de Content-Signal-regels (search=yes, ai-input=yes,
-ai-train=no) en houd het aantal verzoeken redelijk. De site is publiek en
-read-only; er is geen API-sleutel of registratie nodig.
+<!-- Gegenereerd uit content/feiten.json door scripts/build-llms.mjs. Niet met de hand bewerken. -->

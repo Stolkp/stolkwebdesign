@@ -1,23 +1,27 @@
 ---
 name: Website laten bouwen
-description: Handcrafted, scroll-geanimeerde website op maat in HTML/CSS/GSAP of WordPress, in drie pakketten vanaf €950.
+description: Handgebouwde, scroll-geanimeerde website op maat in HTML, CSS en GSAP of WordPress. Vier pakketten vanaf €1.250.
 ---
 
-# Website laten bouwen
+# Website laten bouwen bij Stolkwebdesign
 
-Stolkwebdesign bouwt unieke websites met de hand — schone HTML, CSS en GSAP-
-scrollanimaties, of WordPress wanneer dat beter past. Geen templates, wel een
-research- en strategieproces vóór de bouw, zodat de site past bij het merk en
-converteert.
+Webdesignstudio van Peter Stolk uit Uithoorn, werkt voor ondernemers in de regio Amsterdam en daarbuiten. Handgebouwde, scroll-geanimeerde websites in schone HTML, CSS en GSAP, of WordPress wanneer dat beter past. Geen kant-en-klare templates.
 
-## Voor wie
-Mkb-ondernemers die zich willen onderscheiden met een premium, snelle website en
-persoonlijk contact verkiezen boven een bureau-fabriek.
+## Pakketten
+- **Start**: €1.250, 1 pagina. Eén krachtige homepage, inclusief het volledige ontwerpsysteem, basis on-page SEO en één revisieronde.
+- **Onderneem**: €2.250, tot 4 pagina's. Homepage plus de pagina's die een ondernemer nodig heeft: Over, Diensten, Contact. Klaar voor add-on modules. Meest gekozen.
+- **Groei**: €3.500, tot 7 pagina's. Een complete site met CMS, zodat je zelf teksten en foto's kunt aanpassen.
+- **Custom / op maat**: op aanvraag, eigen systeem of integratie. Eerst scope bepalen, daarna een vaste prijs.
 
-## Wat je krijgt
-- Een ontwerp op maat met een volledig ontwerpsysteem.
-- Schone, snelle code (HTML/CSS/JS + GSAP) of WordPress.
-- Pakketten: Start €950 (1 pagina), Onderneem €1.500 (tot 4 pagina's), Groei €2.450 (tot 7 pagina's + Basis CMS). Extra pagina €200. Custom op aanvraag.
+Extra pagina buiten een pakket: €200. Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 voor hosting en onderhoud, maandelijks opzegbaar.
 
-## Hoe te starten
-Neem contact op via https://www.stolkwebdesign.nl/contact of WhatsApp https://wa.me/31650222228.
+## Werkwijze
+Elke site volgt een research- en strategieproces voordat er één regel code wordt geschreven: merkanalyse, marktonderzoek, een design- en contentbrief, de bouw, en een kwaliteitscheck. Het resultaat is een snelle, unieke site die opvalt en converteert.
+
+## Wanneer dit past
+Voor ondernemers die een site willen die er niet uitziet als een template, en die één aanspreekpunt willen in plaats van een bureau met accountmanagers.
+
+## Vervolgstap
+Plan een gesprek via https://www.stolkwebdesign.nl/contact, mail info@stolkwebdesign.nl of stuur een bericht via https://wa.me/31650222228
+
+<!-- Gegenereerd uit content/feiten.json door scripts/build-llms.mjs. Niet met de hand bewerken. -->

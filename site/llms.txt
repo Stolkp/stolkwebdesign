@@ -1,30 +1,59 @@
 # Stolkwebdesign
 
-> Webdesignstudio van Peter Stolk (Uithoorn, regio Amsterdam). Handcrafted,
-> scroll-geanimeerde websites in schone HTML, CSS & GSAP én WordPress — uniek,
-> snel en volledig op maat. Vanaf €950.
+> Webdesignstudio van Peter Stolk uit Uithoorn, werkt voor ondernemers in de regio Amsterdam en daarbuiten. Handgebouwde, scroll-geanimeerde websites in schone HTML, CSS en GSAP, of WordPress wanneer dat beter past. Geen kant-en-klare templates. Websites vanaf €1.250.
 
 ## Over
-- [Over Peter Stolk](https://www.stolkwebdesign.nl/over): zelfstandig webdesigner uit Uithoorn met 7+ jaar ervaring; persoonlijk contact, custom designs, geen templates.
-- [Contact & agent-info](https://www.stolkwebdesign.nl/auth.md): hoe je contact opneemt en hoe een agent zich hoort te identificeren.
+- [Over Peter Stolk](https://www.stolkwebdesign.nl/over): zelfstandig webdesigner uit Uithoorn, werkt voor ondernemers in de regio Amsterdam. Persoonlijk contact, één aanspreekpunt, ontwerp op maat van het merk.
+- [Contact en agent-info](https://www.stolkwebdesign.nl/auth.md): hoe je contact opneemt en hoe een agent zich hoort te identificeren.
+- Zustersite [Stolksupport](https://www.stolksupport.nl): AI-automatisering: chatbots, workflows, documentverwerking.
 
 ## Wat Stolkwebdesign doet
-- [Website laten bouwen](https://www.stolkwebdesign.nl/): per-pagina-model in drie pakketten — Start €950 (1 pagina), Onderneem €1.500 (tot 4 pagina's), Groei €2.450 (tot 7 pagina's + Basis CMS). Extra pagina €200. Custom/op maat op aanvraag.
-- [Modules](https://www.stolkwebdesign.nl/modules): add-ons op de Basis CMS (€149 eenmalig) — Content (€99 + €49/pagina), Factuur (€199), Social (€99 + €149/campagne), Blog (€99 + €89/blog), SEO-rapport (€99 + per actiepunt).
-- [Portfolio](https://www.stolkwebdesign.nl/portfolio): selectie van gebouwde projecten.
-- [Blog](https://www.stolkwebdesign.nl/blog/): artikelen over webdesign, performance en het ambacht.
+- [Website laten bouwen](https://www.stolkwebdesign.nl/): Pakketten, werkwijze en de modules in het kort.
+- [Over Peter Stolk](https://www.stolkwebdesign.nl/over): Zelfstandig webdesigner uit Uithoorn met ruim zeven jaar ervaring. Persoonlijk contact, één aanspreekpunt.
+- [Portfolio](https://www.stolkwebdesign.nl/portfolio): Selectie van opgeleverde projecten.
+- [Modules](https://www.stolkwebdesign.nl/modules): De acht add-on modules op de Basis CMS, met prijs en status per module.
+- [Website laten maken](https://www.stolkwebdesign.nl/website-laten-maken): Uitgebreide uitleg van het traject, van eerste gesprek tot livegang.
+- [Rekentool](https://www.stolkwebdesign.nl/rekentool): Zelf uitrekenen wat jouw site kost op basis van het aantal pagina's en de modules.
+- [Contact](https://www.stolkwebdesign.nl/contact): Plan een gesprek, mail of WhatsApp.
+- [Blog](https://www.stolkwebdesign.nl/blog/): Artikelen over webdesign, de modules en het ambacht.
 
-## Diensten & tarieven (overzicht)
-- Uurtarief: €75.
-- Webhosting & beveiliging: vanaf €25/maand.
-- Onderhoud & support: op aanvraag.
+## Wat een website kost
+Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina bouwt daarop voort.
+- Start €1.250 (1 pagina). Eén krachtige homepage, inclusief het volledige ontwerpsysteem, basis on-page SEO en één revisieronde. Gespreid betalen kan: €500 vooraf plus €75 per maand, 12 maanden.
+- Onderneem €2.250 (tot 4 pagina's). Homepage plus de pagina's die een ondernemer nodig heeft: Over, Diensten, Contact. Klaar voor add-on modules. Meest gekozen. Gespreid betalen kan: €1.000 vooraf plus €125 per maand, 12 maanden.
+- Groei €3.500 (tot 7 pagina's). Een complete site met CMS, zodat je zelf teksten en foto's kunt aanpassen. Gespreid betalen kan: €1.500 vooraf plus €200 per maand, 12 maanden.
+- Custom / op maat (eigen systeem of integratie): op aanvraag. Eerst scope bepalen, daarna een vaste prijs.
+- Extra pagina buiten een pakket: €200.
+- Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 voor hosting en onderhoud, maandelijks opzegbaar.
+
+## Modules op de Basis CMS
+Alles draait op de Basis CMS: één login op je eigen domein. Per module een maandbedrag plus een eenmalige setup. Early-access tarief 2026.
+- Basis CMS (fundering, vereist voor alle modules): €19 per maand plus €149 setup. Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login, hosting en updates inbegrepen.
+- Content (live): €15 per maand plus €99 setup. Zelf teksten en foto's aanpassen op alle pagina's, onbeperkt.
+- Factuur-tool (live): €9 per maand plus €99 setup. Onbeperkt facturen en PDF's, zonder Moneybird of Mollie.
+- Social Campagnes (live): €39 per maand plus €99 setup. Vier campagnes per maand in vier formaten. Extra campagne €29.
+- SEO-rapport (live): €99 eenmalig, actiepunten op uurbasis. Score, prioriteiten en actieplan. Per actiepunt zelf oppakken of laten doen.
+- Blog (Q3 2026): €29 per maand plus €99 setup. Twee artikelen per maand met AI en SEO-meta. Extra artikel €39.
+- Ondertekenen (nieuw): €7 per maand plus €79 setup. Onbeperkt eIDAS-handtekeningen, status in één oogopslag.
+- Personeelsplanner (nieuw): €15 per maand plus €99 setup. Onbeperkt medewerkers, diensten en deel-links. Rooster printen of als PDF.
+- Reserveringen (nieuw): €19 per maand plus €99 setup. Onbeperkt boekingen, dubbel-boek-vrij, klant kan zelf annuleren.
+- SEO-content (live): €149 setup plus €89 per pagina. Artikel plus FAQ plus structured data, vindbaar in Google en in AI-overviews. Dienst-en-stad-project vanaf €490 voor 10 pagina's.
+- Gevonden worden door AI (nieuw): €29 per maand plus €199 setup. Meten en inrichten of AI-antwoordmachines zoals ChatGPT, Perplexity en de AI-antwoorden in Google je site kunnen vinden, lezen en citeren. Inclusief maandelijkse hermeting en een citatietrend in je eigen portal.
+
+## Overige diensten
+- Webhosting en beveiliging: vanaf €25 per maand. Dedicated webhosting, de site staat altijd online en is actueel.
+- Doorlopende SEO: €195 per maand. Blijvend werken aan je vindbaarheid in Google.
+- Onderhoud en support: op aanvraag. Kleine aanpassingen en doorontwikkeling.
 
 ## Voor agents
-- [Agent Skills index](https://www.stolkwebdesign.nl/.well-known/agent-skills/index.json): vindbare capaciteiten/diensten.
+- Publiek en alleen-lezen. Geen registratie of API-sleutel nodig om de site te lezen.
+- [Agent Skills index](https://www.stolkwebdesign.nl/.well-known/agent-skills/index.json): vindbare diensten.
 - [API catalog](https://www.stolkwebdesign.nl/.well-known/api-catalog): machine-leesbare resource-index.
-- [llms-full.txt](https://www.stolkwebdesign.nl/llms-full.txt): uitgebreidere inhoud in één bestand.
+- [llms-full.txt](https://www.stolkwebdesign.nl/llms-full.txt): dezelfde inhoud, uitgebreider.
 
-## Contact / afspraak
+## Contact
 - E-mail: info@stolkwebdesign.nl
 - WhatsApp: https://wa.me/31650222228
 - Contactpagina: https://www.stolkwebdesign.nl/contact
+
+<!-- Gegenereerd uit content/feiten.json door scripts/build-llms.mjs. Niet met de hand bewerken. -->

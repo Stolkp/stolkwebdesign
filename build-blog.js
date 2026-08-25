@@ -135,8 +135,11 @@ async function fetchPosts() {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_ANON_KEY;
   if (!url || !key) {
-    console.warn('[build-blog] SUPABASE_URL / SUPABASE_ANON_KEY ontbreken — render empty blog.');
-    return [];
+    // null, niet []: "ik kon de bron niet lezen" is iets anders dan "er zijn geen posts".
+    // Zie de bewaking in main(); zonder dat onderscheid wist een lokale build zonder
+    // keys de hele blog en sloopte hij 7 blog-URL's uit de gecommitte sitemap.xml.
+    console.warn('[build-blog] SUPABASE_URL / SUPABASE_ANON_KEY ontbreken.');
+    return null;
   }
   const supabase = createClient(url, key);
   // Alleen posts waarvan de publicatiedatum al verstreken is (geplande/toekomstige datums
@@ -148,14 +151,23 @@ async function fetchPosts() {
     .lte('published_at', new Date().toISOString())
     .order('published_at', { ascending: false });
   if (error) {
-    console.warn('[build-blog] Supabase fetch failed:', error.message, '— render empty blog.');
-    return [];
+    console.warn('[build-blog] Supabase fetch mislukt:', error.message);
+    return null;
   }
   return data || [];
 }
 
 async function main() {
   const posts = await fetchPosts();
+
+  // Bron onbereikbaar: niets aanraken. De stappen hieronder verwijderen alle blog-HTML
+  // en herschrijven het BLOG-blok in sitemap.xml, en dat is met een lege lijst
+  // destructief. Op Vercel staan de keys wél, dus daar verandert er niets.
+  if (posts === null) {
+    console.warn('[build-blog] Blog en sitemap ongemoeid gelaten (bron niet gelezen).');
+    console.warn('[build-blog] Zet SUPABASE_URL en SUPABASE_ANON_KEY om lokaal te bouwen.');
+    return;
+  }
   const postTpl = await fs.readFile(path.join(ROOT, 'templates', 'blog-post.html'), 'utf-8');
   const indexTpl = await fs.readFile(path.join(ROOT, 'templates', 'blog-index.html'), 'utf-8');
 

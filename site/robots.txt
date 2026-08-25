@@ -7,6 +7,14 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /api/
+# Beeld in /assets/ moet wel opgehaald kunnen worden: de og-image zit hier en die
+# is nodig voor linkpreviews en voor AI-antwoorden die een afbeelding tonen.
+# Allow gaat vóór Disallow, want de meest specifieke regel wint.
+Allow: /assets/og-image.png
+Allow: /assets/*.png$
+Allow: /assets/*.jpg$
+Allow: /assets/*.webp$
+Allow: /assets/*.svg$
 Disallow: /assets/
 Disallow: /seo/
 # Token- en parameter-URL's niet crawlen (voorkomt phantom-URL's in GSC)

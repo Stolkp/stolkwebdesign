@@ -1,0 +1,346 @@
+{
+  "_toelichting": [
+    "Enige bron van waarheid voor de machine-leesbare laag: llms.txt, llms-full.txt en de",
+    "agent-skills SKILL.md's. Deze bestanden worden gegenereerd door scripts/build-llms.mjs",
+    "en horen NOOIT met de hand bewerkt te worden.",
+    "",
+    "Elk bedrag heeft een 'bron': de pagina waar het zichtbaar op staat. De generator",
+    "controleert dat het bedrag daar echt voorkomt en breekt de build af als dat niet zo is.",
+    "Verander je een prijs op de site, dan faalt de build tot je hem hier ook aanpast.",
+    "",
+    "Aanleiding (25-08-2026): llms.txt verkocht maandenlang de pakketten van 950, 1500 en",
+    "2450 euro terwijl de site al 1250, 2250 en 3500 voerde. AI-antwoordmachines lezen juist",
+    "die bestanden, dus prospects kregen prijzen te horen die 25 tot 30 procent te laag lagen."
+  ],
+  "merk": {
+    "naam": "Stolkwebdesign",
+    "url": "https://www.stolkwebdesign.nl",
+    "persoon": "Peter Stolk",
+    "plaats": "Uithoorn",
+    "regio": "regio Amsterdam",
+    "email": "info@stolkwebdesign.nl",
+    "whatsapp": "https://wa.me/31650222228",
+    "samenvatting": "Webdesignstudio van Peter Stolk uit Uithoorn, werkt voor ondernemers in de regio Amsterdam en daarbuiten. Handgebouwde, scroll-geanimeerde websites in schone HTML, CSS en GSAP, of WordPress wanneer dat beter past. Geen kant-en-klare templates.",
+    "zustersite": {
+      "naam": "Stolksupport",
+      "url": "https://www.stolksupport.nl",
+      "wat": "AI-automatisering: chatbots, workflows, documentverwerking"
+    }
+  },
+  "pakketten": {
+    "bron": "/index.html",
+    "model": "Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina bouwt daarop voort.",
+    "items": [
+      {
+        "naam": "Start",
+        "prijs": "€1.250",
+        "omvang": "1 pagina",
+        "perPagina": "€1.250",
+        "gespreid": "€500 vooraf plus €75 per maand, 12 maanden",
+        "wat": "Eén krachtige homepage, inclusief het volledige ontwerpsysteem, basis on-page SEO en één revisieronde."
+      },
+      {
+        "naam": "Onderneem",
+        "prijs": "€2.250",
+        "omvang": "tot 4 pagina's",
+        "perPagina": "vanaf €563",
+        "gespreid": "€1.000 vooraf plus €125 per maand, 12 maanden",
+        "wat": "Homepage plus de pagina's die een ondernemer nodig heeft: Over, Diensten, Contact. Klaar voor add-on modules. Meest gekozen."
+      },
+      {
+        "naam": "Groei",
+        "prijs": "€3.500",
+        "omvang": "tot 7 pagina's",
+        "perPagina": "vanaf €500, inclusief CMS",
+        "gespreid": "€1.500 vooraf plus €200 per maand, 12 maanden",
+        "wat": "Een complete site met CMS, zodat je zelf teksten en foto's kunt aanpassen."
+      },
+      {
+        "naam": "Custom / op maat",
+        "prijs": "op aanvraag",
+        "omvang": "eigen systeem of integratie",
+        "wat": "Eerst scope bepalen, daarna een vaste prijs."
+      }
+    ],
+    "extraPagina": "€200",
+    "naTwaalfMaanden": "Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 voor hosting en onderhoud, maandelijks opzegbaar."
+  },
+  "diensten": {
+    "bron": "/index.html",
+    "items": [
+      {
+        "naam": "Webhosting en beveiliging",
+        "prijs": "vanaf €25 per maand",
+        "wat": "Dedicated webhosting, de site staat altijd online en is actueel."
+      },
+      {
+        "naam": "Doorlopende SEO",
+        "prijs": "€195 per maand",
+        "wat": "Blijvend werken aan je vindbaarheid in Google."
+      },
+      {
+        "naam": "Onderhoud en support",
+        "prijs": "op aanvraag",
+        "wat": "Kleine aanpassingen en doorontwikkeling."
+      }
+    ]
+  },
+  "modules": {
+    "bron": "/modules.html",
+    "model": "Alles draait op de Basis CMS: één login op je eigen domein. Per module een maandbedrag plus een eenmalige setup. Early-access tarief 2026.",
+    "items": [
+      {
+        "naam": "Basis CMS",
+        "prijs": "€19 per maand plus €149 setup",
+        "status": "fundering, vereist voor alle modules",
+        "wat": "Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login, hosting en updates inbegrepen.",
+        "anker": "basis",
+        "nummer": "Fundering",
+        "label": "Vereist",
+        "stripprijs": "vanaf €19/mnd"
+      },
+      {
+        "naam": "Content",
+        "prijs": "€15 per maand plus €99 setup",
+        "status": "live",
+        "wat": "Zelf teksten en foto's aanpassen op alle pagina's, onbeperkt.",
+        "anker": "content",
+        "nummer": "/ 01",
+        "label": "Live",
+        "stripprijs": "vanaf €15/mnd"
+      },
+      {
+        "naam": "Factuur-tool",
+        "prijs": "€9 per maand plus €99 setup",
+        "status": "live",
+        "wat": "Onbeperkt facturen en PDF's, zonder Moneybird of Mollie.",
+        "anker": "factuur",
+        "nummer": "/ 02",
+        "label": "Live",
+        "stripprijs": "vanaf €9/mnd"
+      },
+      {
+        "naam": "Social Campagnes",
+        "prijs": "€39 per maand plus €99 setup",
+        "status": "live",
+        "wat": "Vier campagnes per maand in vier formaten. Extra campagne €29.",
+        "anker": "social",
+        "nummer": "/ 03",
+        "label": "Live",
+        "stripprijs": "vanaf €39/mnd"
+      },
+      {
+        "naam": "SEO-rapport",
+        "prijs": "€99 eenmalig, actiepunten op uurbasis",
+        "status": "live",
+        "wat": "Score, prioriteiten en actieplan. Per actiepunt zelf oppakken of laten doen.",
+        "anker": "seo",
+        "nummer": "/ 04",
+        "label": "Live",
+        "stripprijs": "vanaf €99"
+      },
+      {
+        "naam": "Blog",
+        "prijs": "€29 per maand plus €99 setup",
+        "status": "Q3 2026",
+        "wat": "Twee artikelen per maand met AI en SEO-meta. Extra artikel €39.",
+        "anker": "blog",
+        "nummer": "/ 05",
+        "label": "Q3 2026",
+        "stripprijs": "vanaf €29/mnd"
+      },
+      {
+        "naam": "Ondertekenen",
+        "prijs": "€7 per maand plus €79 setup",
+        "status": "nieuw",
+        "wat": "Onbeperkt eIDAS-handtekeningen, status in één oogopslag.",
+        "anker": "sign",
+        "nummer": "/ 06",
+        "label": "Nieuw",
+        "stripprijs": "vanaf €7/mnd"
+      },
+      {
+        "naam": "Personeelsplanner",
+        "prijs": "€15 per maand plus €99 setup",
+        "status": "nieuw",
+        "wat": "Onbeperkt medewerkers, diensten en deel-links. Rooster printen of als PDF.",
+        "anker": "rooster",
+        "nummer": "/ 07",
+        "label": "Nieuw",
+        "stripprijs": "vanaf €15/mnd"
+      },
+      {
+        "naam": "Reserveringen",
+        "prijs": "€19 per maand plus €99 setup",
+        "status": "nieuw",
+        "wat": "Onbeperkt boekingen, dubbel-boek-vrij, klant kan zelf annuleren.",
+        "anker": "reserveren",
+        "nummer": "/ 08",
+        "label": "Nieuw",
+        "stripprijs": "vanaf €19/mnd"
+      },
+      {
+        "naam": "SEO-content",
+        "prijs": "€149 setup plus €89 per pagina",
+        "status": "live",
+        "wat": "Artikel plus FAQ plus structured data, vindbaar in Google en in AI-overviews. Dienst-en-stad-project vanaf €490 voor 10 pagina's."
+      },
+      {
+        "naam": "Gevonden worden door AI",
+        "prijs": "€29 per maand plus €199 setup",
+        "status": "nieuw",
+        "wat": "Meten en inrichten of AI-antwoordmachines zoals ChatGPT, Perplexity en de AI-antwoorden in Google je site kunnen vinden, lezen en citeren. Inclusief maandelijkse hermeting en een citatietrend in je eigen portal.",
+        "anker": "aeo",
+        "nummer": "/ 09",
+        "label": "Nieuw",
+        "stripprijs": "vanaf €29/mnd"
+      }
+    ],
+    "_stripbron": "De modulestrip op index.html wordt uit deze lijst gegenereerd door scripts/build-strip.mjs. Tot 25-08-2026 stond die strip met de hand op de oude eenmalige prijzen (vanaf €149, €99, €249) terwijl modules.html al het maandmodel voerde. Een prospect zag dus twee verschillende prijzen voor dezelfde module."
+  },
+  "paginas": [
+    {
+      "url": "/",
+      "titel": "Website laten bouwen",
+      "wat": "Pakketten, werkwijze en de modules in het kort."
+    },
+    {
+      "url": "/over",
+      "titel": "Over Peter Stolk",
+      "wat": "Zelfstandig webdesigner uit Uithoorn met ruim zeven jaar ervaring. Persoonlijk contact, één aanspreekpunt."
+    },
+    {
+      "url": "/portfolio",
+      "titel": "Portfolio",
+      "wat": "Selectie van opgeleverde projecten."
+    },
+    {
+      "url": "/modules",
+      "titel": "Modules",
+      "wat": "De acht add-on modules op de Basis CMS, met prijs en status per module."
+    },
+    {
+      "url": "/website-laten-maken",
+      "titel": "Website laten maken",
+      "wat": "Uitgebreide uitleg van het traject, van eerste gesprek tot livegang."
+    },
+    {
+      "url": "/rekentool",
+      "titel": "Rekentool",
+      "wat": "Zelf uitrekenen wat jouw site kost op basis van het aantal pagina's en de modules."
+    },
+    {
+      "url": "/contact",
+      "titel": "Contact",
+      "wat": "Plan een gesprek, mail of WhatsApp."
+    },
+    {
+      "url": "/blog/",
+      "titel": "Blog",
+      "wat": "Artikelen over webdesign, de modules en het ambacht."
+    }
+  ],
+  "aanpak": "Elke site volgt een research- en strategieproces voordat er één regel code wordt geschreven: merkanalyse, marktonderzoek, een design- en contentbrief, de bouw, en een kwaliteitscheck. Het resultaat is een snelle, unieke site die opvalt en converteert.",
+  "voorAgents": {
+    "toegang": "Publiek en alleen-lezen. Geen registratie of API-sleutel nodig om de site te lezen.",
+    "contactRoute": "Mail info@stolkwebdesign.nl of gebruik het contactformulier. Identificeer je als agent en noem namens wie je handelt."
+  },
+  "entiteit": {
+    "_bron": "Adres en KvK uit site/privacybeleid.html en site/algemene-voorwaarden.html; beoordeling uit de reviewregel op site/index.html.",
+    "type": "LocalBusiness",
+    "telefoon": "+31650222228",
+    "adres": {
+      "straat": "Burgemeester Kootlaan 57",
+      "postcode": "1421 KB",
+      "plaats": "Uithoorn",
+      "land": "NL"
+    },
+    "kvk": "66906660",
+    "prijsklasse": "€€",
+    "sameAs": [
+      "https://www.instagram.com/stolkwebdesign.nl",
+      "https://www.linkedin.com/in/peter-stolk-66b10b2",
+      "https://www.stolksupport.nl"
+    ],
+    "beoordeling": {
+      "waarde": "5.0",
+      "aantal": 8,
+      "bron": "Google",
+      "_zichtbaarOp": "/index.html"
+    },
+    "werkgebied": [
+      "Uithoorn",
+      "Amstelveen",
+      "Mijdrecht",
+      "De Ronde Venen",
+      "Aalsmeer",
+      "Regio Amsterdam"
+    ],
+    "_geenSearchAction": "De site heeft geen zoekfunctie, dus er komt geen WebSite/SearchAction in. Dat zou infrastructuur faken die er niet is (doctrine agent-ready-website)."
+  },
+  "faq": {
+    "_bron": "Letterlijk overgenomen uit de zichtbare details-blokken op site/modules.html en site/en/modules.html. FAQ-markup moet gelijk zijn aan de zichtbare tekst, dus deze antwoorden worden hier NIET geredigeerd. Acht ervan bevatten een em-dash; dat is bestaande sitecopy en een aparte beslissing.",
+    "modules": [
+      {
+        "nl": {
+          "vraag": "Heb ik de Basis CMS altijd nodig?",
+          "antwoord": "De Basis CMS (€149 setup + €19/mnd) is de fundering: je eigen login, dashboard, hosting en updates. Die activeer je één keer. Daarna klik je modules erbij — Content, Factuur, Social, Blog — elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS."
+        },
+        "en": {
+          "vraag": "Do I always need the Base CMS?",
+          "antwoord": "The Base CMS (€149 setup + €19/mo) is the foundation: your own login, dashboard, hosting and updates. You activate it once. After that you click modules on — Content, Invoicing, Social, Blog — each with its own small monthly rate, without paying for the base again. Only the SEO report can also be ordered separately, without the Base CMS."
+        }
+      },
+      {
+        "nl": {
+          "vraag": "Werkt dit ook zonder een Stolkwebdesign-website?",
+          "antwoord": "Op termijn ja. Op dit moment zijn de modules ontworpen voor websites die door Stolkwebdesign zijn gebouwd, omdat de embed-route en het design-systeem standaard zijn ingebakken. Vanaf Q3 2026 komt er een variant voor bestaande sites — meld je aan op de wachtlijst om als eerste te horen wanneer."
+        },
+        "en": {
+          "vraag": "Does this work without a Stolkwebdesign website?",
+          "antwoord": "Eventually, yes. Right now the modules are designed for websites built by Stolkwebdesign, because the embed route and the design system are baked in by default. From Q3 2026 there will be a version for existing sites — join the waitlist to be the first to hear when."
+        }
+      },
+      {
+        "nl": {
+          "vraag": "Wanneer kan ik beginnen?",
+          "antwoord": "Basis CMS, Content, Factuur, Social en SEO zijn vanaf zomer 2026 beschikbaar voor early-access-klanten. Blog volgt in Q3 2026. Wachtlijst-aanmeldingen krijgen voorrang en behouden het early-access tarief, ook na de officiële launch."
+        },
+        "en": {
+          "vraag": "When can I start?",
+          "antwoord": "Base CMS, Content, Invoicing, Social and SEO are available to early-access clients from summer 2026. Blog follows in Q3 2026. Waitlist sign-ups get priority and keep the early-access rate, even after the official launch."
+        }
+      },
+      {
+        "nl": {
+          "vraag": "Wat als ik wil stoppen?",
+          "antwoord": "De setup-fee betaal je eenmalig; daarna een vast maandbedrag per actieve module. Maandelijks opzegbaar — stop je, dan stopt het maandbedrag, zonder opzegtermijn of boete. Je content en factuur-gegevens kun je altijd exporteren."
+        },
+        "en": {
+          "vraag": "What if I want to stop?",
+          "antwoord": "You pay the setup fee once; after that a flat monthly rate per active module. Cancel monthly — stop and the monthly rate stops too, no notice period or penalty. You can always export your content and invoice data."
+        }
+      },
+      {
+        "nl": {
+          "vraag": "Kan ik mijn eigen domeinnaam gebruiken?",
+          "antwoord": "Ja, altijd. Het CMS draait op jouwsite.nl/cms, je blog op jouwsite.nl/blog. Geen subdomein van Stolkwebdesign, geen \"powered by\"-balk."
+        },
+        "en": {
+          "vraag": "Can I use my own domain name?",
+          "antwoord": "Yes, always. The CMS runs on yoursite.nl/cms, your blog on yoursite.nl/blog. No Stolkwebdesign subdomain, no \"powered by\" bar."
+        }
+      },
+      {
+        "nl": {
+          "vraag": "Krijg ik korting bij meerdere modules?",
+          "antwoord": "Voor early-access-klanten die meerdere modules tegelijk activeren is er een bundeltarief. Plan een korte call met Peter — hij rekent het ter plekke voor je uit."
+        },
+        "en": {
+          "vraag": "Do I get a discount for multiple modules?",
+          "antwoord": "For early-access clients who activate several modules at once there's a bundle rate. Book a short call with Peter — he'll work it out for you on the spot."
+        }
+      }
+    ]
+  }
+}
