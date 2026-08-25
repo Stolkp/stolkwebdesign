@@ -278,7 +278,7 @@
     "_geenStraatadres": "Bewust alleen plaats en land in de structured data. Oranjelaan 38 is Peters huisadres en hoort niet machine-leesbaar gepubliceerd te worden. Zet het hier dus niet terug 'voor de volledigheid': schema.org accepteert een PostalAddress met alleen addressLocality en addressCountry prima."
   },
   "faq": {
-    "_bron": "Letterlijk overgenomen uit de zichtbare details-blokken op site/modules.html en site/en/modules.html. FAQ-markup moet gelijk zijn aan de zichtbare tekst, dus deze antwoorden worden hier NIET geredigeerd. Acht ervan bevatten een em-dash; dat is bestaande sitecopy en een aparte beslissing.",
+    "_bron": "Letterlijk overgenomen uit de zichtbare details-blokken op site/modules.html, site/en/modules.html en site/contact.html. FAQ-markup moet gelijk zijn aan de zichtbare tekst, dus deze antwoorden worden hier NIET geredigeerd. Acht ervan bevatten een em-dash; dat is bestaande sitecopy en een aparte beslissing.",
     "modules": [
       {
         "nl": {
@@ -339,6 +339,20 @@
           "vraag": "Do I get a discount for multiple modules?",
           "antwoord": "For early-access clients who activate several modules at once there's a bundle rate. Book a short call with Peter — he'll work it out for you on the spot."
         }
+      }
+    ],
+    "contact": [
+      {
+        "vraag": "Wat kost een eerste gesprek?",
+        "antwoord": "Niets. Je vertelt wat je nodig hebt, ik zeg eerlijk of ik de juiste ben en wat het ongeveer gaat kosten. Duurt meestal een half uur. Daarna krijg je een voorstel met een vaste prijs, geen uurtjes achteraf."
+      },
+      {
+        "vraag": "Hoe snel krijg ik antwoord?",
+        "antwoord": "Binnen één werkdag, en meestal dezelfde dag. Bellen of appen mag ook, dat is vaak sneller dan mailen."
+      },
+      {
+        "vraag": "Werk je ook buiten de regio Amsterdam?",
+        "antwoord": "Ja. Ik zit in Uithoorn en kom graag langs bij klanten in de buurt, maar de helft van het werk gaat op afstand. Videobellen en schermdelen werkt voor de meeste trajecten prima."
       }
     ]
   }

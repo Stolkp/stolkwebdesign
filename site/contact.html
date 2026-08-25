@@ -145,6 +145,25 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
 @media(prefers-reduced-motion:reduce) {
   .reveal { transition:none; opacity:1; transform:none; }
 }
+
+/* FAQ, zelfde opmaak als op /modules zodat de pagina's één geheel blijven */
+.faq-section { padding: 96px 48px; background: var(--bone); border-top: 2px solid var(--black); }
+.faq-inner { max-width: 980px; margin: 0 auto; }
+.faq-list { margin-top: 44px; border-top: 2px solid var(--black); }
+.faq-item { border-bottom: 2px solid var(--black); }
+.faq-item summary {
+  cursor: pointer; list-style: none;
+  padding: 26px 0;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  font-family: 'Archivo Black', sans-serif;
+  font-size: clamp(16px, 1.9vw, 22px);
+  text-transform: uppercase; letter-spacing: -0.02em; line-height: 1.2;
+}
+.faq-toggle { font-family: 'Archivo Black', sans-serif; font-size: 22px; color: var(--red); flex-shrink: 0; transition: transform .2s; }
+.faq-item[open] .faq-toggle { transform: rotate(45deg); }
+.faq-body { padding: 0 0 26px; font-size: 15px; line-height: 1.75; max-width: 760px; color: var(--black); }
+summary::-webkit-details-marker { display: none; }
+@media (max-width: 980px) { .faq-section { padding: 64px 20px; } }
 </style>
 <!-- SCHEMA-START -->
 <script type="application/ld+json">
@@ -160,6 +179,36 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
       "about": {
         "@id": "https://www.stolkwebdesign.nl#organisatie"
       }
+    },
+    {
+      "@type": "FAQPage",
+      "inLanguage": "nl-NL",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Wat kost een eerste gesprek?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Niets. Je vertelt wat je nodig hebt, ik zeg eerlijk of ik de juiste ben en wat het ongeveer gaat kosten. Duurt meestal een half uur. Daarna krijg je een voorstel met een vaste prijs, geen uurtjes achteraf."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Hoe snel krijg ik antwoord?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Binnen één werkdag, en meestal dezelfde dag. Bellen of appen mag ook, dat is vaak sneller dan mailen."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Werk je ook buiten de regio Amsterdam?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja. Ik zit in Uithoorn en kom graag langs bij klanten in de buurt, maar de helft van het werk gaat op afstand. Videobellen en schermdelen werkt voor de meeste trajecten prima."
+          }
+        }
+      ]
     },
     {
       "@type": "LocalBusiness",
@@ -373,6 +422,28 @@ footer { background:var(--black); color:var(--white); padding:40px 48px; border-
 
 </div>
 </main>
+
+<section class="faq-section">
+  <div class="faq-inner">
+    <div class="section-label font-mono" data-content="contact.faq_label">Veelgestelde vragen / —</div>
+    <h2 class="section-heading" data-content-html="contact.faq_heading">Voordat je<br><span class="red">iets stuurt.</span></h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary><span data-content="contact.faq1_q">Wat kost een eerste gesprek?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body" data-content="contact.faq1_a">Niets. Je vertelt wat je nodig hebt, ik zeg eerlijk of ik de juiste ben en wat het ongeveer gaat kosten. Duurt meestal een half uur. Daarna krijg je een voorstel met een vaste prijs, geen uurtjes achteraf.</div>
+      </details>
+      <details class="faq-item">
+        <summary><span data-content="contact.faq2_q">Hoe snel krijg ik antwoord?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body" data-content="contact.faq2_a">Binnen één werkdag, en meestal dezelfde dag. Bellen of appen mag ook, dat is vaak sneller dan mailen.</div>
+      </details>
+      <details class="faq-item">
+        <summary><span data-content="contact.faq3_q">Werk je ook buiten de regio Amsterdam?</span><span class="faq-toggle">+</span></summary>
+        <div class="faq-body" data-content="contact.faq3_a">Ja. Ik zit in Uithoorn en kom graag langs bij klanten in de buurt, maar de helft van het werk gaat op afstand. Videobellen en schermdelen werkt voor de meeste trajecten prima.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
 
 <footer>
   <div class="footer-logo font-display">Stolk<span style="color:#EA2525">web</span>design<span style="color:#EA2525">®</span></div>

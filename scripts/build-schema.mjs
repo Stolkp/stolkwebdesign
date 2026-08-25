@@ -129,6 +129,14 @@ const PAGINAS = {
 
   'contact.html': () => graaf([
     { '@type': 'ContactPage', '@id': U('/contact'), url: U('/contact'), name: 'Contact', inLanguage: 'nl-NL', about: { '@id': U('#organisatie') } },
+    // De vragen komen uit feiten.json, maar zijn daar letterlijk uit de pagina
+    // overgenomen. FAQ-markup die afwijkt van de zichtbare tekst is een overtreding,
+    // geen slordigheid.
+    ...(F.faq.contact?.length ? [{
+      '@type': 'FAQPage',
+      inLanguage: 'nl-NL',
+      mainEntity: F.faq.contact.map((q) => ({ '@type': 'Question', name: q.vraag, acceptedAnswer: { '@type': 'Answer', text: q.antwoord } })),
+    }] : []),
     { ...organisatie(), contactPoint: { '@type': 'ContactPoint', contactType: 'sales', email: m.email, telephone: e.telefoon, areaServed: 'NL', availableLanguage: ['nl', 'en'] } },
     kruimels([{ naam: 'Home', pad: '/' }, { naam: 'Contact', pad: '/contact' }]),
   ]),
