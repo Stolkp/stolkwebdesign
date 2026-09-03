@@ -423,8 +423,8 @@ async function loadReports(userId) {
 
   const { data: reports, error } = await db
     .from('seo_reports')
-    .select('*')
-    .order('created_at', { ascending: false });
+    .select('slug,title,domain,version,report_date,created_at')
+    .order('report_date', { ascending: false, nullsFirst: false });
 
   loading.style.display = 'none';
 
@@ -434,22 +434,27 @@ async function loadReports(userId) {
   }
 
   grid.innerHTML = reports.map(r => `
-    <a class="report-card" href="/seo/rapporten/${esc(r.slug)}.html">
+    <a class="report-card" href="/seo/rapport/?x=${encodeURIComponent(r.slug)}">
       <div class="report-card-left">
         <div class="report-card-title">${esc(r.title)}</div>
         <div class="report-card-meta">
           ${r.domain ? `<span class="report-domain">${esc(r.domain)}</span>` : ''}
-          <span class="report-date">${formatDate(r.created_at)}</span>
+          <span class="report-date">${formatDate(r.report_date || r.created_at)}</span>
         </div>
       </div>
       <div class="report-version">${esc(r.version)}</div>
-      <div class="report-arrow">Bekijk rapport →</div>
+      <div class="report-arrow">Bekijk rapport &rarr;</div>
     </a>
   `).join('');
 }
 
-function formatDate(iso) {
-  const d = new Date(iso);
+function formatDate(waarde) {
+  if (!waarde) return '';
+  // Een kale datum zonder tijd wordt in sommige browsers als UTC gelezen en schuift dan een
+  // dag terug; daarom expliciet als lokale datum opbouwen.
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(waarde)
+    ? new Date(Number(waarde.slice(0, 4)), Number(waarde.slice(5, 7)) - 1, Number(waarde.slice(8, 10)))
+    : new Date(waarde);
   return d.toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
