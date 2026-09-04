@@ -10,6 +10,20 @@ alter table public.seo_reports
 -- Een rapport mag bestaan voordat er een klantaccount is; dan ziet alleen het bureau het.
 alter table public.seo_reports alter column user_id drop not null;
 
+-- publiceer.mjs schrijft via ?on_conflict=slug (upsert bij een hermeting op dezelfde slug). Die
+-- upsert rust op een unieke constraint op slug die op productie al bestond (seo_reports_slug_key)
+-- maar in geen enkele migratie stond, dus een schoon project zou de upsert stil laten mislukken.
+-- ADD CONSTRAINT kent geen IF NOT EXISTS, vandaar de existence-check in een DO-blok.
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'seo_reports_slug_key' and conrelid = 'public.seo_reports'::regclass
+  ) then
+    alter table public.seo_reports add constraint seo_reports_slug_key unique (slug);
+  end if;
+end $$;
+
 alter table public.seo_reports enable row level security;
 
 -- De oude policy kent `shared` niet en wordt vervangen.

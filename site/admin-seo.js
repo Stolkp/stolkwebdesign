@@ -25,7 +25,12 @@ function seoScores(data) {
   const compleet = paar.filter(x => typeof x.after === 'number');
   if (compleet.length !== paar.length) return null;
   const gem = (k) => Math.round(compleet.reduce((s, x) => s + x[k], 0) / compleet.length);
-  return { voor: gem('before'), na: gem('after'), paginas: p.length };
+  // paginas is het aantal pagina's dat in het gemiddelde zit, dus compleet.length en niet
+  // p.length: p bevat ALLE pagina's uit data.pages, ook pagina's zonder onpage-blok (niet
+  // gescand, of van een ouder rapportformaat). Die tellen dan wel mee in "over N pagina's"
+  // zonder ooit in de som te zitten. compleet.length en paar.length zijn hier aan elkaar gelijk
+  // (de guard hierboven dwingt dat af), maar compleet is de groep die de meting echt droeg.
+  return { voor: gem('before'), na: gem('after'), paginas: compleet.length };
 }
 
 async function loadSeoReports() {

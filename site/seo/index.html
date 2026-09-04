@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Client Portal — Stolkwebdesign</title>
+<title>Client Portal · Stolkwebdesign</title>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
@@ -269,7 +269,7 @@ body {
 .report-date {
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: #444;
+  color: var(--muted);
 }
 .report-version {
   display: inline-flex;
@@ -339,6 +339,9 @@ body {
   .report-card { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
   .report-version { display: none; }
   .login-box { padding: 32px 24px; }
+  /* Huisregel: bodytekst minstens 16px op 320/360/390. De kop van de kaart en de labels op
+     het inlogscherm blijven bewust op hun eigen grootte, dit raakt alleen deze twee. */
+  .report-domain, .report-date { font-size: 16px; }
 }
 </style>
 </head>
@@ -348,7 +351,7 @@ body {
 <div id="login-screen">
   <div class="login-logo">STOLK<span>.</span>WEBDESIGN</div>
   <div class="login-box">
-    <div class="login-eyebrow">Beveiligd — Client Toegang</div>
+    <div class="login-eyebrow">Beveiligd · Client Toegang</div>
     <h1 class="login-title">Uw<br><span>Rapporten</span></h1>
     <label class="form-label" for="email-input">E-mailadres</label>
     <input type="email" id="email-input" class="login-input" placeholder="naam@bedrijf.nl" autocomplete="email">

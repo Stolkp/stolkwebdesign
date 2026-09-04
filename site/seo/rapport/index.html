@@ -1,5 +1,5 @@
 <!-- Gegenereerd door scripts/seo-audit/bouw-kijkpagina.mjs. Niet met de hand bewerken.
-     bron-hash: 31416fb66af03ece -->
+     bron-hash: 5b66b76791b1b657 -->
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -182,12 +182,15 @@ section:first-of-type, header.hero { break-before: auto; }
    'm in zijn geheel naar de volgende pagina schuiven (leeg papier onder de kop) en
    gaf hier zelfs één volledig lege pagina tussen hoofdstuk 1 en 2 (gemeten met
    naar-pdf.mjs: weg zodra .card uit deze regel ging). De kleinere eenheden erin
-   (.grp uit het sjabloon zelf, .box, .row) blijven wel beschermd. */
+   (.grp uit het sjabloon zelf, .box, .row) blijven wel beschermd: .grp komt 8 keer in het
+   sjabloon voor (de checklist-groepen) en kan dus echt midden op een pagina breken. figure
+   stond hier eerder ook in, maar is een dode selector: het sjabloon gebruikt nergens een
+   <figure>-element, dus die regel deed niets. */
 /* Ook NIET table zelf: de "Eén regel per pagina"-tabel is langer dan één A4-pagina.
    tr blijft wel onsplitsbaar (geen rij doormidden) en thead herhaalt zich per pagina,
    dus de tabel mag over meerdere pagina's lopen zonder dat er een rij breekt. */
 section > h2, h2.display { break-after: avoid; }
-tr, .box, .row, figure { break-inside: avoid; }
+tr, .box, .row, .grp { break-inside: avoid; }
 thead { display: table-header-group; }
 
 /* Links: het adres erachter, want een klik doet het niet op papier. */
@@ -502,7 +505,15 @@ a[href^="#"]::after { content: ""; }
   document.getElementById('rapport-terug').href = '/seo/';
   document.getElementById('rapport-print').addEventListener('click', () => window.print());
   document.getElementById('rapport-balk').hidden = false;
-  window.__renderAudit();
+  // Deze aanroep hoort in een eigen try/catch: rendert het sjabloon niet (data uit een oudere
+  // of nieuwere sjabloonversie, een ontbrekende sleutel), dan staat de balk er zonder de rest
+  // van het rapport en zonder enige melding. Dat is precies de faalvorm die de andere drie
+  // randgevallen hierboven (geen sessie, geen ?x=, rapport niet gevonden) al wel afvangen.
+  try {
+    window.__renderAudit();
+  } catch (e) {
+    return melding('Er ging iets mis bij het weergeven', 'De data kon niet worden getoond. Neem contact op als dit blijft gebeuren.');
+  }
 })();
 </script>
 </body>
