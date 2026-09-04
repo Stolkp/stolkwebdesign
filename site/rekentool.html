@@ -342,23 +342,23 @@ footer{background:var(--black);color:var(--white);padding:60px 48px 36px;border-
           <span class="step-num">01</span>
           <h2 class="step-title">Je website</h2>
         </div>
-        <div class="pkg-grid" id="pkg-grid"></div>
+        <div class="pkg-grid" id="pkg-grid" data-prijs-gegenereerd></div>
 
         <div id="extra-pages-row" style="display:none">
           <div class="extra-row">
-            <span class="extra-row-label">Extra pagina's — €200 per stuk</span>
+            <span class="extra-row-label">Extra pagina's: <span data-prijs="pakket.extra_pagina">€200</span> per stuk</span>
             <div class="extra-counter">
               <button class="extra-btn" onclick="adjustPages(-1)" aria-label="Minder">−</button>
               <div class="extra-val" id="extra-val">0</div>
               <button class="extra-btn" onclick="adjustPages(1)" aria-label="Meer">+</button>
             </div>
-            <span class="extra-price-tag" id="extra-price-tag">+ €0</span>
+            <span class="extra-price-tag" id="extra-price-tag" data-prijs-gegenereerd>+ €0</span>
           </div>
         </div>
 
         <div class="hosting-note">
           <span class="hosting-dot"></span>
-          <span>Webhosting &amp; beveiliging: €25/mnd — altijd inbegrepen bij een pakket</span>
+          <span>Webhosting &amp; beveiliging: <span data-prijs="hosting.maand">€25</span>/mnd, komt bij elk pakket</span>
         </div>
       </div>
 
@@ -380,13 +380,13 @@ footer{background:var(--black);color:var(--white);padding:60px 48px 36px;border-
             <div class="mod-name">Basis CMS</div>
             <div class="mod-desc" id="mod-desc-basis">Login-dashboard · alle modules draaien hierop</div>
             <div class="mod-pricing">
-              <span class="mod-price-setup">€149</span>
-              <span class="mod-price-monthly">eenmalig + €19/mnd</span>
+              <span class="mod-price-setup" data-prijs="module.basis.setup">€149</span>
+              <span class="mod-price-monthly">eenmalig + <span data-prijs="module.basis.maand">€19</span>/mnd</span>
             </div>
           </div>
         </div>
 
-        <div class="mod-grid" id="mod-grid"></div>
+        <div class="mod-grid" id="mod-grid" data-prijs-gegenereerd></div>
       </div>
 
     </div><!-- /left -->
@@ -403,22 +403,22 @@ footer{background:var(--black);color:var(--white);padding:60px 48px 36px;border-
           <div class="sidebar-body">
             <div class="sb-empty" id="sb-empty">Kies een pakket<br>om te beginnen.</div>
             <div id="sb-filled" style="display:none">
-              <div id="sb-items"></div>
+              <div id="sb-items" data-prijs-gegenereerd></div>
               <div class="total-block">
                 <div class="total-row">
                   <span class="total-label">Eenmalig</span>
-                  <span class="total-amount" id="sb-once">€0</span>
+                  <span class="total-amount" id="sb-once" data-prijs-gegenereerd>€0</span>
                 </div>
                 <div class="total-row">
                   <span class="total-label">Per maand</span>
-                  <span class="total-amount" id="sb-monthly">€0</span>
+                  <span class="total-amount" id="sb-monthly" data-prijs-gegenereerd>€0</span>
                 </div>
                 <div class="total-year-row">
                   <div class="total-year-left">
                     <div class="total-label">Eerste jaar</div>
                     <div class="total-year-note">eenmalig + 12× /mnd</div>
                   </div>
-                  <span class="total-year-amount" id="sb-year">€0</span>
+                  <span class="total-year-amount" id="sb-year" data-prijs-gegenereerd>€0</span>
                 </div>
                 <div class="total-vat">Excl. BTW · Early-access 2026 tarief</div>
               </div>
@@ -544,11 +544,11 @@ footer{background:var(--black);color:var(--white);padding:60px 48px 36px;border-
 <div class="mobile-bar" id="mobile-bar">
   <div class="m-col">
     <span class="m-label">Eenmalig</span>
-    <span class="m-amount" id="m-once">—</span>
+    <span class="m-amount" id="m-once" data-prijs-gegenereerd>—</span>
   </div>
   <div class="m-col">
     <span class="m-label">Per maand</span>
-    <span class="m-amount" id="m-monthly">—</span>
+    <span class="m-amount" id="m-monthly" data-prijs-gegenereerd>—</span>
   </div>
   <a href="#sidebar-anchor" class="m-cta">Bekijk →</a>
 </div>
@@ -557,23 +557,36 @@ footer{background:var(--black);color:var(--white);padding:60px 48px 36px;border-
 <script src="config.js"></script>
 <script>
 // ── DATA ──
+// Alle bedragen komen uit de tabel stolkwebdesign_prijzen (admin-tab Prijzen) en worden bij
+// elke build door scripts/build-prijzen.mjs tussen de markers hieronder gestempeld.
+// Niet met de hand invullen: de build overschrijft het.
+/* PRIJZEN-START */
+const PRIJZEN = {"gespreid.maanden":12,"gespreid.start.vooraf":500,"gespreid.start.maand":75,"gespreid.onderneem.vooraf":1000,"gespreid.onderneem.maand":125,"gespreid.groei.vooraf":1500,"gespreid.groei.maand":200,"hosting.maand":25,"hosting_onderhoud.maand":50,"seo.doorlopend.maand":195,"abonnement.maand":350,"module.basis.setup":149,"module.basis.maand":19,"module.content.setup":99,"module.content.maand":15,"module.factuur.setup":99,"module.factuur.maand":9,"module.social.setup":99,"module.social.maand":39,"module.social.extra_campagne":29,"module.blog.setup":99,"module.blog.maand":29,"module.blog.extra_artikel":39,"module.sign.setup":79,"module.sign.maand":7,"module.rooster.setup":99,"module.rooster.maand":15,"module.reserveren.setup":99,"module.reserveren.maand":19,"module.aeo.setup":199,"module.aeo.maand":29,"pakket.start.prijs":1250,"pakket.start.paginas":1,"pakket.onderneem.prijs":2250,"pakket.onderneem.paginas":4,"pakket.groei.prijs":3500,"pakket.groei.paginas":7,"pakket.extra_pagina":200,"seo.rapport":99,"seo.content.setup":149,"seo.content.per_pagina":89,"seo.lokaal.project":490,"voorwaarden.uurtarief":60,"voorwaarden.aanmaning":50,"voorwaarden.onderhoud.maand":25,"pakket.start.per_pagina":1250,"pakket.onderneem.per_pagina":563,"pakket.groei.per_pagina":500,"gespreid.start.jaar_totaal":1400,"gespreid.onderneem.jaar_totaal":2500,"gespreid.groei.jaar_totaal":3900,"onderhoud.maand":25};
+/* PRIJZEN-END */
+const P = (k) => { if (!(k in PRIJZEN)) throw new Error('prijs ontbreekt: ' + k); return PRIJZEN[k]; };
+
+const HOSTING      = P('hosting.maand');        // komt bij elk pakket
+const EXTRA_PAGINA = P('pakket.extra_pagina');
+
 const PACKAGES = [
-  { id:'start',    name:'Start',     price:1250, features:['1 pagina (homepage)','Volledig ontwerp-systeem','Responsive + SEO-klaar'] },
-  { id:'onderneem',name:'Onderneem', price:2250, popular:true, features:['Tot 4 pagina\'s','Volledig ontwerp-systeem','Responsive + SEO-klaar'] },
-  { id:'groei',    name:'Groei',     price:3500, best:true, features:['Tot 7 pagina\'s','Volledig ontwerp-systeem','Basis CMS + Content gratis'] },
+  { id:'start',    name:'Start',     price:P('pakket.start.prijs'),     features:['1 pagina (homepage)','Volledig ontwerp-systeem','Responsive + SEO-klaar'] },
+  { id:'onderneem',name:'Onderneem', price:P('pakket.onderneem.prijs'), popular:true, features:['Tot 4 pagina\'s','Volledig ontwerp-systeem','Responsive + SEO-klaar'] },
+  { id:'groei',    name:'Groei',     price:P('pakket.groei.prijs'),     best:true, features:['Tot 7 pagina\'s','Volledig ontwerp-systeem','Basis CMS + Content gratis'] },
 ];
 
-const BASIS = { setup:149, monthly:19 };
+const BASIS = { setup:P('module.basis.setup'), monthly:P('module.basis.maand') };
 
+// monthly:0 = alleen eenmalig (het SEO-rapport heeft geen maandbedrag, actiepunten gaan op uurbasis)
 const MODULES = [
-  { id:'content',    num:'01', name:'Content',          desc:'Teksten & foto\'s aanpassen',            setup:99,  monthly:15, standalone:false },
-  { id:'factuur',    num:'02', name:'Factuur',           desc:'Facturen + offertes in 60 sec',          setup:99,  monthly:9,  standalone:false },
-  { id:'social',     num:'03', name:'Social Campagnes',  desc:'Posts in 4 formats · AI-kopij',          setup:99,  monthly:39, standalone:false },
-  { id:'seo',        num:'04', name:'SEO Rapport',       desc:'Audit + actieplan · ook standalone',     setup:99,  monthly:19, standalone:true  },
-  { id:'blog',       num:'05', name:'Blog',              desc:'Notion → auto-gepubliceerde posts',      setup:99,  monthly:29, standalone:false },
-  { id:'onderteken', num:'06', name:'Ondertekenen',      desc:'eIDAS e-handtekening · link sturen',     setup:79,  monthly:7,  standalone:false },
-  { id:'rooster',    num:'07', name:'Personeelsplanner', desc:'Rooster + verlof + medewerker-links',    setup:99,  monthly:15, standalone:false },
-  { id:'reserveren', num:'08', name:'Reserveringen',     desc:'Online boeken · slots · Notion-sync',    setup:99,  monthly:19, standalone:false },
+  { id:'content',    num:'01', name:'Content',                 desc:'Teksten & foto\'s aanpassen',            setup:P('module.content.setup'),    monthly:P('module.content.maand'),    standalone:false },
+  { id:'factuur',    num:'02', name:'Factuur',                  desc:'Facturen + offertes in 60 sec',          setup:P('module.factuur.setup'),    monthly:P('module.factuur.maand'),    standalone:false },
+  { id:'social',     num:'03', name:'Social Campagnes',         desc:'Posts in 4 formaten · AI-kopij',         setup:P('module.social.setup'),     monthly:P('module.social.maand'),     standalone:false },
+  { id:'seo',        num:'04', name:'SEO Rapport',              desc:'Audit + actieplan · ook los te bestellen', setup:P('seo.rapport'),           monthly:0,                            standalone:true  },
+  { id:'blog',       num:'05', name:'Blog',                     desc:'Twee artikelen per maand, AI + SEO-meta', setup:P('module.blog.setup'),      monthly:P('module.blog.maand'),       standalone:false },
+  { id:'onderteken', num:'06', name:'Ondertekenen',             desc:'eIDAS e-handtekening · link sturen',     setup:P('module.sign.setup'),       monthly:P('module.sign.maand'),       standalone:false },
+  { id:'rooster',    num:'07', name:'Personeelsplanner',        desc:'Rooster + verlof + medewerker-links',    setup:P('module.rooster.setup'),    monthly:P('module.rooster.maand'),    standalone:false },
+  { id:'reserveren', num:'08', name:'Reserveringen',            desc:'Online boeken · slots · Notion-sync',    setup:P('module.reserveren.setup'), monthly:P('module.reserveren.maand'), standalone:false },
+  { id:'aeo',        num:'09', name:'Gevonden worden door AI',  desc:'Scan, inrichting en maandelijkse hermeting', setup:P('module.aeo.setup'),    monthly:P('module.aeo.maand'),        standalone:false },
 ];
 
 const state = { pkg:null, extraPages:0, modules:new Set() };
@@ -603,7 +616,7 @@ function init() {
       <div class="mod-desc" id="mod-desc-${m.id}">${m.desc}</div>
       <div class="mod-pricing">
         <span class="mod-price-setup">€${m.setup}</span>
-        <span class="mod-price-monthly">eenmalig + €${m.monthly}/mnd</span>
+        <span class="mod-price-monthly">${m.monthly ? `eenmalig + €${m.monthly}/mnd` : 'eenmalig'}</span>
         ${m.standalone ? '<span class="mod-standalone-badge">Standalone</span>' : ''}
       </div>
     </div>`).join('');
@@ -648,7 +661,7 @@ function toggleModule(id) {
 function adjustPages(d) {
   state.extraPages = Math.max(0, Math.min(20, state.extraPages + d));
   document.getElementById('extra-val').textContent = state.extraPages;
-  document.getElementById('extra-price-tag').textContent = `+ €${fmt(state.extraPages * 200)}`;
+  document.getElementById('extra-price-tag').textContent = `+ €${fmt(state.extraPages * EXTRA_PAGINA)}`;
   recalc();
 }
 
@@ -661,8 +674,8 @@ function recalc() {
   const nonStandaloneOn = MODULES.filter(m=>!m.standalone).some(m=>state.modules.has(m.id));
   if (nonStandaloneOn && !isGroei) state.modules.add('basis');
 
-  let setup = pkg ? pkg.price + state.extraPages * 200 : state.extraPages * 200;
-  let monthly = pkg ? 25 : 0;
+  let setup = pkg ? pkg.price + state.extraPages * EXTRA_PAGINA : state.extraPages * EXTRA_PAGINA;
+  let monthly = pkg ? HOSTING : 0;
 
   // Basis
   if (state.modules.has('basis') && !isGroei) { setup += BASIS.setup; monthly += BASIS.monthly; }
@@ -741,9 +754,9 @@ function updateSidebar(pkg, isGroei, setup, monthly, year) {
   if (pkg) {
     html += sbItem(pkg.name, eur(pkg.price));
     if (state.extraPages > 0)
-      html += sbItem(`+ ${state.extraPages} extra pagina${state.extraPages>1?"'s":''}`, eur(state.extraPages*200));
+      html += sbItem(`+ ${state.extraPages} extra pagina${state.extraPages>1?"'s":''}`, eur(state.extraPages*EXTRA_PAGINA));
     html += '<div class="sb-divider"></div>';
-    html += sbItem('Hosting', '€25<span class="sb-item-price">/mnd</span>');
+    html += sbItem('Hosting', `${eur(HOSTING)}<span class="sb-item-price">/mnd</span>`);
   }
 
   if (isGroei) {
@@ -757,7 +770,7 @@ function updateSidebar(pkg, isGroei, setup, monthly, year) {
     if (!state.modules.has(m.id)) return;
     count++;
     const isFree = isGroei && m.id==='content';
-    html += isFree ? sbItemFree(m.name) : sbItem(m.name, `${eur(m.setup)} + €${m.monthly}/mnd`);
+    html += isFree ? sbItemFree(m.name) : sbItem(m.name, m.monthly ? `${eur(m.setup)} + €${m.monthly}/mnd` : `${eur(m.setup)} eenmalig`);
   });
 
   document.getElementById('sb-items').innerHTML   = html;

@@ -1,0 +1,415 @@
+{
+  "_toelichting": [
+    "Snapshot van de tabel stolkwebdesign_prijzen, geschreven door scripts/build-prijzen.mjs.",
+    "Niet met de hand bewerken: de tabel is de bron, bewerk hem in de admin-tab Prijzen.",
+    "Staat in git zodat --lokaal zonder verbinding werkt en zodat prijswijzigingen een geschiedenis hebben."
+  ],
+  "laatstGewijzigd": "2026-09-04T08:22:32.24943+00:00",
+  "rijen": [
+    {
+      "sleutel": "gespreid.maanden",
+      "groep": "Gespreid betalen",
+      "label": "Looptijd",
+      "bedrag": 12,
+      "eenheid": "aantal",
+      "toelichting": "Aantal maandtermijnen. Daarna is de site eigendom van de klant.",
+      "volgorde": 5
+    },
+    {
+      "sleutel": "gespreid.start.vooraf",
+      "groep": "Gespreid betalen",
+      "label": "Start: vooraf",
+      "bedrag": 500,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 10
+    },
+    {
+      "sleutel": "gespreid.start.maand",
+      "groep": "Gespreid betalen",
+      "label": "Start: per maand",
+      "bedrag": 75,
+      "eenheid": "per maand",
+      "toelichting": "Twaalf maanden. Eerste jaar samen €1.400, dat rekent de site zelf uit.",
+      "volgorde": 11
+    },
+    {
+      "sleutel": "gespreid.onderneem.vooraf",
+      "groep": "Gespreid betalen",
+      "label": "Onderneem: vooraf",
+      "bedrag": 1000,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 20
+    },
+    {
+      "sleutel": "gespreid.onderneem.maand",
+      "groep": "Gespreid betalen",
+      "label": "Onderneem: per maand",
+      "bedrag": 125,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 21
+    },
+    {
+      "sleutel": "gespreid.groei.vooraf",
+      "groep": "Gespreid betalen",
+      "label": "Groei: vooraf",
+      "bedrag": 1500,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 30
+    },
+    {
+      "sleutel": "gespreid.groei.maand",
+      "groep": "Gespreid betalen",
+      "label": "Groei: per maand",
+      "bedrag": 200,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 31
+    },
+    {
+      "sleutel": "hosting.maand",
+      "groep": "Hosting en onderhoud",
+      "label": "Webhosting en beveiliging",
+      "bedrag": 25,
+      "eenheid": "per maand",
+      "toelichting": "Server, SSL-certificaat, back-ups en monitoring. Komt bij elk pakket en ook bij Basis CMS; zit nergens in inbegrepen.",
+      "volgorde": 10
+    },
+    {
+      "sleutel": "hosting_onderhoud.maand",
+      "groep": "Hosting en onderhoud",
+      "label": "Hosting plus onderhoud",
+      "bedrag": 50,
+      "eenheid": "per maand",
+      "toelichting": "Het maandbedrag na de twaalf gespreide maanden: €25 hosting plus €25 onderhoud. Onderhoud is: updates van de techniek, back-ups, beveiligingscontrole en kleine tekstwijzigingen (even mailen). Geen nieuwe pagina's of onderdelen; dat is meerwerk tegen een vaste prijs.",
+      "volgorde": 20
+    },
+    {
+      "sleutel": "seo.doorlopend.maand",
+      "groep": "Hosting en onderhoud",
+      "label": "Doorlopende SEO",
+      "bedrag": 195,
+      "eenheid": "per maand",
+      "toelichting": "Maandelijks werk aan de vindbaarheid in Google. Komt in plaats van de €50, hosting en onderhoud zitten erin.",
+      "volgorde": 30
+    },
+    {
+      "sleutel": "abonnement.maand",
+      "groep": "Hosting en onderhoud",
+      "label": "Alles-in-één abonnement",
+      "bedrag": 350,
+      "eenheid": "per maand",
+      "toelichting": "De maandvariant op /website-laten-maken: site, hosting, onderhoud en vindbaarheid in één bedrag, geen opstartkosten.",
+      "volgorde": 40
+    },
+    {
+      "sleutel": "module.basis.setup",
+      "groep": "Modules",
+      "label": "Basis CMS: setup",
+      "bedrag": 149,
+      "eenheid": "eenmalig",
+      "toelichting": "Fundering voor alle modules. Login en updates inbegrepen, hosting komt erbij.",
+      "volgorde": 10
+    },
+    {
+      "sleutel": "module.basis.maand",
+      "groep": "Modules",
+      "label": "Basis CMS: per maand",
+      "bedrag": 19,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 11
+    },
+    {
+      "sleutel": "module.content.setup",
+      "groep": "Modules",
+      "label": "Content: setup",
+      "bedrag": 99,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 20
+    },
+    {
+      "sleutel": "module.content.maand",
+      "groep": "Modules",
+      "label": "Content: per maand",
+      "bedrag": 15,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 21
+    },
+    {
+      "sleutel": "module.factuur.setup",
+      "groep": "Modules",
+      "label": "Factuur-tool: setup",
+      "bedrag": 99,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 30
+    },
+    {
+      "sleutel": "module.factuur.maand",
+      "groep": "Modules",
+      "label": "Factuur-tool: per maand",
+      "bedrag": 9,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 31
+    },
+    {
+      "sleutel": "module.social.setup",
+      "groep": "Modules",
+      "label": "Social Campagnes: setup",
+      "bedrag": 99,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 40
+    },
+    {
+      "sleutel": "module.social.maand",
+      "groep": "Modules",
+      "label": "Social Campagnes: per maand",
+      "bedrag": 39,
+      "eenheid": "per maand",
+      "toelichting": "Vier campagnes per maand in vier formaten.",
+      "volgorde": 41
+    },
+    {
+      "sleutel": "module.social.extra_campagne",
+      "groep": "Modules",
+      "label": "Social Campagnes: extra campagne",
+      "bedrag": 29,
+      "eenheid": "per campagne",
+      "toelichting": null,
+      "volgorde": 42
+    },
+    {
+      "sleutel": "module.blog.setup",
+      "groep": "Modules",
+      "label": "Blog: setup",
+      "bedrag": 99,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 50
+    },
+    {
+      "sleutel": "module.blog.maand",
+      "groep": "Modules",
+      "label": "Blog: per maand",
+      "bedrag": 29,
+      "eenheid": "per maand",
+      "toelichting": "Twee artikelen per maand met AI en SEO-meta.",
+      "volgorde": 51
+    },
+    {
+      "sleutel": "module.blog.extra_artikel",
+      "groep": "Modules",
+      "label": "Blog: extra artikel",
+      "bedrag": 39,
+      "eenheid": "per artikel",
+      "toelichting": null,
+      "volgorde": 52
+    },
+    {
+      "sleutel": "module.sign.setup",
+      "groep": "Modules",
+      "label": "Ondertekenen: setup",
+      "bedrag": 79,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 60
+    },
+    {
+      "sleutel": "module.sign.maand",
+      "groep": "Modules",
+      "label": "Ondertekenen: per maand",
+      "bedrag": 7,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 61
+    },
+    {
+      "sleutel": "module.rooster.setup",
+      "groep": "Modules",
+      "label": "Personeelsplanner: setup",
+      "bedrag": 99,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 70
+    },
+    {
+      "sleutel": "module.rooster.maand",
+      "groep": "Modules",
+      "label": "Personeelsplanner: per maand",
+      "bedrag": 15,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 71
+    },
+    {
+      "sleutel": "module.reserveren.setup",
+      "groep": "Modules",
+      "label": "Reserveringen: setup",
+      "bedrag": 99,
+      "eenheid": "eenmalig",
+      "toelichting": null,
+      "volgorde": 80
+    },
+    {
+      "sleutel": "module.reserveren.maand",
+      "groep": "Modules",
+      "label": "Reserveringen: per maand",
+      "bedrag": 19,
+      "eenheid": "per maand",
+      "toelichting": null,
+      "volgorde": 81
+    },
+    {
+      "sleutel": "module.aeo.setup",
+      "groep": "Modules",
+      "label": "Gevonden worden door AI: setup",
+      "bedrag": 199,
+      "eenheid": "eenmalig",
+      "toelichting": "Scan en inrichting.",
+      "volgorde": 90
+    },
+    {
+      "sleutel": "module.aeo.maand",
+      "groep": "Modules",
+      "label": "Gevonden worden door AI: per maand",
+      "bedrag": 29,
+      "eenheid": "per maand",
+      "toelichting": "Maandelijkse hermeting en citatietrend in het portal.",
+      "volgorde": 91
+    },
+    {
+      "sleutel": "pakket.start.prijs",
+      "groep": "Pakketten",
+      "label": "Start",
+      "bedrag": 1250,
+      "eenheid": "eenmalig",
+      "toelichting": "Eén pagina, inclusief het volledige ontwerpsysteem, basis on-page SEO en één revisieronde.",
+      "volgorde": 10
+    },
+    {
+      "sleutel": "pakket.start.paginas",
+      "groep": "Pakketten",
+      "label": "Start: aantal pagina's",
+      "bedrag": 1,
+      "eenheid": "aantal",
+      "toelichting": "Wordt gebruikt voor de prijs per pagina op de homepage.",
+      "volgorde": 11
+    },
+    {
+      "sleutel": "pakket.onderneem.prijs",
+      "groep": "Pakketten",
+      "label": "Onderneem",
+      "bedrag": 2250,
+      "eenheid": "eenmalig",
+      "toelichting": "Homepage plus Over, Diensten en Contact. Meest gekozen.",
+      "volgorde": 20
+    },
+    {
+      "sleutel": "pakket.onderneem.paginas",
+      "groep": "Pakketten",
+      "label": "Onderneem: aantal pagina's",
+      "bedrag": 4,
+      "eenheid": "aantal",
+      "toelichting": "Wordt gebruikt voor \"vanaf €… per pagina\".",
+      "volgorde": 21
+    },
+    {
+      "sleutel": "pakket.groei.prijs",
+      "groep": "Pakketten",
+      "label": "Groei",
+      "bedrag": 3500,
+      "eenheid": "eenmalig",
+      "toelichting": "Complete site met CMS (Basis CMS en Content zitten erin).",
+      "volgorde": 30
+    },
+    {
+      "sleutel": "pakket.groei.paginas",
+      "groep": "Pakketten",
+      "label": "Groei: aantal pagina's",
+      "bedrag": 7,
+      "eenheid": "aantal",
+      "toelichting": "Wordt gebruikt voor \"vanaf €… per pagina\".",
+      "volgorde": 31
+    },
+    {
+      "sleutel": "pakket.extra_pagina",
+      "groep": "Pakketten",
+      "label": "Extra pagina",
+      "bedrag": 200,
+      "eenheid": "per pagina",
+      "toelichting": "Elke pagina buiten het pakket.",
+      "volgorde": 40
+    },
+    {
+      "sleutel": "seo.rapport",
+      "groep": "SEO",
+      "label": "SEO-rapport",
+      "bedrag": 99,
+      "eenheid": "eenmalig",
+      "toelichting": "Score, prioriteiten en actieplan. Actiepunten op uurbasis. Ook los te bestellen zonder Basis CMS.",
+      "volgorde": 10
+    },
+    {
+      "sleutel": "seo.content.setup",
+      "groep": "SEO",
+      "label": "SEO-content: setup",
+      "bedrag": 149,
+      "eenheid": "eenmalig",
+      "toelichting": "Merkstem en eerste keyword-cluster.",
+      "volgorde": 20
+    },
+    {
+      "sleutel": "seo.content.per_pagina",
+      "groep": "SEO",
+      "label": "SEO-content: per pagina",
+      "bedrag": 89,
+      "eenheid": "per pagina",
+      "toelichting": "Artikel plus FAQ plus structured data.",
+      "volgorde": 21
+    },
+    {
+      "sleutel": "seo.lokaal.project",
+      "groep": "SEO",
+      "label": "Lokale vindbaarheid: project",
+      "bedrag": 490,
+      "eenheid": "per project",
+      "toelichting": "Dienst-en-stad-pagina's, vanaf tien pagina's.",
+      "volgorde": 30
+    },
+    {
+      "sleutel": "voorwaarden.uurtarief",
+      "groep": "Voorwaarden",
+      "label": "Uurtarief",
+      "bedrag": 60,
+      "eenheid": "per uur",
+      "toelichting": "Staat in de algemene voorwaarden (NL en EN). Let op: de project-CLAUDE.md noemde €75; de voorwaarden zijn de contracttekst.",
+      "volgorde": 10
+    },
+    {
+      "sleutel": "voorwaarden.aanmaning",
+      "groep": "Voorwaarden",
+      "label": "Kosten tweede aanmaning",
+      "bedrag": 50,
+      "eenheid": "eenmalig",
+      "toelichting": "Artikel betaling in de algemene voorwaarden.",
+      "volgorde": 20
+    },
+    {
+      "sleutel": "voorwaarden.onderhoud.maand",
+      "groep": "Voorwaarden",
+      "label": "Onderhoudsovereenkomst",
+      "bedrag": 25,
+      "eenheid": "per maand",
+      "toelichting": "Artikel onderhoud in de voorwaarden: geeft recht op één uur onderhoud per maand. Staat los van de hosting van €25 op de site; hetzelfde bedrag, andere afspraak.",
+      "volgorde": 30
+    }
+  ]
+}

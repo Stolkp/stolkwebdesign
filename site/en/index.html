@@ -882,13 +882,13 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="pillar-num">01</div>
         <div class="pillar-title">Website design</div>
         <p class="pillar-body">I build websites in HTML &amp; CSS with GSAP animations and WordPress — depending on what your project needs. Always bespoke, always responsive, always with personal contact. No off-the-shelf templates, no hidden costs.</p>
-        <div class="pillar-price">From <strong>€1.250</strong></div>
+        <div class="pillar-price">From <strong data-prijs="pakket.start.prijs">€1.250</strong></div>
       </div>
       <div class="pillar reveal" style="transition-delay:.1s">
         <div class="pillar-num">02</div>
         <div class="pillar-title">Web hosting &amp; security</div>
         <p class="pillar-body">Dedicated web hosting on a fast server. SSL certificate, automatic backups and monitoring included. Your website is always online and always up to date — without you ever having to think about it.</p>
-        <div class="pillar-price">From <strong>€25 / month</strong></div>
+        <div class="pillar-price">From <strong><span data-prijs="hosting.maand">€25</span> / month</strong></div>
       </div>
       <div class="pillar reveal" style="transition-delay:.2s">
         <div class="pillar-num">03</div>
@@ -916,7 +916,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           <span class="pkg-name">Start</span>
           <span class="pkg-tag">1 page</span>
         </div>
-        <div class="pkg-price">€1.250</div>
+        <div class="pkg-price" data-prijs="pakket.start.prijs">€1.250</div>
         <div class="pkg-sub">One powerful homepage, including the complete design system.</div>
         <ul class="pkg-list">
           <li>Fully bespoke design</li>
@@ -934,7 +934,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           <span class="pkg-name">Build</span>
           <span class="pkg-tag">up to 4 pages</span>
         </div>
-        <div class="pkg-price">€2.250</div>
+        <div class="pkg-price" data-prijs="pakket.onderneem.prijs">€2.250</div>
         <div class="pkg-sub">Homepage plus the pages an entrepreneur needs.</div>
         <ul class="pkg-list">
           <li>Everything in Start</li>
@@ -951,7 +951,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           <span class="pkg-name">Grow</span>
           <span class="pkg-tag">up to 7 pages</span>
         </div>
-        <div class="pkg-price">€3.500</div>
+        <div class="pkg-price" data-prijs="pakket.groei.prijs">€3.500</div>
         <div class="pkg-sub">A complete site with CMS, so you manage your own copy and photos.</div>
         <ul class="pkg-list">
           <li>Everything in Build</li>
@@ -976,7 +976,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     </div>
 
     <div class="pkg-foot reveal">
-      <div class="pkg-alacarte">Need more pages?<br><strong>€200 per extra page.</strong></div>
+      <div class="pkg-alacarte">Need more pages?<br><strong><span data-prijs="pakket.extra_pagina">€200</span> per extra page.</strong></div>
       <div class="pkg-scope">
         <div class="pkg-scope-title">What's in a page?</div>
         <p class="pkg-scope-body">One page from the fixed design system · fully responsive · base on-page SEO (title, meta, headings, alt) · 1 revision round · standard sections with existing GSAP animations. <strong>Extra work</strong> — custom animation, forms with logic, integrations or copywriting — is done at a fixed additional price, always agreed up front.</p>
@@ -996,39 +996,40 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       </p>
     </div>
     <div class="modules-row reveal" style="transition-delay:.1s">
-      <a href="/en/modules#basis" class="module-mini">
+<!-- STRIP-START -->
+      <a href="/en/modules#basis" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">Foundation</span>
-          <span class="module-mini-dot">Live</span>
+          <span class="module-mini-dot">Required</span>
         </div>
         <div class="module-mini-name">Base CMS</div>
-        <div class="module-mini-price">from <strong>€149</strong></div>
+        <div class="module-mini-price">from <strong>€19</strong>/mo</div>
       </a>
-      <a href="/en/modules#content" class="module-mini">
+      <a href="/en/modules#content" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 01</span>
           <span class="module-mini-dot">Live</span>
         </div>
         <div class="module-mini-name">Content</div>
-        <div class="module-mini-price">from <strong>€99</strong></div>
+        <div class="module-mini-price">from <strong>€15</strong>/mo</div>
       </a>
-      <a href="/en/modules#factuur" class="module-mini">
+      <a href="/en/modules#factuur" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 02</span>
           <span class="module-mini-dot">Live</span>
         </div>
-        <div class="module-mini-name">Invoice</div>
-        <div class="module-mini-price">from <strong>€199</strong></div>
+        <div class="module-mini-name">Invoicing tool</div>
+        <div class="module-mini-price">from <strong>€9</strong>/mo</div>
       </a>
-      <a href="/en/modules#social" class="module-mini">
+      <a href="/en/modules#social" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 03</span>
           <span class="module-mini-dot">Live</span>
         </div>
-        <div class="module-mini-name">Social</div>
-        <div class="module-mini-price">from <strong>€99</strong></div>
+        <div class="module-mini-name">Social Campaigns</div>
+        <div class="module-mini-price">from <strong>€39</strong>/mo</div>
       </a>
-      <a href="/en/modules#seo" class="module-mini">
+      <a href="/en/modules#seo" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 04</span>
           <span class="module-mini-dot">Live</span>
@@ -1036,38 +1037,39 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="module-mini-name">SEO</div>
         <div class="module-mini-price">from <strong>€99</strong></div>
       </a>
-      <a href="/en/modules#blog" class="module-mini">
+      <a href="/en/modules#blog" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 05</span>
           <span class="module-mini-dot soon">Q3 2026</span>
         </div>
         <div class="module-mini-name">Blog</div>
-        <div class="module-mini-price">from <strong>€99</strong></div>
+        <div class="module-mini-price">from <strong>€29</strong>/mo</div>
       </a>
-      <a href="/en/modules#sign" class="module-mini">
+      <a href="/en/modules#sign" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 06</span>
           <span class="module-mini-dot">New</span>
         </div>
         <div class="module-mini-name">Signing</div>
-        <div class="module-mini-price">from <strong>€149</strong></div>
+        <div class="module-mini-price">from <strong>€7</strong>/mo</div>
       </a>
-      <a href="/en/modules#rooster" class="module-mini">
+      <a href="/en/modules#rooster" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 07</span>
           <span class="module-mini-dot">New</span>
         </div>
         <div class="module-mini-name">Staff Scheduler</div>
-        <div class="module-mini-price">from <strong>€199</strong></div>
+        <div class="module-mini-price">from <strong>€15</strong>/mo</div>
       </a>
-      <a href="/en/modules#reserveren" class="module-mini">
+      <a href="/en/modules#reserveren" class="module-mini" data-prijs-gegenereerd>
         <div class="module-mini-head">
           <span class="module-mini-num">/ 08</span>
           <span class="module-mini-dot">New</span>
         </div>
         <div class="module-mini-name">Bookings</div>
-        <div class="module-mini-price">from <strong>€249</strong></div>
+        <div class="module-mini-price">from <strong>€19</strong>/mo</div>
       </a>
+      <!-- STRIP-END -->
     </div>
     <a href="/en/modules" class="modules-teaser-cta">
       View all modules
@@ -1165,7 +1167,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="metric-label font-mono">Custom design</div>
       </div>
       <div class="metric">
-        <div class="metric-num font-display">€1.250</div>
+        <div class="metric-num font-display" data-prijs="pakket.start.prijs">€1.250</div>
         <div class="metric-label font-mono">Starting price</div>
       </div>
     </div>

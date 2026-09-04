@@ -5,14 +5,16 @@
   "type": "module",
   "description": "Stolkwebdesign.nl \u2014 brutalist site + AI blog pipeline (Notion \u2192 Supabase \u2192 static HTML + Blotato carousel)",
   "scripts": {
-    "build": "node scripts/build-llms.mjs && node scripts/build-strip.mjs && node scripts/build-portfolio.mjs && node scripts/build-schema.mjs && node build-blog.js",
+    "build": "node scripts/build-prijzen.mjs && node scripts/build-llms.mjs && node scripts/build-strip.mjs && node scripts/build-portfolio.mjs && node scripts/build-schema.mjs && node build-blog.js",
     "dev": "node build-blog.js && echo 'Open site/index.html in your browser'",
     "llms": "node scripts/build-llms.mjs",
     "llms:check": "node scripts/build-llms.mjs --check",
     "schema": "node scripts/build-schema.mjs",
     "schema:check": "node scripts/build-schema.mjs --check",
     "portfolio": "node scripts/build-portfolio.mjs",
-    "strip": "node scripts/build-strip.mjs"
+    "strip": "node scripts/build-strip.mjs",
+    "prijzen": "node scripts/build-prijzen.mjs",
+    "prijzen:check": "node scripts/build-prijzen.mjs --check"
   },
   "dependencies": {
     "@notionhq/client": "^2.2.15",

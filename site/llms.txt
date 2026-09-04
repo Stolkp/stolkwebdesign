@@ -24,11 +24,11 @@ Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina 
 - Groei €3.500 (tot 7 pagina's). Een complete site met CMS, zodat je zelf teksten en foto's kunt aanpassen. Gespreid betalen kan: €1.500 vooraf plus €200 per maand, 12 maanden.
 - Custom / op maat (eigen systeem of integratie): op aanvraag. Eerst scope bepalen, daarna een vaste prijs.
 - Extra pagina buiten een pakket: €200.
-- Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 voor hosting en onderhoud, maandelijks opzegbaar.
+- Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 per maand: €25 hosting en €25 onderhoud (updates, back-ups en kleine tekstwijzigingen), maandelijks opzegbaar.
 
 ## Modules op de Basis CMS
 Alles draait op de Basis CMS: één login op je eigen domein. Per module een maandbedrag plus een eenmalige setup. Early-access tarief 2026.
-- Basis CMS (fundering, vereist voor alle modules): €19 per maand plus €149 setup. Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login, hosting en updates inbegrepen.
+- Basis CMS (fundering, vereist voor alle modules): €19 per maand plus €149 setup. Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login en updates inbegrepen; hosting (€25 per maand) komt erbij.
 - Content (live): €15 per maand plus €99 setup. Zelf teksten en foto's aanpassen op alle pagina's, onbeperkt.
 - Factuur-tool (live): €9 per maand plus €99 setup. Onbeperkt facturen en PDF's, zonder Moneybird of Mollie.
 - Social Campagnes (live): €39 per maand plus €99 setup. Vier campagnes per maand in vier formaten. Extra campagne €29.
@@ -41,8 +41,8 @@ Alles draait op de Basis CMS: één login op je eigen domein. Per module een maa
 - Gevonden worden door AI (nieuw): €29 per maand plus €199 setup. Meten en inrichten of AI-antwoordmachines zoals ChatGPT, Perplexity en de AI-antwoorden in Google je site kunnen vinden, lezen en citeren. Inclusief maandelijkse hermeting en een citatietrend in je eigen portal.
 
 ## Overige diensten
-- Webhosting en beveiliging: vanaf €25 per maand. Dedicated webhosting, de site staat altijd online en is actueel.
-- Doorlopende SEO: €195 per maand. Blijvend werken aan je vindbaarheid in Google.
+- Webhosting en beveiliging: vanaf €25 per maand. Dedicated webhosting met SSL, back-ups en monitoring. Komt bij elk pakket en ook bij Basis CMS.
+- Doorlopende SEO: €195 per maand. Blijvend werken aan je vindbaarheid in Google. Komt in plaats van de €50 voor hosting en onderhoud.
 - Onderhoud en support: op aanvraag. Kleine aanpassingen en doorontwikkeling.
 
 ## Voor agents

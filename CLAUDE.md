@@ -35,12 +35,13 @@ Projecten/Stolkwebdesign/
 │   ├── config.js              ← Supabase URL + anon key (publiek by design)
 │   ├── en/                    ← Tweetalig: 7 Engelse pagina's (index, over, portfolio, contact, modules, privacy, terms). NL=standaard, taalwissel NL/EN in nav+footer + hreflang. Aparte statische pagina's (data-content gestript, resource-refs absoluut). Gegenereerd via transform-script + vertaling
 │   ├── modules.html           ← Verkooppagina add-on modules met wachtlijst-modal (actuele prijzen: zie "Modules" hieronder; het oorspronkelijke SaaS-plan rekende CMS €499, Factuur €199, Social/SEO/Blog €99+per-use)
-│   ├── admin.html             ← Admin-SPA (Supabase auth). Sidebar gegroepeerd (10-07): **Sales** (Projecten · Privacyverzoeken · Factuur) · **Marketing** (Campagnes · Advertenties · Automations · Blog) · **Website** (Portfolio · Content · Layout · Design System) · **Modules** (Reserveringen · Rooster · Ondertekenen) · **Beheer** (Instellingen). Start-tab = Projecten. Deep-links via hash (`/admin#<sectie>`, bv. `#klantprojecten` — SECTION_LOADERS + openSectionFromHash; showSection is null-tolerant en zet de hash). Mobiel <900px: hamburger-drawer (toggleSidebar/closeSidebar + backdrop), inputs 16px, knoppen volle breedte. Tab-details: Content (data-driven schema, 137 velden, upsert naar stolkwebdesign_content) · Layout (admin-layout.js, stolkwebdesign_blocks + SortableJS) · Factuur (admin-factuur.js, tweeluik overzicht+editor: offertes/openstaande/betaalde facturen, betaald-stempel, offerte→factuur, merk-mail + PDF-naam=nummer) · Campagnes (social posts + @vercel/og download) · Ondertekenen (statuslijst sign_requests + overeenkomst-composer; loadSignList/sendAgreement) · Design System (admin-brandkit.js)
+│   ├── admin.html             ← Admin-SPA (Supabase auth). Sidebar gegroepeerd (10-07): **Sales** (Projecten · Privacyverzoeken · Factuur) · **Marketing** (Campagnes · Advertenties · Automations · Blog) · **Website** (Portfolio · Content · Layout · Design System) · **Modules** (Reserveringen · Rooster · Ondertekenen) · **Beheer** (Toolkit · Prijzen · Loops · Instellingen). Start-tab = Projecten. Deep-links via hash (`/admin#<sectie>`, bv. `#klantprojecten` — SECTION_LOADERS + openSectionFromHash; showSection is null-tolerant en zet de hash). Mobiel <900px: hamburger-drawer (toggleSidebar/closeSidebar + backdrop), inputs 16px, knoppen volle breedte. Tab-details: Content (data-driven schema, 137 velden, upsert naar stolkwebdesign_content) · Layout (admin-layout.js, stolkwebdesign_blocks + SortableJS) · Factuur (admin-factuur.js, tweeluik overzicht+editor: offertes/openstaande/betaalde facturen, betaald-stempel, offerte→factuur, merk-mail + PDF-naam=nummer) · Campagnes (social posts + @vercel/og download) · Ondertekenen (statuslijst sign_requests + overeenkomst-composer; loadSignList/sendAgreement) · Design System (admin-brandkit.js)
 │   ├── admin-badges.js        ← SWDBadges (10-07): rode actie-tellers op de sidebar-items — Projecten (nieuwe_lead + opvolging te laat + demo verlopen), Privacyverzoeken (open), Ondertekenen (pending/viewed), Advertenties (open acties), Automations (error-runs). Refresh bij login + elke 60s + debounced na elke tab-wissel; query-fouten (bv. GDPR-tabel nog niet gemigreerd) verbergen de badge stil
 │   ├── content-loader.js      ← Client-side override-loader: (1) vult data-content/-html/-src/-bg/-href uit stolkwebdesign_content (hardcoded HTML blijft SEO-fallback); (2) applyBlockLayout() herordent/verbergt secties met data-block-id op basis van stolkwebdesign_blocks
 │   ├── admin-layout.js        ← Layout-tab logica: laadt stolkwebdesign_blocks per pagina, SortableJS drag-and-drop, oog-toggle voor zichtbaarheid, UPSERT opslaan. Locked blokken (nav/footer) niet verplaatsbaar
 │   ├── admin-factuur.js       ← Self-contained Factuur-tool (vanilla JS). **Tweeluik sinds 21-07:** `#fact-overview` (startscherm: 3 blokken Offertes / Openstaande facturen / Betaalde facturen + "＋ Nieuw"-keuze offerte/factuur + rij-acties Open/→Factuur/Betaald/Verwijder) ⇄ `#fact-editor` (formulier + live A4-preview via sign-render.js + print-naar-PDF). **Betaald-status** (`paid/paidAt` in het record, geen migratie) → groen BETAALD-stempel op de factuur/PDF (`.inv-paid-stamp`) + badge in overzicht. **Offerte → factuur** in-place (`convertCurrentToInvoice`/`convertById`). **Merk-mail** ("✉ Mail naar klant"): opgemaakte HTML-mail in de huisstijl, tokens live uit Design System via seam `DS_TABLE` (`emailInner`/`loadBrandTokens`), kopieer-rich-HTML (`copyMailHtml`) of platte mailto; nooit auto-verzonden. **PDF-bestandsnaam = factuurnummer** (`printInvoice` zet document.title tijdelijk). Documenttype-toggle Factuur/Offerte; "Verstuur ter ondertekening" (sendForSignature → /api/create-signature-request) + status-badges. Vast driekleur-vector-logo (LOGO_SVG). Concept in localStorage `swd-invoice-draft-v1`; afzender apart in `swd-invoice-sender-v1` (Instellingen → "Afzendergegevens"). Print-CSS-valkuil: Rooster-`@page landscape` was globaal en zette de factuur liggend → nu named page `swdRoosterLandscape`. Zie `docs/logs/2026-07-21/03-…`
 │   ├── admin-brandkit.js      ← Brand Kit / Design System-module (skill cms-brandkit): loadBrandKit() rendert tab #section-designsystem (kleurstalen+hex, font-specimens, logo wit/donker, stijlregel-chips) uit stolkwebdesign_design_system; downloads (logo SVG/PNG kleur-zwart-wit, foto's via storage.list, brand-guide.md, brand-tokens.css/.json, kleuren.txt); superuser-gate (SUPERUSER_EMAILS) toont edit-velden + opslaan
+│   ├── admin-prijzen.js       ← Prijzen-tab (Beheer, 04-09): alle bedragen uit stolkwebdesign_prijzen, opslaan + "Zet live" (triggerRebuild). Zie "Diensten + Prijzen"
 │   ├── admin-rooster.js       ← Personeelsplanner-tab (module /07, skill cms-rooster)
 │   ├── admin-bookings.js      ← Reserveringen-tab (module /08, skill cms-reserveringen)
 │   ├── sign-render.js         ← Gedeelde pure documentHTML(snapshot, doc_type) voor factuur/offerte/overeenkomst — één bron van waarheid voor admin-preview én publieke ondertekenpagina (Ondertekenen-module / cms-sign)
@@ -53,7 +54,14 @@ Projecten/Stolkwebdesign/
 ├── api/                       ← Vercel serverless/edge functions (details per functie hieronder)
 ├── templates/blog-{index,post}.html ← Verfijnde brutalist blog templates (herschreven 16-07): Archivo Black + rode offset-schaduw, sentence-case kop, echte hero via cover_url in uitgelijnde 800px-kolom, verfijnd CTA-blok. Em-dash-vrij
 ├── migrations/                ← Alle SQL-migraties (overzicht hieronder)
+├── content/feiten.json        ← Beschrijvende laag voor llms.txt, JSON-LD en modulestrips; bedragen als {{sleutel}}-plaatshouders
+├── content/prijzen.json       ← Snapshot van de tabel stolkwebdesign_prijzen, geschreven door build-prijzen.mjs (niet met de hand bewerken)
 ├── scripts/
+│   ├── build-prijzen.mjs      ← Eerste stap van `npm run build`: tabel ophalen, snapshot schrijven, data-prijs-elementen + rekentool + meta stempelen (--check, --lokaal, --zelftest)
+│   ├── lib/prijzen.mjs        ← Snapshot lezen, formatteren (€1.250), afgeleide waarden (per pagina, jaartotaal, onderhoudsdeel)
+│   ├── lib/feiten.mjs         ← feiten.json met ingevulde plaatshouders (gebruikt door build-llms/-schema/-strip)
+│   ├── prijzen-live-check.mjs ← Browsermeting: elk gestempeld bedrag = tabel, geen onbeheerd bedrag in de tekst (lokaal of live URL's)
+│   ├── test-admin-prijzen.mjs ← Gedragstest Prijzen-tab (Puppeteer, db.from gemockt, 1440 + 390)
 │   ├── launch-showcase/       ← Launch Showcase-skill: capture.mjs + device-composite.html + render-composite.mjs + upload-and-publish.mjs + upload-card.mjs
 │   └── chat-smoke.mjs         ← Playwright smoke-test chatbot: desktop (1280×800) + mobiel (390×844), trigger exit-intent (mouseleave / SWDChat.open()), assertt paneel-open, screenshots in /tmp/chat-{desktop,mobile}.png
 ├── marketing/launch-socials/  ← Bestand-gebaseerde brutalist launch-carousels (HTML→Playwright PNG) + captions + README; los van de CMS-campagne. Ook doelmap voor go-live-skill screenshots (<sitenaam>/)
@@ -119,6 +127,7 @@ Projecten/Stolkwebdesign/
 | `automations_claim.sql` | Atomaire claim-RPC stolkwebdesign_automation_claim_runs (FOR UPDATE SKIP LOCKED) waar automation-tick runs uit trekt |
 | `automations_cron.sql` | pg_cron-job swd-automation-tick (elke 5 min, via pg_net → automation-tick). **In git staat een placeholder** `<AUTOMATION_SECRET>` i.p.v. het echte secret; de live cron is met het echte secret geladen via `execute_sql`, dus dit bestand alleen is niet genoeg om de cron te reproduceren |
 | `automations_dogfood_flow.sql` | Seed van de actieve dogfood-flow "Nieuwe lead opvolging" (zie Automations hieronder) + de 2 e-mailtemplates |
+| `prijzen_init.sql` | Prijzen op één plek: tabel stolkwebdesign_prijzen (sleutel/groep/label/bedrag/eenheid/toelichting/volgorde, updated_at-trigger) + RLS (public read, auth write) + seed van 45 rijen. Live 04-09-2026 via MCP. Gestempeld door `scripts/build-prijzen.mjs`, zie "Diensten + Prijzen" |
 | `client_projects_demo_expiry.sql` | Kolom `demo_expires_at date` op stolkwebdesign_client_projects: vervaldatum van een pitch-demo (14 dagen na deploy). Gezet door `scripts/deploy-demo/deploy-demo.mjs` in de monorepo; Projecten-tab toont "Demo verloopt/verlopen"-badge (`admin-klantprojecten.js`, `demoExpiryHTML`); dagelijkse checker `scripts/check-demo-expiry.mjs` (launchd 09:20) → Telegram + concept-mail. Live 10-07 via Management API |
 
 ## Design System
@@ -150,6 +159,53 @@ Via de launch-showcase-skill (portfolio-modus) kregen Sauberhaus, ExpenseMatch, 
 De publieke `projects`-tabel (portfolio-pagina + homepage-werkgrid + admin-tab Portfolio) is alleen voor **opgeleverd werk**. Pitch-demo's en concepten (GMSF, GS Automotive) staan in de **admin-tab Projecten** (klantprojecten-pijplijn, tabel `stolkwebdesign_client_projects`, UI `site/admin-klantprojecten.js`) met hun demo-URL in `live_url` en het voorstel in `proposal_url`. Er is op 09-07 kort een publieke `/projecten`-pagina geweest ("in de maak", negatieve-sort_order-conventie); die is dezelfde dag op Peters verzoek teruggedraaid (commit `789c112`) — niet opnieuw bouwen. Wordt een pitch een echte oplevering, dan pas via launch-showcase een `projects`-rij + kaart aanmaken. Nav-weetje uit die exercitie: een 7e nav-item past alleen op één regel t/m 1366px als de gap van 40 naar 14px gaat.
 
 ## Diensten + Prijzen
+
+**Sinds 04-09-2026 staat elke prijs op één plek: de tabel `stolkwebdesign_prijzen`** (45 rijen,
+migratie `migrations/prijzen_init.sql`), bewerkbaar in de admin-tab **Prijzen** (Beheer,
+`site/admin-prijzen.js`). Opslaan schrijft de rij weg; **"Zet live"** start een deploy, en pas bij
+die build stempelt `scripts/build-prijzen.mjs` (eerste stap van `npm run build`) de bedragen in de
+site. Reken op twee minuten. Hoe het werkt:
+
+- Elke prijs in de HTML staat in een element met `data-prijs="<sleutel>"` (134 stempels over
+  negen pagina's, NL en EN); de build vervangt de inhoud, de tekst eromheen blijft HTML.
+  `data-prijs-formaat="voorwaarden"` geeft `€ 50,-` voor de algemene voorwaarden. Zet **nooit** een
+  tag ín zo'n element: de build weigert dan (zelftest dekt dat).
+- De rekentool leest zijn constanten uit `const PRIJZEN = {…}` tussen `/* PRIJZEN-START */` en
+  `/* PRIJZEN-END */`, gestempeld door dezelfde build. Meta-descriptions ("Vanaf €1.250") via de
+  `META`-lijst in het script.
+- `content/feiten.json` bevat plaatshouders (`{{pakket.start.prijs}}`, `{{gespreid.maanden|kaal}}`);
+  `scripts/lib/feiten.mjs` vult ze uit de snapshot `content/prijzen.json` (geschreven door de
+  build, staat in git voor `--lokaal` en voor de geschiedenis). build-llms, build-schema en
+  build-strip lezen feiten via die lib. Het drift-slot in build-llms blijft: elk bedrag moet
+  zichtbaar op zijn bronpagina staan, dus een vergeten `data-prijs` breekt de build.
+- Afgeleide waarden (prijs per pagina, jaartotaal gespreid, onderhoudsdeel) rekent
+  `scripts/lib/prijzen.mjs` uit; de admin toont ze alleen-lezen (`prAfgeleid` in
+  `admin-prijzen.js`, SYNC-commentaar). Het aantal pagina's per pakket staat in de tabel.
+- `build-strip.mjs` dekt sinds 04-09 vier pagina's (NL en EN homepage en modulepagina); module 09
+  wordt op EN overgeslagen zolang `/en/modules` geen `id="aeo"`-sectie heeft. Engelse namen via
+  `naamEn` in feiten.json.
+- De prijsvelden zijn uit de Content-tab en uit `stolkwebdesign_content` gehaald (elf rijen), omdat
+  content-loader.js een gestempeld bedrag anders client-side zou overschrijven.
+- Controles: `node scripts/build-prijzen.mjs --zelftest` (13 toetsen, incl. een geneste-tag-geval),
+  `--check` (schijf), `node scripts/prijzen-live-check.mjs --lokaal http://localhost:8765` of met
+  live URL's (browser, ná content-loader: gestempeld = tabel, en geen onbeheerd bedrag in de tekst;
+  gegenereerde blokken dragen `data-prijs-gegenereerd`), en `node scripts/test-admin-prijzen.mjs`
+  (Puppeteer tegen een lokale server, `db.from` gemockt, 16 toetsen incl. 390px).
+- Kan Supabase bij de build niet bereikt worden, dan **faalt de build hard** en blijft de vorige
+  deploy staan. Bewust: een deploy met oude prijzen is erger dan geen deploy.
+
+**Prijsbesluiten 04-09 (Peter):** hosting €25/mnd (server, SSL, back-ups, monitoring), hosting
+plus onderhoud €50/mnd na de twaalf gespreide maanden (onderhoud = updates, back-ups,
+beveiligingscontrole, kleine tekstwijzigingen), en Basis CMS (€19/mnd + €149) komt **bovenop** de
+hosting; "hosting inbegrepen" bij Basis CMS is van de site. Zeven afwijkingen uit de meting van
+04-09 zijn daarbij rechtgezet (EN-homepagestrip op oude eenmalige prijzen, rekentool SEO €19/mnd,
+hero /modules "vanaf €29", "vanaf €2.250" op /website-laten-maken, en meer), zie
+`docs/logs/2026-09-04/03-…` in de monorepo. Nog open voor Peter: uurtarief €60 in de voorwaarden
+tegenover €75 hieronder, en de clausule "€25 per maand geeft recht op 1 uur onderhoud".
+
+De lijst hieronder is de stand van vóór 04-09 en is voor de moduleprijzen verouderd (eenmalige
+bedragen); de tabel is leidend.
+
 Per-pagina model (uurtarief €75) — gepresenteerd als 3 pakketten op de homepage (`#pakketten`):
 - **Start** €1.250 — homepage / 1 pagina, incl. volledig ontwerp-systeem
 - **Onderneem** €2.250 — tot 4 pagina's (meest gekozen)
@@ -170,7 +226,7 @@ Per-pagina model (uurtarief €75) — gepresenteerd als 3 pakketten op de homep
   - **SEO-content** €149 setup (merkstem + 1e keyword-cluster) + €89 per gepubliceerde pagina — skill `cms-seo-content` + interne motor `seo-content-engine`; draait op Basis CMS + Blog. Keyword-clusters → AI-blog/-pagina in merkstem met GEO (answer-first + FAQ/Article/Service JSON-LD). Migratie `migrations/seo_keywords_init.sql` (tabel `stolkwebdesign_seo_keywords`, klaargezet — nog niet live gedraaid). Demo-output in `seo-content/`
   - **Lokale vindbaarheid** (service-matrix, dienst×stad) projectprijs vanaf €490 (10 pagina's) — `seo-content-engine/scripts/service-matrix.mjs`
 
-> Prijzen tonen via HTML-defaults; CMS-bewerkbaar via `/admin.html` (keys `home.pkg*`, `home.pillar1_price`, `home.metric4_num`) → upsert in Supabase `stolkwebdesign_content`. **LET OP (09-07): het CMS is inmiddels leidend voor home-copy** — er staan ~82 `home`-rijen die de HTML overriden. Elke copy-wijziging op de homepage dus in HTML én CMS doorvoeren (fallback via REST + `SUPABASE_SERVICE_ROLE_KEY` uit root `.env` als de Supabase-MCP niet verbonden is). Zie `docs/logs/2026-07-09/02-…`.
+> **Prijzen zijn sinds 04-09 NIET meer CMS-bewerkbaar via de Content-tab** (zie boven); de keys `home.pkg*_price`, `home.pillar*_price`, `home.metric4_num` en `modules.*_price` bestaan niet meer. Voor de overige home-copy geldt nog steeds (09-07): het CMS is leidend, er staan ~70 `home`-rijen die de HTML overriden. Elke copy-wijziging op de homepage dus in HTML én CMS doorvoeren (fallback via REST + `SUPABASE_SERVICE_ROLE_KEY` uit root `.env` als de Supabase-MCP niet verbonden is). Zie `docs/logs/2026-07-09/02-…`.
 
 ## Blog-pijplijn (Notion → Supabase → static)
 Notion DB "Blog drafts" (page `36ff84f0…81d1`) → Vercel Cron `/api/poll-notion` (1×/dag 08:00) → `/api/notion-publish` upsert Supabase `stolkwebdesign_blog_posts` + 5 brutalist carousel-slides via `/api/og` → deploy hook → static `/blog/[slug].html` + LinkedIn (Blotato ID 6535) + Instagram (ID 30624). Setup-stappen in `HANDOFF.md`.

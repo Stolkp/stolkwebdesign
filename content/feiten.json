@@ -10,7 +10,11 @@
     "",
     "Aanleiding (25-08-2026): llms.txt verkocht maandenlang de pakketten van 950, 1500 en",
     "2450 euro terwijl de site al 1250, 2250 en 3500 voerde. AI-antwoordmachines lezen juist",
-    "die bestanden, dus prospects kregen prijzen te horen die 25 tot 30 procent te laag lagen."
+    "die bestanden, dus prospects kregen prijzen te horen die 25 tot 30 procent te laag lagen.",
+    "",
+    "Sinds 04-09-2026 staan de bedragen hier als plaatshouder (dubbele accolades om de sleutel, optioneel |kaal) en komen ze uit",
+    "content/prijzen.json, de snapshot van de tabel stolkwebdesign_prijzen (admin-tab Prijzen).",
+    "scripts/lib/feiten.mjs vult ze in; een onbekende sleutel breekt de build."
   ],
   "merk": {
     "naam": "Stolkwebdesign",
@@ -33,26 +37,26 @@
     "items": [
       {
         "naam": "Start",
-        "prijs": "€1.250",
+        "prijs": "{{pakket.start.prijs}}",
         "omvang": "1 pagina",
-        "perPagina": "€1.250",
-        "gespreid": "€500 vooraf plus €75 per maand, 12 maanden",
+        "perPagina": "{{pakket.start.per_pagina}}",
+        "gespreid": "{{gespreid.start.vooraf}} vooraf plus {{gespreid.start.maand}} per maand, {{gespreid.maanden|kaal}} maanden",
         "wat": "Eén krachtige homepage, inclusief het volledige ontwerpsysteem, basis on-page SEO en één revisieronde."
       },
       {
         "naam": "Onderneem",
-        "prijs": "€2.250",
+        "prijs": "{{pakket.onderneem.prijs}}",
         "omvang": "tot 4 pagina's",
-        "perPagina": "vanaf €563",
-        "gespreid": "€1.000 vooraf plus €125 per maand, 12 maanden",
+        "perPagina": "vanaf {{pakket.onderneem.per_pagina}}",
+        "gespreid": "{{gespreid.onderneem.vooraf}} vooraf plus {{gespreid.onderneem.maand}} per maand, {{gespreid.maanden|kaal}} maanden",
         "wat": "Homepage plus de pagina's die een ondernemer nodig heeft: Over, Diensten, Contact. Klaar voor add-on modules. Meest gekozen."
       },
       {
         "naam": "Groei",
-        "prijs": "€3.500",
+        "prijs": "{{pakket.groei.prijs}}",
         "omvang": "tot 7 pagina's",
-        "perPagina": "vanaf €500, inclusief CMS",
-        "gespreid": "€1.500 vooraf plus €200 per maand, 12 maanden",
+        "perPagina": "vanaf {{pakket.groei.per_pagina}}, inclusief CMS",
+        "gespreid": "{{gespreid.groei.vooraf}} vooraf plus {{gespreid.groei.maand}} per maand, {{gespreid.maanden|kaal}} maanden",
         "wat": "Een complete site met CMS, zodat je zelf teksten en foto's kunt aanpassen."
       },
       {
@@ -62,21 +66,21 @@
         "wat": "Eerst scope bepalen, daarna een vaste prijs."
       }
     ],
-    "extraPagina": "€200",
-    "naTwaalfMaanden": "Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 voor hosting en onderhoud, maandelijks opzegbaar."
+    "extraPagina": "{{pakket.extra_pagina}}",
+    "naTwaalfMaanden": "Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar {{hosting_onderhoud.maand}} per maand: {{hosting.maand}} hosting en {{onderhoud.maand}} onderhoud (updates, back-ups en kleine tekstwijzigingen), maandelijks opzegbaar."
   },
   "diensten": {
     "bron": "/index.html",
     "items": [
       {
         "naam": "Webhosting en beveiliging",
-        "prijs": "vanaf €25 per maand",
-        "wat": "Dedicated webhosting, de site staat altijd online en is actueel."
+        "prijs": "vanaf {{hosting.maand}} per maand",
+        "wat": "Dedicated webhosting met SSL, back-ups en monitoring. Komt bij elk pakket en ook bij Basis CMS."
       },
       {
         "naam": "Doorlopende SEO",
-        "prijs": "€195 per maand",
-        "wat": "Blijvend werken aan je vindbaarheid in Google."
+        "prijs": "{{seo.doorlopend.maand}} per maand",
+        "wat": "Blijvend werken aan je vindbaarheid in Google. Komt in plaats van de {{hosting_onderhoud.maand}} voor hosting en onderhoud."
       },
       {
         "naam": "Onderhoud en support",
@@ -91,109 +95,119 @@
     "items": [
       {
         "naam": "Basis CMS",
-        "prijs": "€19 per maand plus €149 setup",
+        "prijs": "{{module.basis.maand}} per maand plus {{module.basis.setup}} setup",
         "status": "fundering, vereist voor alle modules",
-        "wat": "Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login, hosting en updates inbegrepen.",
+        "wat": "Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login en updates inbegrepen; hosting ({{hosting.maand}} per maand) komt erbij.",
         "anker": "basis",
         "nummer": "Fundering",
         "label": "Vereist",
-        "stripprijs": "vanaf €19/mnd"
+        "stripprijs": "vanaf {{module.basis.maand}}/mnd",
+        "naamEn": "Base CMS"
       },
       {
         "naam": "Content",
-        "prijs": "€15 per maand plus €99 setup",
+        "prijs": "{{module.content.maand}} per maand plus {{module.content.setup}} setup",
         "status": "live",
         "wat": "Zelf teksten en foto's aanpassen op alle pagina's, onbeperkt.",
         "anker": "content",
         "nummer": "/ 01",
         "label": "Live",
-        "stripprijs": "vanaf €15/mnd"
+        "stripprijs": "vanaf {{module.content.maand}}/mnd",
+        "naamEn": "Content"
       },
       {
         "naam": "Factuur-tool",
-        "prijs": "€9 per maand plus €99 setup",
+        "prijs": "{{module.factuur.maand}} per maand plus {{module.factuur.setup}} setup",
         "status": "live",
         "wat": "Onbeperkt facturen en PDF's, zonder Moneybird of Mollie.",
         "anker": "factuur",
         "nummer": "/ 02",
         "label": "Live",
-        "stripprijs": "vanaf €9/mnd"
+        "stripprijs": "vanaf {{module.factuur.maand}}/mnd",
+        "naamEn": "Invoicing tool"
       },
       {
         "naam": "Social Campagnes",
-        "prijs": "€39 per maand plus €99 setup",
+        "prijs": "{{module.social.maand}} per maand plus {{module.social.setup}} setup",
         "status": "live",
-        "wat": "Vier campagnes per maand in vier formaten. Extra campagne €29.",
+        "wat": "Vier campagnes per maand in vier formaten. Extra campagne {{module.social.extra_campagne}}.",
         "anker": "social",
         "nummer": "/ 03",
         "label": "Live",
-        "stripprijs": "vanaf €39/mnd"
+        "stripprijs": "vanaf {{module.social.maand}}/mnd",
+        "naamEn": "Social Campaigns"
       },
       {
         "naam": "SEO-rapport",
-        "prijs": "€99 eenmalig, actiepunten op uurbasis",
+        "prijs": "{{seo.rapport}} eenmalig, actiepunten op uurbasis",
         "status": "live",
         "wat": "Score, prioriteiten en actieplan. Per actiepunt zelf oppakken of laten doen.",
         "anker": "seo",
         "nummer": "/ 04",
         "label": "Live",
-        "stripprijs": "vanaf €99"
+        "stripprijs": "vanaf {{seo.rapport}}",
+        "naamEn": "SEO"
       },
       {
         "naam": "Blog",
-        "prijs": "€29 per maand plus €99 setup",
+        "prijs": "{{module.blog.maand}} per maand plus {{module.blog.setup}} setup",
         "status": "Q3 2026",
-        "wat": "Twee artikelen per maand met AI en SEO-meta. Extra artikel €39.",
+        "wat": "Twee artikelen per maand met AI en SEO-meta. Extra artikel {{module.blog.extra_artikel}}.",
         "anker": "blog",
         "nummer": "/ 05",
         "label": "Q3 2026",
-        "stripprijs": "vanaf €29/mnd"
+        "stripprijs": "vanaf {{module.blog.maand}}/mnd",
+        "naamEn": "Blog"
       },
       {
         "naam": "Ondertekenen",
-        "prijs": "€7 per maand plus €79 setup",
+        "prijs": "{{module.sign.maand}} per maand plus {{module.sign.setup}} setup",
         "status": "nieuw",
         "wat": "Onbeperkt eIDAS-handtekeningen, status in één oogopslag.",
         "anker": "sign",
         "nummer": "/ 06",
         "label": "Nieuw",
-        "stripprijs": "vanaf €7/mnd"
+        "stripprijs": "vanaf {{module.sign.maand}}/mnd",
+        "naamEn": "Signing"
       },
       {
         "naam": "Personeelsplanner",
-        "prijs": "€15 per maand plus €99 setup",
+        "prijs": "{{module.rooster.maand}} per maand plus {{module.rooster.setup}} setup",
         "status": "nieuw",
         "wat": "Onbeperkt medewerkers, diensten en deel-links. Rooster printen of als PDF.",
         "anker": "rooster",
         "nummer": "/ 07",
         "label": "Nieuw",
-        "stripprijs": "vanaf €15/mnd"
+        "stripprijs": "vanaf {{module.rooster.maand}}/mnd",
+        "naamEn": "Staff Scheduler"
       },
       {
         "naam": "Reserveringen",
-        "prijs": "€19 per maand plus €99 setup",
+        "prijs": "{{module.reserveren.maand}} per maand plus {{module.reserveren.setup}} setup",
         "status": "nieuw",
         "wat": "Onbeperkt boekingen, dubbel-boek-vrij, klant kan zelf annuleren.",
         "anker": "reserveren",
         "nummer": "/ 08",
         "label": "Nieuw",
-        "stripprijs": "vanaf €19/mnd"
+        "stripprijs": "vanaf {{module.reserveren.maand}}/mnd",
+        "naamEn": "Bookings"
       },
       {
         "naam": "SEO-content",
-        "prijs": "€149 setup plus €89 per pagina",
+        "prijs": "{{seo.content.setup}} setup plus {{seo.content.per_pagina}} per pagina",
         "status": "live",
-        "wat": "Artikel plus FAQ plus structured data, vindbaar in Google en in AI-overviews. Dienst-en-stad-project vanaf €490 voor 10 pagina's."
+        "wat": "Artikel plus FAQ plus structured data, vindbaar in Google en in AI-overviews. Dienst-en-stad-project vanaf {{seo.lokaal.project}} voor 10 pagina's."
       },
       {
         "naam": "Gevonden worden door AI",
-        "prijs": "€29 per maand plus €199 setup",
+        "prijs": "{{module.aeo.maand}} per maand plus {{module.aeo.setup}} setup",
         "status": "nieuw",
         "wat": "Meten en inrichten of AI-antwoordmachines zoals ChatGPT, Perplexity en de AI-antwoorden in Google je site kunnen vinden, lezen en citeren. Inclusief maandelijkse hermeting en een citatietrend in je eigen portal.",
         "anker": "aeo",
         "nummer": "/ 09",
         "label": "Nieuw",
-        "stripprijs": "vanaf €29/mnd"
+        "stripprijs": "vanaf {{module.aeo.maand}}/mnd",
+        "naamEn": "Found by AI"
       }
     ],
     "_stripbron": "De modulestrip op index.html wordt uit deze lijst gegenereerd door scripts/build-strip.mjs. Tot 25-08-2026 stond die strip met de hand op de oude eenmalige prijzen (vanaf €149, €99, €249) terwijl modules.html al het maandmodel voerde. Een prospect zag dus twee verschillende prijzen voor dezelfde module."
@@ -278,16 +292,16 @@
     "_geenStraatadres": "Bewust alleen plaats en land in de structured data. Oranjelaan 38 is Peters huisadres en hoort niet machine-leesbaar gepubliceerd te worden. Zet het hier dus niet terug 'voor de volledigheid': schema.org accepteert een PostalAddress met alleen addressLocality en addressCountry prima."
   },
   "faq": {
-    "_bron": "Letterlijk overgenomen uit de zichtbare details-blokken op site/modules.html, site/en/modules.html en site/contact.html. FAQ-markup moet gelijk zijn aan de zichtbare tekst, dus deze antwoorden worden hier NIET geredigeerd. Acht ervan bevatten een em-dash; dat is bestaande sitecopy en een aparte beslissing.",
+    "_bron": "Letterlijk overgenomen uit de zichtbare details-blokken op site/modules.html, site/en/modules.html en site/contact.html. FAQ-markup moet gelijk zijn aan de zichtbare tekst, dus deze antwoorden worden hier NIET geredigeerd. Zeven ervan bevatten een em-dash; dat is bestaande sitecopy en een aparte beslissing.",
     "modules": [
       {
         "nl": {
           "vraag": "Heb ik de Basis CMS altijd nodig?",
-          "antwoord": "De Basis CMS (€149 setup + €19/mnd) is de fundering: je eigen login, dashboard, hosting en updates. Die activeer je één keer. Daarna klik je modules erbij — Content, Factuur, Social, Blog — elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS."
+          "antwoord": "De Basis CMS ({{module.basis.setup}} setup + {{module.basis.maand}}/mnd) is de fundering: je eigen login, dashboard en updates. Hosting ({{hosting.maand}}/mnd) komt erbij. Die activeer je één keer. Daarna klik je modules erbij (Content, Factuur, Social, Blog), elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS."
         },
         "en": {
           "vraag": "Do I always need the Base CMS?",
-          "antwoord": "The Base CMS (€149 setup + €19/mo) is the foundation: your own login, dashboard, hosting and updates. You activate it once. After that you click modules on — Content, Invoicing, Social, Blog — each with its own small monthly rate, without paying for the base again. Only the SEO report can also be ordered separately, without the Base CMS."
+          "antwoord": "The Base CMS ({{module.basis.setup}} setup + {{module.basis.maand}}/mo) is the foundation: your own login, dashboard and updates. Hosting ({{hosting.maand}}/mo) comes on top. You activate it once. After that you click modules on (Content, Invoicing, Social, Blog), each with its own small monthly rate, without paying for the base again. Only the SEO report can also be ordered separately, without the Base CMS."
         }
       },
       {

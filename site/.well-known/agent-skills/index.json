@@ -11,14 +11,14 @@
       "type": "service",
       "description": "Handgebouwde, scroll-geanimeerde website op maat in HTML, CSS en GSAP of WordPress, in vier pakketten vanaf €1.250.",
       "url": "https://www.stolkwebdesign.nl/.well-known/agent-skills/website-laten-bouwen/SKILL.md",
-      "digest": "sha256:4ad9d14cada96595b6ad411b317664d165a583264bccb9bb24ba56eff1626df6"
+      "digest": "sha256:6ce25f9c01904d462715c6572bd87ff24b99416deb2bb37c5e284b985ce46da5"
     },
     {
       "name": "Website-modules",
       "type": "service",
       "description": "Add-on modules op de Basis CMS: zelf content beheren, facturen maken, social plannen, bloggen, ondertekenen, roosteren en reserveringen aannemen.",
       "url": "https://www.stolkwebdesign.nl/.well-known/agent-skills/modules/SKILL.md",
-      "digest": "sha256:ff1cdaf17599db06fc53b9817015c58b8a4bd040a4faaa8adbbfd5e4b5da080c"
+      "digest": "sha256:b6b6ed3578262f9dc17c41c5a83daf418fc81807cea90c9890e1f99ad8b8fc42"
     }
   ]
 }

@@ -13,7 +13,7 @@ Webdesignstudio van Peter Stolk uit Uithoorn, werkt voor ondernemers in de regio
 - **Groei**: €3.500, tot 7 pagina's. Een complete site met CMS, zodat je zelf teksten en foto's kunt aanpassen.
 - **Custom / op maat**: op aanvraag, eigen systeem of integratie. Eerst scope bepalen, daarna een vaste prijs.
 
-Extra pagina buiten een pakket: €200. Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 voor hosting en onderhoud, maandelijks opzegbaar.
+Extra pagina buiten een pakket: €200. Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 per maand: €25 hosting en €25 onderhoud (updates, back-ups en kleine tekstwijzigingen), maandelijks opzegbaar.
 
 ## Werkwijze
 Elke site volgt een research- en strategieproces voordat er één regel code wordt geschreven: merkanalyse, marktonderzoek, een design- en contentbrief, de bouw, en een kwaliteitscheck. Het resultaat is een snelle, unieke site die opvalt en converteert.

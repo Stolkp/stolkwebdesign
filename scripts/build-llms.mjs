@@ -33,7 +33,8 @@ const args = process.argv.slice(2);
 const ALLEEN_CHECK = args.includes('--check');
 const FORCEER = args.includes('--forceer');
 
-const feiten = JSON.parse(readFileSync(join(ROOT, 'content', 'feiten.json'), 'utf8'));
+import { laadFeiten } from './lib/feiten.mjs';
+const feiten = laadFeiten();
 
 // ── Drift-slot ──────────────────────────────────────────────────────────────
 // Haalt de zichtbare tekst van een pagina op en kijkt of elk bedrag er echt staat.

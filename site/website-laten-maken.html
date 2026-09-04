@@ -446,11 +446,11 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
     <div class="price-card">
       <div class="price-anchor">
         <div class="lbl">Los afgenomen</div>
-        <div class="row"><span>Nieuwe site als eenmalig project</span><b class="nw">vanaf €2.250</b></div>
-        <div class="row"><span>Onderhoud en vindbaarheid los</span><b class="nw">vanaf €195 p/m</b></div>
+        <div class="row"><span>Nieuwe site als eenmalig project</span><b class="nw">vanaf <span data-prijs="pakket.start.prijs">€1.250</span></b></div>
+        <div class="row"><span>Onderhoud en vindbaarheid los</span><b class="nw">vanaf <span data-prijs="seo.doorlopend.maand">€195</span> p/m</b></div>
       </div>
       <div class="price-main">
-        <div class="big">€350 p/m</div>
+        <div class="big"><span data-prijs="abonnement.maand">€350</span> p/m</div>
         <div class="per">Alles bij elkaar, één bedrag</div>
         <ul class="price-terms">
           <li><span class="tick">→</span> <span>Geen opstartkosten</span></li>
@@ -458,7 +458,7 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
           <li><span class="tick">→</span> <span>Na twaalf betaalde maanden is de site jouw eigendom</span></li>
           <li><span class="tick">→</span> <span>Eerder stoppen kan: de resterende maanden worden dan in één keer gefactureerd en de site is direct van jou</span></li>
         </ul>
-        <p class="price-note">Prijzen excl. btw. Liever in één keer betalen? Dat kan ook, met vaste pakketten vanaf €1.250. Zeg het in het gesprek.</p>
+        <p class="price-note">Prijzen excl. btw. Liever in één keer betalen? Dat kan ook, met vaste pakketten vanaf <span data-prijs="pakket.start.prijs">€1.250</span>. Zeg het in het gesprek.</p>
         <a href="#aanvraag" class="plan-cta">Vraag je gratis mockup aan →</a>
       </div>
     </div>
@@ -468,17 +468,17 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
   <div class="instap">
     <div class="instap-kop">
       <h3>Liever kleiner beginnen?</h3>
-      <div class="instap-prijs"><span class="nw">€500</span> + <span class="nw">€75 p/m</span></div>
+      <div class="instap-prijs"><span class="nw" data-prijs="gespreid.start.vooraf">€500</span> + <span class="nw"><span data-prijs="gespreid.start.maand">€75</span> p/m</span></div>
     </div>
-    <p>Eén pagina waar alles op staat: wat je doet, wie je bent, je werk en hoe mensen je bereiken. Ook op maat ontworpen en in schone code gebouwd, alleen compacter. Je betaalt €500 bij de start en daarna twaalf maanden €75. Na dat jaar zakt het naar €50 per maand.</p>
+    <p>Eén pagina waar alles op staat: wat je doet, wie je bent, je werk en hoe mensen je bereiken. Ook op maat ontworpen en in schone code gebouwd, alleen compacter. Je betaalt <span data-prijs="gespreid.start.vooraf">€500</span> bij de start en daarna twaalf maanden <span data-prijs="gespreid.start.maand">€75</span>. Na dat jaar zakt het naar <span data-prijs="hosting_onderhoud.maand">€50</span> per maand.</p>
     <ul>
       <li><span class="tick">→</span> <span>Eén pagina, volledig op maat en snel op de telefoon</span></li>
       <li><span class="tick">→</span> <span>Hosting, beveiliging, updates en back-ups</span></li>
       <li><span class="tick">→</span> <span>Kleine tekst- en fotowijzigingen, gewoon even mailen</span></li>
-      <li><span class="tick">→</span> <span>Twaalf maanden looptijd, eerste jaar <span class="nw">€1.400</span> in totaal</span></li>
+      <li><span class="tick">→</span> <span>Twaalf maanden looptijd, eerste jaar <span class="nw" data-prijs="gespreid.start.jaar_totaal">€1.400</span> in totaal</span></li>
       <li><span class="tick">→</span> <span>Na twaalf betaalde maanden is de site jouw eigendom</span></li>
-      <li><span class="tick">→</span> <span>Daarna <span class="nw">€50 p/m</span> voor hosting en onderhoud, per maand opzegbaar</span></li>
-      <li><span class="tick">→</span> <span>Vindbaarheid erbij houden? Dan <span class="nw">€195 p/m</span> in plaats van €50</span></li>
+      <li><span class="tick">→</span> <span>Daarna <span class="nw"><span data-prijs="hosting_onderhoud.maand">€50</span> p/m</span> voor hosting en onderhoud, per maand opzegbaar</span></li>
+      <li><span class="tick">→</span> <span>Vindbaarheid erbij houden? Dan <span class="nw"><span data-prijs="seo.doorlopend.maand">€195</span> p/m</span> in plaats van <span data-prijs="hosting_onderhoud.maand">€50</span></span></li>
     </ul>
     <p class="instap-uit"><b>Wat er niet in zit:</b> het maandelijkse werk aan je vindbaarheid in Google. Geen bijgehouden bedrijfsprofiel, geen nieuwe pagina's, geen rapportage. Wil je dat er later bij, dan schuif je door naar het volledige abonnement. <b>En let op:</b> hier betaal je wél een bedrag bij de start. Wil je juist niets vooraf, dan is het volledige abonnement de betere route.</p>
   </div>
@@ -519,12 +519,12 @@ footer { background:var(--black); color:var(--white); padding:34px 0; }
 <section class="block"><div class="wrap">
   <div class="kicker">Veelgestelde vragen</div>
   <h2 class="sec">Goed om<br>te weten</h2>
-  <div class="faq-item"><h4>Wat kost het precies?</h4><p>Vanaf €350 per maand, exclusief btw. Daar zit alles in: de nieuwe site, hosting, onderhoud en het maandelijkse werk aan je vindbaarheid. Geen opstartkosten. Wat het bij jou wordt hangt af van de omvang van de site, en dat weet je vóór je iets tekent.</p></div>
-  <div class="faq-item"><h4>Kan het ook kleiner?</h4><p>Ja. Voor €500 bij de start en twaalf maanden €75 krijg je één pagina waar alles op staat, ook op maat gebouwd, inclusief hosting, onderhoud en kleine wijzigingen. Het eerste jaar kost dat €1.400 in totaal. Het verschil met het volledige abonnement is het maandelijkse werk aan je vindbaarheid in Google: dat zit er bij de instap niet in.</p></div>
-  <div class="faq-item"><h4>Wat gebeurt er na dat eerste jaar?</h4><p>De site is dan van jou. Het maandbedrag zakt naar €50 voor hosting, onderhoud en kleine wijzigingen, en dat is per maand opzegbaar. Wil je dat ik ook aan je vindbaarheid in Google blijf werken, dan is het €195 per maand in plaats van €50. Je kiest dat aan het eind van het jaar, niet nu.</p></div>
+  <div class="faq-item"><h4>Wat kost het precies?</h4><p>Vanaf <span data-prijs="abonnement.maand">€350</span> per maand, exclusief btw. Daar zit alles in: de nieuwe site, hosting, onderhoud en het maandelijkse werk aan je vindbaarheid. Geen opstartkosten. Wat het bij jou wordt hangt af van de omvang van de site, en dat weet je vóór je iets tekent.</p></div>
+  <div class="faq-item"><h4>Kan het ook kleiner?</h4><p>Ja. Voor <span data-prijs="gespreid.start.vooraf">€500</span> bij de start en twaalf maanden <span data-prijs="gespreid.start.maand">€75</span> krijg je één pagina waar alles op staat, ook op maat gebouwd, inclusief hosting, onderhoud en kleine wijzigingen. Het eerste jaar kost dat <span data-prijs="gespreid.start.jaar_totaal">€1.400</span> in totaal. Het verschil met het volledige abonnement is het maandelijkse werk aan je vindbaarheid in Google: dat zit er bij de instap niet in.</p></div>
+  <div class="faq-item"><h4>Wat gebeurt er na dat eerste jaar?</h4><p>De site is dan van jou. Het maandbedrag zakt naar <span data-prijs="hosting_onderhoud.maand">€50</span> per maand: <span data-prijs="hosting.maand">€25</span> hosting en <span data-prijs="onderhoud.maand">€25</span> onderhoud (updates, back-ups en kleine tekstwijzigingen), en dat is per maand opzegbaar. Wil je dat ik ook aan je vindbaarheid in Google blijf werken, dan is het <span data-prijs="seo.doorlopend.maand">€195</span> per maand in plaats van <span data-prijs="hosting_onderhoud.maand">€50</span>. Je kiest dat aan het eind van het jaar, niet nu.</p></div>
   <div class="faq-item"><h4>Zit ik dan twaalf maanden vast?</h4><p>De looptijd is twaalf maanden, daarna is het per maand opzegbaar. Wil je er eerder uit, dan factureer ik de resterende maanden in één keer en is de site meteen van jou. Je koopt dus een site, je huurt hem niet.</p></div>
   <div class="faq-item"><h4>Van wie is de website?</h4><p>Van jou. Na twaalf betaalde maanden is de site je eigendom, inclusief de code. Stop je daarna, dan kun je hem meenemen naar een andere partij.</p></div>
-  <div class="faq-item"><h4>Kan ik ook gewoon in één keer betalen?</h4><p>Ja. Vaste pakketten vanaf €1.250 voor één pagina tot €3.500 voor een grotere site. Zeg het in het gesprek, dan reken ik het allebei voor je uit.</p></div>
+  <div class="faq-item"><h4>Kan ik ook gewoon in één keer betalen?</h4><p>Ja. Vaste pakketten vanaf <span data-prijs="pakket.start.prijs">€1.250</span> voor één pagina tot <span data-prijs="pakket.groei.prijs">€3.500</span> voor een grotere site. Zeg het in het gesprek, dan reken ik het allebei voor je uit.</p></div>
   <div class="faq-item"><h4>Is de mockup echt gratis?</h4><p>Ja. Je krijgt een voorproefje van je nieuwe homepage zonder kosten of verplichtingen. Bevalt het niet, dan stopt het daar.</p></div>
   <div class="faq-item"><h4>Werk je ook buiten Amstelveen/Amsterdam?</h4><p>Zeker, ik zit in Uithoorn en werk door heel Nederland. Alles kan online.</p></div>
   <div class="faq-item"><h4>WordPress of niet?</h4><p>Beide kan. Standaard bouw ik in schone code (sneller, veiliger), maar wil je zelf in WordPress beheren, dan regel ik dat.</p></div>

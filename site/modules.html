@@ -689,7 +689,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
           "name": "Heb ik de Basis CMS altijd nodig?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "De Basis CMS (€149 setup + €19/mnd) is de fundering: je eigen login, dashboard, hosting en updates. Die activeer je één keer. Daarna klik je modules erbij — Content, Factuur, Social, Blog — elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS."
+            "text": "De Basis CMS (€149 setup + €19/mnd) is de fundering: je eigen login, dashboard en updates. Hosting (€25/mnd) komt erbij. Die activeer je één keer. Daarna klik je modules erbij (Content, Factuur, Social, Blog), elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS."
           }
         },
         {
@@ -751,7 +751,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         {
           "@type": "Offer",
           "name": "Basis CMS",
-          "description": "Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login, hosting en updates inbegrepen.",
+          "description": "Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login en updates inbegrepen; hosting (€25 per maand) komt erbij.",
           "price": "19",
           "priceCurrency": "EUR",
           "availability": "https://schema.org/InStock"
@@ -897,8 +897,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <h1 class="hero-headline" data-content-html="modules.hero_heading">
       Eén platform —<br>negen <span class="red">modules.</span>
     </h1>
-    <p class="hero-sub" data-content-html="modules.hero_sub">
-      Stop met betalen voor <strong>losse tools die niet met elkaar praten</strong>. Content, facturatie, social, SEO, blog, ondertekenen, personeelsplanning en reserveringen — in één dashboard op je eigen domein. Vanaf €29 per maand, alles inbegrepen. Geen plugin-hel, geen ticketsysteem.
+    <p class="hero-sub">
+      Stop met betalen voor <strong>losse tools die niet met elkaar praten</strong>. Content, facturatie, social, SEO, blog, ondertekenen, personeelsplanning en reserveringen — in één dashboard op je eigen domein. Vanaf <span data-prijs="module.basis.maand">€19</span> per maand plus een eenmalige setup. Geen plugin-hel, geen ticketsysteem.
     </p>
     <div class="hero-ctas">
       <a href="#strip" class="btn-primary">
@@ -918,7 +918,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
 <!-- MODULE STRIP (TOC) -->
 <section class="module-strip" id="strip">
   <div class="module-strip-inner">
-    <a href="#basis" class="strip-card fundering">
+<!-- STRIP-START -->
+    <a href="#basis" class="strip-card fundering" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">Fundering</span>
         <span class="strip-status req">Vereist</span>
@@ -926,7 +927,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Basis CMS</div>
       <div class="strip-card-price font-mono">vanaf <strong>€19</strong>/mnd</div>
     </a>
-    <a href="#content" class="strip-card">
+    <a href="#content" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 01</span>
         <span class="strip-status">Live</span>
@@ -934,7 +935,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Content</div>
       <div class="strip-card-price font-mono">vanaf <strong>€15</strong>/mnd</div>
     </a>
-    <a href="#factuur" class="strip-card">
+    <a href="#factuur" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 02</span>
         <span class="strip-status">Live</span>
@@ -942,7 +943,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Factuur-tool</div>
       <div class="strip-card-price font-mono">vanaf <strong>€9</strong>/mnd</div>
     </a>
-    <a href="#social" class="strip-card">
+    <a href="#social" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 03</span>
         <span class="strip-status">Live</span>
@@ -950,15 +951,15 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Social Campagnes</div>
       <div class="strip-card-price font-mono">vanaf <strong>€39</strong>/mnd</div>
     </a>
-    <a href="#seo" class="strip-card">
+    <a href="#seo" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 04</span>
         <span class="strip-status">Live</span>
       </div>
-      <div class="strip-card-name">SEO</div>
+      <div class="strip-card-name">SEO-rapport</div>
       <div class="strip-card-price font-mono">vanaf <strong>€99</strong></div>
     </a>
-    <a href="#blog" class="strip-card">
+    <a href="#blog" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 05</span>
         <span class="strip-status soon">Q3 2026</span>
@@ -966,7 +967,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Blog</div>
       <div class="strip-card-price font-mono">vanaf <strong>€29</strong>/mnd</div>
     </a>
-    <a href="#sign" class="strip-card">
+    <a href="#sign" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 06</span>
         <span class="strip-status">Nieuw</span>
@@ -974,15 +975,15 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Ondertekenen</div>
       <div class="strip-card-price font-mono">vanaf <strong>€7</strong>/mnd</div>
     </a>
-    <a href="#rooster" class="strip-card">
+    <a href="#rooster" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 07</span>
         <span class="strip-status">Nieuw</span>
       </div>
-      <div class="strip-card-name">Personeels-planner</div>
+      <div class="strip-card-name">Personeelsplanner</div>
       <div class="strip-card-price font-mono">vanaf <strong>€15</strong>/mnd</div>
     </a>
-    <a href="#reserveren" class="strip-card">
+    <a href="#reserveren" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 08</span>
         <span class="strip-status">Nieuw</span>
@@ -990,7 +991,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Reserveringen</div>
       <div class="strip-card-price font-mono">vanaf <strong>€19</strong>/mnd</div>
     </a>
-    <a href="#aeo" class="strip-card">
+    <a href="#aeo" class="strip-card" data-prijs-gegenereerd>
       <div class="strip-card-head">
         <span class="strip-card-num font-mono">/ 09</span>
         <span class="strip-status">Nieuw</span>
@@ -998,6 +999,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
       <div class="strip-card-name">Gevonden worden door AI</div>
       <div class="strip-card-price font-mono">vanaf <strong>€29</strong>/mnd</div>
     </a>
+    <!-- STRIP-END -->
   </div>
 </section>
 
@@ -1020,8 +1022,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Geen "powered by", geen subdomein — alles op je eigen domein.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.basis_price">€19</span><span style="font-size:14px;color:rgba(255,255,255,.5);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.basis_pricetag">+ €149 setup eenmalig · login, hosting & updates inbegrepen</div>
+        <div class="price-main"><span data-prijs="module.basis.maand">€19</span><span style="font-size:14px;color:rgba(255,255,255,.5);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.basis.setup">€149</span> setup eenmalig · login en updates inbegrepen · draait op je hosting (<span data-prijs="hosting.maand">€25</span>/mnd)</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="basis">
         Op de wachtlijst
@@ -1073,8 +1075,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén factuur, geen losse plugin-abonnementen.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.content_price">€15</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.content_pageprice">+ €99 setup eenmalig · onbeperkt teksten & foto's, alle pagina's</div>
+        <div class="price-main"><span data-prijs="module.content.maand">€15</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.content.setup">€99</span> setup eenmalig · onbeperkt teksten & foto's, alle pagina's</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="content">
         Op de wachtlijst
@@ -1129,8 +1131,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Eén klik → PDF in je downloads. Geen Moneybird of Mollie nodig.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.factuur_price">€9</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.factuur_pricetag">+ €99 setup eenmalig · onbeperkt facturen & PDF's</div>
+        <div class="price-main"><span data-prijs="module.factuur.maand">€9</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.factuur.setup">€99</span> setup eenmalig · onbeperkt facturen & PDF's</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="factuur">
         Op de wachtlijst
@@ -1193,8 +1195,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Download alle vier tegelijk als ZIP, klaar om te posten.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.social_price">€39</span><span style="font-size:14px;color:rgba(255,255,255,.5);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.social_pricetag">+ €99 setup · 4 campagnes/mnd in 4 formaten · extra campagne €29</div>
+        <div class="price-main"><span data-prijs="module.social.maand">€39</span><span style="font-size:14px;color:rgba(255,255,255,.5);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.social.setup">€99</span> setup · 4 campagnes/mnd in 4 formaten · extra campagne <span data-prijs="module.social.extra_campagne">€29</span></div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="social">
         Op de wachtlijst
@@ -1242,12 +1244,12 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         Drie lagen die op elkaar bouwen: een audit die de gaten vindt, content die mensen én Google willen lezen, en lokale pagina's die je in je regio vindbaar maken. Los te bestellen of als één traject.
       </p>
       <div class="feature-list">
-        <div class="feature"><span class="feature-plus font-mono">1</span><span class="feature-text"><strong>SEO-rapport</strong> — site-brede audit met score, prioriteiten en actieplan. Per actiepunt: zelf oppakken of laat Peter het doen. <span style="color:var(--muted)">€99 eenmalig + actiepunten op uurbasis.</span></span></div>
-        <div class="feature"><span class="feature-plus font-mono">2</span><span class="feature-text"><strong>SEO-content</strong> — keyword-clusters + blogs/pagina's in jouw merkstem, met answer-first + FAQ + structured data ingebakken (vindbaar in Google én AI-overviews). <span style="color:var(--muted)">€149 setup + €89 per pagina. Draait op Blog.</span></span></div>
-        <div class="feature"><span class="feature-plus font-mono">3</span><span class="feature-text"><strong>Lokale vindbaarheid</strong> — dienst-×-stad-pagina's voor je hele regio, elk met eigen lokale invalshoek + schema. <span style="color:var(--muted)">Projectprijs vanaf €490 (10 pagina's).</span></span></div>
+        <div class="feature"><span class="feature-plus font-mono">1</span><span class="feature-text"><strong>SEO-rapport</strong> — site-brede audit met score, prioriteiten en actieplan. Per actiepunt: zelf oppakken of laat Peter het doen. <span style="color:var(--muted)"><span data-prijs="seo.rapport">€99</span> eenmalig + actiepunten op uurbasis.</span></span></div>
+        <div class="feature"><span class="feature-plus font-mono">2</span><span class="feature-text"><strong>SEO-content</strong> — keyword-clusters + blogs/pagina's in jouw merkstem, met answer-first + FAQ + structured data ingebakken (vindbaar in Google én AI-overviews). <span style="color:var(--muted)"><span data-prijs="seo.content.setup">€149</span> setup + <span data-prijs="seo.content.per_pagina">€89</span> per pagina. Draait op Blog.</span></span></div>
+        <div class="feature"><span class="feature-plus font-mono">3</span><span class="feature-text"><strong>Lokale vindbaarheid</strong> — dienst-×-stad-pagina's voor je hele regio, elk met eigen lokale invalshoek + schema. <span style="color:var(--muted)">Projectprijs vanaf <span data-prijs="seo.lokaal.project">€490</span> (10 pagina's).</span></span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.seo_price">vanaf €99</span></div>
+        <div class="price-main"><span>vanaf <span data-prijs="seo.rapport">€99</span></span></div>
         <div class="price-tag" data-content="modules.seo_pricetag">rapport · content · lokaal — los of gebundeld</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="seo">
@@ -1318,8 +1320,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Automatische meta-tags, OG-image en interne links naar diensten.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.blog_price">€29</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.blog_pricetag">+ €99 setup · 2 artikelen/mnd (AI + SEO-meta) · extra artikel €39</div>
+        <div class="price-main"><span data-prijs="module.blog.maand">€29</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.blog.setup">€99</span> setup · 2 artikelen/mnd (AI + SEO-meta) · extra artikel <span data-prijs="module.blog.extra_artikel">€39</span></div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="blog">
         Hou me op de hoogte
@@ -1372,8 +1374,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Status in één oogopslag: in afwachting · bekeken · getekend.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.sign_price">€7</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.sign_pricetag">+ €79 setup eenmalig · onbeperkt eIDAS-handtekeningen</div>
+        <div class="price-main"><span data-prijs="module.sign.maand">€7</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.sign.setup">€79</span> setup eenmalig · onbeperkt eIDAS-handtekeningen</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="sign">
         Op de wachtlijst
@@ -1433,8 +1435,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Rooster printen of als PDF bewaren — onbeperkt medewerkers en diensten.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.rooster_price">€15</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.rooster_pricetag">+ €99 setup eenmalig · onbeperkt medewerkers, diensten en deel-links</div>
+        <div class="price-main"><span data-prijs="module.rooster.maand">€15</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.rooster.setup">€99</span> setup eenmalig · onbeperkt medewerkers, diensten en deel-links</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="rooster">
         Op de wachtlijst
@@ -1501,8 +1503,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Nieuwe afspraak verschijnt in je dashboard + Notion; klant kan zelf annuleren.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.reserveren_price">€19</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.reserveren_pricetag">+ €99 setup eenmalig · onbeperkt boekingen, dubbel-boek-vrij</div>
+        <div class="price-main"><span data-prijs="module.reserveren.maand">€19</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.reserveren.setup">€99</span> setup eenmalig · onbeperkt boekingen, dubbel-boek-vrij</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="reserveren">
         Op de wachtlijst
@@ -1561,8 +1563,8 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
         <div class="feature"><span class="feature-plus font-mono">+</span><span class="feature-text">Elke maand opnieuw meten, zodat je het verloop ziet in plaats van één momentopname.</span></div>
       </div>
       <div class="module-pricing">
-        <div class="price-main"><span data-content="modules.aeo_price">€29</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
-        <div class="price-tag" data-content="modules.aeo_pricetag">+ €199 setup eenmalig · scan, inrichting en maandelijkse hermeting</div>
+        <div class="price-main"><span data-prijs="module.aeo.maand">€29</span><span style="font-size:14px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.05em;"> /mnd</span></div>
+        <div class="price-tag">+ <span data-prijs="module.aeo.setup">€199</span> setup eenmalig · scan, inrichting en maandelijkse hermeting</div>
       </div>
       <button class="btn-primary module-cta" data-waitlist data-module="aeo">
         Vraag een scan aan
@@ -1649,7 +1651,7 @@ footer { background: var(--black); color: var(--white); padding: 60px 48px 36px;
     <div class="faq-list">
       <details class="faq-item">
         <summary><span data-content="modules.faq1_q">Heb ik de Basis CMS altijd nodig?</span><span class="faq-toggle">+</span></summary>
-        <div class="faq-body" data-content="modules.faq1_a">De Basis CMS (€149 setup + €19/mnd) is de fundering: je eigen login, dashboard, hosting en updates. Die activeer je één keer. Daarna klik je modules erbij — Content, Factuur, Social, Blog — elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS.</div>
+        <div class="faq-body">De Basis CMS (<span data-prijs="module.basis.setup">€149</span> setup + <span data-prijs="module.basis.maand">€19</span>/mnd) is de fundering: je eigen login, dashboard en updates. Hosting (<span data-prijs="hosting.maand">€25</span>/mnd) komt erbij. Die activeer je één keer. Daarna klik je modules erbij (Content, Factuur, Social, Blog), elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS.</div>
       </details>
       <details class="faq-item">
         <summary><span data-content="modules.faq2_q">Werkt dit ook zonder een Stolkwebdesign-website?</span><span class="faq-toggle">+</span></summary>
