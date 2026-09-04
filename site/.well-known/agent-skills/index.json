@@ -18,7 +18,7 @@
       "type": "service",
       "description": "Add-on modules op de Basis CMS: zelf content beheren, facturen maken, social plannen, bloggen, ondertekenen, roosteren en reserveringen aannemen.",
       "url": "https://www.stolkwebdesign.nl/.well-known/agent-skills/modules/SKILL.md",
-      "digest": "sha256:b6b6ed3578262f9dc17c41c5a83daf418fc81807cea90c9890e1f99ad8b8fc42"
+      "digest": "sha256:044c2fd3536d88bbf4a6d30ddeb4a1a2fc37255853ebfc12189c05c0ac17286e"
     }
   ]
 }

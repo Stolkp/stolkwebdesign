@@ -39,7 +39,7 @@ Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar
 Alles draait op de Basis CMS: één login op je eigen domein. Per module een maandbedrag plus een eenmalige setup. Early-access tarief 2026.
 
 ### Basis CMS: €19 per maand plus €149 setup
-Status: fundering, vereist voor alle modules. Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login en updates inbegrepen; hosting (€25 per maand) komt erbij.
+Status: fundering, vereist voor alle modules. Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Het maandbedrag is onderhoud van je CMS: updates, beveiliging en back-ups. Hosting (€25 per maand) komt daar bovenop.
 
 ### Content: €15 per maand plus €99 setup
 Status: live. Zelf teksten en foto's aanpassen op alle pagina's, onbeperkt.

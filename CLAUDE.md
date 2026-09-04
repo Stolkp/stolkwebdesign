@@ -194,19 +194,35 @@ site. Reken op twee minuten. Hoe het werkt:
 - Kan Supabase bij de build niet bereikt worden, dan **faalt de build hard** en blijft de vorige
   deploy staan. Bewust: een deploy met oude prijzen is erger dan geen deploy.
 
-**Prijsbesluiten 04-09 (Peter):** hosting €25/mnd (server, SSL, back-ups, monitoring), hosting
-plus onderhoud €50/mnd na de twaalf gespreide maanden (onderhoud = updates, back-ups,
-beveiligingscontrole, kleine tekstwijzigingen), en Basis CMS (€19/mnd + €149) komt **bovenop** de
-hosting; "hosting inbegrepen" bij Basis CMS is van de site. Zeven afwijkingen uit de meting van
-04-09 zijn daarbij rechtgezet (EN-homepagestrip op oude eenmalige prijzen, rekentool SEO €19/mnd,
-hero /modules "vanaf €29", "vanaf €2.250" op /website-laten-maken, en meer), zie
-`docs/logs/2026-09-04/03-…` in de monorepo. Nog open voor Peter: uurtarief €60 in de voorwaarden
-tegenover €75 hieronder, en de clausule "€25 per maand geeft recht op 1 uur onderhoud".
+**Prijsbesluiten 04-09 (Peter):** hosting €25/mnd (server, SSL, back-ups, monitoring). Hosting plus
+onderhoud €50/mnd na de twaalf gespreide maanden; onderhoud is updates, back-ups,
+beveiligingscontrole en kleine tekstwijzigingen, en géén nieuwe pagina's of onderdelen. **Het
+maandbedrag van Basis CMS (€19) is onderhoud van het CMS, geen hosting**: hosting komt daar bovenop
+en is verplicht bij Basis CMS. Zo staat het nu op /modules NL en EN, in de FAQ, in feiten.json en
+in llms.txt; de oude formulering "login, hosting en updates inbegrepen" is weg. Zeven afwijkingen
+uit de meting van 04-09 zijn daarbij rechtgezet (EN-homepagestrip op oude eenmalige prijzen,
+rekentool SEO €19/mnd, hero /modules "vanaf €29", "vanaf €2.250" op /website-laten-maken, en meer),
+zie `docs/logs/2026-09-04/03-…` in de monorepo.
+
+**Algemene voorwaarden bijgewerkt naar versie 1.1 (04-09), NL en EN.** De bedragen in artikel 11
+stamden uit de begintijd. Besluiten van Peter: uurtarief van €60 naar **€75** (sleutel `uurtarief`,
+één bron voor meerwerk én de voorwaarden), het onderhoudscontract van "€25 per maand met 1 uur
+onderhoud inbegrepen" naar **€50 per maand, uitgesplitst als €25 hosting plus €25 onderhoud**,
+gelijk aan de site, en aanmaningskosten blijven €50. Daarbij twee tekstwijzigingen die uit die
+besluiten volgen: de urenpot en de bijbehorende factuurregel zijn vervallen, en het contract is nu
+**maandelijks opzegbaar** in plaats van een halfjaarcontract met twee maanden opzegtermijn, omdat de
+site "per maand opzegbaar" belooft en de klant zich op de gunstigste lezing kan beroepen. Ook de
+omschrijving van onderhoud is losgetrokken van WordPress-alleen, met een nieuw lid dat meerwerk
+afbakent. De sleutels `voorwaarden.uurtarief` en `voorwaarden.onderhoud.maand` zijn vervallen; de
+voorwaarden verwijzen nu naar `hosting_onderhoud.maand`, `hosting.maand`, `onderhoud.maand`,
+`uurtarief` en `voorwaarden.aanmaning`. Het seed-blok van `migrations/prijzen_init.sql` wordt
+gegenereerd uit `content/prijzen.json`, dus bestand en tabel lopen niet uit de pas.
 
 De lijst hieronder is de stand van vóór 04-09 en is voor de moduleprijzen verouderd (eenmalige
 bedragen); de tabel is leidend.
 
-Per-pagina model (uurtarief €75) — gepresenteerd als 3 pakketten op de homepage (`#pakketten`):
+Per-pagina model (uurtarief €75, sinds 04-09 ook het tarief in de voorwaarden) — gepresenteerd als
+3 pakketten op de homepage (`#pakketten`):
 - **Start** €1.250 — homepage / 1 pagina, incl. volledig ontwerp-systeem
 - **Onderneem** €2.250 — tot 4 pagina's (meest gekozen)
 - **Groei** €3.500 — tot 7 pagina's + Basis CMS + Content

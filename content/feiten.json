@@ -97,7 +97,7 @@
         "naam": "Basis CMS",
         "prijs": "{{module.basis.maand}} per maand plus {{module.basis.setup}} setup",
         "status": "fundering, vereist voor alle modules",
-        "wat": "Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Login en updates inbegrepen; hosting ({{hosting.maand}} per maand) komt erbij.",
+        "wat": "Je eigen beveiligde login en dashboard op jouwsite.nl/cms. Het maandbedrag is onderhoud van je CMS: updates, beveiliging en back-ups. Hosting ({{hosting.maand}} per maand) komt daar bovenop.",
         "anker": "basis",
         "nummer": "Fundering",
         "label": "Vereist",
@@ -297,11 +297,11 @@
       {
         "nl": {
           "vraag": "Heb ik de Basis CMS altijd nodig?",
-          "antwoord": "De Basis CMS ({{module.basis.setup}} setup + {{module.basis.maand}}/mnd) is de fundering: je eigen login, dashboard en updates. Hosting ({{hosting.maand}}/mnd) komt erbij. Die activeer je één keer. Daarna klik je modules erbij (Content, Factuur, Social, Blog), elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS."
+          "antwoord": "De Basis CMS ({{module.basis.setup}} setup + {{module.basis.maand}}/mnd) is de fundering: je eigen login en dashboard. Dat maandbedrag is onderhoud van je CMS, geen hosting; hosting ({{hosting.maand}}/mnd) komt daar bovenop. De basis activeer je één keer. Daarna klik je modules erbij (Content, Factuur, Social, Blog), elk met een eigen klein maandbedrag, zonder de basis opnieuw te betalen. Alleen het SEO-rapport kun je ook los bestellen, zonder Basis CMS."
         },
         "en": {
           "vraag": "Do I always need the Base CMS?",
-          "antwoord": "The Base CMS ({{module.basis.setup}} setup + {{module.basis.maand}}/mo) is the foundation: your own login, dashboard and updates. Hosting ({{hosting.maand}}/mo) comes on top. You activate it once. After that you click modules on (Content, Invoicing, Social, Blog), each with its own small monthly rate, without paying for the base again. Only the SEO report can also be ordered separately, without the Base CMS."
+          "antwoord": "The Base CMS ({{module.basis.setup}} setup + {{module.basis.maand}}/mo) is the foundation: your own login and dashboard. That monthly rate is maintenance of your CMS, not hosting; hosting ({{hosting.maand}}/mo) comes on top. You activate the base once. After that you click modules on (Content, Invoicing, Social, Blog), each with its own small monthly rate, without paying for the base again. Only the SEO report can also be ordered separately, without the Base CMS."
         }
       },
       {

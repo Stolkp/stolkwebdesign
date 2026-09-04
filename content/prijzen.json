@@ -4,7 +4,7 @@
     "Niet met de hand bewerken: de tabel is de bron, bewerk hem in de admin-tab Prijzen.",
     "Staat in git zodat --lokaal zonder verbinding werkt en zodat prijswijzigingen een geschiedenis hebben."
   ],
-  "laatstGewijzigd": "2026-09-04T08:22:32.24943+00:00",
+  "laatstGewijzigd": "2026-09-04T09:04:51.459104+00:00",
   "rijen": [
     {
       "sleutel": "gespreid.maanden",
@@ -75,7 +75,7 @@
       "label": "Webhosting en beveiliging",
       "bedrag": 25,
       "eenheid": "per maand",
-      "toelichting": "Server, SSL-certificaat, back-ups en monitoring. Komt bij elk pakket en ook bij Basis CMS; zit nergens in inbegrepen.",
+      "toelichting": "Server, SSL-certificaat, back-ups en monitoring. Komt bij elk pakket en ook bij Basis CMS; zit nergens in inbegrepen. Het onderhoud van het CMS (Basis CMS) staat hier los van.",
       "volgorde": 10
     },
     {
@@ -106,21 +106,30 @@
       "volgorde": 40
     },
     {
+      "sleutel": "uurtarief",
+      "groep": "Hosting en onderhoud",
+      "label": "Uurtarief",
+      "bedrag": 75,
+      "eenheid": "per uur",
+      "toelichting": "Meerwerk buiten het onderhoud: nieuwe pagina's, nieuwe functies, een nieuw ontwerp. Staat in artikel 11 van de algemene voorwaarden (NL en EN) en is het tarief waarop de pakketprijzen zijn gebaseerd.",
+      "volgorde": 50
+    },
+    {
       "sleutel": "module.basis.setup",
       "groep": "Modules",
       "label": "Basis CMS: setup",
       "bedrag": 149,
       "eenheid": "eenmalig",
-      "toelichting": "Fundering voor alle modules. Login en updates inbegrepen, hosting komt erbij.",
+      "toelichting": "Fundering voor alle modules, eenmalig. Het maandbedrag ernaast is onderhoud van het CMS; hosting komt daar bovenop.",
       "volgorde": 10
     },
     {
       "sleutel": "module.basis.maand",
       "groep": "Modules",
-      "label": "Basis CMS: per maand",
+      "label": "Basis CMS: onderhoud per maand",
       "bedrag": 19,
       "eenheid": "per maand",
-      "toelichting": null,
+      "toelichting": "Maandelijks onderhoud van het CMS: updates, beveiliging en back-ups. Dit is geen hosting; hosting komt daar bovenop en is verplicht bij Basis CMS.",
       "volgorde": 11
     },
     {
@@ -385,31 +394,13 @@
       "volgorde": 30
     },
     {
-      "sleutel": "voorwaarden.uurtarief",
-      "groep": "Voorwaarden",
-      "label": "Uurtarief",
-      "bedrag": 60,
-      "eenheid": "per uur",
-      "toelichting": "Staat in de algemene voorwaarden (NL en EN). Let op: de project-CLAUDE.md noemde €75; de voorwaarden zijn de contracttekst.",
-      "volgorde": 10
-    },
-    {
       "sleutel": "voorwaarden.aanmaning",
       "groep": "Voorwaarden",
       "label": "Kosten tweede aanmaning",
       "bedrag": 50,
       "eenheid": "eenmalig",
-      "toelichting": "Artikel betaling in de algemene voorwaarden.",
+      "toelichting": "Kosten van een tweede aanmaning, artikel 10 van de algemene voorwaarden (NL en EN). Bevestigd op 04-09-2026: blijft 50 euro.",
       "volgorde": 20
-    },
-    {
-      "sleutel": "voorwaarden.onderhoud.maand",
-      "groep": "Voorwaarden",
-      "label": "Onderhoudsovereenkomst",
-      "bedrag": 25,
-      "eenheid": "per maand",
-      "toelichting": "Artikel onderhoud in de voorwaarden: geeft recht op één uur onderhoud per maand. Staat los van de hosting van €25 op de site; hetzelfde bedrag, andere afspraak.",
-      "volgorde": 30
     }
   ]
 }
