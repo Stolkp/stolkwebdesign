@@ -144,6 +144,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 8px;
   padding: 14px 32px;
 }
 .portal-nav-logo {
@@ -153,7 +155,21 @@ body {
   letter-spacing: -0.02em;
 }
 .portal-nav-logo span { color: var(--red); }
-.portal-nav-right { display: flex; align-items: center; gap: 16px; }
+/* min-width:0 is wat het wrappen mogelijk maakt: zonder dat weigert een flex-item onder zijn
+   eigen inhoudsbreedte te krimpen en steekt de balk op smalle schermen buiten beeld. */
+.portal-nav-right { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: flex-end; min-width: 0; }
+/* De adminlink verschijnt alleen voor de bureau-accounts, zie showPortal(). Geen display in
+   deze regel, want dat zou het hidden-attribuut overrulen en hem voor iedereen tonen. */
+.portal-adminlink {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color .2s;
+}
+.portal-adminlink:hover { color: var(--white); }
 .portal-badge {
   font-family: 'JetBrains Mono', monospace;
   font-size: 10px;
@@ -163,6 +179,10 @@ body {
   color: var(--green);
   border: 1px solid var(--green-border);
   padding: 4px 10px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .portal-logout {
   font-family: 'JetBrains Mono', monospace;
@@ -226,8 +246,10 @@ body {
   border-color: var(--border-hover);
   background: #161616;
 }
-.report-card-left { display: flex; flex-direction: column; gap: 6px; }
+/* min-width:0 laat deze kolom krimpen; zonder dat duwt een lange titel de kaart buiten beeld. */
+.report-card-left { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .report-card-title {
+  overflow-wrap: anywhere;
   font-family: 'Archivo Black', sans-serif;
   font-size: 18px;
   text-transform: uppercase;
@@ -314,7 +336,7 @@ body {
 @media (max-width: 640px) {
   .portal-nav { padding: 12px 20px; }
   .portal-body { padding: 40px 20px 60px; }
-  .report-card { grid-template-columns: 1fr auto; padding: 20px; }
+  .report-card { grid-template-columns: 1fr; gap: 12px; padding: 20px; }
   .report-version { display: none; }
   .login-box { padding: 32px 24px; }
 }
@@ -343,6 +365,7 @@ body {
   <nav class="portal-nav">
     <div class="portal-nav-logo">STOLK<span>.</span>WEBDESIGN</div>
     <div class="portal-nav-right">
+      <a class="portal-adminlink" id="admin-link" href="/admin" hidden>Naar de admin</a>
       <span class="portal-badge" id="user-badge">Ingelogd</span>
       <button class="portal-logout" onclick="doLogout()">Uitloggen</button>
     </div>
@@ -397,11 +420,16 @@ async function doLogout() {
   await db.auth.signOut();
 }
 
+// De bureau-adressen uit de RLS-policy op seo_reports. Deze lijst bepaalt alleen of de link
+// naar de admin zichtbaar is; wie er werkelijk in de admin mag, bepaalt Supabase.
+const BUREAU_ADRESSEN = ['info@stolkwebdesign.nl', 'info@stolksupport.nl'];
+
 function showPortal(user) {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('portal-screen').style.display = 'block';
-  const emailShort = user.email.split('@')[0];
   document.getElementById('user-badge').textContent = user.email;
+  document.getElementById('admin-link').hidden =
+    !BUREAU_ADRESSEN.includes(String(user.email || '').toLowerCase());
   loadReports(user.id);
 }
 
