@@ -27,8 +27,11 @@ const RIJEN = [
   { sleutel: 'pakket.start.paginas', groep: 'Pakketten', label: "Start: aantal pagina's", bedrag: 1, eenheid: 'aantal', toelichting: null, volgorde: 11, updated_at: '2026-09-04T10:00:00Z' },
   { sleutel: 'pakket.onderneem.prijs', groep: 'Pakketten', label: 'Onderneem', bedrag: 2250, eenheid: 'eenmalig', toelichting: null, volgorde: 20, updated_at: '2026-09-04T10:00:00Z' },
   { sleutel: 'pakket.onderneem.paginas', groep: 'Pakketten', label: "Onderneem: aantal pagina's", bedrag: 4, eenheid: 'aantal', toelichting: null, volgorde: 21, updated_at: '2026-09-04T10:00:00Z' },
+  { sleutel: 'gespreid.maanden', groep: 'Gespreid betalen', label: 'Looptijd', bedrag: 12, eenheid: 'aantal', toelichting: null, volgorde: 5, updated_at: '2026-09-04T10:00:00Z' },
+  { sleutel: 'gespreid.start.vooraf', groep: 'Gespreid betalen', label: 'Start: vooraf', bedrag: 500, eenheid: 'eenmalig', toelichting: null, volgorde: 10, updated_at: '2026-09-04T10:00:00Z' },
+  { sleutel: 'gespreid.start.maand', groep: 'Gespreid betalen', label: 'Start: per maand', bedrag: 75, eenheid: 'per maand', toelichting: null, volgorde: 11, updated_at: '2026-09-04T10:00:00Z' },
   { sleutel: 'hosting.maand', groep: 'Hosting en onderhoud', label: 'Webhosting en beveiliging', bedrag: 25, eenheid: 'per maand', toelichting: 'Komt bij elk pakket.', volgorde: 10, updated_at: '2026-09-04T10:00:00Z' },
-  { sleutel: 'hosting_onderhoud.maand', groep: 'Hosting en onderhoud', label: 'Hosting plus onderhoud', bedrag: 50, eenheid: 'per maand', toelichting: 'Na twaalf maanden.', volgorde: 20, updated_at: '2026-09-04T10:00:00Z' },
+  { sleutel: 'onderhoud.maand', groep: 'Hosting en onderhoud', label: 'Onderhoud', bedrag: 25, eenheid: 'per maand', toelichting: 'Optioneel, in elke route.', volgorde: 15, updated_at: '2026-09-04T10:00:00Z' },
   { sleutel: 'module.basis.maand', groep: 'Modules', label: 'Basis CMS: per maand', bedrag: 19, eenheid: 'per maand', toelichting: null, volgorde: 11, updated_at: '2026-09-04T10:00:00Z' },
 ];
 
@@ -68,11 +71,12 @@ const geladen = await page.evaluate(() => ({
   opslaanUit: document.getElementById('pr-opslaan').disabled,
   afgeleid: [...document.querySelectorAll('.pr-afg .pr-rij')].map((r) => r.querySelector('.pr-label').textContent + ' = ' + r.querySelector('.pr-waarde').textContent),
 }));
-eis('zeven rijen geladen', geladen.rijen === 7, String(geladen.rijen));
-eis('groepen in vaste volgorde', geladen.groepen.join('|') === 'Pakketten|Hosting en onderhoud|Modules', geladen.groepen.join('|'));
+eis('tien rijen geladen', geladen.rijen === 10, String(geladen.rijen));
+eis('groepen in vaste volgorde', geladen.groepen.join('|') === 'Pakketten|Gespreid betalen|Hosting en onderhoud|Modules', geladen.groepen.join('|'));
 eis('Opslaan staat uit zonder wijziging', geladen.opslaanUit);
 eis('afgeleide per pagina Onderneem = €563', geladen.afgeleid.includes('Onderneem: per pagina = €563'), geladen.afgeleid.join(' · '));
-eis('afgeleide onderhoudsdeel = €25', geladen.afgeleid.includes('Onderhoudsdeel per maand = €25'));
+eis('afgeleide hosting plus onderhoud = €50', geladen.afgeleid.includes('Hosting plus onderhoud = €50'), geladen.afgeleid.join(' · '));
+eis('afgeleid eerste jaar met hosting = €1.700', geladen.afgeleid.includes('Start gespreid: eerste jaar met hosting = €1.700'));
 await page.screenshot({ path: join(OUT, 'admin-prijzen-1440.png'), fullPage: true });
 
 // 2. wijzigen
@@ -84,12 +88,12 @@ const naWijzig = await page.evaluate(() => ({
   dirty: document.querySelector('.pr-rij[data-sleutel="hosting.maand"]').classList.contains('gewijzigd'),
   opslaanAan: !document.getElementById('pr-opslaan').disabled,
   stand: document.querySelector('.pr-stand').textContent,
-  onderhoud: [...document.querySelectorAll('.pr-afg .pr-rij')].find((r) => r.textContent.includes('Onderhoudsdeel'))?.querySelector('.pr-waarde').textContent,
+  samen: [...document.querySelectorAll('.pr-afg .pr-rij')].find((r) => r.textContent.includes('Hosting plus onderhoud'))?.querySelector('.pr-waarde').textContent,
 }));
 eis('gewijzigde rij gemarkeerd', naWijzig.dirty);
 eis('Opslaan gaat aan', naWijzig.opslaanAan);
 eis('teller "1 niet opgeslagen"', /1 niet opgeslagen/.test(naWijzig.stand), naWijzig.stand);
-eis('afgeleide onderhoud volgt live (50 - 30 = €20)', naWijzig.onderhoud === '€20', naWijzig.onderhoud);
+eis('afgeleide som volgt live (30 + 25 = €55)', naWijzig.samen === '€55', naWijzig.samen);
 
 // 3. opslaan: alleen de gewijzigde rij, met het nieuwe bedrag
 await page.click('#pr-opslaan');

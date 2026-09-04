@@ -39,12 +39,25 @@ export function metAfgeleiden(map) {
   };
   per('start'); per('onderneem'); per('groei');
   const looptijd = m['gespreid.maanden'] ?? 12;
+  const hosting = m['hosting.maand'];
   for (const p of ['start', 'onderneem', 'groei']) {
     const v = m[`gespreid.${p}.vooraf`], mnd = m[`gespreid.${p}.maand`];
-    if (v != null && mnd != null) m[`gespreid.${p}.jaar_totaal`] = v + looptijd * mnd;
+    if (v == null || mnd == null) continue;
+    // Wat de klant aan de site zelf betaalt, dus zonder hosting. Dit is het getal waarmee
+    // de homepage de "ongeveer 11 procent meer"-belofte waarmaakt: €1.400 tegen €1.250.
+    m[`gespreid.${p}.jaar_totaal`] = v + looptijd * mnd;
+    // Wat er werkelijk per maand en over het eerste jaar afgeschreven wordt. Hosting is sinds
+    // 04-09-2026 in élke route verplicht en zit dus ook níét in de gespreide termijn.
+    if (hosting != null) {
+      m[`gespreid.${p}.maand_met_hosting`] = mnd + hosting;
+      m[`gespreid.${p}.jaar_totaal_met_hosting`] = v + looptijd * (mnd + hosting);
+    }
   }
-  if (m['hosting_onderhoud.maand'] != null && m['hosting.maand'] != null) {
-    m['onderhoud.maand'] = m['hosting_onderhoud.maand'] - m['hosting.maand'];
+  // Hosting plus onderhoud is de som van twee losse producten, niet andersom. Stond tot
+  // 04-09-2026 omgekeerd (onderhoud = som min hosting), waardoor het onderhoud stil kromp
+  // zodra de hosting duurder werd.
+  if (hosting != null && m['onderhoud.maand'] != null) {
+    m['hosting_onderhoud.maand'] = hosting + m['onderhoud.maand'];
   }
   return m;
 }

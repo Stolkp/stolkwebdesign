@@ -11,7 +11,7 @@ Naast Stolkwebdesign draait Stolksupport (https://www.stolksupport.nl): AI-autom
 Elke site volgt een research- en strategieproces voordat er één regel code wordt geschreven: merkanalyse, marktonderzoek, een design- en contentbrief, de bouw, en een kwaliteitscheck. Het resultaat is een snelle, unieke site die opvalt en converteert.
 
 ## Pakketten
-Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina bouwt daarop voort.
+Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina bouwt daarop voort. De hosting van €25 per maand komt bij elke route erbij, ook tijdens de gespreide maanden.
 
 ### Start: €1.250
 Omvang: 1 pagina (€1.250 per pagina).
@@ -33,7 +33,7 @@ Omvang: eigen systeem of integratie.
 Eerst scope bepalen, daarna een vaste prijs.
 
 Extra pagina buiten een pakket: €200.
-Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar €50 per maand: €25 hosting en €25 onderhoud (updates, back-ups en kleine tekstwijzigingen), maandelijks opzegbaar.
+Na twaalf betaalde maanden is de site jouw eigendom en stopt de maandtermijn. De hosting van €25 per maand loopt door; wil je het onderhoud erbij (updates, back-ups en kleine tekstwijzigingen), dan is dat €25 per maand extra. Allebei maandelijks opzegbaar.
 
 ## Modules
 Alles draait op de Basis CMS: één login op je eigen domein. Per module een maandbedrag plus een eenmalige setup. Early-access tarief 2026.
@@ -73,13 +73,13 @@ Status: nieuw. Meten en inrichten of AI-antwoordmachines zoals ChatGPT, Perplexi
 
 ## Overige diensten
 ### Webhosting en beveiliging: vanaf €25 per maand
-Dedicated webhosting met SSL, back-ups en monitoring. Komt bij elk pakket en ook bij Basis CMS.
+Dedicated webhosting met SSL, back-ups en monitoring. Verplicht in elke route: bij een pakket ineens, tijdens de twaalf gespreide maanden, en bij Basis CMS.
 
 ### Doorlopende SEO: €195 per maand
-Blijvend werken aan je vindbaarheid in Google. Komt in plaats van de €50 voor hosting en onderhoud.
+Blijvend werken aan je vindbaarheid in Google. Hosting en onderhoud zitten erin, dus dit komt in plaats van de €50.
 
-### Onderhoud en support: op aanvraag
-Kleine aanpassingen en doorontwikkeling.
+### Onderhoud en support: €25 per maand, optioneel
+Updates van de techniek, back-ups, beveiligingscontrole en kleine tekstwijzigingen. Nieuwe pagina's en nieuwe functies vallen er niet onder; dat is meerwerk tegen een vaste prijs.
 
 ## Pagina's
 - https://www.stolkwebdesign.nl/ (Website laten bouwen): Pakketten, werkwijze en de modules in het kort.

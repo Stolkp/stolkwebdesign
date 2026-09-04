@@ -34,12 +34,18 @@ function prAfgeleid(m) {
   };
   per('Start', 'start'); per('Onderneem', 'onderneem'); per('Groei', 'groei');
   const looptijd = m['gespreid.maanden'] ?? 12;
+  const hosting = m['hosting.maand'];
   for (const [naam, p] of [['Start', 'start'], ['Onderneem', 'onderneem'], ['Groei', 'groei']]) {
     const v = m[`gespreid.${p}.vooraf`], mnd = m[`gespreid.${p}.maand`];
-    if (v != null && mnd != null) uit.push([`${naam} gespreid: eerste jaar`, prFormat(v + looptijd * mnd), `${prFormat(v)} vooraf plus ${looptijd} × ${prFormat(mnd)}`]);
+    if (v == null || mnd == null) continue;
+    uit.push([`${naam} gespreid: eerste jaar, site`, prFormat(v + looptijd * mnd), `${prFormat(v)} vooraf plus ${looptijd} × ${prFormat(mnd)}; hiermee klopt de belofte "ongeveer 11 procent meer" op de homepage`]);
+    if (hosting != null) {
+      uit.push([`${naam} gespreid: per maand met hosting`, prFormat(mnd + hosting), `${prFormat(mnd)} site plus ${prFormat(hosting)} hosting`]);
+      uit.push([`${naam} gespreid: eerste jaar met hosting`, prFormat(v + looptijd * (mnd + hosting)), `wat de klant het eerste jaar werkelijk betaalt`]);
+    }
   }
-  if (m['hosting_onderhoud.maand'] != null && m['hosting.maand'] != null) {
-    uit.push(['Onderhoudsdeel per maand', prFormat(m['hosting_onderhoud.maand'] - m['hosting.maand']), 'hosting plus onderhoud min hosting; zo staat het op de site uitgesplitst']);
+  if (hosting != null && m['onderhoud.maand'] != null) {
+    uit.push(['Hosting plus onderhoud', prFormat(hosting + m['onderhoud.maand']), `${prFormat(hosting)} hosting plus ${prFormat(m['onderhoud.maand'])} onderhoud; onderhoud is optioneel`]);
   }
   return uit;
 }

@@ -171,12 +171,15 @@ function stempelSite(prijzen, alleenCheck) {
 
 // ── Zelftest ─────────────────────────────────────────────────────────────────
 function zelftest() {
-  const prijzen = metAfgeleiden({ 'a.prijs': 1250, 'b.maand': 25, 'pakket.onderneem.prijs': 2250, 'pakket.onderneem.paginas': 4, 'hosting.maand': 25, 'hosting_onderhoud.maand': 50 });
+  const prijzen = metAfgeleiden({ 'a.prijs': 1250, 'b.maand': 25, 'pakket.onderneem.prijs': 2250, 'pakket.onderneem.paginas': 4,
+    'hosting.maand': 25, 'onderhoud.maand': 25,
+    'gespreid.maanden': 12, 'gespreid.start.vooraf': 500, 'gespreid.start.maand': 75 });
   const proef = `<meta name="description" content="Sites vanaf €950. Amsterdam.">
 <meta property="og:description" content="Vanaf €950.">
 <p>Prijs <span data-prijs="a.prijs">€950</span> en <b class="nw" data-prijs="b.maand">€99</b> per maand.</p>
 <p>AV: <span data-prijs="b.maand" data-prijs-formaat="voorwaarden">€ 99,-</span> · EN <span data-prijs-formaat="voorwaarden-en" data-prijs="b.maand">€ 99</span></p>
-<p>Per pagina <em data-prijs="pakket.onderneem.per_pagina">€1</em>, onderhoud <em data-prijs="onderhoud.maand">€0</em></p>
+<p>Per pagina <em data-prijs="pakket.onderneem.per_pagina">€1</em>, samen <em data-prijs="hosting_onderhoud.maand">€0</em></p>
+<p>Gespreid <em data-prijs="gespreid.start.maand_met_hosting">€0</em> p/m, jaar <em data-prijs="gespreid.start.jaar_totaal_met_hosting">€0</em></p>
 <p>Fout: <span data-prijs="bestaat.niet">€1</span> en <span data-prijs="a.prijs"><strong>€1</strong></span></p>
 <script>/* PRIJZEN-START */
 const PRIJZEN = {};
@@ -188,11 +191,13 @@ const PRIJZEN = {};
   eis('formaat voorwaarden geeft € 25,-', res.html.includes('data-prijs-formaat="voorwaarden">€ 25,-</span>'));
   eis('formaat voorwaarden-en geeft € 25 (attribuutvolgorde maakt niet uit)', res.html.includes('data-prijs="b.maand">€ 25</span>'));
   eis('afgeleide per pagina = ceil(2250/4) = €563', res.html.includes('per_pagina">€563</em>'));
-  eis('afgeleide onderhoud = 50 - 25 = €25', res.html.includes('onderhoud.maand">€25</em>'));
+  eis('afgeleide hosting plus onderhoud = 25 + 25 = €50', res.html.includes('hosting_onderhoud.maand">€50</em>'));
+  eis('afgeleide gespreide maand met hosting = 75 + 25 = €100', res.html.includes('maand_met_hosting">€100</em>'));
+  eis('afgeleid eerste jaar met hosting = 500 + 12 × 100 = €1.700', res.html.includes('jaar_totaal_met_hosting">€1.700</em>'));
   eis('meta description en og:description vervangen', res.html.includes('vanaf €1.250. Amsterdam') && res.html.includes('content="Vanaf €1.250."'));
   eis('onbekende sleutel wordt gemeld', res.fouten.some((f) => f.includes('bestaat.niet')));
   eis('precies één geneste tag gemeld (niet de zes goede elementen)', res.fouten.filter((f) => f.includes('geneste tag')).length === 1);
-  eis('zes goede elementen plus twee meta-regels plus rekentool = 9 stempels', res.aantal === 9);
+  eis('acht goede elementen plus twee meta-regels plus rekentool = 11 stempels', res.aantal === 11, String(res.aantal));
   eis('rekentool-blok gevuld', /const PRIJZEN = \{"a\.prijs":1250/.test(res.html));
   const twee = stempel(res.html, prijzen, { bestand: 'proef', meta: 'a.prijs', rekentool: true });
   eis('idempotent: tweede run verandert niets', twee.html === res.html);

@@ -178,9 +178,18 @@ site. Reken op twee minuten. Hoe het werkt:
   build, staat in git voor `--lokaal` en voor de geschiedenis). build-llms, build-schema en
   build-strip lezen feiten via die lib. Het drift-slot in build-llms blijft: elk bedrag moet
   zichtbaar op zijn bronpagina staan, dus een vergeten `data-prijs` breekt de build.
-- Afgeleide waarden (prijs per pagina, jaartotaal gespreid, onderhoudsdeel) rekent
-  `scripts/lib/prijzen.mjs` uit; de admin toont ze alleen-lezen (`prAfgeleid` in
-  `admin-prijzen.js`, SYNC-commentaar). Het aantal pagina's per pakket staat in de tabel.
+- Afgeleide waarden rekent `scripts/lib/prijzen.mjs` uit; de admin toont ze alleen-lezen
+  (`prAfgeleid` in `admin-prijzen.js`, SYNC-commentaar). Het aantal pagina's per pakket staat in
+  de tabel. Afgeleid zijn: `pakket.<x>.per_pagina`, `gespreid.<x>.jaar_totaal` (site alleen),
+  `gespreid.<x>.maand_met_hosting`, `gespreid.<x>.jaar_totaal_met_hosting` en
+  `hosting_onderhoud.maand` (= hosting + onderhoud).
+- **`hosting_onderhoud.maand` is een som, geen invoerveld** (omgedraaid 04-09). Tot die datum was
+  het andersom (onderhoud = som min hosting), waardoor het onderhoud stil kromp zodra de hosting
+  duurder werd: hosting op €30 zetten maakte het onderhoud €20 zonder dat iemand dat vroeg.
+- `scripts/bouw-prijzen-migratie.mjs` schrijft het seed-blok van `migrations/prijzen_init.sql`
+  opnieuw uit de snapshot (`--check` meldt drift). De migratie beweerde al dat dat blok
+  gegenereerd werd, maar dat gebeurde met de hand en liep meteen achter toen de sleutels
+  veranderden.
 - `build-strip.mjs` dekt sinds 04-09 vier pagina's (NL en EN homepage en modulepagina); module 09
   wordt op EN overgeslagen zolang `/en/modules` geen `id="aeo"`-sectie heeft. Engelse namen via
   `naamEn` in feiten.json.
@@ -194,8 +203,18 @@ site. Reken op twee minuten. Hoe het werkt:
 - Kan Supabase bij de build niet bereikt worden, dan **faalt de build hard** en blijft de vorige
   deploy staan. Bewust: een deploy met oude prijzen is erger dan geen deploy.
 
-**Prijsbesluiten 04-09 (Peter):** hosting €25/mnd (server, SSL, back-ups, monitoring). Hosting plus
-onderhoud €50/mnd na de twaalf gespreide maanden; onderhoud is updates, back-ups,
+**Het prijsmodel in één alinea (stand 04-09, na drie besluitrondes van Peter):** de site koop je
+ineens (€1.250 / €2.250 / €3.500) of gespreid over twaalf maanden (€500 + €75, €1.000 + €125,
+€1.500 + €200). Gespreid kost ongeveer 11 procent meer aan de site zelf, en dát is wat die belofte
+op de homepage vergelijkt: €1.400 tegen €1.250, hosting bij geen van beide meegeteld. **Hosting
+(€25/mnd) is verplicht in élke route**, ook tijdens de gespreide maanden, dus Start kost het eerste
+jaar €1.700 en niet €1.400. **Onderhoud (€25/mnd) is overal optioneel**, ook na maand twaalf. Samen
+is dat €50, en dat bedrag is een som die de build zelf uitrekent. Doorlopende SEO (€195/mnd) heeft
+hosting en onderhoud erin en komt dus in plaats van die €50. Het alles-in-abonnement op
+`/website-laten-maken` (€350/mnd, geen opstartkosten) is een eigen product en staat hier los van.
+
+**Prijsbesluiten 04-09 (Peter), ronde 1 en 2:** hosting €25/mnd (server, SSL, back-ups, monitoring).
+Hosting plus onderhoud €50/mnd; onderhoud is updates, back-ups,
 beveiligingscontrole en kleine tekstwijzigingen, en géén nieuwe pagina's of onderdelen. **Het
 maandbedrag van Basis CMS (€19) is onderhoud van het CMS, geen hosting**: hosting komt daar bovenop
 en is verplicht bij Basis CMS. Zo staat het nu op /modules NL en EN, in de FAQ, in feiten.json en
@@ -217,6 +236,22 @@ afbakent. De sleutels `voorwaarden.uurtarief` en `voorwaarden.onderhoud.maand` z
 voorwaarden verwijzen nu naar `hosting_onderhoud.maand`, `hosting.maand`, `onderhoud.maand`,
 `uurtarief` en `voorwaarden.aanmaning`. Het seed-blok van `migrations/prijzen_init.sql` wordt
 gegenereerd uit `content/prijzen.json`, dus bestand en tabel lopen niet uit de pas.
+
+**Ronde 3 (04-09, na een signaal uit een andere sessie): hosting overal bovenop, onderhoud overal
+optioneel.** Er bleef één tegenspraak staan die de eerste twee rondes niet raakten. Op
+`/website-laten-maken` stond bij de instap dat hosting, updates en back-ups in de €75 zaten, met
+"eerste jaar €1.400 in totaal". Dan is gespreid €1.400 tegenover ineens €1.550 met hosting, dus
+goedkoper, terwijl de homepage belooft dat gespreid ongeveer 11 procent duurder is. De rekensom
+wees uit dat die belofte over de site alleen gaat (12,0 / 11,1 / 11,4 procent voor Start,
+Onderneem en Groei), dus hosting hoorde bij geen van beide routes in de termijn te zitten. Peters
+besluit: **hosting komt overal bovenop** (instap eerste jaar dus €1.700) en **onderhoud is overal
+optioneel** in plaats van verplicht vanaf maand dertien. Dat laatste haalt een tweede scheefheid
+weg: twee klanten met dezelfde site betaalden €25 of €50 puur omdat ze anders hadden betaald.
+Doorgevoerd op de homepage (drie pakketkaarten, het uitlegblok en dienst 3, die van "Op aanvraag"
+naar €25/mnd ging), op `/website-laten-maken` (instapblok en twee FAQ-antwoorden), in artikel 11
+van de voorwaarden NL en EN, en in feiten.json. **Let op:** `home.pillar3_price` is uit
+`stolkwebdesign_content` verwijderd omdat het nu een gestempelde prijs is; `home.pillar3_body` is
+in HTML én CMS bijgewerkt, want dat blijft gewone copy.
 
 De lijst hieronder is de stand van vóór 04-09 en is voor de moduleprijzen verouderd (eenmalige
 bedragen); de tabel is leidend.

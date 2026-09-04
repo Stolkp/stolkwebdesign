@@ -33,7 +33,7 @@
   },
   "pakketten": {
     "bron": "/index.html",
-    "model": "Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina bouwt daarop voort.",
+    "model": "Per pagina. Elk pakket bevat het volledige ontwerpsysteem; elke volgende pagina bouwt daarop voort. De hosting van {{hosting.maand}} per maand komt bij elke route erbij, ook tijdens de gespreide maanden.",
     "items": [
       {
         "naam": "Start",
@@ -67,7 +67,7 @@
       }
     ],
     "extraPagina": "{{pakket.extra_pagina}}",
-    "naTwaalfMaanden": "Na twaalf betaalde maanden is de site jouw eigendom en zakt het maandbedrag naar {{hosting_onderhoud.maand}} per maand: {{hosting.maand}} hosting en {{onderhoud.maand}} onderhoud (updates, back-ups en kleine tekstwijzigingen), maandelijks opzegbaar."
+    "naTwaalfMaanden": "Na twaalf betaalde maanden is de site jouw eigendom en stopt de maandtermijn. De hosting van {{hosting.maand}} per maand loopt door; wil je het onderhoud erbij (updates, back-ups en kleine tekstwijzigingen), dan is dat {{onderhoud.maand}} per maand extra. Allebei maandelijks opzegbaar."
   },
   "diensten": {
     "bron": "/index.html",
@@ -75,17 +75,17 @@
       {
         "naam": "Webhosting en beveiliging",
         "prijs": "vanaf {{hosting.maand}} per maand",
-        "wat": "Dedicated webhosting met SSL, back-ups en monitoring. Komt bij elk pakket en ook bij Basis CMS."
+        "wat": "Dedicated webhosting met SSL, back-ups en monitoring. Verplicht in elke route: bij een pakket ineens, tijdens de twaalf gespreide maanden, en bij Basis CMS."
       },
       {
         "naam": "Doorlopende SEO",
         "prijs": "{{seo.doorlopend.maand}} per maand",
-        "wat": "Blijvend werken aan je vindbaarheid in Google. Komt in plaats van de {{hosting_onderhoud.maand}} voor hosting en onderhoud."
+        "wat": "Blijvend werken aan je vindbaarheid in Google. Hosting en onderhoud zitten erin, dus dit komt in plaats van de {{hosting_onderhoud.maand}}."
       },
       {
         "naam": "Onderhoud en support",
-        "prijs": "op aanvraag",
-        "wat": "Kleine aanpassingen en doorontwikkeling."
+        "prijs": "{{onderhoud.maand}} per maand, optioneel",
+        "wat": "Updates van de techniek, back-ups, beveiligingscontrole en kleine tekstwijzigingen. Nieuwe pagina's en nieuwe functies vallen er niet onder; dat is meerwerk tegen een vaste prijs."
       }
     ]
   },
