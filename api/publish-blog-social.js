@@ -62,7 +62,7 @@ export default async function handler(req) {
     return json({ error: 'Instagram vereist een hero-afbeelding op de post. Voeg er een toe of vink Instagram uit.' }, 400);
   }
 
-  const link = `${SITE_URL}/blog/${post.slug}.html`;
+  const link = `${SITE_URL}/blog/${post.slug}`;
   const text = caption || `${post.title}\n\n${post.excerpt || ''}\n\nLees verder: ${link}`;
   const media = post.cover_url ? [post.cover_url] : [];
 

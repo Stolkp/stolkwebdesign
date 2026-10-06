@@ -77,7 +77,7 @@ export default async function handler(req, res) {
 
     let blotato = null;
     if (shouldRepost) {
-      const blogUrl = `${SITE_URL}/blog/${slug}.html`;
+      const blogUrl = `${SITE_URL}/blog/${slug}`;
       const caption = `${post.excerpt}\n\nLees het volledige artikel: ${blogUrl}\n\n${TOPIC_HASHTAGS[post.topic] || ''}`.trim();
       blotato = {};
       if (process.env.BLOTATO_LINKEDIN_ACCOUNT_ID) {

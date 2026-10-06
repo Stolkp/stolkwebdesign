@@ -224,7 +224,7 @@ export default async function handler(req, res) {
     }
 
     // 9. Post naar LinkedIn + Instagram via Blotato
-    const blogUrl = `${SITE_URL}/blog/${slug}.html`;
+    const blogUrl = `${SITE_URL}/blog/${slug}`;
     const caption = `${excerpt}\n\nLees het volledige artikel: ${blogUrl}\n\n${TOPIC_HASHTAGS[topic] || ''}`.trim();
     const blotato = await postCarousel({ carouselUrls, caption });
     await supabase

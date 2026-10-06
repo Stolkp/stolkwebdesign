@@ -30,7 +30,7 @@ const htmlEscape = (s = '') => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').re
 function renderPost(post, tpl, allPosts) {
   const bodyHtml = marked.parse(post.body_md || '', { breaks: false, gfm: true });
   const topicLabel = TOPIC_LABELS[post.topic] || htmlEscape(post.topic || 'Algemeen');
-  const canonical = `${SITE_URL}/blog/${post.slug}.html`;
+  const canonical = `${SITE_URL}/blog/${post.slug}`;
   const ogImage = post.cover_url || (post.carousel_urls && post.carousel_urls[0]) || `${SITE_URL}/assets/og-image.png`;
 
   const coverBlock = post.cover_url
@@ -41,7 +41,7 @@ function renderPost(post, tpl, allPosts) {
     .filter((p) => p.slug !== post.slug)
     .slice(0, 3)
     .map((p) => `
-      <a class="related-card" href="/blog/${p.slug}.html">
+      <a class="related-card" href="/blog/${p.slug}">
         <span class="related-card-topic">${TOPIC_LABELS[p.topic] || htmlEscape(p.topic || 'Algemeen')}</span>
         <h3>${htmlEscape(p.title)}</h3>
         <p>${htmlEscape((p.excerpt || '').slice(0, 140))}${(p.excerpt || '').length > 140 ? '…' : ''}</p>
@@ -87,7 +87,7 @@ function renderIndex(posts, tpl) {
         ? `<div class="post-card-cover"><img src="${htmlEscape(p.cover_url)}" alt="${htmlEscape(p.title)}" loading="lazy"></div>`
         : `<div class="post-card-cover no-image">${String((posts.indexOf(p) + 1)).padStart(2, '0')}</div>`;
       return `
-        <a class="post-card" href="/blog/${p.slug}.html">
+        <a class="post-card" href="/blog/${p.slug}">
           ${cover}
           <div class="post-card-body">
             <div class="post-card-meta">
@@ -124,7 +124,7 @@ async function updateSitemap(posts) {
   const today = new Date().toISOString().split('T')[0];
   const blogEntries = [
     `  <url><loc>${SITE_URL}/blog/</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>`,
-    ...posts.map((p) => `  <url><loc>${SITE_URL}/blog/${p.slug}.html</loc><lastmod>${new Date(p.published_at).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`),
+    ...posts.map((p) => `  <url><loc>${SITE_URL}/blog/${p.slug}</loc><lastmod>${new Date(p.published_at).toISOString().split('T')[0]}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>`),
   ].join('\n');
   const block = `<!-- BLOG-START -->\n${blogEntries}\n  <!-- BLOG-END -->\n`;
   xml = xml.replace('</urlset>', `${block}</urlset>`);
