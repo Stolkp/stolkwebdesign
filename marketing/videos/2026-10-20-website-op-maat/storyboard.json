@@ -1,0 +1,158 @@
+{
+ "slug": "stolkwebdesign-website-op-maat",
+ "title": "Stolkwebdesign: website op maat in de 3D-kamer",
+ "format": "9:16",
+ "voice": {
+  "mode": "tts",
+  "file": "audio/vo.mp3"
+ },
+ "script": "Je website is vaak de eerste indruk. Met een template val je niet op. Stolkwebdesign bouwt je site met de hand, helemaal op maat. Eerst onderzoek naar je merk en je markt. Dan het ontwerp, de bouw en een kwaliteitscheck. Stuur je een bericht? Dan heb je binnen één werkdag antwoord. Op Google staat Stolkwebdesign op vijf sterren, uit acht reviews. Een site op maat begint bij twaalfhonderdvijftig euro. Plan een gratis gesprek op stolkwebdesign punt en el.",
+ "_bronnen": "Alle claims van www.stolkwebdesign.nl, gecontroleerd 20-10-2026: '5,0 op Google (8 reviews)', 'geen templates', 'Start 1 pagina €1.250' / 'Vanaf €1.250', 'Plan een gratis gesprek' (homepage); 'Binnen één werkdag' (contactpagina-FAQ); werkwijze uit content/feiten.json 'aanpak'. Het bericht op de telefoon is fictief.",
+ "caption_fix": {
+  "1250": "1.250"
+ },
+ "caption_keywords": [
+  "website",
+  "indruk",
+  "template",
+  "hand",
+  "maat",
+  "merk",
+  "markt",
+  "ontwerp",
+  "bouw",
+  "kwaliteitscheck",
+  "werkdag",
+  "google",
+  "sterren",
+  "reviews",
+  "gratis",
+  "gesprek",
+  "stolkwebdesign.nl"
+ ],
+ "establishing": true,
+ "beats": [
+  {
+   "station": "board",
+   "from": "Je website",
+   "lines": [
+    {
+     "text": "Eerste indruk"
+    },
+    {
+     "text": "Een template?",
+     "at": "template"
+    },
+    {
+     "text": "Valt niet op.",
+     "color": "brand",
+     "at": "val",
+     "indent": 110
+    }
+   ]
+  },
+  {
+   "station": "monitor",
+   "from": "Stolkwebdesign bouwt",
+   "zoom": {
+    "box": [
+     600,
+     250,
+     1340,
+     860
+    ]
+   },
+   "scene": {
+    "type": "image",
+    "src": "assets/site-home.png",
+    "bare": true,
+    "path": "/"
+   }
+  },
+  {
+   "station": "monitor",
+   "from": "Eerst",
+   "scene": {
+    "type": "bullets",
+    "title": "Zo werkt het",
+    "subtitle": "van onderzoek tot oplevering",
+    "nav": 3,
+    "path": "/aanpak",
+    "items": [
+     "Merk",
+     "Markt",
+     "Ontwerp",
+     "Bouw",
+     "Kwaliteitscheck"
+    ],
+    "at": [
+     "merk",
+     "markt",
+     "ontwerp",
+     "bouw",
+     "kwaliteitscheck"
+    ]
+   },
+   "zoom": {
+    "box": [
+     240,
+     90,
+     960,
+     640
+    ]
+   }
+  },
+  {
+   "station": "phone",
+   "from": "Stuur",
+   "scene": {
+    "type": "notify_chat",
+    "app": "Stolkwebdesign",
+    "title": "Nieuwe aanvraag",
+    "message": "\"Hoi Peter, kun je mijn website vernieuwen?\"",
+    "contact": "Mila (voorbeeld)",
+    "contact_sub": "via het contactformulier",
+    "takeover": "Antwoord binnen één werkdag",
+    "reply": "Hoi Mila! Zullen we morgen even bellen?",
+    "notify_at": "Stuur",
+    "open_at": "binnen"
+   }
+  },
+  {
+   "station": "table",
+   "from": "Op Google",
+   "plaque": {
+    "big": "5,0",
+    "line1": "op Google",
+    "line2": "uit 8 reviews"
+   },
+   "pawns": {
+    "count": 8,
+    "highlight": 8,
+    "at": "acht"
+   }
+  },
+  {
+   "station": "board",
+   "from": "Een site",
+   "lines": [
+    {
+     "text": "Vanaf €1.250",
+     "color": "brand",
+     "at": "begint"
+    },
+    {
+     "text": "Gratis gesprek",
+     "at": "gratis",
+     "size": 105
+    },
+    {
+     "text": "stolkwebdesign.nl",
+     "color": "brand",
+     "at": "stolkwebdesign.nl",
+     "size": 64
+    }
+   ]
+  }
+ ]
+}

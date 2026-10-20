@@ -1,0 +1,4 @@
+build/
+out/
+*.16k.wav
+audio/vo-v1-*
